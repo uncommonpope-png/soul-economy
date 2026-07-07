@@ -746,8 +746,8 @@ render(items);
       const mesh = new Mesh(cfg.geom.clone(), mat);
       mesh.position.copy(pos); mesh.scale.setScalar(0.8 + plt[0] * 0.4);
       mesh.userData.index = idx; root.add(mesh); clickTargets.push(mesh); nodeData.push({ mesh, index: idx, pos, item });
-      // Invisible click collider (larger sphere for easier clicking)
-      const collider = new Mesh(new SphereGeometry(0.3, 8, 8), new MeshBasicMaterial({ visible: false }));
+      // Invisible click collider (larger sphere for easier clicking) — NOT visible:false, raycaster can't hit invisible
+      const collider = new Mesh(new SphereGeometry(0.35, 8, 8), new MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false }));
       collider.position.copy(pos); collider.userData.index = idx;
       root.add(collider); clickTargets.push(collider);
 
