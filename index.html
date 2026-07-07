@@ -798,7 +798,11 @@ render(items);
       return -1;
     }
     document.addEventListener('mousemove', e => { const idx = getHit(e); if (idx !== hov) { hov = idx; document.querySelectorAll('.card').forEach(c => { c.style.borderColor = ''; c.style.boxShadow = ''; }); if (idx >= 0) { const card = document.querySelectorAll('.card')[idx]; if (card) { card.style.borderColor = '#8B5CF6'; card.style.boxShadow = '0 0 40px rgba(139,92,246,0.3)'; } } } });
+    let clickStart = { x: 0, y: 0 };
+    document.addEventListener('pointerdown', e => { clickStart.x = e.clientX; clickStart.y = e.clientY; });
     document.addEventListener('click', e => {
+      const dx = e.clientX - clickStart.x, dy = e.clientY - clickStart.y;
+      if (dx * dx + dy * dy > 64) return;
       if (e.target.closest('#soul-info-panel')) return; const idx = getHit(e);
       if (idx >= 0) { const item = items[idx]; if (!item) return;
         pt.textContent = item.name; pd.textContent = item.desc || ''; pp.textContent = item.plt ? `PLT: ${item.plt}` : '';
