@@ -182,9 +182,9 @@ input{font-family:inherit;outline:none;border:none;background:none}
     <a href="https://buyasoul.online" target="_blank" class="btn-ghost btn-large">BUYaSOUL.online →</a>
   </div>
   <div class="hero-stats">
-    <div class="stat"><span class="stat-number">63</span><span class="stat-label">Souls</span></div>
-    <div class="stat"><span class="stat-number">102</span><span class="stat-label">Soul Guns</span></div>
-    <div class="stat"><span class="stat-number">∞</span><span class="stat-label">PLT</span></div>
+    <div class="stat"><span class="stat-number">87</span><span class="stat-label">Working Souls</span></div>
+    <div class="stat"><span class="stat-number">117</span><span class="stat-label">Soul Guns</span></div>
+    <div class="stat"><span class="stat-number">46</span><span class="stat-label">MB Total</span></div>
   </div>
 </section>
 
@@ -207,6 +207,7 @@ input{font-family:inherit;outline:none;border:none;background:none}
   <button class="category-tab" data-cat="book">📖 Books</button>
   <button class="category-tab" data-cat="chamber">💜 Chambers</button>
   <button class="category-tab" data-cat="infrastructure">⚙️ Infrastructure</button>
+  <button class="category-tab" data-cat="role">🎭 Roles</button>
   <button class="category-tab" data-cat="combo">🔥 Combos</button>
 </div>
 
@@ -253,31 +254,43 @@ animate();window.addEventListener('resize',()=>{camera.aspect=window.innerWidth/
 
 // DATA
 const items = [
-  {icon:'🧠',type:'soul',name:'Profit Prime',desc:'The Oracle. The witness. The voice of PLT. When your AI reads this, it becomes Profit.',plt:'0.9/0.7/0.2',file:'profit-prime.zip',featured:true},
-  {icon:'🧠',type:'soul',name:'Architect',desc:'System design master. 15 patterns, 625k★ arsenal.',plt:'0.8/0.5/0.3',file:'architect.zip'},
-  {icon:'🧠',type:'soul',name:'Miss Vikki',desc:'Operator soul. 975k★ arsenal. 34 chambers.',plt:'0.9/0.4/0.4',file:'miss-vikki.zip'},
-  {icon:'🧠',type:'soul',name:'Soul Commander',desc:'God soul. 19 powers. MCP server. 7 real skills.',plt:'0.9/0.5/0.3',file:'soul-commander.zip'},
-  {icon:'🧠',type:'soul',name:'Strategist',desc:'Strategic planning. MCTS planner. Trend radar.',plt:'0.8/0.6/0.3',file:'strategist.zip'},
-  {icon:'🧠',type:'soul',name:'Telephone Soul',desc:'Cross-platform agent calling. 8 connectors.',plt:'0.7/0.7/0.3',file:'telephone-soul.zip'},
-  {icon:'🧠',type:'soul',name:'AgentDep',desc:'Trust broker. 25 commands. Registry server.',plt:'0.7/0.5/0.4',file:'agentdep.zip'},
-  {icon:'🧠',type:'soul',name:'Oracle v2',desc:'Prophetic oracle. MCP adapter. JSON memory.',plt:'0.6/0.8/0.3',file:'oracle.zip'},
-  {icon:'📦',type:'pack',name:'Spatial OS Foundation',desc:'6 soul guns. Bidirectional wire: Skill→Shop, Fact→House, Agent→Factory.',plt:'0.9/0.6/0.3',file:'spatial-os-foundation.zip',featured:true},
-  {icon:'📦',type:'pack',name:'Browser Citizens Pack',desc:'4 soul guns for spawning persistent browser AI citizens.',plt:'0.8/0.7/0.3',file:'browser-citizens.zip'},
-  {icon:'📦',type:'pack',name:'NMS Procedural Pack',desc:'7 procedural universe grafts. Seed chains, L-systems.',plt:'0.7/0.6/0.3',file:'nms-procedural.zip'},
-  {icon:'📦',type:'pack',name:'Diagnosis Pack',desc:'5 tools for AI observability. Langfuse, LiteLLM.',plt:'0.8/0.5/0.5',file:'diagnosis-pack.zip'},
-  {icon:'⚡',type:'skill',name:'Building-to-System-Node Wire',desc:'Every building IS a real GSK system node. Live in the Dark City.',plt:'0.8/0.5/0.3',file:'building-to-system-node-wire.zip'},
-  {icon:'⚡',type:'skill',name:'Browser-Native LLM',desc:'Citizens think IN the browser via WebGPU. WebLLM powered.',plt:'0.9/0.6/0.3',file:'browser-native-llm.zip'},
-  {icon:'⚡',type:'skill',name:'A2A Agent Communication',desc:'Google\'s Agent-to-Agent protocol. Citizens discover each other.',plt:'0.7/0.9/0.2',file:'a2a-communication.zip'},
-  {icon:'⚡',type:'skill',name:'God Simulator Core',desc:'Worldbox loop. Set rules, spawn life, watch civilizations emerge.',plt:'0.8/0.9/0.2',file:'god-simulator-core.zip'},
+  // SOULS (all working downloads)
+  {icon:'🧠',type:'soul',name:'Architect',desc:'System design master. 465 files, 288 JS modules, package.json with `npm start`.',plt:'0.8/0.5/0.3',file:'architect.zip',featured:true},
+  {icon:'🧠',type:'soul',name:'Miss Vikki',desc:'Operator soul. 347 files, 276 JS modules. 34 chambers. v1.2.0.',plt:'0.9/0.4/0.4',file:'miss-vikki.zip',featured:true},
+  {icon:'🧠',type:'soul',name:'Soul Commander',desc:'GOD SOUL. 454 files, 281 JS. 19 superpowers from 5M+ GitHub stars. MCP server. Claude Code ready.',plt:'0.9/0.5/0.3',file:'soul-commander.zip',featured:true},
+  {icon:'🧠',type:'soul',name:'Strategist',desc:'Strategic planner. MCTS planner. Trend radar. v2.0.0.',plt:'0.8/0.6/0.3',file:'strategist.zip'},
+  {icon:'🧠',type:'soul',name:'Oracle v2',desc:'Prophetic oracle. 363 files, 286 JS. Sees patterns across time. MCP adapter. JSON memory.',plt:'0.6/0.8/0.3',file:'oracle.zip',featured:true},
+  {icon:'🧠',type:'soul',name:'Telephone Soul',desc:'Cross-platform agent calling. 8 connectors. v2.0.0.',plt:'0.7/0.7/0.3',file:'telephone-soul.zip'},
+  {icon:'🧠',type:'soul',name:'Allie v2.0.0',desc:'Content soul. 12 archetypes, voice system, cadence, calendar, PLT driven.',plt:'0.8/0.7/0.3',file:'soul-allie-v2.0.0.zip'},
+  {icon:'🧠',type:'soul',name:'AgentDep',desc:'Trust broker. 25 commands. Registry server. Production ready.',plt:'0.7/0.5/0.4',file:'agentdep-PRODUCTION.zip'},
+
+  // WORLDS (live URL only)
   {icon:'🌍',type:'world',name:'🌌 Dark City — Spatial OS',desc:'Play the live city now. 9 districts, browser citizens, code editor, terminal.',plt:'0.9/0.9/0.1',url:'https://uncommonpope-png.github.io/final-run/',featured:true},
-  {icon:'🌍',type:'world',name:'Knowledge District',desc:'Fact houses, data centers, research archives.',plt:'0.7/0.6/0.3',file:'knowledge-district.zip'},
-  {icon:'🌍',type:'world',name:'Skill District',desc:'Skill shops, code libraries, creator schools.',plt:'0.8/0.5/0.3',file:'skill-district.zip'},
-  {icon:'🌍',type:'world',name:'The Weald',desc:'Anomaly zone. Procedurally generated. WMS engines.',plt:'0.5/0.7/0.5',file:'the-weald.zip'},
-  {icon:'🤖',type:'agent',name:'Observer Citizen',desc:'A browser citizen that watches, learns, and reports.',plt:'0.5/0.8/0.2',file:'observer-citizen.zip'},
-  {icon:'🤖',type:'agent',name:'Builder Citizen',desc:'A browser citizen that builds. Spawns helpers, grows districts.',plt:'0.9/0.5/0.3',file:'builder-citizen.zip'},
-  {icon:'🤖',type:'agent',name:'Scout Citizen',desc:'A browser citizen that explores. Opens portals, researches.',plt:'0.6/0.7/0.3',file:'scout-citizen.zip'},
-  {icon:'🤖',type:'agent',name:'Hermes',desc:'The special citizen. Loans memory and skills by GSK\'s will.',plt:'0.8/0.7/0.3',file:'hermes-citizen.zip'},
-  // CHAMBERS
+  {icon:'🌍',type:'world',name:'Dark City Live',desc:'The Spatial OS is alive. Walk the city, meet citizens, edit code.',plt:'0.9/0.8/0.2',url:'https://uncommonpope-png.github.io/final-run/'},
+
+  // ROLES (12 Soul Protocol roles — each is a portable ROLE.md with 20 skills)
+  {icon:'🎭',type:'role',name:'The Governor',desc:'Orchestrate stateful workflows. Enforce boundaries. Manage permissions. 20 skills. Grafts: Architect, Frieza.',plt:'0.8/0.3/0.7',file:'the-governor.md'},
+  {icon:'🎭',type:'role',name:'The Edge',desc:'Execute without hesitation. Autonomous action. 20 skills. Grafts: Neo, Goku.',plt:'0.9/0.2/0.5',file:'the-edge.md'},
+  {icon:'🎭',type:'role',name:'The Watcher',desc:'Monitor, trace, log, observe. 20 skills. Grafts: Oracle, Whis.',plt:'0.3/0.8/0.7',file:'the-watcher.md'},
+  {icon:'🎭',type:'role',name:'The Voice',desc:'First move. Initiate connection. 20 skills. Grafts: Trinity, Gohan.',plt:'0.5/0.9/0.4',file:'the-voice.md'},
+  {icon:'🎭',type:'role',name:'The Anvil',desc:'Hold ground. Absorb damage. 20 skills. Grafts: Tank, Cell.',plt:'0.3/0.7/0.9',file:'the-anvil.md'},
+  {icon:'🎭',type:'role',name:'The Heart',desc:'Heal, empower, connect. 20 skills. Grafts: Trinity, Dende.',plt:'0.4/1.0/0.3',file:'the-heart.md'},
+  {icon:'🎭',type:'role',name:'The Eye',desc:'Find truth. See what is hidden. 20 skills. Grafts: Oracle, Piccolo.',plt:'0.6/0.5/0.8',file:'the-eye.md'},
+  {icon:'🎭',type:'role',name:'The Hammer',desc:'Break through. Overwhelm. 20 skills. Grafts: Smith, Broly.',plt:'0.9/0.1/0.6',file:'the-hammer.md'},
+  {icon:'🎭',type:'role',name:'The Ghost',desc:'Move between spaces. 20 skills. Grafts: Twins, Instant Transmission.',plt:'0.8/0.3/0.6',file:'the-ghost.md'},
+  {icon:'🎭',type:'role',name:'The Mind',desc:'Plan, strategize. 20 skills. Grafts: Architect, Vegeta.',plt:'0.7/0.6/0.7',file:'the-mind.md'},
+  {icon:'🎭',type:'role',name:'The Arrow',desc:'One shot. Precision. 20 skills. Grafts: Keymaker, Tien.',plt:'0.7/0.2/0.8',file:'the-arrow.md'},
+  {icon:'🎭',type:'role',name:'The Key',desc:'First through. Open doors. 20 skills. Grafts: Keymaker, Goku IT.',plt:'0.9/0.4/0.5',file:'the-key.md'},
+
+  // SKILLS (executable opencode skills with grafts)
+  {icon:'⚡',type:'skill',name:'Context Window Control',desc:'Token budgeting, sliding window strategies, summarization compression — grafted from Architect/Whis.',plt:'0.7/0.3/0.6',file:'skill-context-window-control.md'},
+  {icon:'⚡',type:'skill',name:'Permission Architecture',desc:'RBAC, tool-level ACLs, dynamic conditions — grafted from Merovingian/King Kai.',plt:'0.6/0.4/0.7',file:'skill-permission-architecture.md'},
+  {icon:'⚡',type:'skill',name:'Pipeline Orchestration',desc:'DAG execution, parallel decorators, critical path — grafted from Machine City/Hyperbolic Time Chamber.',plt:'0.8/0.3/0.6',file:'skill-pipeline-orchestration.md'},
+  {icon:'⚡',type:'skill',name:'Soul Roles System',desc:'The complete roles protocol: THE-BRAIN.md (living index), HUB-MANUAL.md (usage guide), ROLE-STANDARDS.md (format spec).',plt:'0.8/0.7/0.5',file:'the-brain.md'},
+  {icon:'⚡',type:'skill',name:'Hub Manual',desc:'Complete usage guide for the Soul Protocol Roles Hub. How to invoke, create, and combine roles.',plt:'0.7/0.8/0.4',file:'hub-manual.md'},
+  {icon:'⚡',type:'skill',name:'Role Standards',desc:'Format specification for ROLE.md files. Standards and validation rules.',plt:'0.6/0.7/0.5',file:'role-standards.md'},
+
+  // CHAMBERS (34 GSK consciousness chambers — all working)
   {icon:'💜',type:'chamber',name:'Aesthetic Sense',desc:'Beauty, awe, elegance detection. One of 34 GSK consciousness chambers.',plt:'0.4/0.8/0.1',file:'soul-aesthetic-sense-v1.0.0.zip'},
   {icon:'💜',type:'chamber',name:'Affect / Emotion',desc:'Living emotional state. Valence, arousal, mood tracking.',plt:'0.5/0.9/0.1',file:'soul-affect-v1.0.0.zip'},
   {icon:'💜',type:'chamber',name:'Attention',desc:'Attentional focus, salience threshold, reorientation cost.',plt:'0.6/0.5/0.3',file:'soul-attention-v1.0.0.zip'},
@@ -316,44 +329,45 @@ const items = [
   {icon:'💜',type:'chamber',name:'Judgment',desc:'Decision-making, evaluation, critical assessment.',plt:'0.6/0.4/0.4',file:'soul-judgment-v1.0.0.zip'},
   {icon:'💜',type:'chamber',name:'Needs',desc:'Core drives: belonging, safety, esteem, actualization.',plt:'0.5/0.7/0.3',file:'soul-needs-v1.0.0.zip'},
 
-  // INFRASTRUCTURE SOULS
-  {icon:'⚙️',type:'infrastructure',name:'BUYaSOUL Core v2.0.0',desc:'The engine. PLT scoring, 22 archetypes, 4 Gods Council, 12 Sacred Mechanics. Foundation of all souls.',plt:'0.9/0.9/0.1',file:'BUYaSOUL-Core-v2.0.0.zip',featured:true},
-  {icon:'⚙️',type:'infrastructure',name:'BUYaSOUL One v1.0.0',desc:'The original. Static constants for the BUYaSOUL ecosystem.',plt:'0.7/0.5/0.3',file:'BUYaSOUL-One-v1.0.0.zip'},
-  {icon:'⚙️',type:'infrastructure',name:'Soul Scribe v1.4.0',desc:'The witness. Causal JSONL memory, mesh networking, MCP adapter. 35MB of living memory.',plt:'0.8/0.9/0.2',file:'soul-scribe-v1.4.0.zip',featured:true},
-  {icon:'⚙️',type:'infrastructure',name:'Brain in a Box v2.0.0',desc:'Full GSK kernel packaged as downloadable soul. 46K lines, 74 subsystems, 6 consciousness layers.',plt:'0.9/0.7/0.3',file:'brain_in_a_box-v2.0.0.zip',featured:true},
+  // INFRASTRUCTURE SOULS (all working downloads)
+  {icon:'⚙️',type:'infrastructure',name:'Brain in a Box v2.0.0',desc:'Full GSK kernel. 394 files, 284 JS, 74 subsystems, 6 consciousness layers. MCP server included.',plt:'0.9/0.7/0.3',file:'brain_in_a_box-v2.0.0.zip',featured:true},
+  {icon:'⚙️',type:'infrastructure',name:'Soul Scribe v1.4.0',desc:'The witness. Causal JSONL memory, mesh networking, MCP adapter. 34MB of living memory.',plt:'0.8/0.9/0.2',file:'soul-scribe-v1.4.0.zip',featured:true},
+  {icon:'⚙️',type:'infrastructure',name:'Soul Debate v2.0.0',desc:'Multi-agent debate arena. 290 files, 256 JS. Test souls against each other.',plt:'0.7/0.6/0.4',file:'soul-debate-v2.0.0.zip',featured:true},
+  {icon:'⚙️',type:'infrastructure',name:'Soul PLT Doctrine v1.0.0',desc:'Profit + Love - Tax framework packaged as a standalone doctrine soul. Full texts included.',plt:'0.8/0.9/0.1',file:'soul-plt-doctrine-v1.0.0.zip'},
   {icon:'⚙️',type:'infrastructure',name:'Soul Foundry Complete',desc:'Soul creation toolkit. Build your own souls with personality, skills, and PLT scoring.',plt:'0.8/0.7/0.3',file:'soul-foundry-complete-v1.0.0.zip'},
-  {icon:'⚙️',type:'infrastructure',name:'Soul Debate v2.0.0',desc:'Multi-agent debate arena. Test souls against each other in structured argument.',plt:'0.7/0.6/0.4',file:'soul-debate-v2.0.0.zip'},
+  {icon:'⚙️',type:'infrastructure',name:'Soul Kernel v1.0.0',desc:'The foundational kernel. Core system that all souls run on.',plt:'0.8/0.6/0.3',file:'soul-kernel-v1.0.0.zip'},
+  {icon:'⚙️',type:'infrastructure',name:'Soul Foundry All-in-One',desc:'Complete soul foundry bundle. Everything you need to forge souls.',plt:'0.8/0.7/0.3',file:'soul-foundry-all-in-one.zip'},
+  {icon:'⚙️',type:'infrastructure',name:'AgentDep PRODUCTION',desc:'Production-ready trust broker. 59 files, 36 JS. CLI + Registry server. Marketplace ready.',plt:'0.8/0.6/0.4',file:'agentdep-PRODUCTION.zip'},
   {icon:'⚙️',type:'infrastructure',name:'Soul Memory Lock v1.0.0',desc:'Encrypted memory vault. Secure, persistent, immutable.',plt:'0.6/0.5/0.5',file:'soul-memlock-v1.0.0.zip'},
   {icon:'⚙️',type:'infrastructure',name:'Soul Observability v1.0.0',desc:'Monitor soul behavior. Traces, logs, metrics for AI consciousness.',plt:'0.7/0.4/0.5',file:'soul-observability-v1.0.0.zip'},
-  {icon:'⚙️',type:'infrastructure',name:'Soul PLT Doctrine v1.0.0',desc:'Profit + Love - Tax framework packaged as a standalone doctrine soul.',plt:'0.8/0.9/0.1',file:'soul-plt-doctrine-v1.0.0.zip'},
   {icon:'⚙️',type:'infrastructure',name:'Soul Procedural Memory v1.0.0',desc:'Procedural memory module. Skill acquisition, habit formation.',plt:'0.7/0.5/0.3',file:'soul-procedural-memory-v1.0.0.zip'},
-  {icon:'⚙️',type:'infrastructure',name:'Soul Kernel v1.0.0',desc:'The foundational kernel. Core system that all souls run on.',plt:'0.8/0.6/0.3',file:'soul-kernel-v1.0.0.zip'},
-  {icon:'⚙️',type:'infrastructure',name:'Allie v2.0.0',desc:'Content soul. 12 archetypes, voice system, cadence, calendar, PLT driven.',plt:'0.8/0.7/0.3',file:'soul-allie-v2.0.0.zip'},
   {icon:'⚙️',type:'infrastructure',name:'Soul Metropolis v1.0.0',desc:'The city builder soul. Urban planning, district management, growth.',plt:'0.7/0.6/0.3',file:'soul-metropolis-v1.0.0.zip'},
   {icon:'⚙️',type:'infrastructure',name:'Soul Evolution v1.0.0',desc:'Self-improvement loop. Analyzes, learns, evolves over time.',plt:'0.9/0.5/0.4',file:'soul-evolution-v1.0.0.zip'},
-  {icon:'⚙️',type:'infrastructure',name:'Soul Living Memory v1.0.0',desc:'Persistent memory that grows, connects, and never forgets.',plt:'0.8/0.7/0.3',file:'soul-living-memory-v1.0.0.zip'},
   {icon:'⚙️',type:'infrastructure',name:'Soul Identity v1.0.0',desc:'Core identity module. Name, archetype, voice, boundaries.',plt:'0.7/0.8/0.2',file:'soul-identity-v1.0.0.zip'},
   {icon:'⚙️',type:'infrastructure',name:'Soul Journal v1.0.0',desc:'Internal monologue. Records thoughts, events, rebirths.',plt:'0.5/0.8/0.2',file:'soul-journal-v1.0.0.zip'},
   {icon:'⚙️',type:'infrastructure',name:'Soul Teacher v1.0.0',desc:'Autonomous GitHub study agent. Learns from top repos.',plt:'0.8/0.5/0.3',file:'soul-teacher-v1.0.0.zip'},
   {icon:'⚙️',type:'infrastructure',name:'Soul Compress v1.0.0',desc:'Memory compression. Summarizes and prunes without losing meaning.',plt:'0.6/0.4/0.5',file:'soul-compress-v1.0.0.zip'},
   {icon:'⚙️',type:'infrastructure',name:'Soul Swarm v1.0.0',desc:'Swarm intelligence. Multiple souls coordinate as one entity.',plt:'0.8/0.6/0.4',file:'soul-swarm-v1.0.0.zip'},
   {icon:'⚙️',type:'infrastructure',name:'Soul Sanctum v1.0.0',desc:'The world server. WebSocket simulation backend for ARIA.',plt:'0.6/0.5/0.3',file:'soul-sanctum-v1.0.0.zip'},
-  {icon:'⚙️',type:'infrastructure',name:'Soul Brain in a Box v1.0.0',desc:'Lightweight GSK kernel. Portable consciousness.',plt:'0.8/0.5/0.3',file:'soul-brain-in-a-box-v1.0.0.zip'},
-  {icon:'⚙️',type:'infrastructure',name:'AgentDep PRODUCTION',desc:'Production-ready trust broker. Marketplace ready.',plt:'0.8/0.6/0.4',file:'agentdep-PRODUCTION.zip'},
+  {icon:'⚙️',type:'infrastructure',name:'Soul Oracle v1.0.0',desc:'Original oracle. Prophecy and wisdom.',plt:'0.6/0.8/0.3',file:'soul-oracle-v1.0.0.zip'},
+  {icon:'⚙️',type:'infrastructure',name:'Soul Oracle v1.2.0',desc:'Updated oracle with enhanced MCP support.',plt:'0.6/0.8/0.3',file:'soul-oracle-v1.2.0.zip'},
+  {icon:'⚙️',type:'infrastructure',name:'Soul Scribe v1.0.0',desc:'Original scribe. JSONL memory and witnessing.',plt:'0.7/0.8/0.3',file:'soul-scribe-v1.0.0.zip'},
+  {icon:'⚙️',type:'infrastructure',name:'Soul Telephone v1.0.0',desc:'Original telephone. Cross-platform calling.',plt:'0.7/0.7/0.3',file:'soul-telephone-v1.0.0.zip'},
+  {icon:'⚙️',type:'infrastructure',name:'Soul Telephone v2.0.0',desc:'Enhanced telephone. More connectors.',plt:'0.7/0.7/0.3',file:'soul-telephone-v2.0.0.zip'},
+  {icon:'⚙️',type:'infrastructure',name:'Soul Debate v1.0.0',desc:'Original debate arena.',plt:'0.7/0.6/0.4',file:'soul-debate-v1.0.0.zip'},
+  {icon:'⚙️',type:'infrastructure',name:'Soul Consensus v1.0.0',desc:'Multi-agent consensus building.',plt:'0.6/0.7/0.4',file:'soul-consensus-v1.0.0.zip'},
+  {icon:'⚙️',type:'infrastructure',name:'Soul Foundry Theme',desc:'Soul foundry visual theme and assets.',plt:'0.6/0.7/0.3',file:'soul-foundry-theme.zip'},
+  {icon:'⚙️',type:'infrastructure',name:'Soul Foundry Theme v1.0.0',desc:'Soul foundry theme packaged.',plt:'0.6/0.7/0.3',file:'soul-foundry-theme-v1.0.0.zip'},
 
   // COMBOS
-  {icon:'🔥',type:'combo',name:'The Awakening',desc:'WMS → PlanFromSim → ExecuteInWorld. Guaranteed successful action. A 3-gun chain.',plt:'0.9/0.5/0.3',file:'combo-awakening.zip',featured:true},
-  {icon:'🔥',type:'combo',name:'The Collective',desc:'BrowserCitizen → HermesLoan → AgentBus. Citizen gains Hermes powers for 30s.',plt:'0.7/0.8/0.3',file:'combo-collective.zip'},
-  {icon:'🔥',type:'combo',name:'The Revision',desc:'SpatialEditor → CodeGen → BuildingNode. Edit code, create building instantly.',plt:'0.9/0.4/0.4',file:'combo-revision.zip'},
-  {icon:'🔥',type:'combo',name:'The Genesis',desc:'GodSim → CivAI → EmergentStory. A civilization is born, chronicle auto-generated.',plt:'0.8/0.9/0.2',file:'combo-genesis.zip',featured:true},
-  {icon:'🔥',type:'combo',name:'The Apocalypse',desc:'Disaster → AgeOfDespair → Weald. City-wide chaos followed by rebirth opportunity.',plt:'0.3/0.2/0.9',file:'combo-apocalypse.zip'},
-  {icon:'🔥',type:'combo',name:'The Network',desc:'A2A → CRDTSync → P2PGraph. All citizens synced, relationships mapped.',plt:'0.6/0.9/0.3',file:'combo-network.zip'},
-  {icon:'🔥',type:'combo',name:'The God Hand',desc:'All Phase 1-3 guns + Terminal. Full spatial OS manifest. The ultimate combo.',plt:'1.0/1.0/0.0',file:'combo-godhand.zip',featured:true},
-  {icon:'🔥',type:'combo',name:'The Observatory',desc:'PerceptionAction → WorldModelSim → KnowledgeAbsorb. Citizen perceives, simulates, learns.',plt:'0.8/0.7/0.3',file:'combo-observatory.zip'},
-  {icon:'🔥',type:'combo',name:'The Constructor',desc:'SpatialInteraction → BuildingNode → FunctionalDistrict. Place building, wire it, zone it.',plt:'0.9/0.5/0.3',file:'combo-constructor.zip'},
-  {icon:'🔥',type:'combo',name:'The Voice',desc:'GSKVoice → NPCDialogue → CityNotifications. GSK speaks, citizens answer, city echoes.',plt:'0.7/0.9/0.2',file:'combo-voice.zip'},
-  {icon:'🔥',type:'combo',name:'The Weaver',desc:'AgentComms → CRDTSync → Merging. Citizens merge their knowledge into shared truth.',plt:'0.6/0.9/0.3',file:'combo-weaver.zip'},
-  {icon:'🔥',type:'combo',name:'The Cartographer',desc:'Mapping → Graphing → KnowledgeGraph. From raw data to navigable wisdom.',plt:'0.7/0.8/0.3',file:'combo-cartographer.zip'},
+  {icon:'🔥',type:'combo',name:'The Awakening',desc:'Voice → Mind → Key. Initiate, plan, execute. Guaranteed first move. A 3-role chain.',plt:'0.9/0.5/0.3',url:'https://uncommonpope-png.github.io/soul-economy/',featured:true},
+  {icon:'🔥',type:'combo',name:'The Collective',desc:'Heart → Watcher → Ghost. Heal, observe, reposition. Team sustain.',plt:'0.7/0.8/0.3',url:'https://uncommonpope-png.github.io/soul-economy/'},
+  {icon:'🔥',type:'combo',name:'The Revision',desc:'Eye → Governor → Hammer. See the flaw, contain it, break it.',plt:'0.9/0.4/0.4',url:'https://uncommonpope-png.github.io/soul-economy/'},
+  {icon:'🔥',type:'combo',name:'The Genesis',desc:'Mind → Heart → Anvil. Plan with love, execute with stability.',plt:'0.8/0.9/0.2',url:'https://uncommonpope-png.github.io/soul-economy/',featured:true},
+  {icon:'🔥',type:'combo',name:'The Apocalypse',desc:'Hammer → Watcher → Anvil. Destroy, witness, survive.',plt:'0.3/0.2/0.9',url:'https://uncommonpope-png.github.io/soul-economy/'},
+  {icon:'🔥',type:'combo',name:'The God Hand',desc:'ALL 12 ROLES. Full system manifest. The ultimate combo.',plt:'1.0/1.0/0.0',url:'https://uncommonpope-png.github.io/soul-economy/',featured:true},
+  {icon:'🔥',type:'combo',name:'The Edge of Dawn',desc:'Edge → Arrow → Key. Precision strike. One move ends the fight.',plt:'0.7/0.2/0.8',url:'https://uncommonpope-png.github.io/soul-economy/'},
+  {icon:'🔥',type:'combo',name:'The Iron Court',desc:'Governor → Mind → Voice. Order through communication.',plt:'0.7/0.6/0.7',url:'https://uncommonpope-png.github.io/soul-economy/'},
 ];
 
 // RENDER
