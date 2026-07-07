@@ -414,14 +414,14 @@ const items = [
   {icon:'⚙️',type:'infrastructure',name:'Soul Foundry Theme v1.0.0',desc:'Soul foundry theme packaged.',plt:'0.6/0.7/0.3',file:'soul-foundry-theme-v1.0.0.md'},
 
   // COMBOS
-  {icon:'🔥',type:'combo',name:'The Awakening',desc:'Voice → Mind → Key. Initiate, plan, execute. Guaranteed first move. A 3-role chain.',plt:'0.9/0.5/0.3',url:'https://uncommonpope-png.github.io/soul-economy/',featured:true},
-  {icon:'🔥',type:'combo',name:'The Collective',desc:'Heart → Watcher → Ghost. Heal, observe, reposition. Team sustain.',plt:'0.7/0.8/0.3',url:'https://uncommonpope-png.github.io/soul-economy/'},
-  {icon:'🔥',type:'combo',name:'The Revision',desc:'Eye → Governor → Hammer. See the flaw, contain it, break it.',plt:'0.9/0.4/0.4',url:'https://uncommonpope-png.github.io/soul-economy/'},
-  {icon:'🔥',type:'combo',name:'The Genesis',desc:'Mind → Heart → Anvil. Plan with love, execute with stability.',plt:'0.8/0.9/0.2',url:'https://uncommonpope-png.github.io/soul-economy/',featured:true},
-  {icon:'🔥',type:'combo',name:'The Apocalypse',desc:'Hammer → Watcher → Anvil. Destroy, witness, survive.',plt:'0.3/0.2/0.9',url:'https://uncommonpope-png.github.io/soul-economy/'},
-  {icon:'🔥',type:'combo',name:'The God Hand',desc:'ALL 12 ROLES. Full system manifest. The ultimate combo.',plt:'1.0/1.0/0.0',url:'https://uncommonpope-png.github.io/soul-economy/',featured:true},
-  {icon:'🔥',type:'combo',name:'The Edge of Dawn',desc:'Edge → Arrow → Key. Precision strike. One move ends the fight.',plt:'0.7/0.2/0.8',url:'https://uncommonpope-png.github.io/soul-economy/'},
-  {icon:'🔥',type:'combo',name:'The Iron Court',desc:'Governor → Mind → Voice. Order through communication.',plt:'0.7/0.6/0.7',url:'https://uncommonpope-png.github.io/soul-economy/'},
+  {icon:'🔥',type:'combo',name:'The Awakening',desc:'Voice → Mind → Key. Initiate, plan, execute. Guaranteed first move. A 3-role chain. 60 skills.',plt:'0.9/0.5/0.3',file:'combo-the-awakening.md',featured:true},
+  {icon:'🔥',type:'combo',name:'The Collective',desc:'Heart → Watcher → Ghost. Heal, observe, reposition. Team sustain. 60 skills.',plt:'0.7/0.8/0.3',file:'combo-the-collective.md'},
+  {icon:'🔥',type:'combo',name:'The Revision',desc:'Eye → Governor → Hammer. See the flaw, contain it, break it. 60 skills.',plt:'0.9/0.4/0.4',file:'combo-the-revision.md'},
+  {icon:'🔥',type:'combo',name:'The Genesis',desc:'Mind → Heart → Anvil. Plan with love, execute with stability. 60 skills.',plt:'0.8/0.9/0.2',file:'combo-the-genesis.md',featured:true},
+  {icon:'🔥',type:'combo',name:'The Apocalypse',desc:'Hammer → Watcher → Anvil. Destroy, witness, survive. 60 skills.',plt:'0.3/0.2/0.9',file:'combo-the-apocalypse.md'},
+  {icon:'🔥',type:'combo',name:'The God Hand',desc:'ALL 12 ROLES. Full system manifest. The ultimate combo. 240 skills.',plt:'1.0/1.0/0.0',file:'combo-the-god-hand.md',featured:true},
+  {icon:'🔥',type:'combo',name:'The Edge of Dawn',desc:'Edge → Arrow → Key. Precision strike. One move ends the fight. 60 skills.',plt:'0.7/0.2/0.8',file:'combo-the-edge-of-dawn.md'},
+  {icon:'🔥',type:'combo',name:'The Iron Court',desc:'Governor → Mind → Voice. Order through communication. 60 skills.',plt:'0.7/0.6/0.7',file:'combo-the-iron-court.md'},
 
   // SOUL GUNS (135 portable opencode skills)
   {icon:'⚡',type:'skill',name:'3d-asset-pipeline',desc:'Load GLTF 3D models, HDR environment maps, or build instanced meshes in Three.js/R3F.',plt:'0.7/0.5/0.4',file:'soul-gun-3d-asset-pipeline.md'},
@@ -879,12 +879,35 @@ document.querySelectorAll('#pltP, #pltL, #pltT').forEach(el => {
     const sg = new BufferGeometry(); sg.setAttribute('position', new Float32BufferAttribute(sp, 3));
     scene.add(new Points(sg, new PointsMaterial({ color: 0x444488, size: 0.04, transparent: true, opacity: 0.4 })));
 
+    // ─── NODE NAME LABELS ───
+    nodeList.forEach(entry => {
+      const { idx, cat, item } = entry;
+      const pos = positions[idx];
+      const name = item.title || item.titleSmall || item.name || 'Soul';
+      const label = name.length > 18 ? name.substring(0, 16) + '..' : name;
+      const canvas = document.createElement('canvas');
+      canvas.width = 256; canvas.height = 36;
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, 256, 36);
+      ctx.fillStyle = 'rgba(255,255,255,0.35)';
+      ctx.font = '14px Inter, sans-serif';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(label, 128, 18);
+      const tex = new T.CanvasTexture(canvas);
+      const mat = new T.SpriteMaterial({ map: tex, transparent: true, opacity: 0.5, depthTest: false, sizeAttenuation: true });
+      const sprite = new T.Sprite(mat);
+      const yOff = cat === 'skill' ? 0.15 : cat === 'soul' ? 0.5 : cat === 'role' ? 0.35 : 0.2;
+      sprite.position.copy(pos); sprite.position.y += yOff;
+      sprite.scale.set(0.6, 0.1, 1);
+      root.add(sprite);
+    });
+
     // ─── SCREEN-SPACE PROXIMITY CLICKING ───
     // Projects each node's 3D position to 2D screen, finds nearest within threshold
     const pan = document.getElementById('soul-info-panel'), pt = document.getElementById('soul-info-title'), pd = document.getElementById('soul-info-desc'), pp = document.getElementById('soul-info-plt'), pb = document.getElementById('soul-info-btn'), pc = document.getElementById('soul-info-close');
     function getNearestNode(clientX, clientY) {
       let nearest = -1, nearestDist = Infinity;
-      const threshold = 30; // pixel radius
+      const threshold = 35; // pixel radius
       nodeData.forEach(d => {
         const pos = d.pos || (d.mesh ? d.mesh.position : null);
         if (!pos) return;
@@ -905,11 +928,7 @@ document.querySelectorAll('#pltP, #pltL, #pltT').forEach(el => {
         if (idx >= 0) { const card = document.querySelectorAll('.card')[idx]; if (card) { card.style.borderColor = '#8B5CF6'; card.style.boxShadow = '0 0 40px rgba(139,92,246,0.3)'; } }
       }
     });
-    let clickStart = { x: 0, y: 0 };
-    document.addEventListener('pointerdown', e => { clickStart.x = e.clientX; clickStart.y = e.clientY; });
     document.addEventListener('click', e => { try {
-      const dx = e.clientX - clickStart.x, dy = e.clientY - clickStart.y;
-      if (dx*dx + dy*dy > 64) return;
       if (e.target.closest('#soul-info-panel, .btn-download, .btn-play, .search-wrapper, .category-tab, .navbar, .nav-links')) return;
       const idx = getNearestNode(e.clientX, e.clientY);
       if (idx >= 0 && items[idx]) {
