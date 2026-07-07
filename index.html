@@ -621,7 +621,8 @@ render(items);
 (async function soulGraph() {
   try {
     const canvas = document.getElementById('bg-canvas');
-    if (!canvas || !window.items) return;
+    if (!canvas) return;
+    // items is in closure scope from outer script (line 277)
     canvas.width = window.innerWidth; canvas.height = window.innerHeight;
     const T = await import('three');
     const { Scene, PerspectiveCamera, WebGLRenderer, Color, AmbientLight, DirectionalLight, MeshPhysicalMaterial, OctahedronGeometry, Mesh, SphereGeometry, MeshBasicMaterial, BufferGeometry, Float32BufferAttribute, PointsMaterial, Points, AdditiveBlending, EdgesGeometry, LineBasicMaterial, LineSegments, Group, Vector2, Raycaster, TetrahedronGeometry, BoxGeometry, InstancedMesh, Matrix4 } = T;
@@ -651,7 +652,7 @@ render(items);
       infrastructure: { geom: new BoxGeometry(0.08,0.08,0.08), radius: 3.8 },
       combo: { geom: null, radius: 4.5 },
     };
-    const items = window.items, root = new Group(); scene.add(root);
+    const root = new Group(); scene.add(root);
     const clickTargets = [], nodeData = [], catItems = {};
     items.forEach((item, idx) => { const cat = item.type; if (!CAT[cat]) return; if (!catItems[cat]) catItems[cat] = []; catItems[cat].push({ item, idx }); });
     Object.keys(catItems).forEach(cat => {
