@@ -732,7 +732,7 @@ render(items);
 
       if (cat === 'skill') {
         if (!root.userData._sb) {
-          const im = new InstancedMesh(new OctahedronGeometry(0.045, 0), new MeshPhysicalMaterial({ color: 0x8B5CF6, emissive: 0x6D28D9, emissiveIntensity: 0.15, metalness: 0.3, roughness: 0.2 }), 300);
+          const im = new InstancedMesh(new OctahedronGeometry(0.09, 0), new MeshPhysicalMaterial({ color: 0x8B5CF6, emissive: 0x6D28D9, emissiveIntensity: 0.2, metalness: 0.3, roughness: 0.2 }), 300);
           im.userData.instances = []; im.userData.bc = 0; root.add(im); root.userData._sb = im; clickTargets.push(im);
         }
         const b = root.userData._sb, bi = b.userData.bc;
@@ -746,6 +746,10 @@ render(items);
       const mesh = new Mesh(cfg.geom.clone(), mat);
       mesh.position.copy(pos); mesh.scale.setScalar(0.8 + plt[0] * 0.4);
       mesh.userData.index = idx; root.add(mesh); clickTargets.push(mesh); nodeData.push({ mesh, index: idx, pos, item });
+      // Invisible click collider (larger sphere for easier clicking)
+      const collider = new Mesh(new SphereGeometry(0.3, 8, 8), new MeshBasicMaterial({ visible: false }));
+      collider.position.copy(pos); collider.userData.index = idx;
+      root.add(collider); clickTargets.push(collider);
 
       // Build constellation lines from edges
       edges.forEach(e => {
@@ -799,18 +803,20 @@ render(items);
     }
     document.addEventListener('mousemove', e => { const idx = getHit(e); if (idx !== hov) { hov = idx; document.querySelectorAll('.card').forEach(c => { c.style.borderColor = ''; c.style.boxShadow = ''; }); if (idx >= 0) { const card = document.querySelectorAll('.card')[idx]; if (card) { card.style.borderColor = '#8B5CF6'; card.style.boxShadow = '0 0 40px rgba(139,92,246,0.3)'; } } } });
     let clickStart = { x: 0, y: 0 };
-    document.addEventListener('pointerdown', e => { clickStart.x = e.clientX; clickStart.y = e.clientY; });
-    document.addEventListener('click', e => {
+    document.addEventListener('pointerdown', e => { try { clickStart.x = e.clientX; clickStart.y = e.clientY; } catch(e) {} });
+    document.addEventListener('click', e => { try {
       const dx = e.clientX - clickStart.x, dy = e.clientY - clickStart.y;
       if (dx * dx + dy * dy > 64) return;
-      if (e.target.closest('#soul-info-panel')) return; const idx = getHit(e);
-      if (idx >= 0) { const item = items[idx]; if (!item) return;
+      if (e.target.closest('#soul-info-panel, .btn-download, .btn-play, .search-wrapper, .category-tab, .navbar, .nav-links')) return;
+      const idx = getHit(e);
+      if (idx >= 0 && items[idx]) {
+        const item = items[idx];
         pt.textContent = item.name; pd.textContent = item.desc || ''; pp.textContent = item.plt ? `PLT: ${item.plt}` : '';
-        if (item.file) { pb.textContent = '⬇ Awaken'; pb.style.display = 'inline-block'; pb.onclick = () => { const a = document.createElement('a'); a.href = 'downloads/' + item.file; a.download = item.file; a.click(); pan.classList.remove('active'); window.open('https://uncommonpope-png.github.io/final-run/', '_blank'); }; }
+        if (item.file) { pb.textContent = '⬇ Awaken'; pb.style.display = 'inline-block'; pb.onclick = () => { const a = document.createElement('a'); a.href = 'downloads/' + item.file; a.download = item.file; a.click(); pan.classList.remove('active'); }; }
         else if (item.url) { pb.textContent = '▶ Open'; pb.style.display = 'inline-block'; pb.onclick = () => { window.open(item.url, '_blank'); pan.classList.remove('active'); }; }
         else pb.style.display = 'none'; pan.classList.add('active'); return; }
       if (pan.classList.contains('active')) pan.classList.remove('active');
-    });
+    } catch(e) { console.error('Click error:', e); } });
     pc.onclick = () => pan.classList.remove('active');
 
     function animate() {
