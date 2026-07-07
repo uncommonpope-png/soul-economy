@@ -32,6 +32,10 @@
   --transition: 0.4s cubic-bezier(0.22,1,0.36,1);
   --shadow-card: 0 8px 40px rgba(0,0,0,0.5);
   --font: 'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  --glass-bg: rgba(255,255,255,0.04);
+  --glass-bg-hover: rgba(255,255,255,0.08);
+  --glass-edge: rgba(139,92,246,0.15);
+  --card-stagger: 0;
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -100,6 +104,10 @@ input{font-family:inherit;outline:none;border:none;background:none}
 
 /* GRID */
 .resource-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:24px}
+
+/* CARD STAGGER ENTRANCE */
+.card-entrance{animation:cardIn 0.6s cubic-bezier(0.22,1,0.36,1) both}
+@keyframes cardIn{0%{opacity:0;transform:translateY(24px) scale(0.95)}100%{opacity:1;transform:translateY(0) scale(1)}}
 
 /* CARDS */
 .card{background:rgba(255,255,255,0.06);backdrop-filter:blur(18px) saturate(1.1);-webkit-backdrop-filter:blur(18px) saturate(1.1);border:1px solid rgba(255,255,255,0.06);border-radius:var(--radius);padding:24px;transition:var(--transition);cursor:default;position:relative;overflow:hidden;box-shadow:var(--shadow-card);transform:translateZ(0);will-change:transform,box-shadow,border-color;perspective:800px}
@@ -537,10 +545,18 @@ function render(data){
   `).join('');
   // 3D tilt + ripple
   function burstParticles(x,y){
-    const colors=['#8B5CF6','#00D4FF','#FFD166'];
-    for(let i=0;i<24;i++){const p=document.createElement('div'),size=4+Math.random()*6,angle=Math.random()*Math.PI*2,v=30+Math.random()*60;
-    p.style.cssText=`position:fixed;left:${x}px;top:${y}px;width:${size}px;height:${size}px;background:${colors[Math.floor(Math.random()*colors.length)]};border-radius:50%;pointer-events:none;z-index:9999;box-shadow:0 0 10px currentColor;transition:all ${0.6+Math.random()*0.4}s cubic-bezier(0.22,1,0.36,1);opacity:1`;
-    document.body.appendChild(p);requestAnimationFrame(()=>{p.style.transform=`translate(${Math.cos(angle)*v}px,${Math.sin(angle)*v}px) scale(0)`;p.style.opacity='0'});setTimeout(()=>p.remove(),1200)}
+    const colors=['#8B5CF6','#00D4FF','#FFD166','#FF6B9D','#A855F7'];
+    const patterns=[0,1,2];const pt=patterns[Math.floor(Math.random()*patterns.length)];
+    const count=pt===0?36:pt===1?24:48;
+    for(let i=0;i<count;i++){
+      const p=document.createElement('div'),size=2+Math.random()*8;
+      let angle,v;
+      if(pt===0){angle=i/count*Math.PI*2;v=40+Math.random()*80}
+      else if(pt===1){angle=Math.random()*Math.PI*2;v=20+Math.random()*100}
+      else{const ring=Math.floor(i/(count/3));angle=(i%(count/3))/(count/3)*Math.PI*2+ring*0.5;v=30+ring*30}
+      const col=colors[Math.floor(Math.random()*colors.length)];
+      p.style.cssText=`position:fixed;left:${x}px;top:${y}px;width:${size}px;height:${size}px;background:${col};border-radius:50%;pointer-events:none;z-index:9999;box-shadow:0 0 ${size*2}px ${col};transition:all ${0.5+Math.random()*0.5}s cubic-bezier(0.22,1,0.36,1);opacity:1`;
+      document.body.appendChild(p);requestAnimationFrame(()=>{p.style.transform=`translate(${Math.cos(angle)*v}px,${Math.sin(angle)*v}px) scale(0) rotate(${Math.random()*360}deg)`;p.style.opacity='0'});setTimeout(()=>p.remove(),1500)}
   }
 
   document.querySelectorAll('.card').forEach(card=>{
@@ -600,7 +616,10 @@ render(items);
 (async function cosmicPyramid() {
   const canvas = document.getElementById('bg-canvas');
   if (!canvas) return;
-  const { Scene, PerspectiveCamera, WebGLRenderer, Color, AmbientLight, DirectionalLight, MeshPhysicalMaterial, OctahedronGeometry, Mesh, SphereGeometry, MeshBasicMaterial, BufferGeometry, Float32BufferAttribute, PointsMaterial, Points, AdditiveBlending, EdgesGeometry, LineBasicMaterial, LineSegments, GridHelper, Group } = await import('three');
+  const { Scene, PerspectiveCamera, WebGLRenderer, Color, AmbientLight, DirectionalLight, MeshPhysicalMaterial, OctahedronGeometry, Mesh, SphereGeometry, MeshBasicMaterial, BufferGeometry, Float32BufferAttribute, PointsMaterial, Points, AdditiveBlending, EdgesGeometry, LineBasicMaterial, LineSegments, GridHelper, Group, Vector2 } = await import('three');
+  const { UnrealBloomPass } = await import('three/addons/postprocessing/UnrealBloomPass.js');
+  const { EffectComposer } = await import('three/addons/postprocessing/EffectComposer.js');
+  const { RenderPass } = await import('three/addons/postprocessing/RenderPass.js');
   const scene = new Scene();
   scene.background = new Color(0x080808);
   const camera = new PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
@@ -610,7 +629,11 @@ render(items);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.toneMapping = 3; renderer.toneMappingExposure = 1.2;
 
-  const ambient = new AmbientLight(0x222244, 0.5); scene.add(ambient);
+  // ─── BLOOM POST-PROCESSING ───
+  const composer = new EffectComposer(renderer);
+  composer.addPass(new RenderPass(scene, camera));
+  const bloom = new UnrealBloomPass(new Vector2(window.innerWidth, window.innerHeight), 0.8, 0.3, 0.6);
+  composer.addPass(bloom);
   const key = new DirectionalLight(0x8B5CF6, 2); key.position.set(2, 3, 4); scene.add(key);
   const fill = new DirectionalLight(0x00D4FF, 0.8); fill.position.set(-3, 1, -2); scene.add(fill);
   const rim = new DirectionalLight(0xFFD166, 0.4); rim.position.set(0, -2, -3); scene.add(rim);
@@ -737,12 +760,12 @@ render(items);
     mesh.material.emissiveIntensity = 0.04 + pulse * 0.35;
     wire.material.opacity = 0.08 + pulse * 0.25;
     glow.material.opacity = 0.03 + pulse * 0.08;
-    renderer.render(scene, camera);
+    composer.render();
   }
   animate();
   window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    composer.setSize(window.innerWidth, window.innerHeight);
   });
 })();
 
