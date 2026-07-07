@@ -619,292 +619,127 @@ render(items);
 
 // ─── SOUL KNOWLEDGE GRAPH — Interactive 3D Graph ───
 (async function soulGraph() {
-  const canvas = document.getElementById('bg-canvas');
-  if (!canvas || !window.items) return;
-  const T = await import('three');
-  const { Scene, PerspectiveCamera, WebGLRenderer, Color, AmbientLight, DirectionalLight, MeshPhysicalMaterial, OctahedronGeometry, Mesh, SphereGeometry, MeshBasicMaterial, BufferGeometry, Float32BufferAttribute, PointsMaterial, Points, AdditiveBlending, EdgesGeometry, LineBasicMaterial, LineSegments, Group, Vector2, Raycaster, TetrahedronGeometry, BoxGeometry, InstancedMesh, DynamicDrawUsage, Matrix4 } = T;
-  const { OrbitControls } = await import('three/addons/controls/OrbitControls.js');
-  const { UnrealBloomPass } = await import('three/addons/postprocessing/UnrealBloomPass.js');
-  const { EffectComposer } = await import('three/addons/postprocessing/EffectComposer.js');
-  const { RenderPass } = await import('three/addons/postprocessing/RenderPass.js');
+  try {
+    const canvas = document.getElementById('bg-canvas');
+    if (!canvas || !window.items) return;
+    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+    const T = await import('three');
+    const { Scene, PerspectiveCamera, WebGLRenderer, Color, AmbientLight, DirectionalLight, MeshPhysicalMaterial, OctahedronGeometry, Mesh, SphereGeometry, MeshBasicMaterial, BufferGeometry, Float32BufferAttribute, PointsMaterial, Points, AdditiveBlending, EdgesGeometry, LineBasicMaterial, LineSegments, Group, Vector2, Raycaster, TetrahedronGeometry, BoxGeometry, InstancedMesh, Matrix4 } = T;
+    const { OrbitControls } = await import('three/addons/controls/OrbitControls.js');
 
-  const scene = new Scene(); scene.background = new Color(0x080808);
-  const camera = new PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 100);
-  camera.position.set(0, 2, 7);
-  const renderer = new WebGLRenderer({ canvas, antialias: true, alpha: true });
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  renderer.toneMapping = 3; renderer.toneMappingExposure = 1.2;
-  const composer = new EffectComposer(renderer);
-  composer.addPass(new RenderPass(scene, camera));
-  composer.addPass(new UnrealBloomPass(new Vector2(window.innerWidth, window.innerHeight), 0.6, 0.3, 0.5));
+    const scene = new Scene(); scene.background = new Color(0x080808);
+    const camera = new PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 100);
+    camera.position.set(0, 2, 7);
+    const renderer = new WebGLRenderer({ canvas, antialias: true, alpha: false });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-  const controls = new OrbitControls(camera, renderer.domElement);
-  controls.enableDamping = true; controls.dampingFactor = 0.08;
-  controls.target.set(0, 0.3, 0); controls.minDistance = 2; controls.maxDistance = 25;
-  controls.autoRotate = true; controls.autoRotateSpeed = 0.8;
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true; controls.dampingFactor = 0.08;
+    controls.target.set(0, 0.3, 0); controls.minDistance = 2; controls.maxDistance = 25;
+    controls.autoRotate = true; controls.autoRotateSpeed = 0.8;
 
-  const ambient = new AmbientLight(0x222244, 0.6); scene.add(ambient);
-  const key = new DirectionalLight(0x8B5CF6, 2); key.position.set(2, 3, 4); scene.add(key);
-  const fill = new DirectionalLight(0x00D4FF, 0.8); fill.position.set(-3, 1, -2); scene.add(fill);
+    const ambient = new AmbientLight(0x222244, 0.6); scene.add(ambient);
+    const key = new DirectionalLight(0x8B5CF6, 2); key.position.set(2, 3, 4); scene.add(key);
+    const fill = new DirectionalLight(0x00D4FF, 0.8); fill.position.set(-3, 1, -2); scene.add(fill);
 
-  // ─── BUILD NODES FROM CATALOG ───
-  const CAT = {
-    soul: { geom: new OctahedronGeometry(0.22,0), radius: 1.5, color: 0x8B5CF6, scale:1 },
-    role: { geom: new OctahedronGeometry(0.14,0), radius: 2.2, color: 0x00D4FF, scale:1 },
-    skill: { geom: new OctahedronGeometry(0.045,0), radius: 2.9, color: 0x8B5CF6, scale:1 },
-    chamber: { geom: new TetrahedronGeometry(0.07,0), radius: 3.4, color: 0xFFD166, scale:1 },
-    infrastructure: { geom: new BoxGeometry(0.08,0.08,0.08), radius: 3.8, color: 0x00D4FF, scale:1 },
-    combo: { geom: null, radius: 4.5, color: 0xFFD166, scale:1 },
-  };
-
-  const items = window.items;
-  const root = new Group(); scene.add(root);
-  const clickTargets = [];
-  const nodeData = []; // { mesh, index, pos, item }
-  const catCounts = {};
-  const catItems = {};
-
-  items.forEach((item, idx) => {
-    const cat = item.type;
-    if (!CAT[cat]) return;
-    if (!catItems[cat]) catItems[cat] = [];
-    catItems[cat].push({ item, idx });
-  });
-
-  // Position nodes by category in concentric rings
-  Object.keys(catItems).forEach(cat => {
-    const list = catItems[cat];
-    const cfg = CAT[cat];
-    const total = list.length;
-    list.forEach((entry, i) => {
-      const { item, idx } = entry;
-      const angle = (i / total) * Math.PI * 2 + cat.length * 0.3;
-      const yOffset = cat === 'skill' ? (Math.random() - 0.5) * 0.8 : Math.sin(angle * 3) * 0.2;
-      const rSpread = cat === 'skill' ? (Math.random() - 0.5) * 0.5 : 0;
-      const pos = new T.Vector3(
-        Math.cos(angle) * (cfg.radius + rSpread),
-        yOffset + 0.3,
-        Math.sin(angle) * (cfg.radius + rSpread)
-      );
-
-      // PLT-based color
-      const plt = (item.plt || '0.5/0.5/0.5').split('/').map(Number);
-      const c = new T.Color().setHSL(0.75 - plt[0] * 0.15, 0.6 + plt[1] * 0.3, 0.35 + plt[2] * 0.25);
-
-      if (cat === 'combo') {
-        const starGeo = new T.BufferGeometry();
-        const starVerts = [];
-        for (let s = 0; s < 8; s++) {
-          const sa = (s / 8) * Math.PI * 2 + angle;
-          starVerts.push(pos.x + Math.cos(sa)*0.1, pos.y + Math.sin(sa*2)*0.05, pos.z + Math.sin(sa)*0.1);
+    const CAT = {
+      soul: { geom: new OctahedronGeometry(0.22,0), radius: 1.5 },
+      role: { geom: new OctahedronGeometry(0.14,0), radius: 2.2 },
+      skill: { geom: new OctahedronGeometry(0.045,0), radius: 2.9 },
+      chamber: { geom: new TetrahedronGeometry(0.07,0), radius: 3.4 },
+      infrastructure: { geom: new BoxGeometry(0.08,0.08,0.08), radius: 3.8 },
+      combo: { geom: null, radius: 4.5 },
+    };
+    const items = window.items, root = new Group(); scene.add(root);
+    const clickTargets = [], nodeData = [], catItems = {};
+    items.forEach((item, idx) => { const cat = item.type; if (!CAT[cat]) return; if (!catItems[cat]) catItems[cat] = []; catItems[cat].push({ item, idx }); });
+    Object.keys(catItems).forEach(cat => {
+      const list = catItems[cat], cfg = CAT[cat], total = list.length;
+      list.forEach((entry, i) => {
+        const { item, idx } = entry;
+        const a = (i / total) * Math.PI * 2 + cat.length * 0.3;
+        const yOff = cat === 'skill' ? (Math.random() - 0.5) * 0.8 : Math.sin(a * 3) * 0.2;
+        const rSp = cat === 'skill' ? (Math.random() - 0.5) * 0.5 : 0;
+        const pos = new T.Vector3(Math.cos(a) * (cfg.radius + rSp), yOff + 0.3, Math.sin(a) * (cfg.radius + rSp));
+        const plt = (item.plt || '0.5/0.5/0.5').split('/').map(Number);
+        const c = new T.Color().setHSL(0.75 - plt[0] * 0.15, 0.6 + plt[1] * 0.3, 0.35 + plt[2] * 0.25);
+        if (cat === 'combo') {
+          const sg = new T.BufferGeometry(); const sv = [];
+          for (let s = 0; s < 8; s++) { const sa = (s / 8) * Math.PI * 2 + a; sv.push(pos.x + Math.cos(sa)*0.1, pos.y + Math.sin(sa*2)*0.05, pos.z + Math.sin(sa)*0.1); }
+          sg.setAttribute('position', new Float32BufferAttribute(sv, 3));
+          const star = new Points(sg, new PointsMaterial({ color: c, size: 0.04, transparent: true, opacity: 0.6, blending: AdditiveBlending }));
+          star.userData = { index: idx }; root.add(star); clickTargets.push(star); nodeData.push({ index: idx, pos, item }); return;
         }
-        starGeo.setAttribute('position', new Float32BufferAttribute(starVerts, 3));
-        const starMat = new T.PointsMaterial({ color: c, size: 0.04, transparent: true, opacity: 0.6, blending: AdditiveBlending });
-        const star = new T.Points(starGeo, starMat);
-        star.userData = { index: idx };
-        root.add(star);
-        clickTargets.push(star);
-        nodeData.push({ mesh: star, index: idx, pos, item });
-        return;
-      }
-
-      // For soul guns, batch into InstancedMesh
-      if (cat === 'skill' && total > 20) {
-        if (!root.userData._skillBatch) {
-          const igeom = new OctahedronGeometry(0.045, 0);
-          const imat = new MeshPhysicalMaterial({ color: 0x8B5CF6, emissive: 0x6D28D9, emissiveIntensity: 0.15, metalness: 0.3, roughness: 0.2 });
-          const imesh = new InstancedMesh(igeom, imat, 300);
-          imesh.instanceMatrix.setUsage(DynamicDrawUsage);
-          imesh.userData.instances = [];
-          imesh.userData.batchCount = 0;
-          root.add(imesh);
-          root.userData._skillBatch = imesh;
-          clickTargets.push(imesh);
+        if (cat === 'skill' && total > 20) {
+          if (!root.userData._sb) {
+            const im = new InstancedMesh(new OctahedronGeometry(0.045, 0), new MeshPhysicalMaterial({ color: 0x8B5CF6, emissive: 0x6D28D9, emissiveIntensity: 0.15, metalness: 0.3, roughness: 0.2 }), 300);
+            im.userData.instances = []; im.userData.bc = 0; root.add(im); root.userData._sb = im; clickTargets.push(im);
+          }
+          const b = root.userData._sb, bi = b.userData.bc;
+          b.setMatrixAt(bi, new Matrix4().makeTranslation(pos.x, pos.y, pos.z));
+          b.instanceMatrix.needsUpdate = true; b.userData.bc++; b.count = b.userData.bc;
+          b.userData.instances.push({ index: idx, pos: pos.clone() });
+          nodeData.push({ type: 'instanced', batch: b, instanceIdx: bi, index: idx, pos, item }); return;
         }
-        const batch = root.userData._skillBatch;
-        const bi = batch.userData.batchCount;
-        const m4 = new Matrix4().makeTranslation(pos.x, pos.y, pos.z);
-        batch.setMatrixAt(bi, m4);
-        batch.instanceMatrix.needsUpdate = true;
-        batch.userData.batchCount++;
-        batch.count = batch.userData.batchCount;
-        batch.userData.instances.push({ index: idx, pos: pos.clone() });
-        nodeData.push({ type: 'instanced', batch, instanceIdx: bi, index: idx, pos, item });
-        return;
-      }
-
-      const mat = new MeshPhysicalMaterial({ color: c, emissive: c, emissiveIntensity: 0.25, metalness: 0.3, roughness: 0.2, transparent: true, opacity: 0.8, clearcoat: 0.2 });
-      const mesh = new Mesh(cfg.geom.clone(), mat);
-      mesh.position.copy(pos);
-      mesh.scale.setScalar(cfg.scale * (0.8 + plt[0] * 0.4));
-      mesh.userData.index = idx;
-      root.add(mesh);
-      clickTargets.push(mesh);
-      nodeData.push({ mesh, index: idx, pos, item });
-    });
-  });
-
-  // ─── CONSTELLATION LINES (category-adjacent connections) ───
-  const edgePositions = [];
-  const catOrder = ['soul','role','skill','chamber','infrastructure','combo'];
-  for (let ci = 0; ci < catOrder.length - 1; ci++) {
-    const catA = catOrder[ci], catB = catOrder[ci+1];
-    const listA = catItems[catA] || [], listB = catItems[catB] || [];
-    listA.forEach(a => {
-      const aNode = nodeData.find(n => n.index === a.idx);
-      if (!aNode) return;
-      listB.forEach(b => {
-        if (Math.random() > 0.08) return;
-        const bNode = nodeData.find(n => n.index === b.idx);
-        if (!bNode) return;
-        const dist = aNode.pos.distanceTo(bNode.pos);
-        if (dist < 3) {
-          edgePositions.push(aNode.pos.x, aNode.pos.y, aNode.pos.z);
-          edgePositions.push(bNode.pos.x, bNode.pos.y, bNode.pos.z);
-        }
+        const mat = new MeshPhysicalMaterial({ color: c, emissive: c, emissiveIntensity: 0.25, metalness: 0.3, roughness: 0.2, transparent: true, opacity: 0.8, clearcoat: 0.2 });
+        const mesh = new Mesh(cfg.geom.clone(), mat);
+        mesh.position.copy(pos); mesh.scale.setScalar(0.8 + plt[0] * 0.4);
+        mesh.userData.index = idx; root.add(mesh); clickTargets.push(mesh); nodeData.push({ mesh, index: idx, pos, item });
       });
     });
-  }
-  // Also connect within same category (close nodes)
-  Object.keys(catItems).forEach(cat => {
-    const list = catItems[cat];
-    for (let i = 0; i < list.length; i++) {
-      for (let j = i + 1; j < Math.min(i + 5, list.length); j++) {
-        const aNode = nodeData.find(n => n.index === list[i].idx);
-        const bNode = nodeData.find(n => n.index === list[j].idx);
-        if (!aNode || !bNode) continue;
-        const dist = aNode.pos.distanceTo(bNode.pos);
-        if (dist < 1.5 && Math.random() < 0.3) {
-          edgePositions.push(aNode.pos.x, aNode.pos.y, aNode.pos.z);
-          edgePositions.push(bNode.pos.x, bNode.pos.y, bNode.pos.z);
-        }
-      }
+
+    // Constellation lines
+    const ep = [], co = ['soul','role','skill','chamber','infrastructure','combo'];
+    for (let ci = 0; ci < co.length - 1; ci++) {
+      const la = catItems[co[ci]] || [], lb = catItems[co[ci+1]] || [];
+      la.forEach(a => { const an = nodeData.find(n => n.index === a.idx); if (!an) return;
+        lb.forEach(b => { if (Math.random() > 0.08) return; const bn = nodeData.find(n => n.index === b.idx); if (!bn) return;
+          if (an.pos.distanceTo(bn.pos) < 3) ep.push(an.pos.x,an.pos.y,an.pos.z,bn.pos.x,bn.pos.y,bn.pos.z); }); });
     }
-  });
-  const edgeGeom = new BufferGeometry();
-  edgeGeom.setAttribute('position', new Float32BufferAttribute(edgePositions, 3));
-  const edgeMat = new LineBasicMaterial({ color: 0x00D4FF, transparent: true, opacity: 0.06, blending: AdditiveBlending });
-  const edges = new LineSegments(edgeGeom, edgeMat);
-  scene.add(edges);
+    Object.keys(catItems).forEach(cat => { const l = catItems[cat];
+      for (let i = 0; i < l.length; i++) for (let j = i + 1; j < Math.min(i + 5, l.length); j++) {
+        const an = nodeData.find(n => n.index === l[i].idx), bn = nodeData.find(n => n.index === l[j].idx);
+        if (!an || !bn) continue; if (an.pos.distanceTo(bn.pos) < 1.5 && Math.random() < 0.3) ep.push(an.pos.x,an.pos.y,an.pos.z,bn.pos.x,bn.pos.y,bn.pos.z); }});
+    if (ep.length) { const eg = new BufferGeometry(); eg.setAttribute('position', new Float32BufferAttribute(ep, 3)); scene.add(new LineSegments(eg, new LineBasicMaterial({ color: 0x00D4FF, transparent: true, opacity: 0.06, blending: AdditiveBlending }))); }
 
-  // ─── BACKGROUND STARFIELD ───
-  const sCount = 1500;
-  const sPos = new Float32Array(sCount * 3);
-  for (let i = 0; i < sCount; i++) {
-    const r = 10 + Math.random() * 30;
-    const t1 = Math.random() * Math.PI * 2, t2 = Math.acos(2 * Math.random() - 1);
-    sPos[i*3]=r*Math.sin(t2)*Math.cos(t1); sPos[i*3+1]=r*Math.sin(t2)*Math.sin(t1); sPos[i*3+2]=r*Math.cos(t2);
-  }
-  const sGeom = new BufferGeometry(); sGeom.setAttribute('position', new Float32BufferAttribute(sPos, 3));
-  const sMat = new PointsMaterial({ color: 0x444488, size: 0.04, transparent: true, opacity: 0.4 });
-  scene.add(new Points(sGeom, sMat));
+    // Background stars
+    const sc = 1200, sp = new Float32Array(sc * 3);
+    for (let i = 0; i < sc; i++) { const r = 10 + Math.random() * 30, t1 = Math.random() * Math.PI * 2, t2 = Math.acos(2 * Math.random() - 1); sp[i*3]=r*Math.sin(t2)*Math.cos(t1); sp[i*3+1]=r*Math.sin(t2)*Math.sin(t1); sp[i*3+2]=r*Math.cos(t2); }
+    const sg = new BufferGeometry(); sg.setAttribute('position', new Float32BufferAttribute(sp, 3));
+    scene.add(new Points(sg, new PointsMaterial({ color: 0x444488, size: 0.04, transparent: true, opacity: 0.4 })));
 
-  // ─── INFO PANEL ───
-  const panel = document.getElementById('soul-info-panel');
-  const pTitle = document.getElementById('soul-info-title');
-  const pDesc = document.getElementById('soul-info-desc');
-  const pPLT = document.getElementById('soul-info-plt');
-  const pBtn = document.getElementById('soul-info-btn');
-  const pClose = document.getElementById('soul-info-close');
-
-  // ─── RAYCASTER ───
-  const raycaster = new Raycaster();
-  const pointer = new Vector2();
-  let hoveredIdx = -1;
-  let selectedIdx = -1;
-
-  function getHit(e) {
-    pointer.x = (e.clientX / window.innerWidth) * 2 - 1;
-    pointer.y = -(e.clientY / window.innerHeight) * 2 + 1;
-    raycaster.setFromCamera(pointer, camera);
-    for (const t of clickTargets) {
-      const hits = raycaster.intersectObject(t);
-      if (hits.length) {
-        if (t.isInstancedMesh) {
-          const instId = hits[0].instanceId;
-          if (t.userData.instances && t.userData.instances[instId]) return t.userData.instances[instId].index;
-        }
-        return hits[0].object.userData.index;
-      }
+    // Info panel
+    const pan = document.getElementById('soul-info-panel'), pt = document.getElementById('soul-info-title'), pd = document.getElementById('soul-info-desc'), pp = document.getElementById('soul-info-plt'), pb = document.getElementById('soul-info-btn'), pc = document.getElementById('soul-info-close');
+    const ray = new Raycaster(), po = new Vector2(); let hov = -1;
+    function getHit(e) {
+      po.x = (e.clientX / window.innerWidth) * 2 - 1; po.y = -(e.clientY / window.innerHeight) * 2 + 1;
+      ray.setFromCamera(po, camera);
+      for (const t of clickTargets) { const hits = ray.intersectObject(t);
+        if (hits.length) { if (t.isInstancedMesh) { const id = hits[0].instanceId; if (t.userData.instances && t.userData.instances[id]) return t.userData.instances[id].index; } return hits[0].object.userData.index; } }
+      return -1;
     }
-    return -1;
-  }
-
-  function showInfo(idx) {
-    const item = items[idx];
-    if (!item) return;
-    pTitle.textContent = item.name;
-    pDesc.textContent = item.desc || 'No description available.';
-    pPLT.textContent = item.plt ? `PLT: ${item.plt}` : '';
-    pBtn.dataset.index = idx;
-    if (item.file) {
-      pBtn.textContent = '⬇ Awaken';
-      pBtn.style.display = 'inline-block';
-      pBtn.onclick = () => {
-        const a = document.createElement('a');
-        a.href = 'downloads/' + item.file;
-        a.download = item.file;
-        a.click();
-        panel.classList.remove('active');
-        // Also open Dark City
-        window.open('https://uncommonpope-png.github.io/final-run/', '_blank');
-      };
-    } else if (item.url) {
-      pBtn.textContent = '▶ Open';
-      pBtn.style.display = 'inline-block';
-      pBtn.onclick = () => { window.open(item.url, '_blank'); panel.classList.remove('active'); };
-    } else {
-      pBtn.style.display = 'none';
-    }
-    panel.classList.add('active');
-    selectedIdx = idx;
-  }
-
-  document.addEventListener('mousemove', e => {
-    const idx = getHit(e);
-    if (idx !== hoveredIdx) {
-      hoveredIdx = idx;
-      if (idx >= 0) {
-        const card = document.querySelectorAll('.card')[idx];
-        if (card) { card.style.borderColor = '#8B5CF6'; card.style.boxShadow = '0 0 40px rgba(139,92,246,0.3)'; }
-      } else {
-        document.querySelectorAll('.card').forEach(c => { c.style.borderColor = ''; c.style.boxShadow = ''; });
-      }
-    }
-  });
-
-  document.addEventListener('click', e => {
-    if (e.target.closest('#soul-info-panel')) return;
-    const idx = getHit(e);
-    if (idx >= 0) { showInfo(idx); return; }
-    if (panel.classList.contains('active') && !e.target.closest('#soul-info-panel')) {
-      panel.classList.remove('active');
-    }
-  });
-
-  pClose.addEventListener('click', () => panel.classList.remove('active'));
-
-  // ─── ANIMATION ───
-  function animate() {
-    requestAnimationFrame(animate);
-    controls.update();
-    // Pulse all meshes
-    const t = Date.now() * 0.001;
-    nodeData.forEach(d => {
-      if (d.mesh && d.mesh.isMesh) {
-        d.mesh.rotation.x = Math.sin(t + d.index) * 0.05;
-        d.mesh.rotation.y = Math.cos(t + d.index) * 0.05;
-      }
+    document.addEventListener('mousemove', e => { const idx = getHit(e); if (idx !== hov) { hov = idx; document.querySelectorAll('.card').forEach(c => { c.style.borderColor = ''; c.style.boxShadow = ''; }); if (idx >= 0) { const card = document.querySelectorAll('.card')[idx]; if (card) { card.style.borderColor = '#8B5CF6'; card.style.boxShadow = '0 0 40px rgba(139,92,246,0.3)'; } } } });
+    document.addEventListener('click', e => {
+      if (e.target.closest('#soul-info-panel')) return; const idx = getHit(e);
+      if (idx >= 0) { const item = items[idx]; if (!item) return;
+        pt.textContent = item.name; pd.textContent = item.desc || ''; pp.textContent = item.plt ? `PLT: ${item.plt}` : '';
+        if (item.file) { pb.textContent = '⬇ Awaken'; pb.style.display = 'inline-block'; pb.onclick = () => { const a = document.createElement('a'); a.href = 'downloads/' + item.file; a.download = item.file; a.click(); pan.classList.remove('active'); window.open('https://uncommonpope-png.github.io/final-run/', '_blank'); }; }
+        else if (item.url) { pb.textContent = '▶ Open'; pb.style.display = 'inline-block'; pb.onclick = () => { window.open(item.url, '_blank'); pan.classList.remove('active'); }; }
+        else pb.style.display = 'none'; pan.classList.add('active'); return; }
+      if (pan.classList.contains('active')) pan.classList.remove('active');
     });
-    // Pulse central glow
-    composer.render();
-  }
-  animate();
-  window.addEventListener('resize', () => {
-    camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix();
-    composer.setSize(window.innerWidth, window.innerHeight);
-  });
+    pc.onclick = () => pan.classList.remove('active');
+
+    function animate() {
+      requestAnimationFrame(animate); controls.update();
+      const t = Date.now() * 0.001;
+      nodeData.forEach(d => { if (d.mesh && d.mesh.isMesh) { d.mesh.rotation.x = Math.sin(t + d.index) * 0.05; d.mesh.rotation.y = Math.cos(t + d.index) * 0.05; } });
+      renderer.render(scene, camera);
+    }
+    animate();
+    window.addEventListener('resize', () => { camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth, window.innerHeight); });
+  } catch(e) { console.error('Soul Graph error:', e); const c = document.getElementById('bg-canvas'); if (c) c.style.display = 'none'; }
 })();
 
 console.log('✦ The Digital Library of Souls is alive.');
