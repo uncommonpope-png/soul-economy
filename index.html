@@ -115,6 +115,9 @@ input{font-family:inherit;outline:none;border:none;background:none}
 .card-category{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted)}
 .btn-download{padding:6px 20px;font-size:0.8rem;font-weight:600;color:#fff;background:linear-gradient(135deg,var(--purple),var(--purple-dark));border-radius:30px;transition:var(--transition);position:relative;overflow:hidden;text-decoration:none;display:inline-block}
 .btn-download:hover{transform:scale(1.05);box-shadow:0 4px 30px var(--purple-glow)}
+.btn-download.loading{background:linear-gradient(135deg,#6B7280,#4B5563);pointer-events:none}
+.btn-download.success{background:linear-gradient(135deg,#10B981,#059669)}
+.btn-download.success::after{content:' ✓';font-weight:700}
 .btn-play{padding:6px 20px;font-size:0.8rem;font-weight:600;color:#fff;background:linear-gradient(135deg,var(--cyan),#0099CC);border-radius:30px;transition:var(--transition);position:relative;overflow:hidden;text-decoration:none;display:inline-block}
 .btn-play:hover{transform:scale(1.05);box-shadow:0 4px 30px var(--cyan-glow)}
 .ripple{position:absolute;border-radius:50%;background:rgba(139,92,246,0.3);transform:scale(0);animation:rippleAnim 0.6s ease-out forwards;pointer-events:none}
@@ -156,16 +159,16 @@ input{font-family:inherit;outline:none;border:none;background:none}
 <canvas id="bg-canvas"></canvas>
 <div class="app">
 
-<nav class="navbar">
+<nav class="navbar" role="navigation" aria-label="Main navigation">
   <span class="logo">✦ Soul Economy</span>
   <ul class="nav-links">
-    <li><a href="#" class="active">Library</a></li>
-    <li><a href="https://buyasoul.online" target="_blank">BUYaSOUL</a></li>
-    <li><a href="https://github.com/uncommonpope-png" target="_blank">GitHub</a></li>
+    <li><a href="#" class="active" aria-label="Library home">Library</a></li>
+    <li><a href="https://buyasoul.online" target="_blank" aria-label="Visit BUYaSOUL online store">BUYaSOUL</a></li>
+    <li><a href="https://github.com/uncommonpope-png" target="_blank" aria-label="Visit GitHub profile">GitHub</a></li>
   </ul>
   <div class="nav-actions">
-    <a href="https://buyasoul.online" target="_blank" class="btn-ghost">BUYaSOUL.online</a>
-    <a href="https://uncommonpope-png.github.io/final-run/" target="_blank" class="btn-primary">🌌 Dark City</a>
+    <a href="https://buyasoul.online" target="_blank" class="btn-ghost" aria-label="Visit BUYaSOUL online store">BUYaSOUL.online</a>
+    <a href="https://uncommonpope-png.github.io/final-run/" target="_blank" class="btn-primary" aria-label="Play Dark City live">🌌 Dark City</a>
   </div>
 </nav>
 
@@ -292,14 +295,29 @@ function render(data){
     </div>
   `).join('');
   // 3D tilt + ripple
+  function burstParticles(x,y){
+    const colors=['#8B5CF6','#00D4FF','#FFD166'];
+    for(let i=0;i<24;i++){const p=document.createElement('div'),size=4+Math.random()*6,angle=Math.random()*Math.PI*2,v=30+Math.random()*60;
+    p.style.cssText=`position:fixed;left:${x}px;top:${y}px;width:${size}px;height:${size}px;background:${colors[Math.floor(Math.random()*colors.length)]};border-radius:50%;pointer-events:none;z-index:9999;box-shadow:0 0 10px currentColor;transition:all ${0.6+Math.random()*0.4}s cubic-bezier(0.22,1,0.36,1);opacity:1`;
+    document.body.appendChild(p);requestAnimationFrame(()=>{p.style.transform=`translate(${Math.cos(angle)*v}px,${Math.sin(angle)*v}px) scale(0)`;p.style.opacity='0'});setTimeout(()=>p.remove(),1200)}
+  }
+
   document.querySelectorAll('.card').forEach(card=>{
     card.addEventListener('mousemove',e=>{const r=card.getBoundingClientRect();card.style.transform=`translateY(-8px) scale(1.01) rotateX(${((e.clientY-r.top)/r.height-0.5)*-6}deg) rotateY(${((e.clientX-r.left)/r.width-0.5)*6}deg)`});
     card.addEventListener('mouseleave',()=>{card.style.transform=''});
-    card.querySelectorAll('.btn-download,.btn-play').forEach(btn=>{
+    card.querySelectorAll('.btn-download').forEach(btn=>{
       btn.addEventListener('click',function(e){
-        const r=this.getBoundingClientRect(),size=Math.max(r.width,r.height)*0.6,rip=document.createElement('span');
+        const r=this.getBoundingClientRect();
+        // Ripple
+        const size=Math.max(r.width,r.height)*0.6,rip=document.createElement('span');
         rip.className='ripple';rip.style.width=rip.style.height=size+'px';rip.style.left=(e.clientX-r.left-size/2)+'px';rip.style.top=(e.clientY-r.top-size/2)+'px';
         this.style.position='relative';this.style.overflow='hidden';this.appendChild(rip);setTimeout(()=>rip.remove(),600);
+        // Particle burst
+        burstParticles(e.clientX,e.clientY);
+        // Button state: idle → loading → success
+        this.classList.add('loading');const orig=this.textContent;this.textContent='⏳';
+        setTimeout(()=>{this.classList.remove('loading');this.classList.add('success');this.textContent='✓ Downloaded';
+          setTimeout(()=>{this.classList.remove('success');this.textContent=orig},1500)},800);
       });
     });
   });
