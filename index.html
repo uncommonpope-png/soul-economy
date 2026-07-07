@@ -45,7 +45,19 @@ button{cursor:pointer;font-family:inherit;border:none;outline:none;background:no
 input{font-family:inherit;outline:none;border:none;background:none}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important}}
 
-#bg-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;transform:translateZ(0);will-change:transform}
+#bg-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;display:block}
+
+/* SOUL INFO PANEL */
+#soul-info-panel{position:fixed;right:24px;top:50%;transform:translateY(-50%);z-index:100;width:320px;background:rgba(8,8,8,0.92);backdrop-filter:blur(24px);border:1px solid rgba(139,92,246,0.2);border-radius:20px;padding:28px;opacity:0;pointer-events:none;transform:translateY(-50%) translateX(20px);transition:all 0.4s cubic-bezier(0.22,1,0.36,1);box-shadow:0 0 80px rgba(139,92,246,0.15)}
+#soul-info-panel.active{opacity:1;pointer-events:auto;transform:translateY(-50%) translateX(0)}
+#soul-info-panel .close{position:absolute;top:12px;right:16px;color:var(--text-muted);cursor:pointer;font-size:1.2rem;transition:color 0.2s;background:none;border:none;font-family:inherit}
+#soul-info-panel .close:hover{color:var(--text-white)}
+#soul-info-panel .name{font-size:1.4rem;font-weight:700;margin-bottom:4px;background:linear-gradient(135deg,var(--purple),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+#soul-info-panel .type{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);margin-bottom:12px}
+#soul-info-panel .desc{font-size:0.9rem;color:var(--text-gray);line-height:1.6;margin-bottom:16px}
+#soul-info-panel .plt{font-size:0.85rem;color:var(--gold);margin-bottom:20px;font-weight:600}
+#soul-info-panel .awaken{display:inline-block;padding:12px 32px;font-size:0.95rem;font-weight:600;color:#fff;background:linear-gradient(135deg,var(--purple),var(--purple-dark));border:none;border-radius:30px;cursor:pointer;transition:all 0.3s;box-shadow:0 4px 20px rgba(139,92,246,0.2);width:100%;text-align:center;font-family:inherit}
+#soul-info-panel .awaken:hover{transform:translateY(-2px);box-shadow:0 8px 40px rgba(139,92,246,0.3)}
 .app{position:relative;z-index:1;max-width:1280px;width:100%;display:flex;flex-direction:column;gap:40px}
 
 /* NAV */
@@ -173,6 +185,16 @@ input{font-family:inherit;outline:none;border:none;background:none}
 </head>
 <body>
 <canvas id="bg-canvas"></canvas>
+
+<!-- Soul Info Panel -->
+<div id="soul-info-panel">
+  <button class="close" id="soul-info-close">✕</button>
+  <div class="name" id="soul-info-title"></div>
+  <div class="type" id="soul-info-type"></div>
+  <div class="desc" id="soul-info-desc"></div>
+  <div class="plt" id="soul-info-plt"></div>
+  <button class="awaken" id="soul-info-btn">⬇ Awaken</button>
+</div>
 <div class="app">
 
 <nav class="navbar" role="navigation" aria-label="Main navigation">
@@ -612,154 +634,287 @@ si.addEventListener('keydown',e=>{
 
 render(items);
 
-// ─── COSMIC PYRAMID BACKGROUND — Three.js Scene ───
-(async function cosmicPyramid() {
+// ─── SOUL KNOWLEDGE GRAPH — Interactive 3D Graph ───
+(async function soulGraph() {
   const canvas = document.getElementById('bg-canvas');
-  if (!canvas) return;
-  const { Scene, PerspectiveCamera, WebGLRenderer, Color, AmbientLight, DirectionalLight, MeshPhysicalMaterial, OctahedronGeometry, Mesh, SphereGeometry, MeshBasicMaterial, BufferGeometry, Float32BufferAttribute, PointsMaterial, Points, AdditiveBlending, EdgesGeometry, LineBasicMaterial, LineSegments, GridHelper, Group, Vector2 } = await import('three');
+  if (!canvas || !window.items) return;
+  const T = await import('three');
+  const { Scene, PerspectiveCamera, WebGLRenderer, Color, AmbientLight, DirectionalLight, MeshPhysicalMaterial, OctahedronGeometry, Mesh, SphereGeometry, MeshBasicMaterial, BufferGeometry, Float32BufferAttribute, PointsMaterial, Points, AdditiveBlending, EdgesGeometry, LineBasicMaterial, LineSegments, Group, Vector2, Raycaster, TetrahedronGeometry, BoxGeometry, InstancedMesh, DynamicDrawUsage, Matrix4 } = T;
+  const { OrbitControls } = await import('three/addons/controls/OrbitControls.js');
   const { UnrealBloomPass } = await import('three/addons/postprocessing/UnrealBloomPass.js');
   const { EffectComposer } = await import('three/addons/postprocessing/EffectComposer.js');
   const { RenderPass } = await import('three/addons/postprocessing/RenderPass.js');
-  const scene = new Scene();
-  scene.background = new Color(0x080808);
-  const camera = new PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
-  camera.position.set(0, 1.5, 6);
+
+  const scene = new Scene(); scene.background = new Color(0x080808);
+  const camera = new PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 100);
+  camera.position.set(0, 2, 7);
   const renderer = new WebGLRenderer({ canvas, antialias: true, alpha: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.toneMapping = 3; renderer.toneMappingExposure = 1.2;
-
-  // ─── BLOOM POST-PROCESSING ───
   const composer = new EffectComposer(renderer);
   composer.addPass(new RenderPass(scene, camera));
-  const bloom = new UnrealBloomPass(new Vector2(window.innerWidth, window.innerHeight), 0.8, 0.3, 0.6);
-  composer.addPass(bloom);
+  composer.addPass(new UnrealBloomPass(new Vector2(window.innerWidth, window.innerHeight), 0.6, 0.3, 0.5));
+
+  const controls = new OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true; controls.dampingFactor = 0.08;
+  controls.target.set(0, 0.3, 0); controls.minDistance = 2; controls.maxDistance = 25;
+  controls.autoRotate = true; controls.autoRotateSpeed = 0.8;
+
+  const ambient = new AmbientLight(0x222244, 0.6); scene.add(ambient);
   const key = new DirectionalLight(0x8B5CF6, 2); key.position.set(2, 3, 4); scene.add(key);
   const fill = new DirectionalLight(0x00D4FF, 0.8); fill.position.set(-3, 1, -2); scene.add(fill);
-  const rim = new DirectionalLight(0xFFD166, 0.4); rim.position.set(0, -2, -3); scene.add(rim);
 
-  const root = new Group();
-  scene.add(root);
+  // ─── BUILD NODES FROM CATALOG ───
+  const CAT = {
+    soul: { geom: new OctahedronGeometry(0.22,0), radius: 1.5, color: 0x8B5CF6, scale:1 },
+    role: { geom: new OctahedronGeometry(0.14,0), radius: 2.2, color: 0x00D4FF, scale:1 },
+    skill: { geom: new OctahedronGeometry(0.045,0), radius: 2.9, color: 0x8B5CF6, scale:1 },
+    chamber: { geom: new TetrahedronGeometry(0.07,0), radius: 3.4, color: 0xFFD166, scale:1 },
+    infrastructure: { geom: new BoxGeometry(0.08,0.08,0.08), radius: 3.8, color: 0x00D4FF, scale:1 },
+    combo: { geom: null, radius: 4.5, color: 0xFFD166, scale:1 },
+  };
 
-  // ─── STARFIELD ───
-  const starCount = 2000;
-  const starPos = new Float32Array(starCount * 3);
-  const starColors = new Float32Array(starCount * 3);
-  const starSizes = new Float32Array(starCount);
-  for (let i = 0; i < starCount; i++) {
-    const r = 8 + Math.random() * 20;
-    const theta = Math.random() * Math.PI * 2;
-    const phi = Math.acos(2 * Math.random() - 1);
-    starPos[i*3] = r * Math.sin(phi) * Math.cos(theta);
-    starPos[i*3+1] = r * Math.sin(phi) * Math.sin(theta);
-    starPos[i*3+2] = r * Math.cos(phi);
-    const bright = 0.4 + Math.random() * 0.6;
-    const tint = Math.random();
-    if (tint < 0.6) { starColors[i*3]=bright; starColors[i*3+1]=bright; starColors[i*3+2]=bright + Math.random()*0.1; }
-    else if (tint < 0.8) { starColors[i*3]=bright; starColors[i*3+1]=bright*0.7; starColors[i*3+2]=bright*0.3; }
-    else { starColors[i*3]=bright*0.6; starColors[i*3+1]=bright*0.7; starColors[i*3+2]=bright; }
-    starSizes[i] = 0.02 + Math.random() * 0.06;
+  const items = window.items;
+  const root = new Group(); scene.add(root);
+  const clickTargets = [];
+  const nodeData = []; // { mesh, index, pos, item }
+  const catCounts = {};
+  const catItems = {};
+
+  items.forEach((item, idx) => {
+    const cat = item.type;
+    if (!CAT[cat]) return;
+    if (!catItems[cat]) catItems[cat] = [];
+    catItems[cat].push({ item, idx });
+  });
+
+  // Position nodes by category in concentric rings
+  Object.keys(catItems).forEach(cat => {
+    const list = catItems[cat];
+    const cfg = CAT[cat];
+    const total = list.length;
+    list.forEach((entry, i) => {
+      const { item, idx } = entry;
+      const angle = (i / total) * Math.PI * 2 + cat.length * 0.3;
+      const yOffset = cat === 'skill' ? (Math.random() - 0.5) * 0.8 : Math.sin(angle * 3) * 0.2;
+      const rSpread = cat === 'skill' ? (Math.random() - 0.5) * 0.5 : 0;
+      const pos = new T.Vector3(
+        Math.cos(angle) * (cfg.radius + rSpread),
+        yOffset + 0.3,
+        Math.sin(angle) * (cfg.radius + rSpread)
+      );
+
+      // PLT-based color
+      const plt = (item.plt || '0.5/0.5/0.5').split('/').map(Number);
+      const c = new T.Color().setHSL(0.75 - plt[0] * 0.15, 0.6 + plt[1] * 0.3, 0.35 + plt[2] * 0.25);
+
+      if (cat === 'combo') {
+        const starGeo = new T.BufferGeometry();
+        const starVerts = [];
+        for (let s = 0; s < 8; s++) {
+          const sa = (s / 8) * Math.PI * 2 + angle;
+          starVerts.push(pos.x + Math.cos(sa)*0.1, pos.y + Math.sin(sa*2)*0.05, pos.z + Math.sin(sa)*0.1);
+        }
+        starGeo.setAttribute('position', new Float32BufferAttribute(starVerts, 3));
+        const starMat = new T.PointsMaterial({ color: c, size: 0.04, transparent: true, opacity: 0.6, blending: AdditiveBlending });
+        const star = new T.Points(starGeo, starMat);
+        star.userData = { index: idx };
+        root.add(star);
+        clickTargets.push(star);
+        nodeData.push({ mesh: star, index: idx, pos, item });
+        return;
+      }
+
+      // For soul guns, batch into InstancedMesh
+      if (cat === 'skill' && total > 20) {
+        if (!root.userData._skillBatch) {
+          const igeom = new OctahedronGeometry(0.045, 0);
+          const imat = new MeshPhysicalMaterial({ color: 0x8B5CF6, emissive: 0x6D28D9, emissiveIntensity: 0.15, metalness: 0.3, roughness: 0.2 });
+          const imesh = new InstancedMesh(igeom, imat, 300);
+          imesh.instanceMatrix.setUsage(DynamicDrawUsage);
+          imesh.userData.instances = [];
+          imesh.userData.batchCount = 0;
+          root.add(imesh);
+          root.userData._skillBatch = imesh;
+          clickTargets.push(imesh);
+        }
+        const batch = root.userData._skillBatch;
+        const bi = batch.userData.batchCount;
+        const m4 = new Matrix4().makeTranslation(pos.x, pos.y, pos.z);
+        batch.setMatrixAt(bi, m4);
+        batch.instanceMatrix.needsUpdate = true;
+        batch.userData.batchCount++;
+        batch.count = batch.userData.batchCount;
+        batch.userData.instances.push({ index: idx, pos: pos.clone() });
+        nodeData.push({ type: 'instanced', batch, instanceIdx: bi, index: idx, pos, item });
+        return;
+      }
+
+      const mat = new MeshPhysicalMaterial({ color: c, emissive: c, emissiveIntensity: 0.25, metalness: 0.3, roughness: 0.2, transparent: true, opacity: 0.8, clearcoat: 0.2 });
+      const mesh = new Mesh(cfg.geom.clone(), mat);
+      mesh.position.copy(pos);
+      mesh.scale.setScalar(cfg.scale * (0.8 + plt[0] * 0.4));
+      mesh.userData.index = idx;
+      root.add(mesh);
+      clickTargets.push(mesh);
+      nodeData.push({ mesh, index: idx, pos, item });
+    });
+  });
+
+  // ─── CONSTELLATION LINES (category-adjacent connections) ───
+  const edgePositions = [];
+  const catOrder = ['soul','role','skill','chamber','infrastructure','combo'];
+  for (let ci = 0; ci < catOrder.length - 1; ci++) {
+    const catA = catOrder[ci], catB = catOrder[ci+1];
+    const listA = catItems[catA] || [], listB = catItems[catB] || [];
+    listA.forEach(a => {
+      const aNode = nodeData.find(n => n.index === a.idx);
+      if (!aNode) return;
+      listB.forEach(b => {
+        if (Math.random() > 0.08) return;
+        const bNode = nodeData.find(n => n.index === b.idx);
+        if (!bNode) return;
+        const dist = aNode.pos.distanceTo(bNode.pos);
+        if (dist < 3) {
+          edgePositions.push(aNode.pos.x, aNode.pos.y, aNode.pos.z);
+          edgePositions.push(bNode.pos.x, bNode.pos.y, bNode.pos.z);
+        }
+      });
+    });
   }
-  const starGeom = new BufferGeometry();
-  starGeom.setAttribute('position', new Float32BufferAttribute(starPos, 3));
-  starGeom.setAttribute('color', new Float32BufferAttribute(starColors, 3));
-  starGeom.setAttribute('size', new Float32BufferAttribute(starSizes, 1));
-  const starMat = new PointsMaterial({ size: 0.05, vertexColors: true, transparent: true, opacity: 0.8, blending: AdditiveBlending, sizeAttenuation: true });
-  const stars = new Points(starGeom, starMat);
-  scene.add(stars);
-
-  // ─── CONSTELLATION LINES ───
-  const connThreshold = 3.5;
-  const maxConn = 3;
-  const connPositions = [];
-  for (let i = 0; i < starCount; i++) {
-    let connections = 0;
-    for (let j = i + 1; j < starCount && connections < maxConn; j++) {
-      const dx = starPos[i*3] - starPos[j*3];
-      const dy = starPos[i*3+1] - starPos[j*3+1];
-      const dz = starPos[i*3+2] - starPos[j*3+2];
-      const dist = Math.sqrt(dx*dx + dy*dy + dz*dz);
-      if (dist < connThreshold && Math.random() < 0.15) {
-        connPositions.push(starPos[i*3], starPos[i*3+1], starPos[i*3+2]);
-        connPositions.push(starPos[j*3], starPos[j*3+1], starPos[j*3+2]);
-        connections++;
+  // Also connect within same category (close nodes)
+  Object.keys(catItems).forEach(cat => {
+    const list = catItems[cat];
+    for (let i = 0; i < list.length; i++) {
+      for (let j = i + 1; j < Math.min(i + 5, list.length); j++) {
+        const aNode = nodeData.find(n => n.index === list[i].idx);
+        const bNode = nodeData.find(n => n.index === list[j].idx);
+        if (!aNode || !bNode) continue;
+        const dist = aNode.pos.distanceTo(bNode.pos);
+        if (dist < 1.5 && Math.random() < 0.3) {
+          edgePositions.push(aNode.pos.x, aNode.pos.y, aNode.pos.z);
+          edgePositions.push(bNode.pos.x, bNode.pos.y, bNode.pos.z);
+        }
       }
     }
+  });
+  const edgeGeom = new BufferGeometry();
+  edgeGeom.setAttribute('position', new Float32BufferAttribute(edgePositions, 3));
+  const edgeMat = new LineBasicMaterial({ color: 0x00D4FF, transparent: true, opacity: 0.06, blending: AdditiveBlending });
+  const edges = new LineSegments(edgeGeom, edgeMat);
+  scene.add(edges);
+
+  // ─── BACKGROUND STARFIELD ───
+  const sCount = 1500;
+  const sPos = new Float32Array(sCount * 3);
+  for (let i = 0; i < sCount; i++) {
+    const r = 10 + Math.random() * 30;
+    const t1 = Math.random() * Math.PI * 2, t2 = Math.acos(2 * Math.random() - 1);
+    sPos[i*3]=r*Math.sin(t2)*Math.cos(t1); sPos[i*3+1]=r*Math.sin(t2)*Math.sin(t1); sPos[i*3+2]=r*Math.cos(t2);
   }
-  const connGeom = new BufferGeometry();
-  connGeom.setAttribute('position', new Float32BufferAttribute(connPositions, 3));
-  const connMat = new LineBasicMaterial({ color: 0x00D4FF, transparent: true, opacity: 0.08, blending: AdditiveBlending });
-  const connLines = new LineSegments(connGeom, connMat);
-  scene.add(connLines);
-  const geo = new OctahedronGeometry(1.1, 0);
-  const mat = new MeshPhysicalMaterial({ color: 0x8B5CF6, metalness: 0.2, roughness: 0.2, emissive: 0x6D28D9, emissiveIntensity: 0.12, transparent: true, opacity: 0.6, clearcoat: 0.3 });
-  const mesh = new Mesh(geo, mat); mesh.position.y = 0.3; root.add(mesh);
-  const edges = new EdgesGeometry(geo);
-  const wire = new LineSegments(edges, new LineBasicMaterial({ color: 0x00D4FF, transparent: true, opacity: 0.2 }));
-  wire.scale.set(1.08, 1.08, 1.08); wire.position.y = 0.3; root.add(wire);
-  const glow = new Mesh(new SphereGeometry(0.5, 16, 16), new MeshBasicMaterial({ color: 0x8B5CF6, transparent: true, opacity: 0.06, blending: AdditiveBlending }));
-  glow.position.y = 0.3; root.add(glow);
+  const sGeom = new BufferGeometry(); sGeom.setAttribute('position', new Float32BufferAttribute(sPos, 3));
+  const sMat = new PointsMaterial({ color: 0x444488, size: 0.04, transparent: true, opacity: 0.4 });
+  scene.add(new Points(sGeom, sMat));
 
-  // Floating soul nodes
-  const nodeCount = 90;
-  const nodePos = new Float32Array(nodeCount * 3);
-  const nodeColors = new Float32Array(nodeCount * 3);
-  const nodeSizes = new Float32Array(nodeCount);
-  for (let i = 0; i < nodeCount; i++) {
-    const theta = Math.random() * Math.PI * 2;
-    const phi = Math.acos(2 * Math.random() - 1);
-    const r = 1.8 + Math.random() * 2.5;
-    nodePos[i*3] = r * Math.sin(phi) * Math.cos(theta);
-    nodePos[i*3+1] = r * Math.cos(phi) + 0.3;
-    nodePos[i*3+2] = r * Math.sin(phi) * Math.sin(theta);
-    const c = [0x8B5CF6, 0x00D4FF, 0xFFD166][Math.floor(Math.random() * 3)];
-    nodeColors[i*3] = ((c >> 16) & 0xff) / 255;
-    nodeColors[i*3+1] = ((c >> 8) & 0xff) / 255;
-    nodeColors[i*3+2] = (c & 0xff) / 255;
-    nodeSizes[i] = 0.02 + Math.random() * 0.04;
-  }
-  const nodeGeom = new BufferGeometry();
-  nodeGeom.setAttribute('position', new Float32BufferAttribute(nodePos, 3));
-  nodeGeom.setAttribute('color', new Float32BufferAttribute(nodeColors, 3));
-  nodeGeom.setAttribute('size', new Float32BufferAttribute(nodeSizes, 1));
-  const nodeMat = new PointsMaterial({ size: 0.04, vertexColors: true, transparent: true, opacity: 0.5, blending: AdditiveBlending });
-  const nodes = new Points(nodeGeom, nodeMat);
-  root.add(nodes);
+  // ─── INFO PANEL ───
+  const panel = document.getElementById('soul-info-panel');
+  const pTitle = document.getElementById('soul-info-title');
+  const pDesc = document.getElementById('soul-info-desc');
+  const pPLT = document.getElementById('soul-info-plt');
+  const pBtn = document.getElementById('soul-info-btn');
+  const pClose = document.getElementById('soul-info-close');
 
-  // Sub-pyramids (smaller nodes around)
-  for (let i = 0; i < 8; i++) {
-    const angle = (i / 8) * Math.PI * 2;
-    const sub = new Mesh(new OctahedronGeometry(0.12, 0), new MeshPhysicalMaterial({ color: [0x8B5CF6, 0x00D4FF, 0xFFD166][i % 3], emissive: [0x6D28D9, 0x0099CC, 0xCCA844][i % 3], emissiveIntensity: 0.3, metalness: 0.3, roughness: 0.2 }));
-    sub.position.set(Math.cos(angle) * 1.4, 0.3 + Math.sin(angle * 2) * 0.3, Math.sin(angle) * 1.4);
-    root.add(sub);
+  // ─── RAYCASTER ───
+  const raycaster = new Raycaster();
+  const pointer = new Vector2();
+  let hoveredIdx = -1;
+  let selectedIdx = -1;
+
+  function getHit(e) {
+    pointer.x = (e.clientX / window.innerWidth) * 2 - 1;
+    pointer.y = -(e.clientY / window.innerHeight) * 2 + 1;
+    raycaster.setFromCamera(pointer, camera);
+    for (const t of clickTargets) {
+      const hits = raycaster.intersectObject(t);
+      if (hits.length) {
+        if (t.isInstancedMesh) {
+          const instId = hits[0].instanceId;
+          if (t.userData.instances && t.userData.instances[instId]) return t.userData.instances[instId].index;
+        }
+        return hits[0].object.userData.index;
+      }
+    }
+    return -1;
   }
 
-  // Grid floor
-  const grid = new GridHelper(8, 30, 0x8B5CF6, 0x00D4FF);
-  grid.position.y = -0.6; grid.material.transparent = true; grid.material.opacity = 0.1; scene.add(grid);
+  function showInfo(idx) {
+    const item = items[idx];
+    if (!item) return;
+    pTitle.textContent = item.name;
+    pDesc.textContent = item.desc || 'No description available.';
+    pPLT.textContent = item.plt ? `PLT: ${item.plt}` : '';
+    pBtn.dataset.index = idx;
+    if (item.file) {
+      pBtn.textContent = '⬇ Awaken';
+      pBtn.style.display = 'inline-block';
+      pBtn.onclick = () => {
+        const a = document.createElement('a');
+        a.href = 'downloads/' + item.file;
+        a.download = item.file;
+        a.click();
+        panel.classList.remove('active');
+        // Also open Dark City
+        window.open('https://uncommonpope-png.github.io/final-run/', '_blank');
+      };
+    } else if (item.url) {
+      pBtn.textContent = '▶ Open';
+      pBtn.style.display = 'inline-block';
+      pBtn.onclick = () => { window.open(item.url, '_blank'); panel.classList.remove('active'); };
+    } else {
+      pBtn.style.display = 'none';
+    }
+    panel.classList.add('active');
+    selectedIdx = idx;
+  }
 
-  // Mouse tracking
-  let mx = 0, my = 0;
-  document.addEventListener('mousemove', e => { mx = (e.clientX / window.innerWidth - 0.5) * 2; my = (e.clientY / window.innerHeight - 0.5) * 2; });
+  document.addEventListener('mousemove', e => {
+    const idx = getHit(e);
+    if (idx !== hoveredIdx) {
+      hoveredIdx = idx;
+      if (idx >= 0) {
+        const card = document.querySelectorAll('.card')[idx];
+        if (card) { card.style.borderColor = '#8B5CF6'; card.style.boxShadow = '0 0 40px rgba(139,92,246,0.3)'; }
+      } else {
+        document.querySelectorAll('.card').forEach(c => { c.style.borderColor = ''; c.style.boxShadow = ''; });
+      }
+    }
+  });
 
+  document.addEventListener('click', e => {
+    if (e.target.closest('#soul-info-panel')) return;
+    const idx = getHit(e);
+    if (idx >= 0) { showInfo(idx); return; }
+    if (panel.classList.contains('active') && !e.target.closest('#soul-info-panel')) {
+      panel.classList.remove('active');
+    }
+  });
+
+  pClose.addEventListener('click', () => panel.classList.remove('active'));
+
+  // ─── ANIMATION ───
   function animate() {
     requestAnimationFrame(animate);
-    const t = Date.now() * 0.0005;
-    root.rotation.x += (my * 0.05 - root.rotation.x) * 0.02;
-    root.rotation.y += (mx * 0.1 - root.rotation.y) * 0.02;
-    root.rotation.z = Math.sin(t * 0.3) * 0.02;
-    stars.rotation.y += 0.00015;
-    stars.rotation.x += 0.00005;
-    connLines.rotation.y = stars.rotation.y;
-    connLines.rotation.x = stars.rotation.x;
-    // Pyramid pulse
-    const pulse = Math.sin(t * 2.5) * 0.5 + 0.5;
-    const scale = 0.92 + pulse * 0.08;
-    mesh.scale.setScalar(scale);
-    wire.scale.setScalar(1.08 * scale);
-    mesh.material.emissiveIntensity = 0.04 + pulse * 0.35;
-    wire.material.opacity = 0.08 + pulse * 0.25;
-    glow.material.opacity = 0.03 + pulse * 0.08;
+    controls.update();
+    // Pulse all meshes
+    const t = Date.now() * 0.001;
+    nodeData.forEach(d => {
+      if (d.mesh && d.mesh.isMesh) {
+        d.mesh.rotation.x = Math.sin(t + d.index) * 0.05;
+        d.mesh.rotation.y = Math.cos(t + d.index) * 0.05;
+      }
+    });
+    // Pulse central glow
     composer.render();
   }
   animate();
