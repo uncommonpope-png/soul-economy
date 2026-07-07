@@ -140,7 +140,7 @@ const items = [
   { type:'skill', name:'AI NPC Character Engine', desc:'Personality, emotion, memory, goals — the Inworld AI pattern for browser citizens.', plt:'0.9/0.8/0.3', file:'ai-npc-engine.zip' },
 
   // WORLDS
-  { type:'world', name:'Dark City — Spatial OS', desc:'The complete Dark City. 9 districts. Browser citizens. Code editor. Terminal. Live on GitHub Pages.', plt:'0.9/0.9/0.1', file:'dark-city-spatial-os.zip', featured:true },
+  { type:'world', name:'🌌 Dark City — Spatial OS', desc:'Play the live city now at darkcity.buyasoul.online — 9 districts, browser citizens, code editor, terminal. Download coming soon.', plt:'0.9/0.9/0.1', url:'https://uncommonpope-png.github.io/final-run/', featured:true },
   { type:'world', name:'Knowledge District', desc:'Fact houses, data centers, research archives. Maps to GSK MemoryCompiler.', plt:'0.7/0.6/0.3', file:'knowledge-district.zip' },
   { type:'world', name:'Skill District', desc:'Skill shops, code libraries, creator schools. Maps to GSK Skills Engine.', plt:'0.8/0.5/0.3', file:'skill-district.zip' },
   { type:'world', name:'The Weald', desc:'Anomaly zone. Procedurally generated. WMS engines, dream fountains, singularity towers.', plt:'0.5/0.7/0.5', file:'the-weald.zip' },
@@ -170,7 +170,7 @@ function renderItems(type) {
         <span class="plt-l">L ${item.plt.split('/')[1]}</span>
         <span class="plt-t">T ${item.plt.split('/')[2]}</span>
       </div>
-      <button class="download-btn" onclick="downloadItem('${item.file}')">⬇ Download ${item.type}</button>
+      ${item.url ? `<a href="${item.url}" target="_blank" class="download-btn" style="display:block;text-decoration:none">▶ Play Now</a>` : `<button class="download-btn" onclick="downloadItem('${item.file}')">⬇ Download ${item.type}</button>`}
     </div>
   `).join('');
 }
