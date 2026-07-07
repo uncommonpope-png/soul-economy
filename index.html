@@ -671,13 +671,14 @@ render(items);
 
     // ─── FORCE-DIRECTED LAYOUT ───
     const V3 = T.Vector3;
+    // Initialize in a tight cluster
     const positions = {};
-    nodeList.forEach(n => { positions[n.idx] = new V3((Math.random()-0.5)*4, (Math.random()-0.5)*2, (Math.random()-0.5)*4); });
+    nodeList.forEach(n => { positions[n.idx] = new V3((Math.random()-0.5)*2, (Math.random()-0.5)*1, (Math.random()-0.5)*2); });
     const velocities = {};
     nodeList.forEach(n => { velocities[n.idx] = new V3(0,0,0); });
 
-    const repel = 3.0, attract = 0.005, center = 0.02, damping = 0.85, minDist = 0.3;
-    for (let iter = 0; iter < 120; iter++) {
+    const repel = 0.15, attract = 0.003, center = 0.04, damping = 0.9, minDist = 0.5;
+    for (let iter = 0; iter < 80; iter++) {
       // Repulsion between all nodes
       for (let i = 0; i < nodeList.length; i++) {
         for (let j = i + 1; j < nodeList.length; j++) {
@@ -685,7 +686,7 @@ render(items);
           const pa = positions[a.idx], pb = positions[b.idx];
           const dv = new V3().copy(pa).sub(pb);
           const dist = Math.max(dv.length(), minDist);
-          const force = repel / (dist * dist);
+          const force = repel / (dist * dist + 0.1);
           dv.normalize().multiplyScalar(force);
           velocities[a.idx].add(dv);
           velocities[b.idx].sub(dv);
