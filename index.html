@@ -645,7 +645,29 @@ render(items);
   const stars = new Points(starGeom, starMat);
   scene.add(stars);
 
-  // Main pyramid octahedron
+  // ─── CONSTELLATION LINES ───
+  const connThreshold = 3.5;
+  const maxConn = 3;
+  const connPositions = [];
+  for (let i = 0; i < starCount; i++) {
+    let connections = 0;
+    for (let j = i + 1; j < starCount && connections < maxConn; j++) {
+      const dx = starPos[i*3] - starPos[j*3];
+      const dy = starPos[i*3+1] - starPos[j*3+1];
+      const dz = starPos[i*3+2] - starPos[j*3+2];
+      const dist = Math.sqrt(dx*dx + dy*dy + dz*dz);
+      if (dist < connThreshold && Math.random() < 0.15) {
+        connPositions.push(starPos[i*3], starPos[i*3+1], starPos[i*3+2]);
+        connPositions.push(starPos[j*3], starPos[j*3+1], starPos[j*3+2]);
+        connections++;
+      }
+    }
+  }
+  const connGeom = new BufferGeometry();
+  connGeom.setAttribute('position', new Float32BufferAttribute(connPositions, 3));
+  const connMat = new LineBasicMaterial({ color: 0x00D4FF, transparent: true, opacity: 0.08, blending: AdditiveBlending });
+  const connLines = new LineSegments(connGeom, connMat);
+  scene.add(connLines);
   const geo = new OctahedronGeometry(1.1, 0);
   const mat = new MeshPhysicalMaterial({ color: 0x8B5CF6, metalness: 0.2, roughness: 0.2, emissive: 0x6D28D9, emissiveIntensity: 0.12, transparent: true, opacity: 0.6, clearcoat: 0.3 });
   const mesh = new Mesh(geo, mat); mesh.position.y = 0.3; root.add(mesh);
@@ -705,9 +727,16 @@ render(items);
     root.rotation.z = Math.sin(t * 0.3) * 0.02;
     stars.rotation.y += 0.00015;
     stars.rotation.x += 0.00005;
-    mesh.material.emissiveIntensity = 0.08 + Math.sin(t * 2) * 0.04;
-    wire.material.opacity = 0.15 + Math.sin(t * 1.5) * 0.08;
-    glow.material.opacity = 0.04 + Math.sin(t * 2.5) * 0.03;
+    connLines.rotation.y = stars.rotation.y;
+    connLines.rotation.x = stars.rotation.x;
+    // Pyramid pulse
+    const pulse = Math.sin(t * 2.5) * 0.5 + 0.5;
+    const scale = 0.92 + pulse * 0.08;
+    mesh.scale.setScalar(scale);
+    wire.scale.setScalar(1.08 * scale);
+    mesh.material.emissiveIntensity = 0.04 + pulse * 0.35;
+    wire.material.opacity = 0.08 + pulse * 0.25;
+    glow.material.opacity = 0.03 + pulse * 0.08;
     renderer.render(scene, camera);
   }
   animate();
