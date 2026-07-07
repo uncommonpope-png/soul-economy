@@ -790,25 +790,39 @@ render(items);
     const sg = new BufferGeometry(); sg.setAttribute('position', new Float32BufferAttribute(sp, 3));
     scene.add(new Points(sg, new PointsMaterial({ color: 0x444488, size: 0.04, transparent: true, opacity: 0.4 })));
 
-    // Info panel
+    // ─── SCREEN-SPACE PROXIMITY CLICKING ───
+    // Projects each node's 3D position to 2D screen, finds nearest within threshold
     const pan = document.getElementById('soul-info-panel'), pt = document.getElementById('soul-info-title'), pd = document.getElementById('soul-info-desc'), pp = document.getElementById('soul-info-plt'), pb = document.getElementById('soul-info-btn'), pc = document.getElementById('soul-info-close');
-    const ray = new Raycaster(), po = new Vector2(); let hov = -1;
-    ray.params.Points.threshold = 0.15;
-    function getHit(e) {
-      po.x = (e.clientX / window.innerWidth) * 2 - 1; po.y = -(e.clientY / window.innerHeight) * 2 + 1;
-      ray.setFromCamera(po, camera);
-      for (const t of clickTargets) { const hits = ray.intersectObject(t);
-        if (hits.length) { if (t.isInstancedMesh) { const id = hits[0].instanceId; if (t.userData.instances && t.userData.instances[id]) return t.userData.instances[id].index; } return hits[0].object.userData.index; } }
-      return -1;
+    function getNearestNode(clientX, clientY) {
+      let nearest = -1, nearestDist = Infinity;
+      const threshold = 30; // pixel radius
+      nodeData.forEach(d => {
+        const pos = d.pos || (d.mesh ? d.mesh.position : null);
+        if (!pos) return;
+        const v = pos.clone().project(camera);
+        const sx = (v.x * 0.5 + 0.5) * window.innerWidth;
+        const sy = (-v.y * 0.5 + 0.5) * window.innerHeight;
+        const dx = sx - clientX, dy = sy - clientY;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < nearestDist && dist < threshold) { nearestDist = dist; nearest = d.index; }
+      });
+      return nearest;
     }
-    document.addEventListener('mousemove', e => { const idx = getHit(e); if (idx !== hov) { hov = idx; document.querySelectorAll('.card').forEach(c => { c.style.borderColor = ''; c.style.boxShadow = ''; }); if (idx >= 0) { const card = document.querySelectorAll('.card')[idx]; if (card) { card.style.borderColor = '#8B5CF6'; card.style.boxShadow = '0 0 40px rgba(139,92,246,0.3)'; } } } });
+    let hoverIdx = -1;
+    document.addEventListener('mousemove', e => {
+      const idx = getNearestNode(e.clientX, e.clientY);
+      if (idx !== hoverIdx) { hoverIdx = idx;
+        document.querySelectorAll('.card').forEach(c => { c.style.borderColor = ''; c.style.boxShadow = ''; });
+        if (idx >= 0) { const card = document.querySelectorAll('.card')[idx]; if (card) { card.style.borderColor = '#8B5CF6'; card.style.boxShadow = '0 0 40px rgba(139,92,246,0.3)'; } }
+      }
+    });
     let clickStart = { x: 0, y: 0 };
-    document.addEventListener('pointerdown', e => { try { clickStart.x = e.clientX; clickStart.y = e.clientY; } catch(e) {} });
+    document.addEventListener('pointerdown', e => { clickStart.x = e.clientX; clickStart.y = e.clientY; });
     document.addEventListener('click', e => { try {
       const dx = e.clientX - clickStart.x, dy = e.clientY - clickStart.y;
-      if (dx * dx + dy * dy > 64) return;
+      if (dx*dx + dy*dy > 64) return;
       if (e.target.closest('#soul-info-panel, .btn-download, .btn-play, .search-wrapper, .category-tab, .navbar, .nav-links')) return;
-      const idx = getHit(e);
+      const idx = getNearestNode(e.clientX, e.clientY);
       if (idx >= 0 && items[idx]) {
         const item = items[idx];
         pt.textContent = item.name; pd.textContent = item.desc || ''; pp.textContent = item.plt ? `PLT: ${item.plt}` : '';
