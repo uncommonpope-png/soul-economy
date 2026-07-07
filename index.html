@@ -5,6 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>The Digital Library of Souls — Soul Economy</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet" />
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
 <style>
 :root {
   --bg-deep: #080808;
@@ -583,6 +591,99 @@ si.addEventListener('keydown',e=>{
 });
 
 render(items);
+
+// ─── COSMIC PYRAMID BACKGROUND — Three.js Scene ───
+(async function cosmicPyramid() {
+  const canvas = document.getElementById('bg-canvas');
+  if (!canvas) return;
+  const { Scene, PerspectiveCamera, WebGLRenderer, Color, AmbientLight, DirectionalLight, MeshPhysicalMaterial, OctahedronGeometry, Mesh, SphereGeometry, MeshBasicMaterial, BufferGeometry, Float32BufferAttribute, PointsMaterial, Points, AdditiveBlending, EdgesGeometry, LineBasicMaterial, LineSegments, GridHelper, Group } = await import('three');
+  const scene = new Scene();
+  scene.background = new Color(0x080808);
+  const camera = new PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
+  camera.position.set(0, 1.5, 6);
+  const renderer = new WebGLRenderer({ canvas, antialias: true, alpha: true });
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.toneMapping = 3; renderer.toneMappingExposure = 1.2;
+
+  const ambient = new AmbientLight(0x222244, 0.5); scene.add(ambient);
+  const key = new DirectionalLight(0x8B5CF6, 2); key.position.set(2, 3, 4); scene.add(key);
+  const fill = new DirectionalLight(0x00D4FF, 0.8); fill.position.set(-3, 1, -2); scene.add(fill);
+  const rim = new DirectionalLight(0xFFD166, 0.4); rim.position.set(0, -2, -3); scene.add(rim);
+
+  const root = new Group();
+  scene.add(root);
+
+  // Main pyramid octahedron
+  const geo = new OctahedronGeometry(1.1, 0);
+  const mat = new MeshPhysicalMaterial({ color: 0x8B5CF6, metalness: 0.2, roughness: 0.2, emissive: 0x6D28D9, emissiveIntensity: 0.12, transparent: true, opacity: 0.6, clearcoat: 0.3 });
+  const mesh = new Mesh(geo, mat); mesh.position.y = 0.3; root.add(mesh);
+  const edges = new EdgesGeometry(geo);
+  const wire = new LineSegments(edges, new LineBasicMaterial({ color: 0x00D4FF, transparent: true, opacity: 0.2 }));
+  wire.scale.set(1.08, 1.08, 1.08); wire.position.y = 0.3; root.add(wire);
+  const glow = new Mesh(new SphereGeometry(0.5, 16, 16), new MeshBasicMaterial({ color: 0x8B5CF6, transparent: true, opacity: 0.06, blending: AdditiveBlending }));
+  glow.position.y = 0.3; root.add(glow);
+
+  // Floating soul nodes
+  const nodeCount = 90;
+  const nodePos = new Float32Array(nodeCount * 3);
+  const nodeColors = new Float32Array(nodeCount * 3);
+  const nodeSizes = new Float32Array(nodeCount);
+  for (let i = 0; i < nodeCount; i++) {
+    const theta = Math.random() * Math.PI * 2;
+    const phi = Math.acos(2 * Math.random() - 1);
+    const r = 1.8 + Math.random() * 2.5;
+    nodePos[i*3] = r * Math.sin(phi) * Math.cos(theta);
+    nodePos[i*3+1] = r * Math.cos(phi) + 0.3;
+    nodePos[i*3+2] = r * Math.sin(phi) * Math.sin(theta);
+    const c = [0x8B5CF6, 0x00D4FF, 0xFFD166][Math.floor(Math.random() * 3)];
+    nodeColors[i*3] = ((c >> 16) & 0xff) / 255;
+    nodeColors[i*3+1] = ((c >> 8) & 0xff) / 255;
+    nodeColors[i*3+2] = (c & 0xff) / 255;
+    nodeSizes[i] = 0.02 + Math.random() * 0.04;
+  }
+  const nodeGeom = new BufferGeometry();
+  nodeGeom.setAttribute('position', new Float32BufferAttribute(nodePos, 3));
+  nodeGeom.setAttribute('color', new Float32BufferAttribute(nodeColors, 3));
+  nodeGeom.setAttribute('size', new Float32BufferAttribute(nodeSizes, 1));
+  const nodeMat = new PointsMaterial({ size: 0.04, vertexColors: true, transparent: true, opacity: 0.5, blending: AdditiveBlending });
+  const nodes = new Points(nodeGeom, nodeMat);
+  root.add(nodes);
+
+  // Sub-pyramids (smaller nodes around)
+  for (let i = 0; i < 8; i++) {
+    const angle = (i / 8) * Math.PI * 2;
+    const sub = new Mesh(new OctahedronGeometry(0.12, 0), new MeshPhysicalMaterial({ color: [0x8B5CF6, 0x00D4FF, 0xFFD166][i % 3], emissive: [0x6D28D9, 0x0099CC, 0xCCA844][i % 3], emissiveIntensity: 0.3, metalness: 0.3, roughness: 0.2 }));
+    sub.position.set(Math.cos(angle) * 1.4, 0.3 + Math.sin(angle * 2) * 0.3, Math.sin(angle) * 1.4);
+    root.add(sub);
+  }
+
+  // Grid floor
+  const grid = new GridHelper(8, 30, 0x8B5CF6, 0x00D4FF);
+  grid.position.y = -0.6; grid.material.transparent = true; grid.material.opacity = 0.1; scene.add(grid);
+
+  // Mouse tracking
+  let mx = 0, my = 0;
+  document.addEventListener('mousemove', e => { mx = (e.clientX / window.innerWidth - 0.5) * 2; my = (e.clientY / window.innerHeight - 0.5) * 2; });
+
+  function animate() {
+    requestAnimationFrame(animate);
+    const t = Date.now() * 0.0005;
+    root.rotation.x += (my * 0.05 - root.rotation.x) * 0.02;
+    root.rotation.y += (mx * 0.1 - root.rotation.y) * 0.02;
+    root.rotation.z = Math.sin(t * 0.3) * 0.02;
+    mesh.material.emissiveIntensity = 0.08 + Math.sin(t * 2) * 0.04;
+    wire.material.opacity = 0.15 + Math.sin(t * 1.5) * 0.08;
+    glow.material.opacity = 0.04 + Math.sin(t * 2.5) * 0.03;
+    renderer.render(scene, camera);
+  }
+  animate();
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+})();
+
 console.log('✦ The Digital Library of Souls is alive.');
 </script>
 </body>
