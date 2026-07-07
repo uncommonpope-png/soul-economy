@@ -656,54 +656,103 @@ render(items);
     const root = new Group(); scene.add(root);
     const clickTargets = [], nodeData = [], catItems = {};
     items.forEach((item, idx) => { const cat = item.type; if (!CAT[cat]) return; if (!catItems[cat]) catItems[cat] = []; catItems[cat].push({ item, idx }); });
-    Object.keys(catItems).forEach(cat => {
-      const list = catItems[cat], cfg = CAT[cat], total = list.length;
-      list.forEach((entry, i) => {
-        const { item, idx } = entry;
-        const a = (i / total) * Math.PI * 2 + cat.length * 0.3;
-        const yOff = cat === 'skill' ? (Math.random() - 0.5) * 0.8 : Math.sin(a * 3) * 0.2;
-        const rSp = cat === 'skill' ? (Math.random() - 0.5) * 0.5 : 0;
-        const pos = new T.Vector3(Math.cos(a) * (cfg.radius + rSp), yOff + 0.3, Math.sin(a) * (cfg.radius + rSp));
-        const plt = (item.plt || '0.5/0.5/0.5').split('/').map(Number);
-        const c = new T.Color().setHSL(0.75 - plt[0] * 0.15, 0.6 + plt[1] * 0.3, 0.35 + plt[2] * 0.25);
-        if (cat === 'combo') {
-          const sg = new T.BufferGeometry(); const sv = [];
-          for (let s = 0; s < 8; s++) { const sa = (s / 8) * Math.PI * 2 + a; sv.push(pos.x + Math.cos(sa)*0.1, pos.y + Math.sin(sa*2)*0.05, pos.z + Math.sin(sa)*0.1); }
-          sg.setAttribute('position', new Float32BufferAttribute(sv, 3));
-          const star = new Points(sg, new PointsMaterial({ color: c, size: 0.04, transparent: true, opacity: 0.6, blending: AdditiveBlending }));
-          star.userData = { index: idx }; root.add(star); clickTargets.push(star); nodeData.push({ index: idx, pos, item }); return;
-        }
-        if (cat === 'skill' && total > 20) {
-          if (!root.userData._sb) {
-            const im = new InstancedMesh(new OctahedronGeometry(0.045, 0), new MeshPhysicalMaterial({ color: 0x8B5CF6, emissive: 0x6D28D9, emissiveIntensity: 0.15, metalness: 0.3, roughness: 0.2 }), 300);
-            im.userData.instances = []; im.userData.bc = 0; root.add(im); root.userData._sb = im; clickTargets.push(im);
-          }
-          const b = root.userData._sb, bi = b.userData.bc;
-          b.setMatrixAt(bi, new Matrix4().makeTranslation(pos.x, pos.y, pos.z));
-          b.instanceMatrix.needsUpdate = true; b.userData.bc++; b.count = b.userData.bc;
-          b.userData.instances.push({ index: idx, pos: pos.clone() });
-          nodeData.push({ type: 'instanced', batch: b, instanceIdx: bi, index: idx, pos, item }); return;
-        }
-        const mat = new MeshPhysicalMaterial({ color: c, emissive: c, emissiveIntensity: 0.25, metalness: 0.3, roughness: 0.2, transparent: true, opacity: 0.8, clearcoat: 0.2 });
-        const mesh = new Mesh(cfg.geom.clone(), mat);
-        mesh.position.copy(pos); mesh.scale.setScalar(0.8 + plt[0] * 0.4);
-        mesh.userData.index = idx; root.add(mesh); clickTargets.push(mesh); nodeData.push({ mesh, index: idx, pos, item });
-      });
-    });
 
-    // Constellation lines
-    const ep = [], co = ['soul','role','skill','chamber','infrastructure','combo'];
-    for (let ci = 0; ci < co.length - 1; ci++) {
-      const la = catItems[co[ci]] || [], lb = catItems[co[ci+1]] || [];
-      la.forEach(a => { const an = nodeData.find(n => n.index === a.idx); if (!an) return;
-        lb.forEach(b => { if (Math.random() > 0.08) return; const bn = nodeData.find(n => n.index === b.idx); if (!bn) return;
-          if (an.pos.distanceTo(bn.pos) < 3) ep.push(an.pos.x,an.pos.y,an.pos.z,bn.pos.x,bn.pos.y,bn.pos.z); }); });
+    // ─── BUILD EDGE GRAPH ───
+    const nodeList = []; // { index, cat, item }
+    Object.keys(catItems).forEach(cat => { catItems[cat].forEach(e => nodeList.push({ idx: e.idx, cat, item: e.item })); });
+    const edges = [];
+    const catOrder = ['soul','role','skill','chamber','infrastructure','combo'];
+    for (let ci = 0; ci < catOrder.length - 1; ci++) {
+      const la = catItems[catOrder[ci]] || [], lb = catItems[catOrder[ci+1]] || [];
+      la.forEach(a => { lb.forEach(b => { if (Math.random() < 0.1) edges.push([a.idx, b.idx]); }); });
     }
     Object.keys(catItems).forEach(cat => { const l = catItems[cat];
-      for (let i = 0; i < l.length; i++) for (let j = i + 1; j < Math.min(i + 5, l.length); j++) {
-        const an = nodeData.find(n => n.index === l[i].idx), bn = nodeData.find(n => n.index === l[j].idx);
-        if (!an || !bn) continue; if (an.pos.distanceTo(bn.pos) < 1.5 && Math.random() < 0.3) ep.push(an.pos.x,an.pos.y,an.pos.z,bn.pos.x,bn.pos.y,bn.pos.z); }});
-    if (ep.length) { const eg = new BufferGeometry(); eg.setAttribute('position', new Float32BufferAttribute(ep, 3)); scene.add(new LineSegments(eg, new LineBasicMaterial({ color: 0x00D4FF, transparent: true, opacity: 0.06, blending: AdditiveBlending }))); }
+      for (let i = 0; i < l.length; i++) for (let j = i + 1; j < Math.min(i + 4, l.length); j++) { edges.push([l[i].idx, l[j].idx]); } });
+
+    // ─── FORCE-DIRECTED LAYOUT ───
+    const V3 = T.Vector3;
+    const positions = {};
+    nodeList.forEach(n => { positions[n.idx] = new V3((Math.random()-0.5)*4, (Math.random()-0.5)*2, (Math.random()-0.5)*4); });
+    const velocities = {};
+    nodeList.forEach(n => { velocities[n.idx] = new V3(0,0,0); });
+
+    const repel = 3.0, attract = 0.005, center = 0.02, damping = 0.85, minDist = 0.3;
+    for (let iter = 0; iter < 120; iter++) {
+      // Repulsion between all nodes
+      for (let i = 0; i < nodeList.length; i++) {
+        for (let j = i + 1; j < nodeList.length; j++) {
+          const a = nodeList[i], b = nodeList[j];
+          const pa = positions[a.idx], pb = positions[b.idx];
+          const dv = new V3().copy(pa).sub(pb);
+          const dist = Math.max(dv.length(), minDist);
+          const force = repel / (dist * dist);
+          dv.normalize().multiplyScalar(force);
+          velocities[a.idx].add(dv);
+          velocities[b.idx].sub(dv);
+        }
+      }
+      // Attraction along edges
+      edges.forEach(e => {
+        const pa = positions[e[0]], pb = positions[e[1]];
+        const dv = new V3().copy(pb).sub(pa);
+        const dist = dv.length();
+        dv.normalize().multiplyScalar(dist * attract);
+        velocities[e[0]].add(dv);
+        velocities[e[1]].sub(dv);
+      });
+      // Center gravity
+      nodeList.forEach(n => {
+        const p = positions[n.idx];
+        velocities[n.idx].add(new V3().copy(p).multiplyScalar(-center));
+      });
+      // Apply velocities with damping
+      nodeList.forEach(n => {
+        velocities[n.idx].multiplyScalar(damping);
+        positions[n.idx].add(velocities[n.idx]);
+      });
+    }
+
+    // ─── BUILD 3D NODES AT FORCE-DIRECTED POSITIONS ───
+    const edgePositions = [];
+    nodeList.forEach(entry => {
+      const { idx, cat, item } = entry;
+      const cfg = CAT[cat];
+      const pos = positions[idx];
+      const plt = (item.plt || '0.5/0.5/0.5').split('/').map(Number);
+      const c = new T.Color().setHSL(0.75 - plt[0] * 0.15, 0.6 + plt[1] * 0.3, 0.35 + plt[2] * 0.25);
+
+      if (cat === 'combo') {
+        const sg = new T.BufferGeometry(); const sv = [];
+        for (let s = 0; s < 8; s++) { const sa = (s / 8) * Math.PI * 2 + idx; sv.push(pos.x + Math.cos(sa)*0.1, pos.y + Math.sin(sa*2)*0.05, pos.z + Math.sin(sa)*0.1); }
+        sg.setAttribute('position', new Float32BufferAttribute(sv, 3));
+        const star = new Points(sg, new PointsMaterial({ color: c, size: 0.04, transparent: true, opacity: 0.6, blending: AdditiveBlending }));
+        star.userData = { index: idx }; root.add(star); clickTargets.push(star); nodeData.push({ index: idx, pos, item }); return;
+      }
+
+      if (cat === 'skill') {
+        if (!root.userData._sb) {
+          const im = new InstancedMesh(new OctahedronGeometry(0.045, 0), new MeshPhysicalMaterial({ color: 0x8B5CF6, emissive: 0x6D28D9, emissiveIntensity: 0.15, metalness: 0.3, roughness: 0.2 }), 300);
+          im.userData.instances = []; im.userData.bc = 0; root.add(im); root.userData._sb = im; clickTargets.push(im);
+        }
+        const b = root.userData._sb, bi = b.userData.bc;
+        b.setMatrixAt(bi, new Matrix4().makeTranslation(pos.x, pos.y, pos.z));
+        b.instanceMatrix.needsUpdate = true; b.userData.bc++; b.count = b.userData.bc;
+        b.userData.instances.push({ index: idx, pos: pos.clone() });
+        nodeData.push({ type: 'instanced', batch: b, instanceIdx: bi, index: idx, pos, item }); return;
+      }
+
+      const mat = new MeshPhysicalMaterial({ color: c, emissive: c, emissiveIntensity: 0.25, metalness: 0.3, roughness: 0.2, transparent: true, opacity: 0.8, clearcoat: 0.2 });
+      const mesh = new Mesh(cfg.geom.clone(), mat);
+      mesh.position.copy(pos); mesh.scale.setScalar(0.8 + plt[0] * 0.4);
+      mesh.userData.index = idx; root.add(mesh); clickTargets.push(mesh); nodeData.push({ mesh, index: idx, pos, item });
+
+      // Build constellation lines from edges
+      edges.forEach(e => {
+        if (e[0] === idx) { const t = positions[e[1]]; if (t && pos.distanceTo(t) < 4) edgePositions.push(pos.x,pos.y,pos.z,t.x,t.y,t.z); }
+        if (e[1] === idx) { const t = positions[e[0]]; if (t && pos.distanceTo(t) < 4) edgePositions.push(pos.x,pos.y,pos.z,t.x,t.y,t.z); }
+      });
+    });
+    if (edgePositions.length) { const eg = new BufferGeometry(); eg.setAttribute('position', new Float32BufferAttribute(edgePositions, 3)); scene.add(new LineSegments(eg, new LineBasicMaterial({ color: 0x00D4FF, transparent: true, opacity: 0.06, blending: AdditiveBlending }))); }
 
     // Background stars
     const sc = 1200, sp = new Float32Array(sc * 3);
