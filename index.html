@@ -58,7 +58,8 @@ input{font-family:inherit;outline:none;border:none;background:none}
 #soul-info-panel .plt{font-size:0.85rem;color:var(--gold);margin-bottom:20px;font-weight:600}
 #soul-info-panel .awaken{display:inline-block;padding:12px 32px;font-size:0.95rem;font-weight:600;color:#fff;background:linear-gradient(135deg,var(--purple),var(--purple-dark));border:none;border-radius:30px;cursor:pointer;transition:all 0.3s;box-shadow:0 4px 20px rgba(139,92,246,0.2);width:100%;text-align:center;font-family:inherit}
 #soul-info-panel .awaken:hover{transform:translateY(-2px);box-shadow:0 8px 40px rgba(139,92,246,0.3)}
-.app{position:relative;z-index:1;max-width:1280px;width:100%;display:flex;flex-direction:column;gap:40px}
+.app{position:relative;z-index:1;max-width:1280px;width:100%;display:flex;flex-direction:column;gap:40px;pointer-events:none}
+.app > * {pointer-events:auto}
 
 /* NAV */
 .navbar{display:flex;align-items:center;justify-content:space-between;padding:12px 28px;background:rgba(255,255,255,0.04);backdrop-filter:blur(20px) saturate(1.2);-webkit-backdrop-filter:blur(20px) saturate(1.2);border:1px solid rgba(255,255,255,0.06);border-radius:60px;box-shadow:var(--shadow-card);transform:translateZ(0);will-change:transform,backdrop-filter;position:relative;overflow:hidden}
@@ -713,6 +714,7 @@ render(items);
     // Info panel
     const pan = document.getElementById('soul-info-panel'), pt = document.getElementById('soul-info-title'), pd = document.getElementById('soul-info-desc'), pp = document.getElementById('soul-info-plt'), pb = document.getElementById('soul-info-btn'), pc = document.getElementById('soul-info-close');
     const ray = new Raycaster(), po = new Vector2(); let hov = -1;
+    ray.params.Points.threshold = 0.15;
     function getHit(e) {
       po.x = (e.clientX / window.innerWidth) * 2 - 1; po.y = -(e.clientY / window.innerHeight) * 2 + 1;
       ray.setFromCamera(po, camera);
