@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>The Digital Library of Souls — Soul Economy</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@7/dist/fuse.min.js"></script>
 <script type="importmap">
 {
   "imports": {
@@ -100,6 +101,20 @@ input{font-family:inherit;outline:none;border:none;background:none}
 .search-clear:hover{color:var(--text-white)}
 .search-results{position:absolute;top:calc(100%+8px);left:0;right:0;background:rgba(8,8,8,0.96);backdrop-filter:blur(24px) saturate(1.2);-webkit-backdrop-filter:blur(24px) saturate(1.2);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:6px 0;max-height:340px;overflow-y:auto;opacity:0;transform:translateY(-8px) scale(0.98);pointer-events:none;transition:var(--transition);box-shadow:0 16px 60px rgba(0,0,0,0.6)}
 .search-results.active{opacity:1;transform:translateY(0) scale(1);pointer-events:auto}
+
+/* PLT FILTERS */
+.plt-filters{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;padding:12px 0}
+.plt-filter{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.03);padding:6px 14px;border-radius:12px;border:1px solid rgba(255,255,255,0.04)}
+.plt-filter label{font-size:0.75rem;font-weight:600;min-width:20px}
+.plt-filter input[type=range]{width:80px;height:4px;-webkit-appearance:none;appearance:none;border-radius:4px;outline:none;background:rgba(255,255,255,0.1)}
+.plt-filter input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;cursor:pointer}
+.plt-filter .p-val{color:var(--purple)}
+.plt-filter .l-val{color:var(--cyan)}
+.plt-filter .t-val{color:var(--gold)}
+.plt-filter .p-thumb::-webkit-slider-thumb{background:var(--purple)}
+.plt-filter .l-thumb::-webkit-slider-thumb{background:var(--cyan)}
+.plt-filter .t-thumb::-webkit-slider-thumb{background:var(--gold)}
+.plt-filter .value{font-size:0.8rem;font-weight:700;min-width:28px;text-align:center}
 .result-item{display:flex;align-items:center;gap:12px;padding:10px 20px;cursor:pointer;transition:var(--transition);border-radius:8px;margin:2px 6px}
 .result-item:hover{background:rgba(139,92,246,0.08)}
 .result-item .icon{font-size:1.2rem}
@@ -248,6 +263,12 @@ input{font-family:inherit;outline:none;border:none;background:none}
   <button class="category-tab" data-cat="infrastructure">⚙️ Infrastructure</button>
   <button class="category-tab" data-cat="role">🎭 Roles</button>
   <button class="category-tab" data-cat="combo">🔥 Combos</button>
+</div>
+
+<div class="plt-filters" id="pltFilters">
+  <div class="plt-filter"><label class="p-val">P</label><input type="range" min="0" max="10" value="0" class="p-thumb" id="pltP"><span class="value p-val" id="pltPVal">0</span></div>
+  <div class="plt-filter"><label class="l-val">L</label><input type="range" min="0" max="10" value="0" class="l-thumb" id="pltL"><span class="value l-val" id="pltLVal">0</span></div>
+  <div class="plt-filter"><label class="t-val">T</label><input type="range" min="0" max="10" value="0" class="t-thumb" id="pltT"><span class="value t-val" id="pltTVal">0</span></div>
 </div>
 
 <section id="catalog">
@@ -597,10 +618,41 @@ function render(data){
   });
 }
 
+// FUSE.JS FUZZY SEARCH
+let fuse = null;
+function initFuse(data) {
+    if (typeof Fuse !== 'undefined') {
+        fuse = new Fuse(data, { keys: ['name', 'type', 'desc'], threshold: 0.35, includeScore: true });
+    }
+}
+initFuse(items);
+
 function filterAndRender(){
-  let d=active==='all'?[...items]:items.filter(i=>i.type===active);
-  const q=si.value.trim().toLowerCase();
-  if(q.length>0)d=d.filter(i=>i.name.toLowerCase().includes(q)||i.desc.toLowerCase().includes(q));
+  let d = active === 'all' ? [...items] : items.filter(i => i.type === active);
+  const q = si.value.trim().toLowerCase();
+  
+  // PLT filters
+  const pltP = parseInt(document.getElementById('pltP')?.value || '0') / 10;
+  const pltL = parseInt(document.getElementById('pltL')?.value || '0') / 10;
+  const pltT = parseInt(document.getElementById('pltT')?.value || '0') / 10;
+  if (pltP > 0 || pltL > 0 || pltT > 0) {
+    d = d.filter(i => {
+      const p = parseFloat(i.plt?.split('/')[0] || 0);
+      const l = parseFloat(i.plt?.split('/')[1] || 0);
+      const t = parseFloat(i.plt?.split('/')[2] || 0);
+      return p >= pltP && l >= pltL && t >= pltT;
+    });
+  }
+  
+  if (q.length > 0) {
+    if (fuse) {
+      const fuzzy = fuse.search(q).map(r => r.item);
+      const exact = d.filter(i => i.name.toLowerCase().includes(q) || i.desc.toLowerCase().includes(q));
+      d = [...new Map([...fuzzy, ...exact].map(i => [i.name, i])).values()];
+    } else {
+      d = d.filter(i => i.name.toLowerCase().includes(q) || i.desc.toLowerCase().includes(q));
+    }
+  }
   render(d);
 }
 
@@ -628,6 +680,32 @@ si.addEventListener('keydown',e=>{
 });
 
 render(items);
+
+// ─── ASYNC CATALOG LOADER ───
+(async function loadExternalCatalog() {
+    try {
+        const res = await fetch('./data/catalog.json');
+        if (res.ok) {
+            const external = await res.json();
+            if (Array.isArray(external) && external.length > 0) {
+                window.items = external;
+                initFuse(external);
+                render(external);
+                console.log(`✦ Catalog loaded externally: ${external.length} items`);
+            }
+        }
+    } catch(e) { console.log('Catalog fallback: using embedded data'); }
+})();
+
+// PLT FILTER EVENTS
+document.querySelectorAll('#pltP, #pltL, #pltT').forEach(el => {
+    el.addEventListener('input', function() {
+        const id = this.id;
+        const val = this.value;
+        document.getElementById(id + 'Val').textContent = val;
+        filterAndRender();
+    });
+});
 
 // ─── SOUL KNOWLEDGE GRAPH — Interactive 3D Graph ───
 (async function soulGraph() {
