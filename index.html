@@ -752,6 +752,31 @@ render(items);
         if (e[0] === idx) { const t = positions[e[1]]; if (t && pos.distanceTo(t) < 4) edgePositions.push(pos.x,pos.y,pos.z,t.x,t.y,t.z); }
         if (e[1] === idx) { const t = positions[e[0]]; if (t && pos.distanceTo(t) < 4) edgePositions.push(pos.x,pos.y,pos.z,t.x,t.y,t.z); }
       });
+
+      // ─── PLT BADGE SPRITE (grafted from Sam & Bruno) ───
+      if (cat !== 'skill' && cat !== 'combo') {
+        const canvas = document.createElement('canvas');
+        canvas.width = 256; canvas.height = 64;
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, 256, 64);
+        const pLabels = ['P', 'L', 'T'], pColors = ['#8B5CF6', '#00D4FF', '#FFD166'];
+        plt.forEach((val, i) => {
+          const px = 10 + i * 82;
+          ctx.fillStyle = pColors[i] + '40';
+          ctx.beginPath(); ctx.roundRect(px, 8, 75, 44, 8); ctx.fill();
+          ctx.fillStyle = pColors[i];
+          ctx.font = 'bold 18px Inter, sans-serif';
+          ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+          ctx.fillText(`${pLabels[i]} ${val.toFixed(1)}`, px + 37, 30);
+        });
+        const tex = new T.CanvasTexture(canvas);
+        const spriteMat = new T.SpriteMaterial({ map: tex, transparent: true, opacity: 0.6, depthTest: false, sizeAttenuation: true });
+        const sprite = new T.Sprite(spriteMat);
+        const s = 0.4 + plt[0] * 0.3;
+        sprite.scale.set(s, s * 0.27, 1);
+        sprite.position.copy(pos); sprite.position.y += 0.5;
+        root.add(sprite);
+      }
     });
     if (edgePositions.length) { const eg = new BufferGeometry(); eg.setAttribute('position', new Float32BufferAttribute(edgePositions, 3)); scene.add(new LineSegments(eg, new LineBasicMaterial({ color: 0x00D4FF, transparent: true, opacity: 0.06, blending: AdditiveBlending }))); }
 
@@ -787,7 +812,15 @@ render(items);
     function animate() {
       requestAnimationFrame(animate); controls.update();
       const t = Date.now() * 0.001;
-      nodeData.forEach(d => { if (d.mesh && d.mesh.isMesh) { d.mesh.rotation.x = Math.sin(t + d.index) * 0.05; d.mesh.rotation.y = Math.cos(t + d.index) * 0.05; } });
+      nodeData.forEach(d => { if (d.mesh && d.mesh.isMesh) {
+        d.mesh.rotation.x = Math.sin(t + d.index) * 0.05;
+        d.mesh.rotation.y = Math.cos(t + d.index) * 0.05;
+        // Proximity glow — brighter when camera is near
+        const dist = controls.target.distanceTo(d.pos || d.mesh.position);
+        const proximity = Math.max(0, 1 - (dist - 0.5) / 4);
+        d.mesh.material.emissiveIntensity = 0.15 + proximity * 0.6;
+        d.mesh.material.opacity = 0.6 + proximity * 0.3;
+      } });
       renderer.render(scene, camera);
     }
     animate();
