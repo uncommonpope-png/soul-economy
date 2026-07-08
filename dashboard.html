@@ -1285,7 +1285,11 @@
                 controls.target.lerpVectors(startTarget, interiorTarget, t);
                 controls.update();
                 if (t < 1) requestAnimationFrame(animEnter);
-                else controls.enabled = true;
+                else {
+                    controls.enabled = true;
+                    // Auto-open journal
+                    setTimeout(() => openBookByIndex(0), 300);
+                }
             }
             requestAnimationFrame(animEnter);
             if (typeof exitBtn !== 'undefined') exitBtn.style.display = 'block';
@@ -1383,7 +1387,12 @@
             return group;
         }
         
-        function startReading(book) {
+        
+function openBookByIndex(idx) {
+    if (!books || idx >= books.length) return;
+    const bookObj = books[idx];
+    if (bookObj) startReading(bookObj);
+}function startReading(book) {
             if (readingState !== 'idle') return;
             readingState = 'flying';
             readingBook = book;
