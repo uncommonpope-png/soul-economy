@@ -194,6 +194,7 @@
                     <div class="reading-actions">
                         <a class="buy-book" id="buy-book-btn" target="_blank" rel="noopener" style="display:none">BUY ON BUYaSOUL</a>
                         <button class="close-book" id="close-book-btn">RETURN BOOK</button>
+                    <button class="close-book" id="download-book-btn" style="background:linear-gradient(135deg,#8B5CF6,#6D28D9);margin-top:8px">⬇ Download Entry</button>
                     </div>
                     <div class="reading-actions" style="margin-top:10px;gap:8px">
                         <a class="share-btn" id="share-bsky" target="_blank" rel="noopener" style="display:none">Share on Bluesky</a>
@@ -1500,6 +1501,23 @@ function openBookByIndex(idx) {
             readingCard.classList.remove('with-cover');
         });
         
+        document.getElementById('download-book-btn').addEventListener('click', () => {
+            if (!readingBook || !readingBook.userData || !readingBook.userData.title) return;
+            const title = readingBook.userData.title;
+            const entry = pltBooks[title];
+            if (!entry) return;
+            let md = '# ' + title + '\n\n';
+            md += '**Author:** ' + (entry.author || 'Profit Prime') + '\n\n---\n\n';
+            (entry.chapters || []).forEach(ch => {
+                md += '## ' + ch.name + '\n\n' + ch.desc + '\n\n';
+            });
+            const blob = new Blob([md], { type: 'text/markdown' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = title.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '.md';
+            a.click(); URL.revokeObjectURL(a.href);
+        });
+        
         function updateBookReading() {
             if (!readingBook) return;
             
@@ -1745,7 +1763,27 @@ function openBookByIndex(idx) {
         document.body.appendChild(exitBtn);
         exitBtn.addEventListener('click', exitPyramid);
         
-        // ========== ANIMATION ==========
+        
+// ===== EXPORT JOURNAL (Meiling's code) =====
+function exportAllJournal() {
+    const entries = Object.keys(pltBooks).map(key => ({ key, ...pltBooks[key] }));
+    let md = '# PROFIT PRIME JOURNAL\n\n';
+    md += '> Exported on ' + new Date().toISOString() + '\n\n---\n\n';
+    entries.forEach((entry, i) => {
+        md += '## ' + (i+1) + '. ' + entry.key + '\n\n';
+        md += '**Date:** ' + (entry.date || 'Unknown') + '\n\n';
+        (entry.chapters || []).forEach(ch => {
+            md += '### ' + ch.name + '\n\n' + ch.desc + '\n\n';
+        });
+        md += '---\n\n';
+    });
+    const blob = new Blob([md], { type: 'text/markdown' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'profit-journal-' + new Date().toISOString().split('T')[0] + '.md';
+    a.click(); URL.revokeObjectURL(a.href);
+}
+// ========== ANIMATION ==========
         let time = 0, lastTime = 0;
         
         function animate() {
