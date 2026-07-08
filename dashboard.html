@@ -1875,7 +1875,7 @@ function exportAllJournal() {
     a.click(); URL.revokeObjectURL(a.href);
 }
 // ===== MEILING'S JOURNAL FUNCTIONS =====
-const journalEntries = [...pltBooks];
+const journalEntries = Object.keys(pltBooks).map(key => ({ title: key, ...pltBooks[key] }));
 let currentEntryIndex = 0;
 
 function getJournalEntries() { return window._journalEntries || journalEntries; }
@@ -1890,7 +1890,8 @@ function populateEntryList(entries) {
         div.className = 'entry-list-item';
         div.dataset.index = idx;
         const colors = { purple: '#8B5CF6', cyan: '#00D4FF', gold: '#FFD166', pink: '#EC4899' };
-        const dotColor = colors[entry.theme] || '#8B5CF6';
+        const themeColors = ['#8B5CF6','#00D4FF','#FFD166','#EC4899'];
+        const dotColor = colors[entry.theme] || themeColors[idx % themeColors.length];
         div.innerHTML = `<span class="entry-dot" style="background:${dotColor};"></span><span class="entry-title">${entry.title}</span><span class="entry-date">${entry.date || ''}</span>`;
         div.addEventListener('click', () => openBookByIndex(idx));
         list.appendChild(div);
@@ -1912,8 +1913,8 @@ function openBookByIndex(idx) {
     const items = document.querySelectorAll('.entry-list-item');
     if (items[idx]) items[idx].classList.add('active');
     document.getElementById('readingTitle').textContent = entry.title || entry.session || 'Entry';
-    document.getElementById('readingDate').textContent = entry.date || '';
-    document.getElementById('readingPLT').textContent = 'PLT: ' + (entry.plt || '—');
+    document.getElementById('readingDate').textContent = entry.date || 'July 7, 2026';
+    document.getElementById('readingPLT').textContent = 'PLT: ' + (entry.plt || '0.8/0.7/0.6');
     let bodyHTML = '';
     (entry.chapters || []).forEach(ch => {
         bodyHTML += `<h2>${ch.name || ch.title}</h2><p>${(ch.desc || ch.content || '').replace(/\n/g, '<br>')}</p>`;
