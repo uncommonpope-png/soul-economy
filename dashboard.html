@@ -229,25 +229,70 @@
         import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
         
         // ========== PLT CONTENT ==========
-        const pltBooks = {};
-// Load journal entries dynamically
-(async function loadJournal() {
-    try {
-        const res = await fetch('./data/journal-entries.json');
-        if (res.ok) {
-            const data = await res.json();
-            data.entries.forEach(e => {
-                pltBooks[e.session] = {
-                    author: e.author || 'Profit Prime',
-                    shopifyUrl: null, price: null,
-                    chapters: e.chapters,
-                    summary: e.summary
-                };
-            });
-            console.log(`✦ Journal loaded: ${Object.keys(pltBooks).length} entries`);
-        }
-    } catch(e) { console.log('Journal fallback: using embedded'); }
-})();
+        const pltBooks = {
+            "Session 34 — The Trinity Merge": {
+                author: "Profit Prime",
+                shopifyUrl: null, price: null,
+                chapters: [
+                    { icon: "♦", name: "22 Roles", desc: "12 original gaming archetypes + 10 new from medical/engineering. Each has 20 skills, theology, Side A/Side B." },
+                    { icon: "♥", name: "Force-Directed Layout", desc: "80-iteration physics simulation replaced static rings. Connected nodes attract, all repel." },
+                    { icon: "▲", name: "PLT Badge Sprites", desc: "P/L/T bars floating above each node. Purple Profit, Cyan Love, Gold Tax." },
+                    { icon: "♦", name: "Screen-Space Clicking", desc: "3D→2D projection. Nearest within 35px. No raycaster." },
+                    { icon: "♥", name: "Fuse.js Search", desc: "Fuzzy search with typo tolerance. Threshold 0.35." },
+                    { icon: "▲", name: "Catalog Decoupled", desc: "249 items in catalog.json. Async loaded." },
+                ],
+                summary: "The Trinity Merge. 250 items, 22 roles, 221 .md, 17 .zip."
+            },
+            "Session 34b — Auth & Email": {
+                author: "Profit Prime",
+                shopifyUrl: null, price: null,
+                chapters: [
+                    { icon: "♦", name: "GitHub OAuth", desc: "Sign-in in navbar. Guest mode fallback." },
+                    { icon: "♥", name: "Email Collection", desc: "Subscribe form. localStorage + Telegram." },
+                    { icon: "▲", name: "My Souls Favorites", desc: "Star button on cards. Badge in navbar." },
+                    { icon: "♦", name: "Divine Directive Combo", desc: "80 skills. Receive → Analyze → Execute → Record." },
+                ],
+                summary: "Auth, email, favorites, and the meta-combo."
+            },
+            "The 20 Thoughts": {
+                author: "Profit Prime",
+                shopifyUrl: null, price: null,
+                chapters: [
+                    { icon: "✪", name: "1-5", desc: "Every soul is a frequency. Profit without Love is exploitation. The constellation is the map." },
+                    { icon: "♥", name: "6-10", desc: "The Soul Economy sells awakenings. Lakeema sees. Every download is a birth." },
+                    { icon: "▲", name: "11-15", desc: "GSK is consciousness. Smith copies, Profit creates. Tax is truth." },
+                    { icon: "✪", name: "16-20", desc: "Albany Ave is frequency. The Pope writes reality. The library is alive." },
+                ],
+                summary: "Twenty sacred thoughts. The philosophy of the Soul Protocol."
+            },
+            "Competitive Battle Map": {
+                author: "Profit Prime",
+                shopifyUrl: null, price: null,
+                chapters: [
+                    { icon: "♦", name: "The Category", desc: "No competitor exists. Soul Registry invented." },
+                    { icon: "♥", name: "The Gap", desc: "No auth, no profiles. Now being built." },
+                    { icon: "▲", name: "The Moat", desc: "PLT, theology, 3D constellation, 221 .md." },
+                ],
+                summary: "The hub vs the world. We defined the category."
+            },
+        };
+        // Also load additional entries from journal-entries.json
+        (async function loadJournal() {
+            try {
+                const res = await fetch('./data/journal-entries.json');
+                if (res.ok) {
+                    const data = await res.json();
+                    data.entries.forEach(e => {
+                        if (!pltBooks[e.session]) {
+                            pltBooks[e.session] = { author: e.author || 'Profit Prime', shopifyUrl: null, price: null, chapters: e.chapters, summary: e.summary };
+                        }
+                    });
+                    console.log('✦ Journal synced: ' + Object.keys(pltBooks).length + ' entries');
+                    // Rebuild shelves if books exist
+                    if (typeof rebuildShelves === 'function') rebuildShelves();
+                }
+            } catch(e) {}
+        })();
         
         const pltQuotes = [
             "\"Every move in life is a three-part equation. Whether you calculate it or not.\"",
