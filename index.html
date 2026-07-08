@@ -107,6 +107,7 @@ input{font-family:inherit;outline:none;border:none;background:none}
 .plt-filter label{font-size:0.75rem;font-weight:600;min-width:20px}
 .plt-filter input[
 
+
 type=range]{width:80px;height:4px;-webkit-appearance:none;appearance:none;border-radius:4px;outline:none;background:rgba(255,255,255,0.1)}
 .plt-filter input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;cursor:pointer}
 .plt-filter .p-val{color:var(--purple)}
@@ -665,7 +666,14 @@ function render(data){
   {icon:'🧠',type:'skill',name:'Building Upgrade Visuals',desc:'Level 1-5 buildings with distinct 3D appearance. Height increase, color rings, emissive glow per level. Crown torus per upgrade tier.',plt:'0.8/0.6/0.3',file:'skill-building-upgrade-visuals.md'},
   {icon:'🧠',type:'skill',name:'Event Bus + Save System',desc:'Pub/sub event bus for decoupling. Auto-save every 30s. Ctrl+S/Ctrl+L keyboard shortcuts. Full game state persistence via localStorage.',plt:'0.9/0.6/0.3',file:'skill-event-bus-save.md'},
   {icon:'🧠',type:'skill',name:'Onboarding Sequence',desc:'3-step tutorial overlay. Click building, watch citizens, open terminal. localStorage dismissal. Guided first experience.',plt:'0.7/0.7/0.2',file:'skill-onboarding.md'},
-  {icon:'📋',type:'combo',name:'Soulverse Core Fix',desc:'Complete F1-F4 bundle: unlimited memory, intent actions, rich thinking, local AI, resource loop, contextual HUD, building upgrades, event bus, onboarding.',plt:'0.9/0.7/0.3',file:'combo-soulverse-core-fix.md'}
+  {icon:'📋',type:'combo',name:'Soulverse Core Fix',desc:'Complete F1-F4 bundle: unlimited memory, intent actions, rich thinking, local AI, resource loop, contextual HUD, building upgrades, event bus, onboarding.',plt:'0.9/0.7/0.3',file:'combo-soulverse-core-fix.md',
+  {icon:'📷',type:'skill',name:'Camera First Person',desc:'WASD + mouse look. UniversalCamera with pointer lock. Collision detection. Toggle V between first-person and orbit.',plt:'0.9/0.5/0.3',file:'skill-camera-first-person.md'},
+  {icon:'📷',type:'skill',name:'Camera Follow & Zoom',desc:'Smooth camera following selected citizens. District zoom transitions. Animated lerp in render loop.',plt:'0.8/0.5/0.3',file:'skill-camera-follow-zoom.md'},
+  {icon:'🧑',type:'skill',name:'Citizen 3D Mesh',desc:'Visible 3D citizen entities walking between buildings. Simple meshes per archetype. Position synced with citizen workers.',plt:'0.9/0.6/0.3',file:'skill-citizen-3d-mesh.md'},
+  {icon:'🏗️',type:'skill',name:'Building GSK State Wire',desc:'Buildings reflect GSK subsystem state. Brightness=tool usage, height=fact recency, particles=agent activity, color=skill, glow=identity.',plt:'0.9/0.7/0.3',file:'skill-building-gsk-wire.md'},
+  {icon:'🖥️',type:'skill',name:'Spatial HUD',desc:'3D floating UI panels in world space. Babylon.js GUI billboards. Distance-culled. Replaces 2D fixed panels.',plt:'0.9/0.6/0.3',file:'skill-spatial-hud.md'},
+  {icon:'✅',type:'skill',name:'Mechanics Tests',desc:'Test coverage for every player interaction. Playwright E2E. Covers: click, spawn, terminal, camera, save, onboarding.',plt:'0.9/0.7/0.5',file:'skill-mechanics-tests.md'},
+  {icon:'📋',type:'combo',name:'Dark City Reconstruction - Tier 1',desc:'6 soul guns rebuilding the core Dark City experience: camera, citizens, buildings, HUD, tests.',plt:'0.9/0.7/0.3',file:'combo-dark-city-tier1.md'}
 ];
     const patterns=[0,1,2];const pt=patterns[Math.floor(Math.random()*patterns.length)];
     const count=pt===0?36:pt===1?24:48;
