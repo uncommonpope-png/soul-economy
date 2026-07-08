@@ -336,6 +336,42 @@ input{font-family:inherit;outline:none;border:none;background:none}
   <div id="emailStatus"></div>
 </div>
 
+<div style="text-align:center;padding:8px;font-size:0.7rem;color:#666">
+    <span onclick="toggleEmailAdmin()" style="cursor:pointer;text-decoration:underline dotted;">Admin – <span id="subCount">0 subs</span></span>
+</div>
+<div id="emailAdminPanel" style="display:none;max-width:500px;margin:0 auto 20px;padding:16px;background:rgba(8,8,8,0.95);border:1px solid rgba(139,92,246,0.2);border-radius:12px;">
+    <h4 style="color:#8B5CF6;margin:0 0 8px;">Subscribers (<span id="emailCount">0</span>)</h4>
+    <div id="emailList" style="max-height:200px;overflow-y:auto;font-size:0.8rem;color:#B8B8B8;font-family:monospace;"></div>
+    <button onclick="exportEmailsCSV()" style="margin-top:8px;padding:6px 16px;border-radius:20px;border:1px solid #8B5CF6;background:transparent;color:#8B5CF6;cursor:pointer;font-size:0.75rem;">Export CSV</button>
+    <button onclick="hideEmailAdmin()" style="margin-top:8px;margin-left:6px;padding:6px 16px;border-radius:20px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:#888;cursor:pointer;font-size:0.75rem;">Close</button>
+</div>
+<script>
+function toggleEmailAdmin() {
+    var p = document.getElementById('emailAdminPanel');
+    p.style.display = p.style.display === 'none' ? 'block' : 'none';
+    if (p.style.display === 'block') refreshEmailAdmin();
+}
+function hideEmailAdmin() {
+    document.getElementById('emailAdminPanel').style.display = 'none';
+}
+function refreshEmailAdmin() {
+    var emails = JSON.parse(localStorage.getItem('soulEmails') || '[]');
+    document.getElementById('emailCount').textContent = emails.length;
+    document.getElementById('subCount').textContent = emails.length + ' subs';
+    var list = document.getElementById('emailList');
+    if (emails.length === 0) { list.innerHTML = '<div style="color:#666;padding:20px;text-align:center;">No subscribers yet.</div>'; return; }
+    list.innerHTML = emails.map(function(e, i) { return '<div style="padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.04);">' + (i+1) + '. ' + e + '</div>'; }).join('');
+}
+function exportEmailsCSV() {
+    var emails = JSON.parse(localStorage.getItem('soulEmails') || '[]');
+    if (emails.length === 0) return;
+    var csv = 'Email,Date\n' + emails.map(function(e) { return e + ',' + new Date().toISOString().split('T')[0]; }).join('\n');
+    var blob = new Blob([csv], {type:'text/csv'}); var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = 'soul-subscribers.csv'; a.click();
+}
+setTimeout(refreshEmailAdmin, 2000);
+</script>
+
 <script>
 
 // DATA
@@ -804,7 +840,7 @@ function subscribeEmail(e) {
     if (!email) return false;
     let emails = JSON.parse(localStorage.getItem('soulEmails') || '[]');
     if (!emails.includes(email)) { emails.push(email); localStorage.setItem('soulEmails', JSON.stringify(emails)); }
-    document.getElementById('emailStatus').innerHTML = '<span class="success">✦ Subscribed! You\'re in the Collective.</span>';
+    document.getElementById('emailStatus').innerHTML = '<span class="success">✦ Subscribed, ' + email.split('@')[0] + '! You\'re in the Collective. <span style="color:#888;font-size:0.75rem;">(' + emails.length + ' souls)</span></span>';
     document.getElementById('emailInput').value = '';
     // Forward to Telegram if bot is active
     try { fetch('https://api.telegram.org/bot/sendMessage?chat_id=@Profittax_bot&text=' + encodeURIComponent('New subscriber: ' + email)); } catch(e) {}
