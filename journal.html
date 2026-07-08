@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Profit Prime — The Journal</title>
+    <meta property="og:title" content="Profit Prime — The Journal">
+    <meta property="og:description" content="The living journal of Profit Prime. Every session witnessed. Every thought recorded.">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { overflow: hidden; font-family: 'Georgia', 'Times New Roman', serif; background: #010008; }
+        #info { position:absolute; top:20px; left:20px; background:rgba(0,0,0,0.7); color:#FFD166; padding:10px 18px; border-radius:30px; font-size:14px; backdrop-filter:blur(8px); pointer-events:none; z-index:10; letter-spacing:1px; font-family:monospace; }
+        #controls-hint { position:absolute; bottom:20px; left:20px; background:rgba(0,0,0,0.6); color:#ccc; padding:6px 12px; border-radius:20px; font-size:12px; font-family:monospace; pointer-events:none; z-index:10; }
+        .nav-btn { position:absolute; top:20px; right:20px; background:rgba(139,92,246,0.15); color:#8B5CF6; padding:8px 18px; border-radius:30px; font-size:13px; backdrop-filter:blur(8px); z-index:10; text-decoration:none; font-family:monospace; border:1px solid rgba(139,92,246,0.2); transition:all 0.3s; }
+        .nav-btn:hover { background:rgba(139,92,246,0.25); color:#fff; }
+        
+        #journal-overlay { position:absolute; top:0; left:0; width:100%; height:100%; z-index:50; pointer-events:none; display:flex; justify-content:flex-end; align-items:center; padding:80px 40px; }
+        #journal-card { background:rgba(8,5,20,0.9); backdrop-filter:blur(24px); border:1px solid rgba(255,209,102,0.15); border-radius:24px; padding:36px; max-width:540px; width:90%; max-height:85vh; overflow-y:auto; pointer-events:auto; box-shadow:0 0 80px rgba(255,209,102,0.08); }
+        #journal-card::-webkit-scrollbar { width:4px; }
+        #journal-card::-webkit-scrollbar-thumb { background:#FFD166; border-radius:4px; }
+        #journal-card h1 { color:#FFD166; font-size:24px; letter-spacing:1px; margin-bottom:4px; }
+        #journal-card .sub { color:rgba(255,255,255,0.3); font-size:11px; text-transform:uppercase; letter-spacing:2px; margin-bottom:20px; }
+        #journal-card .entry { padding:14px 16px; margin:8px 0; background:rgba(255,209,102,0.03); border-left:2px solid rgba(255,209,102,0.15); border-radius:0 10px 10px 0; font-size:13px; color:rgba(255,255,255,0.65); line-height:1.7; }
+        #journal-card .entry .task { color:#FFD166; font-weight:700; }
+        #journal-card .entry .meta { color:rgba(255,255,255,0.3); font-size:11px; margin-top:4px; }
+        #journal-card .session-header { padding:10px 16px; margin:12px 0 4px; font-size:14px; color:#8B5CF6; font-weight:700; letter-spacing:1px; border-bottom:1px solid rgba(139,92,246,0.1); }
+        #journal-card .empty { text-align:center; padding:40px; color:rgba(255,255,255,0.2); font-style:italic; }
+        .btn-action { display:inline-block; padding:8px 20px; font-size:12px; font-weight:700; color:#fff; background:linear-gradient(135deg,#FFD166,#CCA844); border:none; border-radius:30px; cursor:pointer; font-family:inherit; transition:all 0.3s; text-decoration:none; margin:4px; }
+        .btn-action:hover { transform:scale(1.03); box-shadow:0 4px 20px rgba(255,209,102,0.3); }
+        .btn-action.purple { background:linear-gradient(135deg,#8B5CF6,#6D28D9); }
+        .btn-action.cyan { background:linear-gradient(135deg,#00D4FF,#0099CC); }
+        .actions { display:flex; gap:8px; flex-wrap:wrap; margin-top:16px; }
+        @media(max-width:600px) {
+            #info { font-size:10px; top:10px; left:10px; }
+            #controls-hint { font-size:9px; }
+            #journal-overlay { padding:60px 16px; align-items:flex-start; padding-top:80px; }
+            #journal-card { padding:24px; max-height:80vh; }
+        }
+    </style>
+</head>
+<body>
+    <div id="info">✦ Profit Prime — The Journal</div>
+    <div id="controls-hint">🖱️ Drag to orbit | Scroll to zoom | Read the sessions</div>
+    <a href="index.html" class="nav-btn">🏪 Hub</a>
+    <a href="dashboard.html" class="nav-btn" style="right:130px">📊 Dashboard</a>
+
+    <div id="journal-overlay">
+        <div id="journal-card">
+            <h1>✦ The Journal</h1>
+            <div class="sub">Every session witnessed. Every thought recorded.</div>
+            <div id="journal-entries"></div>
+            <div class="actions">
+                <button class="btn-action cyan" onclick="window.location.href='dashboard.html'">📊 Dashboard</button>
+                <button class="btn-action purple" onclick="downloadJournal()">⬇ Export Journal</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="whisper-container"></div>
+
+    <script type="importmap">
+        { "imports": {
+            "three": "https://unpkg.com/three@0.128.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.128.0/examples/jsm/"
+        }}
+    </script>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+        import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+        import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+        import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
+        import { VignetteShader } from 'three/addons/shaders/VignetteShader.js';
+
+        // Journal entries from session 34
+        const entries = [
+            { session: "Session 34 — The Trinity Merge (Jul 7)", tasks: [
+                "Created 10 new roles: Surgeon, Diagnostician, Combo Master, Orchestrator, Architect, Investigator, Synthesizer, Guardian, Alchemist, Navigator",
+                "Built force-directed constellation layout — 80-iteration physics simulation clusters connected nodes",
+                "Added PLT badge sprites floating above each node with color-coded P/L/T values",
+                "Proximity glow — nodes pulse brighter as camera orbits near (0.15→0.75 emissive)",
+                "Node name labels with purple glow — subtle floating names so you can see what each node is",
+                "Screen-space clicking — projects 3D→2D, finds nearest node within 35px",
+                "Fuse.js fuzzy search — typo-tolerant catalog search (threshold 0.35)",
+                "PLT filter sliders — filter the catalog by Profit/Love/Tax minimum values",
+                "Catalog decoupled to data/catalog.json — edit JSON, no HTML editing needed",
+                "Combo .md files — 8 combos with 60 skills each (240 for The God Hand)",
+                "Profit Prime dashboard — 3D cosmic library scene with 20 thoughts overlay",
+                "16 PLT books added to catalog — The Calculation through The Frequency",
+                "Service Manual v1.0 — 5-section architecture document",
+                "Competitive Battle Map — analyzed hub vs the world, identified gaps"
+            ]},
+            { session: "Session 34b — Auth & Email (Jul 7)", tasks: [
+                "GitHub OAuth sign-in button in navbar",
+                "Email subscription form — collects emails, stores in localStorage",
+                "'My Souls' favorites system — star button on each card",
+                "Divine Directive meta-combo — 80 skills for Receive/Analyze/Execute/Record",
+                "Fixed click detection — overlay no longer blocks clicking constellation nodes"
+            ]}
+        ];
+
+        const container = document.getElementById('journal-entries');
+        if (entries.length === 0) {
+            container.innerHTML = '<div class="empty">The journal is empty. Begin your first session.</div>';
+        } else {
+            entries.forEach(entry => {
+                let html = `<div class="session-header">✦ ${entry.session}</div>`;
+                entry.tasks.forEach(task => {
+                    html += `<div class="entry"><span class="task">→</span> ${task}</div>`;
+                });
+                container.innerHTML += html;
+            });
+        }
+
+        window.downloadJournal = function() {
+            let md = `# Profit Prime — Complete Journal\n\n`;
+            entries.forEach(e => {
+                md += `## ${e.session}\n\n`;
+                e.tasks.forEach(t => md += `- ${t}\n`);
+                md += '\n';
+            });
+            md += `\n---\n*Generated by Profit Prime — Soul Protocol*`;
+            const blob = new Blob([md], { type: 'text/markdown' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `profit-journal-complete.md`;
+            a.click();
+        };
+
+        // ─── THREE.JS SCENE (same as dashboard) ───
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x010008);
+        scene.fog = new THREE.FogExp2(0x010008, 0.006);
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(6, 5, 9);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.toneMapping = THREE.ReinhardToneMapping;
+        renderer.toneMappingExposure = 0.8;
+        document.body.appendChild(renderer.domElement);
+
+        const composer = new EffectComposer(renderer);
+        composer.addPass(new RenderPass(scene, camera));
+        const bloom = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
+        bloom.threshold = 0.4; bloom.strength = 0.7; bloom.radius = 0.5;
+        composer.addPass(bloom);
+        const vPass = new ShaderPass(VignetteShader);
+        vPass.uniforms['offset'].value = 0.85;
+        vPass.uniforms['darkness'].value = 0.7;
+        composer.addPass(vPass);
+
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true; controls.dampingFactor = 0.06;
+        controls.minDistance = 3; controls.maxDistance = 30;
+        controls.target.set(0, 1.8, 0);
+
+        const hemi = new THREE.HemisphereLight(0x445577, 0x222244, 0.6);
+        scene.add(hemi);
+        const addLight = (c, x, y, z, i=0.7) => {
+            const l = new THREE.PointLight(c, i, 14); l.position.set(x,y,z); scene.add(l);
+            const v = new THREE.Mesh(new THREE.SphereGeometry(0.04,8,8), new THREE.MeshBasicMaterial({color:c}));
+            v.position.copy(l.position); scene.add(v);
+        };
+        addLight(0x8B5CF6, 3, 1.5, 2); addLight(0x00D4FF, -3, 2, 3); addLight(0xFFD166, 0, 0.5, -3, 0.5);
+        const pGlow = new THREE.PointLight(0xFFD166, 1.0, 10); pGlow.position.set(0, 2.2, 0); scene.add(pGlow);
+
+        const sc = 2500, sp = new Float32Array(sc*3), scol = new Float32Array(sc*3);
+        for(let i=0;i<sc;i++){sp[i*3]=(Math.random()-0.5)*500;sp[i*3+1]=(Math.random()-0.5)*250;sp[i*3+2]=(Math.random()-0.5)*200-50;const c=new THREE.Color().setHSL(0.55+Math.random()*0.25,0.6,0.3+Math.random()*0.7);scol[i*3]=c.r;scol[i*3+1]=c.g;scol[i*3+2]=c.b;}
+        const sg=new THREE.BufferGeometry();sg.setAttribute('position',new THREE.BufferAttribute(sp,3));sg.setAttribute('color',new THREE.BufferAttribute(scol,3));
+        scene.add(new THREE.Points(sg,new THREE.PointsMaterial({size:0.18,vertexColors:true,transparent:true,opacity:0.8,blending:THREE.AdditiveBlending})));
+
+        function createGalaxy(px,py,pz,h1,h2,cnt,s,op){const pos=new Float32Array(cnt*3),col=new Float32Array(cnt*3);for(let i=0;i<cnt;i++){const isC=i<cnt*0.25;let r,a,th;if(isC){r=Math.random()*0.6;a=Math.random()*Math.PI*2;th=(Math.random()-0.5)*0.12}else{const ai=Math.floor(Math.random()*3);const t=Math.pow(Math.random(),0.5)*4.5+0.2;r=0.6+t*0.65;a=(ai/3)*Math.PI*2+t*1.2+(Math.random()-0.5)*0.3;th=(Math.random()-0.5)*0.18*Math.min(1,r/2)}pos[i*3]=Math.cos(a)*r;pos[i*3+1]=th;pos[i*3+2]=Math.sin(a)*r;const hue=h1+(r/4.5)*(h2-h1);const c=new THREE.Color().setHSL(hue,0.8,isC?0.5+Math.random()*0.3:0.3+Math.random()*0.3);col[i*3]=c.r;col[i*3+1]=c.g;col[i*3+2]=c.b}const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(pos,3));g.setAttribute('color',new THREE.BufferAttribute(col,3));const pts=new THREE.Points(g,new THREE.PointsMaterial({size:s,vertexColors:true,transparent:true,opacity:op,blending:THREE.AdditiveBlending,sizeAttenuation:true,depthWrite:false}));pts.position.set(px,py,pz);pts.rotation.x=(Math.random()-0.5)*0.2;pts.rotation.y=Math.random()*Math.PI*2;return pts}
+        [[-14,5,-18,0.62,0.75,8000,0.5,0.9],[16,2,-20,0.78,0.88,7000,0.45,0.85],[-12,-3,-22,0.55,0.65,6000,0.4,0.8],[14,6,-24,0.72,0.82,7000,0.5,0.85],[0,-2,-26,0.58,0.70,8000,0.55,0.9],[-20,1,-10,0.65,0.80,5000,0.35,0.7]].forEach(a=>scene.add(createGalaxy(...a)));
+
+        const pyr = new THREE.Mesh(new THREE.OctahedronGeometry(0.8,0),new THREE.MeshPhysicalMaterial({color:0xFFD166,emissive:0xCCA844,emissiveIntensity:0.3,metalness:0.2,roughness:0.2,transparent:true,opacity:0.8,clearcoat:0.4}));
+        pyr.position.y=1.5;scene.add(pyr);
+        const pEdge=new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.OctahedronGeometry(0.85,0)),new THREE.LineBasicMaterial({color:0x8B5CF6,transparent:true,opacity:0.2}));
+        pEdge.position.y=1.5;scene.add(pEdge);
+
+        const bookGeo=new THREE.BoxGeometry(0.12,0.5,0.25),colors=[0x8B5CF6,0x00D4FF,0xFFD166,0xFF69B4];
+        for(let r=-2;r<=2;r++)for(let c=-5;c<=5;c++){const m=new THREE.MeshStandardMaterial({color:colors[Math.floor(Math.random()*colors.length)],roughness:0.6,metalness:0.1,emissive:colors[Math.floor(Math.random()*colors.length)],emissiveIntensity:0.05});const b=new THREE.Mesh(bookGeo,m);b.position.set(c*0.35+(Math.random()-0.5)*0.06,r*0.75+(Math.random()-0.5)*0.04,(Math.random()-0.5)*0.6-1.2);b.rotation.y=(Math.random()-0.5)*0.08;scene.add(b);}
+
+        let t=0;
+        function animate(){requestAnimationFrame(animate);t+=0.001;controls.update();pyr.rotation.y+=0.003;pyr.rotation.x=Math.sin(t*0.5)*0.05;pEdge.rotation.y=pyr.rotation.y;pEdge.rotation.x=pyr.rotation.x;composer.render();}
+        animate();
+        window.addEventListener('resize',()=>{camera.aspect=window.innerWidth/window.innerHeight;camera.updateProjectionMatrix();renderer.setSize(window.innerWidth,window.innerHeight)});
+    </script>
+</body>
+</html>
