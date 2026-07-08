@@ -1234,27 +1234,7 @@
         const pGlow=new THREE.PointLight(0x8B5CF6,0.5,8); pGlow.position.set(0,-0.2,0); interiorGroup.add(pGlow);
         const cEdge=new THREE.DirectionalLight(0x00D4FF,0.2); cEdge.position.set(-3,1,3); interiorGroup.add(cEdge);
         
-        interiorGroup.userData = { plinth:plinthGroup, crystal:crystal, opMesh:opMesh, symbolGroup:symbolGroup }; 0x332a1a, emissive: 0x221100 }));
-        ceiling.position.set(0, 3.2, 0);
-        interiorGroup.add(ceiling);
-        
-        const pedestal = new THREE.Mesh(new THREE.BoxGeometry(1.1, 0.5, 1.1), new THREE.MeshStandardMaterial({ color: 0xaa8866 }));
-        pedestal.position.set(0, 0, 0);
-        pedestal.castShadow = true;
-        interiorGroup.add(pedestal);
-        
-        const bookGroupInt = new THREE.Group();
-        const bookCover = new THREE.Mesh(new THREE.BoxGeometry(0.85, 0.1, 0.65), new THREE.MeshStandardMaterial({ color: 0x8b3a2a }));
-        bookCover.position.set(0, 0.3, 0);
-        bookGroupInt.add(bookCover);
-        const bookPages = new THREE.Mesh(new THREE.BoxGeometry(0.78, 0.06, 0.6), new THREE.MeshStandardMaterial({ color: 0xfdf0d0 }));
-        bookPages.position.set(0, 0.28, 0);
-        bookGroupInt.add(bookPages);
-        interiorGroup.add(bookGroupInt);
-        
-        const interiorLight = new THREE.PointLight(0xffaa66, 0.7, 6);
-        interiorLight.position.set(0, 1.2, 0);
-        interiorGroup.add(interiorLight);
+        interiorGroup.userData = { plinth:plinthGroup, crystal:crystal, opMesh:opMesh, symbolGroup:symbolGroup };
         
         // ========== WISPS & DUST ==========
         const wispGeo = new THREE.BufferGeometry();
