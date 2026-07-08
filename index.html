@@ -179,6 +179,27 @@ input{font-family:inherit;outline:none;border:none;background:none}
 .footer-links a:hover{color:var(--text-white)}
 .sig{color:rgba(255,255,255,0.05);font-size:0.7em;letter-spacing:1px;margin-top:8px;text-align:center;width:100%}
 
+/* EMAIL SIGNUP */
+.email-section{text-align:center;padding:40px 20px;max-width:500px;margin:0 auto}
+.email-section h3{font-size:1.2rem;margin-bottom:6px;background:linear-gradient(135deg,var(--purple),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.email-section p{font-size:0.85rem;color:var(--text-muted);margin-bottom:16px}
+.email-form{display:flex;gap:8px;justify-content:center}
+.email-form input{padding:10px 16px;border-radius:30px;border:1px solid rgba(139,92,246,0.2);background:rgba(255,255,255,0.04);color:#fff;font-size:0.9rem;width:260px;font-family:inherit}
+.email-form input:focus{border-color:var(--purple);outline:none}
+.email-form button{padding:10px 24px;border-radius:30px;border:none;background:linear-gradient(135deg,var(--purple),var(--purple-dark));color:#fff;font-weight:600;cursor:pointer;font-family:inherit;transition:all 0.3s}
+.email-form button:hover{transform:scale(1.03);box-shadow:0 4px 20px rgba(139,92,246,0.3)}
+.email-form .success{color:#10B981;font-size:0.85rem;margin-top:8px}
+
+/* AUTH BAR */
+.auth-bar{display:flex;align-items:center;gap:12px}
+.auth-bar .avatar{width:28px;height:28px;border-radius:50%;display:none}
+.auth-bar .user-email{font-size:0.8rem;color:var(--text-gray);display:none}
+.auth-bar .btn-signin{padding:6px 16px;font-size:0.8rem;border:1px solid rgba(139,92,246,0.2);border-radius:30px;color:var(--text-gray);cursor:pointer;background:transparent;font-family:inherit;transition:all 0.3s}
+.auth-bar .btn-signin:hover{border-color:var(--purple);color:#fff}
+.auth-bar .btn-signout{font-size:0.75rem;color:var(--text-muted);cursor:pointer;display:none;background:none;border:none;font-family:inherit}
+.auth-bar .btn-signout:hover{color:var(--text-white)}
+.my-souls-badge{font-size:0.7rem;padding:2px 10px;border-radius:30px;background:rgba(139,92,246,0.1);color:var(--purple);border:1px solid rgba(139,92,246,0.15);display:none}
+
 .card-entrance{opacity:0;transform:translateY(30px) scale(0.96);animation:cardIn 0.6s cubic-bezier(0.22,1,0.36,1) forwards}
 @keyframes cardIn{to{opacity:1;transform:translateY(0) scale(1)}}
 
@@ -212,7 +233,15 @@ input{font-family:inherit;outline:none;border:none;background:none}
     <li><a href="https://github.com/uncommonpope-png" target="_blank" aria-label="Visit GitHub profile">GitHub</a></li>
     <li><a href="profit.html" aria-label="Profit Prime journal">Profit</a></li>
   </ul>
+    <li><a href="dashboard.html" aria-label="Profit Prime dashboard">Dashboard</a></li>
+  </ul>
   <div class="nav-actions">
+    <div class="auth-bar">
+      <span class="my-souls-badge" id="mySoulsBadge">⭐ 0</span>
+      <button class="btn-signin" id="btnSignin" onclick="loginWithGitHub()">⭐ Sign In</button>
+      <span class="user-email" id="userEmail"></span>
+      <button class="btn-signout" id="btnSignout">Sign Out</button>
+    </div>
     <a href="https://buyasoul.online" target="_blank" class="btn-ghost" aria-label="Visit BUYaSOUL online store">BUYaSOUL.online</a>
     <a href="https://uncommonpope-png.github.io/final-run/" target="_blank" class="btn-primary" aria-label="Play Dark City live">🌌 Dark City</a>
   </div>
@@ -295,6 +324,16 @@ input{font-family:inherit;outline:none;border:none;background:none}
   </div>
   <div class="sig">PROFIT · LOVE · TAX · CRAIG JONES · GRAND CODE POPE · PLT PRESS</div>
 </footer>
+</div>
+
+<div class="email-section">
+  <h3>✦ Join the Soul Economy</h3>
+  <p>Get notified when new souls drop. No spam. No tax. Just profit + love.</p>
+  <form class="email-form" id="emailForm" onsubmit="return subscribeEmail(event)">
+    <input type="email" id="emailInput" placeholder="your@email.com" required />
+    <button type="submit">✦ Subscribe</button>
+  </form>
+  <div id="emailStatus"></div>
 </div>
 
 <script>
@@ -729,6 +768,77 @@ document.querySelectorAll('#pltP, #pltL, #pltT').forEach(el => {
         filterAndRender();
     });
 });
+
+// ─── AUTH SYSTEM — GitHub OAuth ───
+const GITHUB_CLIENT_ID = ''; // Register at github.com/settings/applications/new
+function loginWithGitHub() {
+    if (!GITHUB_CLIENT_ID) { localStorage.setItem('soulUser', 'guest'); updateAuthUI(); return; }
+    const redirect = window.location.origin + window.location.pathname;
+    window.location.href = `https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&redirect_uri=${redirect}&scope=user:email`;
+}
+function updateAuthUI() {
+    const user = localStorage.getItem('soulUser');
+    const email = localStorage.getItem('soulEmail');
+    if (user) {
+        document.getElementById('btnSignin').style.display = 'none';
+        document.getElementById('btnSignout').style.display = 'inline-block';
+        document.getElementById('userEmail').style.display = 'inline-block';
+        document.getElementById('userEmail').textContent = email || 'Guest';
+    }
+}
+function signOut() { localStorage.removeItem('soulUser'); localStorage.removeItem('soulEmail'); location.reload(); }
+document.getElementById('btnSignout').onclick = signOut;
+// Check OAuth response
+const urlParams = new URLSearchParams(window.location.search);
+if (urlParams.get('code')) {
+    localStorage.setItem('soulUser', 'github-user');
+    localStorage.setItem('soulEmail', urlParams.get('code').substring(0, 10) + '@github');
+    history.replaceState({}, '', window.location.pathname);
+}
+updateAuthUI();
+
+// ─── EMAIL COLLECTION ───
+function subscribeEmail(e) {
+    e.preventDefault();
+    const email = document.getElementById('emailInput').value.trim();
+    if (!email) return false;
+    let emails = JSON.parse(localStorage.getItem('soulEmails') || '[]');
+    if (!emails.includes(email)) { emails.push(email); localStorage.setItem('soulEmails', JSON.stringify(emails)); }
+    document.getElementById('emailStatus').innerHTML = '<span class="success">✦ Subscribed! You\'re in the Collective.</span>';
+    document.getElementById('emailInput').value = '';
+    // Forward to Telegram if bot is active
+    try { fetch('https://api.telegram.org/bot/sendMessage?chat_id=@Profittax_bot&text=' + encodeURIComponent('New subscriber: ' + email)); } catch(e) {}
+    return false;
+}
+
+// ─── "MY SOULS" FAVORITES ───
+function saveSoul(name) {
+    let saved = JSON.parse(localStorage.getItem('mySouls') || '[]');
+    if (saved.includes(name)) { saved = saved.filter(s => s !== name); } else { saved.push(name); }
+    localStorage.setItem('mySouls', JSON.stringify(saved));
+    updateMySouls();
+}
+function updateMySouls() {
+    const saved = JSON.parse(localStorage.getItem('mySouls') || '[]');
+    const badge = document.getElementById('mySoulsBadge');
+    if (badge) { badge.textContent = `⭐ ${saved.length}`; badge.style.display = saved.length > 0 ? 'inline-block' : 'none'; }
+}
+updateMySouls();
+// Add star toggle to cards
+const origRender = render;
+render = function(data) {
+    origRender(data);
+    document.querySelectorAll('.card').forEach((card, i) => {
+        const star = document.createElement('span');
+        const name = data[i]?.name || '';
+        const saved = JSON.parse(localStorage.getItem('mySouls') || '[]');
+        star.textContent = saved.includes(name) ? '⭐' : '☆';
+        star.style.cssText = 'cursor:pointer;font-size:1rem;margin-left:8px;transition:0.3s';
+        star.onclick = (e) => { e.stopPropagation(); saveSoul(name); };
+        const title = card.querySelector('.card-title');
+        if (title) title.appendChild(star);
+    });
+};
 
 // ─── SOUL KNOWLEDGE GRAPH — Interactive 3D Graph ───
 (async function soulGraph() {
