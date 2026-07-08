@@ -336,9 +336,6 @@ input{font-family:inherit;outline:none;border:none;background:none}
   <div id="emailStatus"></div>
 </div>
 
-<div style="text-align:center;padding:8px;font-size:0.7rem;color:#666">
-    <span onclick="toggleEmailAdmin()" style="cursor:pointer;text-decoration:underline dotted;">Admin – <span id="subCount">0 subs</span></span>
-</div>
 <div id="emailAdminPanel" style="display:none;max-width:500px;margin:0 auto 20px;padding:16px;background:rgba(8,8,8,0.95);border:1px solid rgba(139,92,246,0.2);border-radius:12px;">
     <h4 style="color:#8B5CF6;margin:0 0 8px;">Subscribers (<span id="emailCount">0</span>)</h4>
     <div id="emailList" style="max-height:200px;overflow-y:auto;font-size:0.8rem;color:#B8B8B8;font-family:monospace;"></div>
@@ -370,6 +367,8 @@ function exportEmailsCSV() {
     a.href = URL.createObjectURL(blob); a.download = 'soul-subscribers.csv'; a.click();
 }
 setTimeout(refreshEmailAdmin, 2000);
+// Secret admin: Shift+A
+document.addEventListener('keydown', function(e) { if (e.shiftKey && (e.key === 'A' || e.key === 'a')) toggleEmailAdmin(); });
 </script>
 
 <script>
