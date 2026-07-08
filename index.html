@@ -105,7 +105,8 @@ input{font-family:inherit;outline:none;border:none;background:none}
 .plt-filters{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;padding:12px 0}
 .plt-filter{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.03);padding:6px 14px;border-radius:12px;border:1px solid rgba(255,255,255,0.04)}
 .plt-filter label{font-size:0.75rem;font-weight:600;min-width:20px}
-.plt-filter input[type=range]{width:80px;height:4px;-webkit-appearance:none;appearance:none;border-radius:4px;outline:none;background:rgba(255,255,255,0.1)}
+.plt-filter input[
+type=range]{width:80px;height:4px;-webkit-appearance:none;appearance:none;border-radius:4px;outline:none;background:rgba(255,255,255,0.1)}
 .plt-filter input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;cursor:pointer}
 .plt-filter .p-val{color:var(--purple)}
 .plt-filter .l-val{color:var(--cyan)}
@@ -340,8 +341,7 @@ input{font-family:inherit;outline:none;border:none;background:none}
 <script>
 
 // DATA
-const items = [
-  // SOULS (all working downloads)
+const items = \n// SOULS (all working downloads)
   {icon:'🧠',type:'soul',name:'Architect',desc:'System design master. 465 files, 288 JS modules, package.json with `npm start`.',plt:'0.8/0.5/0.3',file:'architect.zip',featured:true},
   {icon:'🧠',type:'soul',name:'Miss Vikki',desc:'Operator soul. 347 files, 276 JS modules. 34 chambers. v1.2.0.',plt:'0.9/0.4/0.4',file:'miss-vikki.zip',featured:true},
   {icon:'🧠',type:'soul',name:'Soul Commander',desc:'GOD SOUL. 454 files, 281 JS. 19 superpowers from 5M+ GitHub stars. MCP server. Claude Code ready.',plt:'0.9/0.5/0.3',file:'soul-commander.zip',featured:true},
@@ -624,8 +624,7 @@ const items = [
   {icon:'⚡',type:'skill',name:'context-window-control',desc:'Token budgeting, sliding window strategies, summarization compression — grafted from Architect/Whis.',plt:'0.7/0.5/0.4',file:'soul-gun-context-window-control.md'},
   {icon:'⚡',type:'skill',name:'permission-architecture',desc:'RBAC systems, tool-level ACLs, dynamic conditions — grafted from Merovingian/King Kai.',plt:'0.7/0.5/0.4',file:'soul-gun-permission-architecture.md'},
   {icon:'⚡',type:'skill',name:'pipeline-orchestration',desc:'DAG execution, sequential/parallel decorators, critical path analysis.',plt:'0.7/0.5/0.4',file:'soul-gun-pipeline-orchestration.md'},
-  {icon:'⚡',type:'skill',name:'soul-media-marketing',desc:'Soul media marketing — promote souls across platforms, track engagement, optimize messaging.',plt:'0.7/0.5/0.4',file:'soul-gun-soul-media-marketing.md'},
-];
+  {icon:'⚡',type:'skill',name:'soul-media-marketing',desc:'Soul media marketing — promote souls across platforms, track engagement, optimize messaging.',plt:'0.7/0.5/0.4',file:'soul-gun-soul-media-marketing.md'},\n  {"icon":"🧠","type":"soul","name":"Browser Citizen v4.0","desc":"Persistent citizen with dreaming, reflection, memory consolidation. Web Worker + IndexedDB + BroadcastChannel. Never dies.","plt":"0.8/0.6/0.3","file":"soul-browser-citizen-v4.0.0.md"},\n  {"icon":"⚡","type":"soul","name":"Hermes Messenger","desc":"The messenger citizen. Loanable powers: memory broadcast, skill creation. Gold-bordered, greets all citizens.","plt":"0.7/0.8/0.3","file":"soul-hermes-messenger-v1.0.0.md"},\n  {"icon":"🖥️","type":"infrastructure","name":"Spatial IDE v1.0","desc":"Full CodeMirror IDE inside the 3D city. File tree, language switcher, theme switcher, GSK bridge save. F2 to open.","plt":"0.9/0.5/0.3","file":"spatial-ide-v1.0.0.md"},\n  {"icon":"⬛","type":"infrastructure","name":"City Terminal v2.0","desc":"xterm.js with 9 local commands. Citizen listing, spawning, civilization status, building. WebSocket bridge to GSK.","plt":"0.8/0.5/0.4","file":"city-terminal-v2.0.0.md"},\n  {"icon":"🏛️","type":"infrastructure","name":"Civilization Engine v1.0","desc":"Resource system (energy/knowledge/materials/wealth). City growth algorithm. Emergent events (fires, festivals, discoveries). PLT scoring.","plt":"0.9/0.7/0.3","file":"civilization-engine-v1.0.0.md"},\n  {"icon":"📋","type":"combo","name":"Spatial OS Complete","desc":"All 6 phases: citizens, IDE, terminal, civilization, commerce. The full Dark City experience.","plt":"0.9/0.7/0.3","file":"spatial-os-complete-v1.0.0.md"},\n  {"icon":"🔧","type":"skill","name":"Civilization Engine Protocol","desc":"PLT-scored resource management. 5 emergent event types. Growth/decay algorithms. Score tracking with history.","plt":"0.9/0.7/0.3","file":"skill-civilization-engine.md"},\n  {"icon":"🔧","type":"skill","name":"Spatial Code Editor Protocol","desc":"CodeMirror 5 in 3D. File tree, multi-language, theme switching, GSK filesystem bridge, Ctrl+S save.","plt":"0.8/0.5/0.3","file":"skill-spatial-code-editor.md"},\n  {"icon":"🔧","type":"skill","name":"Browser Citizen Protocol","desc":"Web Worker citizenship with dreaming/reflection/consolidation. IndexedDB persistence. BroadcastChannel inter-citizen messaging.","plt":"0.8/0.6/0.3","file":"skill-browser-citizen.md"}\n]
 
 // RENDER
 const grid=document.getElementById('resourceGrid'),si=document.getElementById('searchInput'),sc=document.getElementById('searchClear'),sr=document.getElementById('searchResults'),tabs=document.querySelectorAll('.category-tab');
@@ -646,7 +645,17 @@ function render(data){
   `).join('');
   // 3D tilt + ripple
   function burstParticles(x,y){
-    const colors=['#8B5CF6','#00D4FF','#FFD166','#FF6B9D','#A855F7'];
+    const colors=['#8B5CF6','#00D4FF','#FFD166','#FF6B9D','#A855F,
+  {icon:'🧠',type:'soul',name:'Browser Citizen v4.0',desc:'Persistent citizen with dreaming, reflection, memory consolidation. Web Worker + IndexedDB + BroadcastChannel. Never dies.',plt:'0.8/0.6/0.3',file:'soul-browser-citizen-v4.0.0.md'},
+  {icon:'⚡',type:'soul',name:'Hermes Messenger',desc:'The messenger citizen. Loanable powers: memory broadcast, skill creation.',plt:'0.7/0.8/0.3',file:'soul-hermes-messenger-v1.0.0.md'},
+  {icon:'🖥️',type:'infrastructure',name:'Spatial IDE v1.0',desc:'Full CodeMirror IDE in the 3D city. File tree, language switcher, theme switcher, GSK bridge save.',plt:'0.9/0.5/0.3',file:'spatial-ide-v1.0.0.md'},
+  {icon:'⬛',type:'infrastructure',name:'City Terminal v2.0',desc:'xterm.js with 9 commands. Citizen listing, spawning, civilization status, building. WebSocket bridge to GSK.',plt:'0.8/0.5/0.4',file:'city-terminal-v2.0.0.md'},
+  {icon:'🏛️',type:'infrastructure',name:'Civilization Engine v1.0',desc:'Resource system. City growth algorithm. Emergent events (fires, festivals, discoveries). PLT scoring.',plt:'0.9/0.7/0.3',file:'civilization-engine-v1.0.0.md'},
+  {icon:'📋',type:'combo',name:'Spatial OS Complete',desc:'All 6 phases: citizens, IDE, terminal, civilization. Full Dark City Spatial OS.',plt:'0.9/0.7/0.3',file:'spatial-os-complete-v1.0.0.md'},
+  {icon:'🔧',type:'skill',name:'Civilization Engine Protocol',desc:'PLT-scored resource management. 5 emergent event types. Growth/decay algorithms.',plt:'0.9/0.7/0.3',file:'skill-civilization-engine.md'},
+  {icon:'🔧',type:'skill',name:'Spatial Code Editor Protocol',desc:'CodeMirror 5 in 3D. File tree, multi-language, theme switching, GSK filesystem bridge.',plt:'0.8/0.5/0.3',file:'skill-spatial-code-editor.md'},
+  {icon:'🔧',type:'skill',name:'Browser Citizen Protocol',desc:'Web Worker citizenship with dreaming/reflection/consolidation. IndexedDB persistence. BroadcastChannel.',plt:'0.8/0.6/0.3',file:'skill-browser-citizen.md'}
+];
     const patterns=[0,1,2];const pt=patterns[Math.floor(Math.random()*patterns.length)];
     const count=pt===0?36:pt===1?24:48;
     for(let i=0;i<count;i++){
