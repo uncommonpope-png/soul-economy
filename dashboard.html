@@ -156,86 +156,13 @@
             opacity: 0; transition: none;
             font-family: 'Georgia', serif; white-space: nowrap;
         }
-.whisper.fade-in { animation: whisperRise 3.5s ease-out forwards; }
-@keyframes whisperRise {
-    0%   { opacity: 0; transform: translateY(0) scale(0.8); }
-    15%  { opacity: 1; transform: translateY(-10px) scale(1); }
-    70%  { opacity: 0.9; transform: translateY(-40px) scale(1); }
-    100% { opacity: 0; transform: translateY(-70px) scale(0.9); }
-}
-
-/* ===== MEILING'S JOURNAL OVERLAY ===== */
-.reading-overlay#reading-overlay {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(8,8,8,0.85); backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px); z-index: 100;
-    display: none; justify-content: center; align-items: center; padding: 2rem;
-    animation: fadeIn 0.4s ease;
-}
-.reading-overlay#reading-overlay.active { display: flex; }
-.reading-container {
-    display: flex; width: 100%; max-width: 1200px; height: 85vh;
-    background: rgba(20,20,30,0.7); border-radius: 24px;
-    border: 1px solid rgba(139,92,246,0.2); overflow: hidden;
-    box-shadow: 0 0 80px rgba(139,92,246,0.1);
-}
-.reading-sidebar {
-    width: 300px; min-width: 280px; background: rgba(0,0,0,0.5);
-    border-right: 1px solid rgba(255,255,255,0.05);
-    padding: 1.5rem 1rem; display: flex; flex-direction: column; overflow: hidden;
-}
-.sidebar-header {
-    display: flex; justify-content: space-between; align-items: center;
-    margin-bottom: 1.2rem; padding-bottom: 0.8rem;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-}
-.sidebar-header h2 {
-    font-size: 1.3rem; font-weight: 700;
-    background: linear-gradient(135deg,#8B5CF6,#00D4FF);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-}
-.entry-count { font-size: 0.8rem; color: #888; }
-.entry-list { flex: 1; overflow-y: auto; padding-right: 4px; }
-.entry-list-item {
-    display: flex; align-items: center; gap: 12px; padding: 10px 12px;
-    border-radius: 10px; cursor: pointer; transition: 0.2s ease;
-    margin-bottom: 4px; border: 1px solid transparent;
-}
-.entry-list-item:hover { background: rgba(139,92,246,0.08); border-color: rgba(139,92,246,0.15); }
-.entry-list-item.active { background: rgba(139,92,246,0.12); border-color: #8B5CF6; }
-.entry-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-.entry-title { flex: 1; font-weight: 500; font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.entry-date { font-size: 0.7rem; color: #666; flex-shrink: 0; }
-.sidebar-footer { border-top: 1px solid rgba(255,255,255,0.05); padding-top: 1rem; margin-top: 0.5rem; }
-.export-btn {
-    width: 100%; padding: 8px; background: rgba(139,92,246,0.15);
-    border: 1px solid rgba(139,92,246,0.2); border-radius: 10px;
-    color: #fff; font-weight: 500; font-size: 0.85rem;
-    transition: 0.25s ease; cursor: pointer; text-align: center;
-}
-.export-btn:hover { background: rgba(139,92,246,0.25); border-color: #8B5CF6; }
-.reading-content { flex: 1; padding: 2rem 2.5rem; overflow-y: auto; display: flex; flex-direction: column; }
-.reading-header { margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.05); }
-.reading-header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.3rem; background: linear-gradient(135deg,#fff,#aaa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-.reading-meta { display: flex; gap: 1.5rem; font-size: 0.85rem; color: #888; }
-.plt-badge-reader { display: inline-block; padding: 2px 12px; border-radius: 20px; background: rgba(139,92,246,0.15); border: 1px solid rgba(139,92,246,0.2); color: #8B5CF6; font-weight: 500; }
-.reading-body { flex: 1; font-size: 1rem; line-height: 1.8; color: #ddd; }
-.reading-body h2 { color: #8B5CF6; font-size: 1.3rem; margin: 1.2rem 0 0.5rem; }
-.reading-body h3 { color: #00D4FF; font-size: 1.1rem; margin: 1rem 0 0.3rem; }
-.reading-body p { margin-bottom: 0.8rem; }
-.reading-footer { display: flex; gap: 1rem; justify-content: flex-end; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.05); margin-top: 1rem; }
-.download-entry-btn, .close-reading-btn {
-    padding: 8px 20px; border-radius: 30px; font-size: 0.85rem; font-weight: 500;
-    cursor: pointer; transition: 0.25s ease; border: none;
-}
-.download-entry-btn { background: linear-gradient(135deg,#8B5CF6,#6D28D9); color: #fff; }
-.download-entry-btn:hover { transform: scale(1.04); box-shadow: 0 0 30px rgba(139,92,246,0.2); }
-.close-reading-btn { background: transparent; color: #888; border: 1px solid rgba(255,255,255,0.1); }
-.close-reading-btn:hover { color: #fff; border-color: rgba(255,255,255,0.2); }
-.entry-list::-webkit-scrollbar, .reading-content::-webkit-scrollbar { width: 4px; }
-.entry-list::-webkit-scrollbar-track, .reading-content::-webkit-scrollbar-track { background: transparent; }
-.entry-list::-webkit-scrollbar-thumb, .reading-content::-webkit-scrollbar-thumb { background: #8B5CF6; border-radius: 4px; }
-@keyframes fadeIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
+        .whisper.fade-in { animation: whisperRise 3.5s ease-out forwards; }
+        @keyframes whisperRise {
+            0%   { opacity: 0; transform: translateY(0) scale(0.8); }
+            15%  { opacity: 1; transform: translateY(-10px) scale(1); }
+            70%  { opacity: 0.9; transform: translateY(-40px) scale(1); }
+            100% { opacity: 0; transform: translateY(-70px) scale(0.9); }
+        }
         @media (max-width: 600px) {
             #info { font-size: 10px; top: 10px; left: 10px; }
             #controls-hint { font-size: 9px; }
@@ -253,40 +180,23 @@
     <div id="info">✦ PROFIT PRIME — DRAG TO ORBIT | CLICK BOOKS FOR JOURNAL</div>
     <div id="controls-hint">≡ƒû▒∩╕Å Drag objects | Click books | Click souls | Scroll to zoom</div>
 
-    <!-- ===== READING OVERLAY (Meiling's Enhanced Journal) ===== -->
-    <div class="reading-overlay" id="reading-overlay">
-        <div class="reading-container">
-            <div class="reading-sidebar">
-                <div class="sidebar-header">
-                    <h2>✦ Journal</h2>
-                    <span class="entry-count" id="entryCount">0 entries</span>
-                </div>
-                <div class="entry-list" id="entryList"></div>
-                <div class="sidebar-footer">
-                    <button class="export-btn" id="exportJournalBtn">⬇ Export All</button>
-                </div>
-            </div>
-            <div class="reading-content">
-                <div class="reading-header">
-                    <h1 id="readingTitle">Select an entry</h1>
-                    <div class="reading-meta">
-                        <span id="readingDate">—</span>
-                        <span class="plt-badge" id="readingPLT">PLT: —</span>
+    <!-- Reading overlay -->
+    <div id="reading-overlay">
+        <div id="reading-bg"></div>
+        <div id="reading-card">
+            <div class="cover-col">
+                <img id="read-cover" src="" alt="Book cover" style="display:none">
+                <div class="text-col">
+                    <h1 id="read-title">The Calculation</h1>
+                    <p class="author" id="read-author">ΓÇö PLT Framework ΓÇö</p>
+                    <div id="read-chapters"></div>
+                    <p class="summary" id="read-summary"></p>
+                    <div class="reading-actions">
+                        <a class="buy-book" id="buy-book-btn" target="_blank" rel="noopener" style="display:none">BUY ON BUYaSOUL</a>
+                        <button class="close-book" id="close-book-btn">RETURN BOOK</button>
+                    <button class="close-book" id="download-book-btn" style="background:linear-gradient(135deg,#8B5CF6,#6D28D9);margin-top:8px">⬇ Download Entry</button>
                     </div>
-                </div>
-                <div class="reading-body" id="readingBody">
-                    <p style="color:#666;">Choose a journal entry from the list.</p>
-                </div>
-                <div class="reading-footer">
-                    <button class="download-entry-btn" id="downloadEntryBtn">⬇ Download Entry</button>
-                    <button class="close-reading-btn" id="closeReadingBtn">✕ Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Legacy compat elements (hidden, for existing JS) -->
-    <div id="reading-card" style="display:none"><div class="cover-col"><img id="read-cover" style="display:none"><div class="text-col"><h1 id="read-title"></h1><p id="read-author"></p><div id="read-chapters"></div><p id="read-summary"></p></div></div></div>
-    <div id="whisper-container"></div>
+                    <div class="reading-actions" style="margin-top:10px;gap:8px">
                         <a class="share-btn" id="share-bsky" target="_blank" rel="noopener" style="display:none">Share on Bluesky</a>
                         <a class="share-btn" id="share-x" target="_blank" rel="noopener" style="display:none">Share on X</a>
                         <button class="share-btn" id="share-copy" style="display:none">Copy Link</button>
@@ -1402,8 +1312,6 @@
         
         // ========== PYRAMID ENTER/EXIT ==========
         let isInside = false;
-        let isAnimating = false;
-        let readingState = 'idle';
         const originalCameraPos = camera.position.clone();
         const interiorCamPos = new THREE.Vector3(0, 1.2, 2.3);
         const interiorTarget = new THREE.Vector3(0, 1, 0);
@@ -1453,6 +1361,13 @@
                 controls.update();
                 if (t < 1) requestAnimationFrame(animExit);
                 else controls.enabled = true;
+                // Auto-open journal on entry
+                setTimeout(() => {
+                    if (books && books.length > 0 && readingState === 'idle') {
+                        const firstBook = books[0];
+                        if (firstBook) startReading(firstBook);
+                    }
+                }, 400);
             }
             requestAnimationFrame(animExit);
             if (typeof exitBtn !== 'undefined') exitBtn.style.display = 'none';
@@ -1593,6 +1508,26 @@ function openBookByIndex(idx) {
             readingState = 'returning';
             readingOverlay.classList.remove('active');
             readingCard.classList.remove('with-cover');
+        });
+        
+        // Download entry button
+        const downloadBtn = document.createElement('button');
+        downloadBtn.textContent = '⬇ Download Entry';
+        downloadBtn.style.cssText = 'background:linear-gradient(135deg,#8B5CF6,#6D28D9);color:#fff;border:none;padding:10px 22px;border-radius:30px;font-size:14px;font-weight:bold;cursor:pointer;margin-top:8px;font-family:inherit';
+        closeBookBtn.parentNode.insertBefore(downloadBtn, closeBookBtn);
+        downloadBtn.addEventListener('click', () => {
+            if (!readingBook || !readingBook.userData || !readingBook.userData.title) return;
+            const entry = pltBooks[readingBook.userData.title];
+            if (!entry) return;
+            let md = '# ' + readingBook.userData.title + '\n\n---\n\n';
+            (entry.chapters || []).forEach(ch => {
+                md += '## ' + ch.name + '\n\n' + ch.desc + '\n\n';
+            });
+            const blob = new Blob([md], { type: 'text/markdown' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = readingBook.userData.title.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '.md';
+            a.click(); URL.revokeObjectURL(a.href);
         });
         
         document.getElementById('download-book-btn').addEventListener('click', () => {
@@ -1877,118 +1812,6 @@ function exportAllJournal() {
     a.download = 'profit-journal-' + new Date().toISOString().split('T')[0] + '.md';
     a.click(); URL.revokeObjectURL(a.href);
 }
-// ===== MEILING'S JOURNAL FUNCTIONS =====
-const journalEntries = Object.keys(pltBooks).map(key => ({ title: key, ...pltBooks[key] }));
-let currentEntryIndex = 0;
-
-function getJournalEntries() { return window._journalEntries || journalEntries; }
-
-function populateEntryList(entries) {
-    const list = document.getElementById('entryList');
-    const count = document.getElementById('entryCount');
-    if (!list) return;
-    list.innerHTML = '';
-    entries.forEach((entry, idx) => {
-        const div = document.createElement('div');
-        div.className = 'entry-list-item';
-        div.dataset.index = idx;
-        const colors = { purple: '#8B5CF6', cyan: '#00D4FF', gold: '#FFD166', pink: '#EC4899' };
-        const themeColors = ['#8B5CF6','#00D4FF','#FFD166','#EC4899'];
-        const dotColor = colors[entry.theme] || themeColors[idx % themeColors.length];
-        div.innerHTML = `<span class="entry-dot" style="background:${dotColor};"></span><span class="entry-title">${entry.title}</span><span class="entry-date">${entry.date || ''}</span>`;
-        div.addEventListener('click', () => openBookByIndex(idx));
-        list.appendChild(div);
-    });
-    count.textContent = entries.length + ' entries';
-    if (entries.length > 0) {
-        const first = list.querySelector('.entry-list-item');
-        if (first) first.classList.add('active');
-        openBookByIndex(0);
-    }
-}
-
-function openBookByIndex(idx) {
-    const entries = getJournalEntries();
-    if (idx < 0 || idx >= entries.length) return;
-    currentEntryIndex = idx;
-    const entry = entries[idx];
-    document.querySelectorAll('.entry-list-item').forEach(el => el.classList.remove('active'));
-    const items = document.querySelectorAll('.entry-list-item');
-    if (items[idx]) items[idx].classList.add('active');
-    document.getElementById('readingTitle').textContent = entry.title || entry.session || 'Entry';
-    document.getElementById('readingDate').textContent = entry.date || 'July 7, 2026';
-    document.getElementById('readingPLT').textContent = 'PLT: ' + (entry.plt || '0.8/0.7/0.6');
-    let bodyHTML = '';
-    (entry.chapters || []).forEach(ch => {
-        bodyHTML += `<h2>${ch.name || ch.title}</h2><p>${(ch.desc || ch.content || '').replace(/\n/g, '<br>')}</p>`;
-    });
-    document.getElementById('readingBody').innerHTML = bodyHTML || '<p style="color:#666;">No content.</p>';
-    document.getElementById('reading-overlay').classList.add('active');
-    document.getElementById('enter-hint')?.classList.add('hidden');
-}
-
-function closeJournal() {
-    document.getElementById('reading-overlay').classList.remove('active');
-    document.getElementById('enter-hint')?.classList.remove('hidden');
-}
-
-function exportAllJournal() {
-    const entries = getJournalEntries();
-    let md = '# PROFIT PRIME JOURNAL\n\n> Exported ' + new Date().toISOString() + '\n\n---\n\n';
-    entries.forEach((e, i) => {
-        md += '## ' + (i+1) + '. ' + (e.title || e.session) + '\n\n**Date:** ' + (e.date || '') + '\n\n';
-        (e.chapters || []).forEach(ch => { md += '### ' + (ch.name || ch.title) + '\n\n' + (ch.desc || ch.content) + '\n\n'; });
-        md += '---\n\n';
-    });
-    const blob = new Blob([md], { type: 'text/markdown' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'profit-journal-' + new Date().toISOString().split('T')[0] + '.md';
-    a.click(); URL.revokeObjectURL(a.href);
-}
-
-function exportSingleEntry() {
-    const entries = getJournalEntries();
-    if (currentEntryIndex < 0 || currentEntryIndex >= entries.length) return;
-    const e = entries[currentEntryIndex];
-    let md = '# ' + (e.title || e.session) + '\n\n**Date:** ' + (e.date || '') + '\n\n---\n\n';
-    (e.chapters || []).forEach(ch => { md += '## ' + (ch.name || ch.title) + '\n\n' + (ch.desc || ch.content) + '\n\n'; });
-    const blob = new Blob([md], { type: 'text/markdown' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = (e.id || 'entry') + '-' + new Date().toISOString().split('T')[0] + '.md';
-    a.click(); URL.revokeObjectURL(a.href);
-}
-
-// Wire up journal UI
-setTimeout(() => {
-    document.getElementById('closeReadingBtn')?.addEventListener('click', closeJournal);
-    document.getElementById('exportJournalBtn')?.addEventListener('click', exportAllJournal);
-    document.getElementById('downloadEntryBtn')?.addEventListener('click', exportSingleEntry);
-    // Also wire existing close methods
-    const existingClose = document.getElementById('close-book-btn');
-    if (existingClose) existingClose.addEventListener('click', closeJournal);
-}, 500);
-
-// Load external journal entries
-(async function loadExtraJournal() {
-    try {
-        const res = await fetch('./data/journal-entries.json');
-        if (res.ok) {
-            const data = await res.json();
-            const ext = data.entries || data;
-            if (Array.isArray(ext) && ext.length > 0) {
-                const merged = [...journalEntries];
-                const seen = new Set(merged.map(e => e.id));
-                ext.forEach(e => { if (!seen.has(e.id)) { seen.add(e.id); merged.push(e); } });
-                window._journalEntries = merged;
-                setTimeout(() => populateEntryList(merged), 100);
-            }
-        }
-    } catch(e) {}
-    // Even without external, populate with hardcoded
-    setTimeout(() => populateEntryList(journalEntries), 100);
-})();
 // ========== ANIMATION ==========
         let time = 0, lastTime = 0;
         
@@ -2139,6 +1962,22 @@ setTimeout(() => {
         });
         
         console.log('Mystical Library: click books to read PLT content, click souls for whispers, drag objects');
+        
+        // ===== EXPORT JOURNAL =====
+        window.exportJournal = function() {
+            let md = '# Profit Prime Journal\n\n> Exported ' + new Date().toISOString() + '\n\n---\n\n';
+            Object.keys(pltBooks).forEach((title, i) => {
+                const e = pltBooks[title];
+                md += '## ' + (i+1) + '. ' + title + '\n\n';
+                (e.chapters || []).forEach(ch => { md += '### ' + ch.name + '\n\n' + ch.desc + '\n\n'; });
+                md += '---\n\n';
+            });
+            const blob = new Blob([md], { type: 'text/markdown' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'profit-journal-' + new Date().toISOString().split('T')[0] + '.md';
+            a.click(); URL.revokeObjectURL(a.href);
+        };
     </script>
 </body>
 </html>
