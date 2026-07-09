@@ -138,6 +138,28 @@
             var dirLight = new BABYLON.DirectionalLight('dirLight', new BABYLON.Vector3(1, 0.8, 0.4), scene);
             dirLight.intensity = 0.5;
             dirLight.position = new BABYLON.Vector3(20, 30, 10);
+            var shadowGenerator = new BABYLON.ShadowGenerator(1024, dirLight);
+            shadowGenerator.useBlurExponentialShadowMap = true;
+            shadowGenerator.blurKernel = 32;
+
+            // --- Post-Processing ---
+            var pipeline = new BABYLON.DefaultRenderingPipeline("defaultPipeline", true, scene, [camera, fpCamera]);
+            pipeline.bloomEnabled = true;
+            pipeline.bloomThreshold = 0.8;
+            pipeline.bloomWeight = 0.8;
+            pipeline.bloomKernel = 64;
+            pipeline.bloomScale = 0.5;
+            pipeline.fxaaEnabled = true; // Anti-aliasing
+            pipeline.sharpenEnabled = true;
+            pipeline.sharpen.edgeAmount = 0.2;
+            pipeline.sharpen.colorAmount = 1.0;
+            pipeline.grainEnabled = true;
+            pipeline.grain.intensity = 5;
+            pipeline.grain.animated = true;
+            pipeline.chromaticAberrationEnabled = true;
+            pipeline.chromaticAberration.aberrationAmount = 2.0;
+            pipeline.chromaticAberration.radialIntensity = 0.5;
+
 
             // --- Stars (Thin Instances) ---
             var starCount = 200;
@@ -224,7 +246,9 @@
                                 if (newPos.length() > 70) {
                                     newPos.normalize();
                                     newPos.scaleInPlace(70);
-                                }
+                    }
+                    shadowGenerator.addShadowCaster(mesh);
+                    mesh.receiveShadows = true; // Buildings can receive shadows from each other
                                 draggedPlanet.position.copyFrom(newPos);
                             }
                         }
@@ -274,6 +298,7 @@
             gndMat.specularColor = BABYLON.Color3.Black();
             var ground = BABYLON.MeshBuilder.CreateGround('gnd', { width: 70, height: 70 }, scene);
             ground.material = gndMat;
+            ground.receiveShadows = true;
             var gridMat = new BABYLON.StandardMaterial('gridMat', scene);
             gridMat.emissiveColor = new BABYLON.Color3(0.04, 0.15, 0.2);
             gridMat.diffuseColor = BABYLON.Color3.Black();
@@ -316,11 +341,13 @@
             var trunkMat = new BABYLON.StandardMaterial('trunkMat', scene);
             trunkMat.diffuseColor = new BABYLON.Color3(0.15, 0.08, 0.05);
             treeTrunkMesh.material = trunkMat;
+            shadowGenerator.addShadowCaster(treeTrunkMesh);
 
             var canopyMat = new BABYLON.StandardMaterial('canopyMat', scene);
             canopyMat.diffuseColor = new BABYLON.Color3(0.1, 0.35, 0.08);
             canopyMat.emissiveColor = new BABYLON.Color3(0.02, 0.08, 0.02);
             treeCanopyMesh.material = canopyMat;
+            shadowGenerator.addShadowCaster(treeCanopyMesh);
 
             // --- Label helper ---
             function makeLabel(text, position, attachToMesh = null) {
@@ -444,6 +471,13 @@
                         mat.emissiveColor = color.scale(emissiveIntensity);
                         mat.specularColor = BABYLON.Color3.Black();
                         mesh.material = mat;
+                        shadowGenerator.addShadowCaster(mesh);
+                        mesh.receiveShadows = true; // Buildings can receive shadows from each other
+                    } else if (type === 'ziggurat' || type === 'sphinx') { // Handle groups
+                        group.getChildMeshes(false).forEach(function(childMesh) {
+                            shadowGenerator.addShadowCaster(childMesh);
+                            childMesh.receiveShadows = true;
+                        });
                     }
 
                     mesh.isPickable = true;
@@ -534,6 +568,7 @@
                 bodyMat.diffuseColor = this.color;
                 bodyMat.emissiveColor = this.color.scale(0.1);
                 body.material = bodyMat;
+                shadowGenerator.addShadowCaster(body);
 
                 var cabin = BABYLON.MeshBuilder.CreateBox('carCabin', { width: 0.48, height: 0.16, depth: 0.6 }, scene);
                 cabin.position = new BABYLON.Vector3(0, 0.32, -0.12);
@@ -542,6 +577,7 @@
                 cabinMat.diffuseColor = new BABYLON.Color3(0.2, 0.3, 0.5);
                 cabinMat.alpha = 0.4;
                 cabin.material = cabinMat;
+                shadowGenerator.addShadowCaster(cabin);
 
                 this.update = function(dt, allCars) {
                     // Collision detection for cars
