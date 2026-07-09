@@ -408,7 +408,7 @@
                 car.progress += (car.speed / 200) * dt;
                 if (car.progress > 1) car.progress -= 1;
                 var idx = car.progress * (car.path.length - 1);
-                var i0 = Math.floor(idx);
+                var i0 = Math.max(0, Math.floor(idx));
                 var i1 = Math.min(i0 + 1, car.path.length - 1);
                 var f = idx - i0;
                 var p1 = car.path[i0], p2 = car.path[i1];
