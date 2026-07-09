@@ -1,1 +1,93 @@
-<!DOCTYPE html><html><head><title>Dark City</title></head><body><p>test</p></body></html>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Dark City — Soul Protocol</title>
+<style>
+*{margin:0;padding:0}
+body{background:#08080e;overflow:hidden;font-family:monospace}
+canvas{display:block}
+#hud{position:fixed;bottom:20px;left:20px;color:rgba(255,255,255,.25);font-size:11px;pointer-events:none;line-height:1.6}
+#hud span{color:rgba(200,180,255,.5)}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="hud">DARK CITY · SOUL PROTOCOL<br><span>V</span> first-person · <span>T</span> terminal · <span>F</span> fog</div>
+<script src="https://cdn.babylonjs.com/babylon.js"></script>
+<script>
+;(function(){
+const c=document.getElementById('c'),e=new BABYLON.Engine(c,true),s=new BABYLON.Scene(e)
+s.fogMode=BABYLON.Scene.FOGMODE_EXP,s.fogDensity=.006,s.fogColor=new BABYLON.Color3(.04,.02,.08)
+s.clearColor=new BABYLON.Color4(.015,.008,.035,1)
+
+const cam=new BABYLON.ArcRotateCamera('cam',-Math.PI/3,Math.PI/4.2,55,new BABYLON.Vector3(0,2,0),s)
+cam.attachControl(c,true),cam.lowerRadiusLimit=4,cam.upperRadiusLimit=130,cam.wheelPrecision=15
+cam.panningSensibility=50
+
+const al=new BABYLON.HemisphericLight('al',new BABYLON.Vector3(.3,.7,-.4),s)
+al.intensity=.18,al.diffuse=new BABYLON.Color3(.2,.1,.4),al.groundColor=new BABYLON.Color3(.05,.02,.1)
+
+const dl=new BABYLON.DirectionalLight('dl',new BABYLON.Vector3(.5,-1,.3),s)
+dl.intensity=.25,dl.diffuse=new BABYLON.Color3(.5,.3,.8)
+
+// Ground
+const gnd=BABYLON.MeshBuilder.CreateGround('gnd',{width:80,height:80},s)
+const gm=new BABYLON.StandardMaterial('gm',s)
+gm.diffuseColor=new BABYLON.Color3(.03,.01,.06),gm.emissiveColor=new BABYLON.Color3(.02,.01,.04)
+gm.specularColor=BABYLON.Color3.Black(),gnd.material=gm
+
+// Buildings grid
+for(let i=0;i<60;i++){
+const x=(i%10-5)*5.5,z=Math.floor(i/10-5)*5.5,h=2+Math.random()*8
+const b=BABYLON.MeshBuilder.CreateBox('b'+i,{width:1.8,height:h,depth:1.8},s)
+b.position.set(x+Math.random()*.4,h/2,z+Math.random()*.4)
+const m=new BABYLON.StandardMaterial('bm'+i,s)
+const c2=.2+Math.random()*.5,m.e=.1+Math.random()*.4
+m.diffuseColor=new BABYLON.Color3(c2*.6,c2*.2,c2*.8)
+m.emissiveColor=new BABYLON.Color3(.1,.03,.2)
+m.specularColor=BABYLON.Color3.Black(),b.material=m
+// Random windows
+const w=b.getBoundingInfo().boundingBox.extendSize
+for(let wi=0;wi<4;wi++){
+const wb=BABYLON.MeshBuilder.CreatePlane('w'+i+'_'+wi,{width:.3,height:.25},s)
+const wx=w.x*(wi<2?-1:1),wz=w.z*(wi%2===0?-1:1)
+wb.position.set(x+wx,1+Math.random()*(h-1.5),z+wz)
+wb.billboardMode=BABYLON.AbstractMesh.BILLBOARDMODE_ALL
+const wm=new BABYLON.StandardMaterial('wm'+i+'_'+wi,s)
+wm.diffuseColor=new BABYLON.Color3(.8,.6,1),wm.emissiveColor=new BABYLON.Color3(.8,.6,1)
+wm.alpha=.6+Math.random()*.4,wb.material=wm
+}
+}
+
+// Stars
+const starP=BABYLON.MeshBuilder.CreateDisc('stars',{radius:80,tessellation:60},s)
+starP.position.set(0,40,0),starP.rotation.x=Math.PI/2
+const sm=new BABYLON.StandardMaterial('sm',s)
+sm.diffuseColor=new BABYLON.Color3(.1,.05,.2),sm.emissiveColor=new BABYLON.Color3(.1,.05,.25)
+sm.alpha=.8,starP.material=sm
+
+// Particle system
+const ps=new BABYLON.ParticleSystem('ps',300,s)
+ps.emitter=new BABYLON.Vector3(0,10,-15),ps.minEmitPower=.5,ps.maxEmitPower=2
+ps.addSizeGradient(0,.5),ps.addSizeGradient(1,0)
+ps.addColorGradient(0,new BABYLON.Color4(.3,.1,.5,0))
+ps.addColorGradient(.5,new BABYLON.Color4(.5,.3,.8,.6))
+ps.addColorGradient(1,new BABYLON.Color4(.2,.1,.4,0))
+ps.direction1=new BABYLON.Vector3(-2,1,-2),ps.direction2=new BABYLON.Vector3(2,2,2)
+ps.minEmitBox=new BABYLON.Vector3(-10,0,-10),ps.maxEmitBox=new BABYLON.Vector3(10,0,10)
+ps.createSphereEmitter(8),ps.start()
+
+// Keyboard shortcuts
+document.addEventListener('keydown',function(e){
+const k=e.key.toLowerCase()
+if(k==='v'){cam.lowerRadiusLimit=cam.lowerRadiusLimit<3?4:1.5;cam.upperRadiusLimit=cam.upperRadiusLimit>80?130:12}
+if(k==='f'){s.fogDensity=s.fogDensity>0?0:.006;s.fogColor=s.fogColor.r>.04?new BABYLON.Color3(.04,.02,.08):new BABYLON.Color3(.04,.02,.08)}
+})
+
+e.runRenderLoop(function(){s.render()})
+window.addEventListener('resize',function(){e.resize()})
+})()
+</script>
+</body>
+</html>
