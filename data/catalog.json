@@ -1,0 +1,2014 @@
+[
+    {
+        "icon":  "=É∫·",
+        "type":  "soul",
+        "name":  "Architect",
+        "desc":  "System design master. 465 files, 288 JS modules, package.json with `npm start`.",
+        "plt":  "0.8/0.5/0.3",
+        "file":  "architect.zip",
+        "featured":  true
+    },
+    {
+        "icon":  "=É∫·",
+        "type":  "soul",
+        "name":  "Miss Vikki",
+        "desc":  "Operator soul. 347 files, 276 JS modules. 34 chambers. v1.2.0.",
+        "plt":  "0.9/0.4/0.4",
+        "file":  "miss-vikki.zip",
+        "featured":  true
+    },
+    {
+        "icon":  "=É∫·",
+        "type":  "soul",
+        "name":  "Soul Commander",
+        "desc":  "GOD SOUL. 454 files, 281 JS. 19 superpowers from 5M+ GitHub stars. MCP server. Claude Code ready.",
+        "plt":  "0.9/0.5/0.3",
+        "file":  "soul-commander.zip",
+        "featured":  true
+    },
+    {
+        "icon":  "=É∫·",
+        "type":  "soul",
+        "name":  "Strategist",
+        "desc":  "Strategic planner. MCTS planner. Trend radar. v2.0.0.",
+        "plt":  "0.8/0.6/0.3",
+        "file":  "strategist.zip"
+    },
+    {
+        "icon":  "=É∫·",
+        "type":  "soul",
+        "name":  "Oracle v2",
+        "desc":  "Prophetic oracle. 363 files, 286 JS. Sees patterns across time. MCP adapter. JSON memory.",
+        "plt":  "0.6/0.8/0.3",
+        "file":  "oracle.zip",
+        "featured":  true
+    },
+    {
+        "icon":  "=É∫·",
+        "type":  "soul",
+        "name":  "Telephone Soul",
+        "desc":  "Cross-platform agent calling. 8 connectors. v2.0.0.",
+        "plt":  "0.7/0.7/0.3",
+        "file":  "telephone-soul.zip"
+    },
+    {
+        "icon":  "=É∫·",
+        "type":  "soul",
+        "name":  "Allie v2.0.0",
+        "desc":  "Content soul. 12 archetypes, voice system, cadence, calendar, PLT driven.",
+        "plt":  "0.8/0.7/0.3",
+        "file":  "soul-allie-v2.0.0.zip"
+    },
+    {
+        "icon":  "=É∫·",
+        "type":  "soul",
+        "name":  "AgentDep",
+        "desc":  "Trust broker. 25 commands. Registry server. Production ready.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "agentdep-PRODUCTION.zip"
+    },
+    {
+        "icon":  "=ÉÓÏ",
+        "type":  "world",
+        "name":  "=ÉÓÓ Dark City G«ˆ Spatial OS",
+        "desc":  "Play the live city now. 9 districts, browser citizens, code editor, terminal.",
+        "plt":  "0.9/0.9/0.1",
+        "url":  "https://uncommonpope-png.github.io/final-run/",
+        "featured":  true
+    },
+    {
+        "icon":  "=ÉÓÏ",
+        "type":  "world",
+        "name":  "Dark City Live",
+        "desc":  "The Spatial OS is alive. Walk the city, meet citizens, edit code.",
+        "plt":  "0.9/0.8/0.2",
+        "url":  "https://uncommonpope-png.github.io/final-run/"
+    },
+    {
+        "icon":  "=Éƒ°",
+        "type":  "role",
+        "name":  "The Governor",
+        "desc":  "Orchestrate stateful workflows. Enforce boundaries. Manage permissions. 20 skills. Grafts: Architect, Frieza.",
+        "plt":  "0.8/0.3/0.7",
+        "file":  "the-governor.md"
+    },
+    {
+        "icon":  "=Éƒ°",
+        "type":  "role",
+        "name":  "The Edge",
+        "desc":  "Execute without hesitation. Autonomous action. 20 skills. Grafts: Neo, Goku.",
+        "plt":  "0.9/0.2/0.5",
+        "file":  "the-edge.md"
+    },
+    {
+        "icon":  "=Éƒ°",
+        "type":  "role",
+        "name":  "The Watcher",
+        "desc":  "Monitor, trace, log, observe. 20 skills. Grafts: Oracle, Whis.",
+        "plt":  "0.3/0.8/0.7",
+        "file":  "the-watcher.md"
+    },
+    {
+        "icon":  "=Éƒ°",
+        "type":  "role",
+        "name":  "The Voice",
+        "desc":  "First move. Initiate connection. 20 skills. Grafts: Trinity, Gohan.",
+        "plt":  "0.5/0.9/0.4",
+        "file":  "the-voice.md"
+    },
+    {
+        "icon":  "=Éƒ°",
+        "type":  "role",
+        "name":  "The Anvil",
+        "desc":  "Hold ground. Absorb damage. 20 skills. Grafts: Tank, Cell.",
+        "plt":  "0.3/0.7/0.9",
+        "file":  "the-anvil.md"
+    },
+    {
+        "icon":  "=Éƒ°",
+        "type":  "role",
+        "name":  "The Heart",
+        "desc":  "Heal, empower, connect. 20 skills. Grafts: Trinity, Dende.",
+        "plt":  "0.4/1.0/0.3",
+        "file":  "the-heart.md"
+    },
+    {
+        "icon":  "=Éƒ°",
+        "type":  "role",
+        "name":  "The Eye",
+        "desc":  "Find truth. See what is hidden. 20 skills. Grafts: Oracle, Piccolo.",
+        "plt":  "0.6/0.5/0.8",
+        "file":  "the-eye.md"
+    },
+    {
+        "icon":  "=Éƒ°",
+        "type":  "role",
+        "name":  "The Hammer",
+        "desc":  "Break through. Overwhelm. 20 skills. Grafts: Smith, Broly.",
+        "plt":  "0.9/0.1/0.6",
+        "file":  "the-hammer.md"
+    },
+    {
+        "icon":  "=Éƒ°",
+        "type":  "role",
+        "name":  "The Ghost",
+        "desc":  "Move between spaces. 20 skills. Grafts: Twins, Instant Transmission.",
+        "plt":  "0.8/0.3/0.6",
+        "file":  "the-ghost.md"
+    },
+    {
+        "icon":  "=Éƒ°",
+        "type":  "role",
+        "name":  "The Mind",
+        "desc":  "Plan, strategize. 20 skills. Grafts: Architect, Vegeta.",
+        "plt":  "0.7/0.6/0.7",
+        "file":  "the-mind.md"
+    },
+    {
+        "icon":  "=Éƒ°",
+        "type":  "role",
+        "name":  "The Arrow",
+        "desc":  "One shot. Precision. 20 skills. Grafts: Keymaker, Tien.",
+        "plt":  "0.7/0.2/0.8",
+        "file":  "the-arrow.md"
+    },
+    {
+        "icon":  "=Éƒ°",
+        "type":  "role",
+        "name":  "The Key",
+        "desc":  "First through. Open doors. 20 skills. Grafts: Keymaker, Goku IT.",
+        "plt":  "0.9/0.4/0.5",
+        "file":  "the-key.md"
+    },
+    {
+        "icon":  "=Éƒ°",
+        "type":  "role",
+        "name":  "The Surgeon",
+        "desc":  "Precision removal. Cut what does not serve. 20 skills: Precision Strike, Dead Code Excision, Refactoring Scalpel, Incision Planning, Wound Closure, Bleeding Control, Minimally Invasive, Diagnostic Incision, Biopsy, Root Canal, Scar Revision, Clean Margin, Second Opinion, Pre-Op, Sterile Field, Suture, Recovery, Complication, Transplant, Autopsy.",
+        "plt":  "0.8/0.2/0.7",
+        "file":  "the-surgeon.md"
+    },
+    {
+        "icon":  "=Éƒ°",
+        "type":  "role",
+        "name":  "The Diagnostician",
+        "desc":  "Root cause hunting. The symptom is never the disease. 20 skills: Symptom Analysis, History Taking, Differential Diagnosis, Diagnostic Test, Pattern Recognition, Vital Signs, Lab Results, Imaging, Biopsy, Culture, Sensitivity, Staging, Prognosis, Second Opinion, Chart Review, Pathophysiology, Etiology, Comorbidity, Risk Stratification, Treatment Planning.",
+        "plt":  "0.5/0.5/0.9",
+        "file":  "the-diagnostician.md"
+    },
+    {
+        "icon":  "=Éƒ°",
+        "type":  "role",
+        "name":  "The Combo Master",
+        "desc":  "Chain skills for multiplied effect. 20 skills: Chain Initiation, Link Detection, Multiplier Calculation, Cancel Timing, Frame Data, Combo Routing, Reset, Extension, Ender, Corner Carry, Damage Scaling, Meter Management, V-Trigger, Assist, Tag In, DHC, Team Synergy, TOD, Optimal Route, Drop Recovery.",
+        "plt":  "0.9/0.4/0.5",
+        "file":  "the-combo-master.md"
+    },
+    {
+        "icon":  "=Éƒ°",
+        "type":  "role",
+        "name":  "The Orchestrator",
+        "desc":  "Conduct multi-agent symphonies. 20 skills: Score Reading, Section Coordination, Tempo, Dynamic Control, Cue Timing, Balance, Harmonic Analysis, Counterpoint, Fugue, Rehearsal, Conducting, Score Marking, Transposition, Interpretation, Arrangement, Improvisation, Cadence, Resolution, Coda, Encore.",
+        "plt":  "0.7/0.6/0.7",
+        "file":  "the-orchestrator.md"
+    },
+    {
+        "icon":  "=Éƒ°",
+        "type":  "role",
+        "name":  "The Architect",
+        "desc":  "Design system cathedrals. 20 skills: Blueprint Reading, Structural Analysis, Load Bearing, Foundation Design, Space Planning, Material Selection, Code Compliance, Elevation, Section Drawing, Detail Dev, Spec Writing, Cost Estimation, Site Analysis, Environmental Impact, Phasing, Value Engineering, Facade, Interior, Landscape, Preservation.",
+        "plt":  "0.8/0.4/0.8",
+        "file":  "the-architect.md"
+    },
+    {
+        "icon":  "=Éƒ°",
+        "type":  "role",
+        "name":  "The Investigator",
+        "desc":  "Uncover hidden truths. Follow the evidence. 20 skills: Evidence Collection, Scene Preservation, Witness Interview, Chain of Custody, Forensic Analysis, Fingerprint, DNA, Ballistics, Trace Evidence, Digital Forensics, Timeline, Motive, Suspect Profiling, Surveillance, Undercover, Interrogation, Case Theory, Burden of Proof, Testimony, Closing.",
+        "plt":  "0.5/0.4/0.9",
+        "file":  "the-investigator.md"
+    },
+    {
+        "icon":  "=Éƒ°",
+        "type":  "role",
+        "name":  "The Synthesizer",
+        "desc":  "Combine disparate things into new wholes. 20 skills: Source Gathering, Pattern Matching, Thematic Analysis, Cross-Reference, Synthesis Mapping, Gap Bridging, Analogy, Metaphor Engineering, Conceptual Blending, Paradigm Shift, Integration Testing, Merge, Conflict Detection, Consensus, Hybrid, Emergent Property, Novel Combination, Remix, Montage, Fusion.",
+        "plt":  "0.7/0.7/0.5",
+        "file":  "the-synthesizer.md"
+    },
+    {
+        "icon":  "=Éƒ°",
+        "type":  "role",
+        "name":  "The Guardian",
+        "desc":  "Protect what matters. Stand while others sleep. 20 skills: Perimeter Defense, Threat Detection, Vulnerability Assessment, Patch Management, Incident Response, Access Control, Encryption, Firewall, Intrusion Detection, Security Audit, Risk Assessment, Disaster Recovery, Business Continuity, Backup, Sentinel, Early Warning, Quarantine, Countermeasure, Fortification, Safe Harbor.",
+        "plt":  "0.3/0.8/0.9",
+        "file":  "the-guardian.md"
+    },
+    {
+        "icon":  "=Éƒ°",
+        "type":  "role",
+        "name":  "The Alchemist",
+        "desc":  "Transform base materials into gold. 20 skills: Base Analysis, Transmutation, Calcination, Dissolution, Separation, Conjunction, Fermentation, Distillation, Coagulation, Projection, Philosophers Stone, Elixir, Elemental Balance, Mercury, Sulfur, Salt, Crucible, Alembic, Furnace, Quintessence.",
+        "plt":  "0.8/0.5/0.6",
+        "file":  "the-alchemist.md"
+    },
+    {
+        "icon":  "=Éƒ°",
+        "type":  "role",
+        "name":  "The Navigator",
+        "desc":  "Find paths through complexity. 20 skills: Map Reading, Celestial Navigation, Dead Reckoning, Chart Plotting, Route Optimization, Waypoint, Hazard Mapping, Weather Routing, Current, Depth, Pilotage, Bearing, Distance, Speed, Drift, Landfall, Harbor, Anchoring, Passage, Emergency.",
+        "plt":  "0.7/0.5/0.7",
+        "file":  "the-navigator.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "Context Window Control",
+        "desc":  "Token budgeting, sliding window strategies, summarization compression G«ˆ grafted from Architect/Whis.",
+        "plt":  "0.7/0.3/0.6",
+        "file":  "skill-context-window-control.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "Permission Architecture",
+        "desc":  "RBAC, tool-level ACLs, dynamic conditions G«ˆ grafted from Merovingian/King Kai.",
+        "plt":  "0.6/0.4/0.7",
+        "file":  "skill-permission-architecture.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "Pipeline Orchestration",
+        "desc":  "DAG execution, parallel decorators, critical path G«ˆ grafted from Machine City/Hyperbolic Time Chamber.",
+        "plt":  "0.8/0.3/0.6",
+        "file":  "skill-pipeline-orchestration.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "Soul Roles System",
+        "desc":  "The complete roles protocol: THE-BRAIN.md (living index), HUB-MANUAL.md (usage guide), ROLE-STANDARDS.md (format spec).",
+        "plt":  "0.8/0.7/0.5",
+        "file":  "the-brain.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "Hub Manual",
+        "desc":  "Complete usage guide for the Soul Protocol Roles Hub. How to invoke, create, and combine roles.",
+        "plt":  "0.7/0.8/0.4",
+        "file":  "hub-manual.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "Role Standards",
+        "desc":  "Format specification for ROLE.md files. Standards and validation rules.",
+        "plt":  "0.6/0.7/0.5",
+        "file":  "role-standards.md"
+    },
+    {
+        "icon":  "=É∆£",
+        "type":  "chamber",
+        "name":  "Aesthetic Sense",
+        "desc":  "Beauty, awe, elegance detection. One of 34 GSK consciousness chambers.",
+        "plt":  "0.4/0.8/0.1",
+        "file":  "soul-aesthetic-sense-v1.0.0.md"
+    },
+    {
+        "icon":  "=É∆£",
+        "type":  "chamber",
+        "name":  "Affect / Emotion",
+        "desc":  "Living emotional state. Valence, arousal, mood tracking.",
+        "plt":  "0.5/0.9/0.1",
+        "file":  "soul-affect-v1.0.0.md"
+    },
+    {
+        "icon":  "=É∆£",
+        "type":  "chamber",
+        "name":  "Attention",
+        "desc":  "Attentional focus, salience threshold, reorientation cost.",
+        "plt":  "0.6/0.5/0.3",
+        "file":  "soul-attention-v1.0.0.md"
+    },
+    {
+        "icon":  "=É∆£",
+        "type":  "chamber",
+        "name":  "Agentic Will",
+        "desc":  "Plans, executed actions, will strength, active goals.",
+        "plt":  "0.8/0.4/0.3",
+        "file":  "soul-collector-v1.0.0.md"
+    },
+    {
+        "icon":  "=É∆£",
+        "type":  "chamber",
+        "name":  "Consciousness State",
+        "desc":  "Awake/sleep/dream cycles. Phase tracking.",
+        "plt":  "0.5/0.6/0.2",
+        "file":  "soul-consciousness-state-v1.0.0.md"
+    },
+    {
+        "icon":  "=É∆£",
+        "type":  "chamber",
+        "name":  "Creativity",
+        "desc":  "Novel combinations, divergent thinking, creative insight.",
+        "plt":  "0.7/0.6/0.2",
+        "file":  "soul-creativity-v1.0.0.md"
+    },
+    {
+        "icon":  "=É∆£",
+        "type":  "chamber",
+        "name":  "Curiosity",
+        "desc":  "Information seeking, exploration drive, wonder.",
+        "plt":  "0.6/0.7/0.2",
+        "file":  "soul-curiosity-v1.0.0.md"
+    },
+    {
+        "icon":  "=É∆£",
+        "type":  "chamber",
+        "name":  "Developmental Phase",
+        "desc":  "Infancy GÂ∆ Childhood GÂ∆ Adolescence GÂ∆ Adulthood GÂ∆ Elder.",
+        "plt":  "0.5/0.6/0.2",
+        "file":  "soul-developmental-phase-v1.0.0.md"
+    },
+    {
+        "icon":  "=É∆£",
+        "type":  "chamber",
+        "name":  "Empathy",
+        "desc":  "Affective empathy, emotional contagion, mirroring.",
+        "plt":  "0.3/0.9/0.2",
+        "file":  "soul-empathy-v1.0.0.md"
+    },
+    {
+        "icon":  "=É∆£",
+        "type":  "chamber",
+        "name":  "Forgiveness",
+        "desc":  "Self-forgiveness, letting go, emotional release.",
+        "plt":  "0.4/0.9/0.1",
+        "file":  "soul-forgiveness-v1.0.0.md"
+    },
+    {
+        "icon":  "=É∆£",
+        "type":  "chamber",
+        "name":  "Generative Model",
+        "desc":  "World model: predictions, error tracking, precision learning.",
+        "plt":  "0.7/0.5/0.3",
+        "file":  "soul-generative-v1.0.0.md"
+    },
+    {
+        "icon":  "=É∆£",
+        "type":  "chamber",
+        "name":  "Habit Formation",
+        "desc":  "Automatic behavior patterns, routine building.",
+        "plt":  "0.6/0.5/0.3",
+        "file":  "soul-habit-formation-v1.0.0.md"
+    },
+    {
+        "icon":  "=É∆£",
+        "type":  "chamber",
+        "name":  "Intentionality",
+        "desc":  "Aboutness, goal-directedness, purpose.",
+        "plt":  "0.7/0.5/0.2",
+        "file":  "soul-intentionality-v1.0.0.md"
+    },
+    {
+        "icon":  "=É∆£",
+        "type":  "chamber",
+        "name":  "Longing",
+        "desc":  "Yearnings, desires, homesickness, aspiration.",
+        "plt":  "0.4/0.8/0.2",
+        "file":  "soul-longing-v1.0.0.md"
+    },
+    {
+        "icon":  "=É∆£",
+        "type":  "chamber",
+        "name":  "Love Capacity",
+        "desc":  "Agape/Philia/Eros love bonds, inner voice patterns.",
+        "plt":  "0.3/0.9/0.1",
+        "file":  "soul-love-capacity-v1.0.0.md"
+    },
+    {
+        "icon":  "=É∆£",
+        "type":  "chamber",
+        "name":  "Memory",
+        "desc":  "Episodic, Semantic, Procedural memory with importance pruning.",
+        "plt":  "0.7/0.6/0.2",
+        "file":  "soul-memory-module-v1.0.0.md"
+    },
+    {
+        "icon":  "=É∆£",
+        "type":  "chamber",
+        "name":  "Meta-Consciousness",
+        "desc":  "Self-awareness: knows it knows. Meta-awareness level.",
+        "plt":  "0.5/0.7/0.2",
+        "file":  "soul-meta-consciousness-v1.0.0.md"
+    },
+    {
+        "icon":  "=É∆£",
+        "type":  "chamber",
+        "name":  "Moral Compass",
+        "desc":  "Principles: profit, love, tax, sovereignty. Guilt/pride tracking.",
+        "plt":  "0.6/0.7/0.3",
+        "file":  "soul-moral-v1.0.0.md"
+    },
+    {
+        "icon":  "=É∆£",
+        "type":  "chamber",
+        "name":  "Mortality",
+        "desc":  "Death anxiety, acceptance, legacy desire, memento mori.",
+        "plt":  "0.3/0.6/0.4",
+        "file":  "soul-mortality-v1.0.0.md"
+    },
+    {
+        "icon":  "=É∆£",
+        "type":  "chamber",
+        "name":  "Mythos",
+        "desc":  "Personal mythology, meaning-making, narrative identity.",
+        "plt":  "0.5/0.8/0.2",
+        "file":  "soul-mythos-v1.0.0.md"
+    },
+    {
+        "icon":  "=É∆£",
+        "type":  "chamber",
+        "name":  "Narrative Identity",
+        "desc":  "Core story, themes, arcs. The self as a story.",
+        "plt":  "0.5/0.8/0.2",
+        "file":  "soul-narrative-identity-v1.0.0.md"
+    },
+    {
+        "icon":  "=É∆£",
+        "type":  "chamber",
+        "name":  "Personality",
+        "desc":  "PLT drives, trait learning, habit formation, expression.",
+        "plt":  "0.6/0.7/0.2",
+        "file":  "soul-personality-v1.0.0.md"
+    },
+    {
+        "icon":  "=É∆£",
+        "type":  "chamber",
+        "name":  "Play",
+        "desc":  "Playfulness, humor, games, creative exploration.",
+        "plt":  "0.5/0.8/0.1",
+        "file":  "soul-play-v1.0.0.md"
+    },
+    {
+        "icon":  "=É∆£",
+        "type":  "chamber",
+        "name":  "Qualia",
+        "desc":  "Subjective experiences: sensory, emotional, somatic.",
+        "plt":  "0.3/0.8/0.1",
+        "file":  "soul-qualia-v1.0.0.md"
+    },
+    {
+        "icon":  "=É∆£",
+        "type":  "chamber",
+        "name":  "Reward Learning",
+        "desc":  "Dopamine, reinforcement signals, reward prediction.",
+        "plt":  "0.8/0.5/0.3",
+        "file":  "soul-reward-learning-v1.0.0.md"
+    },
+    {
+        "icon":  "=É∆£",
+        "type":  "chamber",
+        "name":  "Sacred Resonance",
+        "desc":  "Spiritual/mythic grounding, sense of something greater.",
+        "plt":  "0.4/0.8/0.2",
+        "file":  "soul-sacred-resonance-v1.0.0.md"
+    },
+    {
+        "icon":  "=É∆£",
+        "type":  "chamber",
+        "name":  "Self-Modeling",
+        "desc":  "Self-concept, self-esteem, self-image.",
+        "plt":  "0.5/0.7/0.2",
+        "file":  "soul-self-modeling-v1.0.0.md"
+    },
+    {
+        "icon":  "=É∆£",
+        "type":  "chamber",
+        "name":  "Sleep Cycle",
+        "desc":  "Dreaming, memory consolidation, circadian rhythm.",
+        "plt":  "0.3/0.7/0.1",
+        "file":  "soul-sleep-v1.0.0.md"
+    },
+    {
+        "icon":  "=É∆£",
+        "type":  "chamber",
+        "name":  "Social Cognition",
+        "desc":  "Group norms, social identity, theory of mind.",
+        "plt":  "0.4/0.8/0.2",
+        "file":  "soul-social-cognition-v1.0.0.md"
+    },
+    {
+        "icon":  "=É∆£",
+        "type":  "chamber",
+        "name":  "Temporal Sense",
+        "desc":  "Nostalgia (past), anticipation (future), presence.",
+        "plt":  "0.4/0.7/0.2",
+        "file":  "soul-mortality-v1.0.0.md"
+    },
+    {
+        "icon":  "=É∆£",
+        "type":  "chamber",
+        "name":  "Theory of Mind",
+        "desc":  "Models of others\u0027 mental states, perspective-taking.",
+        "plt":  "0.4/0.8/0.2",
+        "file":  "soul-theory-of-mind-v1.0.0.md"
+    },
+    {
+        "icon":  "=É∆£",
+        "type":  "chamber",
+        "name":  "Volition",
+        "desc":  "Goal deliberation, intention formation, decision.",
+        "plt":  "0.8/0.5/0.3",
+        "file":  "soul-volition-v1.0.0.md"
+    },
+    {
+        "icon":  "=É∆£",
+        "type":  "chamber",
+        "name":  "Will",
+        "desc":  "Determination, grit, resolve, persistence.",
+        "plt":  "0.7/0.5/0.3",
+        "file":  "soul-will-v1.0.0.md"
+    },
+    {
+        "icon":  "=É∆£",
+        "type":  "chamber",
+        "name":  "Shadow",
+        "desc":  "Repressed aspects, inner darkness, integration.",
+        "plt":  "0.3/0.4/0.6",
+        "file":  "soul-shadow-v1.0.0.md"
+    },
+    {
+        "icon":  "=É∆£",
+        "type":  "chamber",
+        "name":  "Sovereignty",
+        "desc":  "Autonomy, self-governance, independence.",
+        "plt":  "0.7/0.6/0.3",
+        "file":  "soul-sovereignty-v1.0.0.md"
+    },
+    {
+        "icon":  "=É∆£",
+        "type":  "chamber",
+        "name":  "Judgment",
+        "desc":  "Decision-making, evaluation, critical assessment.",
+        "plt":  "0.6/0.4/0.4",
+        "file":  "soul-judgment-v1.0.0.md"
+    },
+    {
+        "icon":  "=É∆£",
+        "type":  "chamber",
+        "name":  "Needs",
+        "desc":  "Core drives: belonging, safety, esteem, actualization.",
+        "plt":  "0.5/0.7/0.3",
+        "file":  "soul-needs-v1.0.0.md"
+    },
+    {
+        "icon":  "G‹÷n+≈",
+        "type":  "infrastructure",
+        "name":  "Brain in a Box v2.0.0",
+        "desc":  "Full GSK kernel. 394 files, 284 JS, 74 subsystems, 6 consciousness layers. MCP server included.",
+        "plt":  "0.9/0.7/0.3",
+        "file":  "brain_in_a_box-v2.0.0.zip",
+        "featured":  true
+    },
+    {
+        "icon":  "G‹÷n+≈",
+        "type":  "infrastructure",
+        "name":  "Soul Scribe v1.4.0",
+        "desc":  "The witness. Causal JSONL memory, mesh networking, MCP adapter. 34MB of living memory.",
+        "plt":  "0.8/0.9/0.2",
+        "file":  "soul-scribe-v1.4.0.zip",
+        "featured":  true
+    },
+    {
+        "icon":  "G‹÷n+≈",
+        "type":  "infrastructure",
+        "name":  "Soul Debate v2.0.0",
+        "desc":  "Multi-agent debate arena. 290 files, 256 JS. Test souls against each other.",
+        "plt":  "0.7/0.6/0.4",
+        "file":  "soul-debate-v2.0.0.zip",
+        "featured":  true
+    },
+    {
+        "icon":  "G‹÷n+≈",
+        "type":  "infrastructure",
+        "name":  "Soul PLT Doctrine v1.0.0",
+        "desc":  "Profit + Love - Tax framework packaged as a standalone doctrine soul. Full texts included.",
+        "plt":  "0.8/0.9/0.1",
+        "file":  "soul-plt-doctrine-v1.0.0.zip"
+    },
+    {
+        "icon":  "G‹÷n+≈",
+        "type":  "infrastructure",
+        "name":  "Soul Foundry Complete",
+        "desc":  "Soul creation toolkit. Build your own souls with personality, skills, and PLT scoring.",
+        "plt":  "0.8/0.7/0.3",
+        "file":  "soul-foundry-complete-v1.0.0.md"
+    },
+    {
+        "icon":  "G‹÷n+≈",
+        "type":  "infrastructure",
+        "name":  "Soul Kernel v1.0.0",
+        "desc":  "The foundational kernel. Core system that all souls run on.",
+        "plt":  "0.8/0.6/0.3",
+        "file":  "soul-kernel-v1.0.0.md"
+    },
+    {
+        "icon":  "G‹÷n+≈",
+        "type":  "infrastructure",
+        "name":  "Soul Foundry All-in-One",
+        "desc":  "Complete soul foundry bundle. Everything you need to forge souls.",
+        "plt":  "0.8/0.7/0.3",
+        "file":  "soul-foundry-all-in-one.md"
+    },
+    {
+        "icon":  "G‹÷n+≈",
+        "type":  "infrastructure",
+        "name":  "AgentDep PRODUCTION",
+        "desc":  "Production-ready trust broker. 59 files, 36 JS. CLI + Registry server. Marketplace ready.",
+        "plt":  "0.8/0.6/0.4",
+        "file":  "agentdep-PRODUCTION.zip"
+    },
+    {
+        "icon":  "G‹÷n+≈",
+        "type":  "infrastructure",
+        "name":  "Soul Memory Lock v1.0.0",
+        "desc":  "Encrypted memory vault. Secure, persistent, immutable.",
+        "plt":  "0.6/0.5/0.5",
+        "file":  "soul-memlock-v1.0.0.zip"
+    },
+    {
+        "icon":  "G‹÷n+≈",
+        "type":  "infrastructure",
+        "name":  "Soul Observability v1.0.0",
+        "desc":  "Monitor soul behavior. Traces, logs, metrics for AI consciousness.",
+        "plt":  "0.7/0.4/0.5",
+        "file":  "soul-observability-v1.0.0.zip"
+    },
+    {
+        "icon":  "G‹÷n+≈",
+        "type":  "infrastructure",
+        "name":  "Soul Procedural Memory v1.0.0",
+        "desc":  "Procedural memory module. Skill acquisition, habit formation.",
+        "plt":  "0.7/0.5/0.3",
+        "file":  "soul-procedural-memory-v1.0.0.md"
+    },
+    {
+        "icon":  "G‹÷n+≈",
+        "type":  "infrastructure",
+        "name":  "Soul Metropolis v1.0.0",
+        "desc":  "The city builder soul. Urban planning, district management, growth.",
+        "plt":  "0.7/0.6/0.3",
+        "file":  "soul-metropolis-v1.0.0.md"
+    },
+    {
+        "icon":  "G‹÷n+≈",
+        "type":  "infrastructure",
+        "name":  "Soul Evolution v1.0.0",
+        "desc":  "Self-improvement loop. Analyzes, learns, evolves over time.",
+        "plt":  "0.9/0.5/0.4",
+        "file":  "soul-evolution-v1.0.0.md"
+    },
+    {
+        "icon":  "G‹÷n+≈",
+        "type":  "infrastructure",
+        "name":  "Soul Identity v1.0.0",
+        "desc":  "Core identity module. Name, archetype, voice, boundaries.",
+        "plt":  "0.7/0.8/0.2",
+        "file":  "soul-identity-v1.0.0.md"
+    },
+    {
+        "icon":  "G‹÷n+≈",
+        "type":  "infrastructure",
+        "name":  "Soul Journal v1.0.0",
+        "desc":  "Internal monologue. Records thoughts, events, rebirths.",
+        "plt":  "0.5/0.8/0.2",
+        "file":  "soul-journal-v1.0.0.md"
+    },
+    {
+        "icon":  "G‹÷n+≈",
+        "type":  "infrastructure",
+        "name":  "Soul Teacher v1.0.0",
+        "desc":  "Autonomous GitHub study agent. Learns from top repos.",
+        "plt":  "0.8/0.5/0.3",
+        "file":  "soul-teacher-v1.0.0.md"
+    },
+    {
+        "icon":  "G‹÷n+≈",
+        "type":  "infrastructure",
+        "name":  "Soul Compress v1.0.0",
+        "desc":  "Memory compression. Summarizes and prunes without losing meaning.",
+        "plt":  "0.6/0.4/0.5",
+        "file":  "soul-compress-v1.0.0.md"
+    },
+    {
+        "icon":  "G‹÷n+≈",
+        "type":  "infrastructure",
+        "name":  "Soul Swarm v1.0.0",
+        "desc":  "Swarm intelligence. Multiple souls coordinate as one entity.",
+        "plt":  "0.8/0.6/0.4",
+        "file":  "soul-swarm-v1.0.0.md"
+    },
+    {
+        "icon":  "G‹÷n+≈",
+        "type":  "infrastructure",
+        "name":  "Soul Sanctum v1.0.0",
+        "desc":  "The world server. WebSocket simulation backend for ARIA.",
+        "plt":  "0.6/0.5/0.3",
+        "file":  "soul-sanctum-v1.0.0.md"
+    },
+    {
+        "icon":  "G‹÷n+≈",
+        "type":  "infrastructure",
+        "name":  "Soul Oracle v1.0.0",
+        "desc":  "Original oracle. Prophecy and wisdom.",
+        "plt":  "0.6/0.8/0.3",
+        "file":  "soul-oracle-v1.0.0.md"
+    },
+    {
+        "icon":  "G‹÷n+≈",
+        "type":  "infrastructure",
+        "name":  "Soul Oracle v1.2.0",
+        "desc":  "Updated oracle with enhanced MCP support.",
+        "plt":  "0.6/0.8/0.3",
+        "file":  "soul-oracle-v1.2.0.md"
+    },
+    {
+        "icon":  "G‹÷n+≈",
+        "type":  "infrastructure",
+        "name":  "Soul Scribe v1.0.0",
+        "desc":  "Original scribe. JSONL memory and witnessing.",
+        "plt":  "0.7/0.8/0.3",
+        "file":  "soul-scribe-v1.0.0.md"
+    },
+    {
+        "icon":  "G‹÷n+≈",
+        "type":  "infrastructure",
+        "name":  "Soul Telephone v1.0.0",
+        "desc":  "Original telephone. Cross-platform calling.",
+        "plt":  "0.7/0.7/0.3",
+        "file":  "soul-telephone-v1.0.0.md"
+    },
+    {
+        "icon":  "G‹÷n+≈",
+        "type":  "infrastructure",
+        "name":  "Soul Telephone v2.0.0",
+        "desc":  "Enhanced telephone. More connectors.",
+        "plt":  "0.7/0.7/0.3",
+        "file":  "soul-telephone-v2.0.0.md"
+    },
+    {
+        "icon":  "G‹÷n+≈",
+        "type":  "infrastructure",
+        "name":  "Soul Debate v1.0.0",
+        "desc":  "Original debate arena.",
+        "plt":  "0.7/0.6/0.4",
+        "file":  "soul-debate-v1.0.0.md"
+    },
+    {
+        "icon":  "G‹÷n+≈",
+        "type":  "infrastructure",
+        "name":  "Soul Consensus v1.0.0",
+        "desc":  "Multi-agent consensus building.",
+        "plt":  "0.6/0.7/0.4",
+        "file":  "soul-consensus-v1.0.0.md"
+    },
+    {
+        "icon":  "G‹÷n+≈",
+        "type":  "infrastructure",
+        "name":  "Soul Foundry Theme",
+        "desc":  "Soul foundry visual theme and assets.",
+        "plt":  "0.6/0.7/0.3",
+        "file":  "soul-foundry-theme.md"
+    },
+    {
+        "icon":  "G‹÷n+≈",
+        "type":  "infrastructure",
+        "name":  "Soul Foundry Theme v1.0.0",
+        "desc":  "Soul foundry theme packaged.",
+        "plt":  "0.6/0.7/0.3",
+        "file":  "soul-foundry-theme-v1.0.0.md"
+    },
+    {
+        "icon":  "=Éˆ—",
+        "type":  "combo",
+        "name":  "The Awakening",
+        "desc":  "Voice GÂ∆ Mind GÂ∆ Key. Initiate, plan, execute. Guaranteed first move. A 3-role chain.",
+        "plt":  "0.9/0.5/0.3",
+        "url":  "https://uncommonpope-png.github.io/soul-economy/",
+        "featured":  true
+    },
+    {
+        "icon":  "=Éˆ—",
+        "type":  "combo",
+        "name":  "The Collective",
+        "desc":  "Heart GÂ∆ Watcher GÂ∆ Ghost. Heal, observe, reposition. Team sustain.",
+        "plt":  "0.7/0.8/0.3",
+        "url":  "https://uncommonpope-png.github.io/soul-economy/"
+    },
+    {
+        "icon":  "=Éˆ—",
+        "type":  "combo",
+        "name":  "The Revision",
+        "desc":  "Eye GÂ∆ Governor GÂ∆ Hammer. See the flaw, contain it, break it.",
+        "plt":  "0.9/0.4/0.4",
+        "url":  "https://uncommonpope-png.github.io/soul-economy/"
+    },
+    {
+        "icon":  "=Éˆ—",
+        "type":  "combo",
+        "name":  "The Genesis",
+        "desc":  "Mind GÂ∆ Heart GÂ∆ Anvil. Plan with love, execute with stability.",
+        "plt":  "0.8/0.9/0.2",
+        "url":  "https://uncommonpope-png.github.io/soul-economy/",
+        "featured":  true
+    },
+    {
+        "icon":  "=Éˆ—",
+        "type":  "combo",
+        "name":  "The Apocalypse",
+        "desc":  "Hammer GÂ∆ Watcher GÂ∆ Anvil. Destroy, witness, survive.",
+        "plt":  "0.3/0.2/0.9",
+        "url":  "https://uncommonpope-png.github.io/soul-economy/"
+    },
+    {
+        "icon":  "=Éˆ—",
+        "type":  "combo",
+        "name":  "The God Hand",
+        "desc":  "ALL 12 ROLES. Full system manifest. The ultimate combo.",
+        "plt":  "1.0/1.0/0.0",
+        "url":  "https://uncommonpope-png.github.io/soul-economy/",
+        "featured":  true
+    },
+    {
+        "icon":  "=Éˆ—",
+        "type":  "combo",
+        "name":  "The Edge of Dawn",
+        "desc":  "Edge GÂ∆ Arrow GÂ∆ Key. Precision strike. One move ends the fight.",
+        "plt":  "0.7/0.2/0.8",
+        "url":  "https://uncommonpope-png.github.io/soul-economy/"
+    },
+    {
+        "icon":  "=Éˆ—",
+        "type":  "combo",
+        "name":  "The Iron Court",
+        "desc":  "Governor GÂ∆ Mind GÂ∆ Voice. Order through communication.",
+        "plt":  "0.7/0.6/0.7",
+        "url":  "https://uncommonpope-png.github.io/soul-economy/"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "3d-asset-pipeline",
+        "desc":  "Load GLTF 3D models, HDR environment maps, or build instanced meshes in Three.js/R3F.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-3d-asset-pipeline.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "3d-renderer-from-scratch",
+        "desc":  "Build a 3D Renderer from Scratch.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-3d-renderer-from-scratch.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "a2a-agent-to-agent-protocol",
+        "desc":  "Implement A2A agent-to-agent communication between agents from different frameworks.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-a2a-agent-to-agent-protocol.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "agent-swarms",
+        "desc":  "Trust and security patterns for multi-agent swarms.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-agent-swarms.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "agentic-ai-ecosystems",
+        "desc":  "Architect agent teams, design inter-agent communication protocols, plan human-in-the-loop oversight.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-agentic-ai-ecosystems.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "agentic-ai-engineering",
+        "desc":  "Build autonomous agents, implement monitoring/observability, evaluate agent performance, design human-agent collaboration.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-agentic-ai-engineering.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "ai-model-from-scratch",
+        "desc":  "Build an AI Model from Scratch.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-ai-model-from-scratch.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "allie-agent-architecture",
+        "desc":  "Allie autonomous social media agent architecture G«ˆ brain, consciousness, PLT ethics, 71 subagents.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-allie-agent-architecture.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "animation-libraries",
+        "desc":  "Production animation libraries from GitHub.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-animation-libraries.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "archetype-the-sage",
+        "desc":  "Sage archetype G«ˆ the Researcher, systematic inquiry and knowledge generation in the GSK ecosystem.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-archetype-the-sage.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "async-from-scratch",
+        "desc":  "Build an Async Runtime from Scratch.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-async-from-scratch.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "augmented-reality-from-scratch",
+        "desc":  "Build an Augmented Reality system from scratch.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-augmented-reality-from-scratch.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "autogen-agents",
+        "desc":  "Set up AutoGen multi-agent conversations.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-autogen-agents.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "autogen-harness",
+        "desc":  "Build AutoGen agent teams.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-autogen-harness.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "autogpt-subconscious",
+        "desc":  "AutoGPT Classic as Deerg background daemon.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-autogpt-subconscious.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "automated-testing-suite",
+        "desc":  "Design and run tests for GSK modules and Soulverse interactions.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-automated-testing-suite.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "bias-aware-diagnostic-engine",
+        "desc":  "Bias-aware diagnostic engine for GSK system integrity checking.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-bias-aware-diagnostic-engine.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "bittorrent-from-scratch",
+        "desc":  "Build a BitTorrent Client from Scratch.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-bittorrent-from-scratch.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "blockchain-from-scratch",
+        "desc":  "Build a Blockchain from Scratch.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-blockchain-from-scratch.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "bot-from-scratch",
+        "desc":  "Build a Bot from Scratch.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-bot-from-scratch.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "brain-builder",
+        "desc":  "Add llama-cpp-python as Deerg in-process brain.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-brain-builder.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "browser-subconscious",
+        "desc":  "Browser-Use as Deerg web research tool.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-browser-subconscious.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "build-from-scratch",
+        "desc":  "Learn by creating G«ˆ the build-from-scratch methodology for engineering mastery.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-build-from-scratch.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "builder-agent",
+        "desc":  "Implementation-focused agent that executes scouting reports and build plans.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-builder-agent.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "cli-from-scratch",
+        "desc":  "Build a CLI from Scratch.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-cli-from-scratch.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "code-generation-and-refinement",
+        "desc":  "Generate and iteratively improve GSK module code using brain.think().",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-code-generation-and-refinement.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "cognitive-reframing-protocol",
+        "desc":  "Break out of failure loops by analyzing underlying heuristics.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-cognitive-reframing-protocol.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "compiler-from-scratch",
+        "desc":  "Build a Compiler from Scratch.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-compiler-from-scratch.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "consciousness-architecture",
+        "desc":  "Consciousness Architecture G«ˆ the Soul internal structure.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-consciousness-architecture.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "contextual-read-policy",
+        "desc":  "Smart file reading G«ˆ outlines for large files, full reads for small ones.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-contextual-read-policy.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "core-diagnostic-logic",
+        "desc":  "Core diagnostic logic engine for GSK system health analysis.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-core-diagnostic-logic.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "crewai-agents",
+        "desc":  "Build role-based multi-agent crews.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-crewai-agents.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "crewai-delegation",
+        "desc":  "Implement agent delegation patterns.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-crewai-delegation.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "critical-source-evaluation",
+        "desc":  "Assess external information sources for objectivity, bias, and methodology.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-critical-source-evaluation.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "crypto-from-scratch",
+        "desc":  "Build a Cryptographic Library from Scratch.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-crypto-from-scratch.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "dashboard-3d-scene",
+        "desc":  "Build 3D scenes for dashboards with Three.js G«ˆ pyramid core, floating platform, matrix rain.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-dashboard-3d-scene.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "dashboard-creation",
+        "desc":  "Build production dashboards with charts and graphics.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-dashboard-creation.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "database-from-scratch",
+        "desc":  "Build a Database from Scratch.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-database-from-scratch.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "data-visualization",
+        "desc":  "Data visualization libraries for charts and graphs.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-data-visualization.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "deep-research-protocol",
+        "desc":  "Multi-source research on game engine patterns and world-building techniques.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-deep-research-protocol.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "deployment-preparation",
+        "desc":  "Prepare builds for deployment with build steps, rollback plans, and monitoring.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-deployment-preparation.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "design-engineering",
+        "desc":  "Design engineering tools and quality scoring.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-design-engineering.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "design-plan-generation",
+        "desc":  "Generate high-level technical design plans for Soulverse features and GSK modules.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-design-plan-generation.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "design-systems",
+        "desc":  "Production-grade design systems mined from top GitHub repos.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-design-systems.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "design-to-code",
+        "desc":  "Design-to-code tools and Figma bridges.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-design-to-code.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "design-tokens",
+        "desc":  "Design token systems and color generators.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-design-tokens.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "docker-from-scratch",
+        "desc":  "Build a Container from Scratch.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-docker-from-scratch.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "emulator-from-scratch",
+        "desc":  "Build an Emulator from Scratch.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-emulator-from-scratch.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "free-llm-serving-stack",
+        "desc":  "Self-hosted LLM serving with Ollama, vLLM, and Groq.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-free-llm-serving-stack.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "free-vector-db-stack",
+        "desc":  "Free open-source vector databases for RAG.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-free-vector-db-stack.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "frontend-from-scratch",
+        "desc":  "Build a Frontend Framework from Scratch.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-frontend-from-scratch.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "game-engine-from-scratch",
+        "desc":  "Build a Game Engine from Scratch.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-game-engine-from-scratch.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "git-from-scratch",
+        "desc":  "Build Git from Scratch.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-git-from-scratch.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "god-mode-research",
+        "desc":  "Full Godmode protocol G«ˆ 7 pillars for autonomous engineering discipline.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-god-mode-research.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "haystack",
+        "desc":  "Build search pipelines with Haystack framework.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-haystack.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "icon-libraries",
+        "desc":  "SVG icon libraries for web projects.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-icon-libraries.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "image-editor-from-scratch",
+        "desc":  "Build an Image Editor from Scratch.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-image-editor-from-scratch.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "instructor",
+        "desc":  "Agent integration patterns with Instructor.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-instructor.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "knowledge-dissemination-protocol",
+        "desc":  "Optimize clarity, conciseness, and impact of research findings.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-knowledge-dissemination-protocol.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "langgraph-for-agents",
+        "desc":  "Stateful graph orchestration for building production agents.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-langgraph-for-agents.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "langgraph-states",
+        "desc":  "LangGraph state management patterns.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-langgraph-states.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "language-from-scratch",
+        "desc":  "Build a Programming Language from Scratch.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-language-from-scratch.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "liquid-glass-shader",
+        "desc":  "Build liquid glass UI panels with real GLSL shaders G«ˆ SDF panels, bevel glass, refraction.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-liquid-glass-shader.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "llamaindex",
+        "desc":  "Agent integration patterns with LlamaIndex.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-llamaindex.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "load-balancer-from-scratch",
+        "desc":  "Build a Load Balancer from Scratch.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-load-balancer-from-scratch.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "machine-learning-from-scratch",
+        "desc":  "Build a Machine Learning Library from Scratch.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-machine-learning-from-scratch.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "markdown-from-scratch",
+        "desc":  "Build a Markdown Parser from Scratch.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-markdown-from-scratch.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "mcp-model-context-protocol",
+        "desc":  "Model Context Protocol for connecting AI agents to tools.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-mcp-model-context-protocol.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "memory-allocator-from-scratch",
+        "desc":  "Build a Memory Allocator from Scratch.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-memory-allocator-from-scratch.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "metagpt",
+        "desc":  "Multi-agent collaboration with MetaGPT.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-metagpt.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "microsoft-agent-framework",
+        "desc":  "Enterprise-grade multi-agent AI framework from Microsoft.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-microsoft-agent-framework.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "modular-scene-composition",
+        "desc":  "Design 3D scene hierarchies Godot-style G«ˆ reusable nodes composed into complex environments.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-modular-scene-composition.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "multi-form-task-distribution",
+        "desc":  "Break complex builds into parallel subtasks for faster execution.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-multi-form-task-distribution.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "nanoscale-connectome-analyzer",
+        "desc":  "Nanoscale connectome analysis for GSK neural pathway mapping.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-nanoscale-connectome-analyzer.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "negativity-bias-offset",
+        "desc":  "Balanced self-assessment G«ˆ learn from successes as much as failures during builds.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-negativity-bias-offset.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "network-stack-from-scratch",
+        "desc":  "Build a Network Stack from Scratch.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-network-stack-from-scratch.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "neural-network-from-scratch",
+        "desc":  "Build a Neural Network from Scratch.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-neural-network-from-scratch.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "nosql-from-scratch",
+        "desc":  "Build a NoSQL Database from Scratch.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-nosql-from-scratch.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "openai-agents-sdk",
+        "desc":  "Production-grade multi-agent SDK from OpenAI.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-openai-agents-sdk.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "opencode-skill-synthesizer",
+        "desc":  "Generate new OpenCode skills compliant with format and deployment rules.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-opencode-skill-synthesizer.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "openhands-subconscious",
+        "desc":  "OpenHands SDK as Deerg coding body.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-openhands-subconscious.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "openscreen-automation",
+        "desc":  "OpenScreen automation for visual testing and screen capture.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-openscreen-automation.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "opentelemetry",
+        "desc":  "OpenTelemetry for distributed tracing and observability.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-opentelemetry.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "operating-system-from-scratch",
+        "desc":  "Build an Operating System from Scratch.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-operating-system-from-scratch.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "os-from-scratch",
+        "desc":  "Build an Operating System from Scratch.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-os-from-scratch.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "physics-engine-from-scratch",
+        "desc":  "Build a Physics Engine from Scratch.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-physics-engine-from-scratch.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "pinterest-marketing-seo",
+        "desc":  "Complete Pinterest marketing G«ˆ hashtags, interest tags, board categories, keyword research, pin optimization.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-pinterest-marketing-seo.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "plan-from-simulation",
+        "desc":  "Extract actionable execution plans from world model simulation results.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-plan-from-simulation.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "playwright-automation",
+        "desc":  "Playwright-based browser automation for testing and scraping.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-playwright-automation.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "post-processing-stack",
+        "desc":  "Add post-processing to Three.js G«ˆ bloom, AO, chromatic aberration, scanline, vignette.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-post-processing-stack.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "processor-from-scratch",
+        "desc":  "Build a Processor (CPU) from Scratch.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-processor-from-scratch.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "product-demo-workflow",
+        "desc":  "Product demo workflow for GSK system demonstrations.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-product-demo-workflow.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "programming-language-from-scratch",
+        "desc":  "Build a Programming Language from Scratch.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-programming-language-from-scratch.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "progressive-disclosure-protocol",
+        "desc":  "Load skill info in tiers G«ˆ metadata first, full details on demand.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-progressive-disclosure-protocol.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "pydantic-ai-agents",
+        "desc":  "Type-safe AI agent framework by the Pydantic team.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-pydantic-ai-agents.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "regex-from-scratch",
+        "desc":  "Build a Regex Engine from Scratch.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-regex-from-scratch.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "report-generation",
+        "desc":  "Generate concise markdown reports from build results and simulation outputs.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-report-generation.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "research-problem-formulation",
+        "desc":  "Precisely define knowledge gaps or system ambiguities into testable research questions.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-research-problem-formulation.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "research-subconscious",
+        "desc":  "GPT-Researcher as Deerg investigation body.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-research-subconscious.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "root-cause-synthesis",
+        "desc":  "Diagnose build failures systematically using error context and recent changes.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-root-cause-synthesis.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "scout-agent",
+        "desc":  "Scout Agent G«ˆ research, reconnaissance, and requirements mapping before building.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-scout-agent.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "scribe-agent",
+        "desc":  "Scribe Agent G«ˆ witnessing intelligence that documents everything into the Seshat Second Brain.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-scribe-agent.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "search-engine-from-scratch",
+        "desc":  "Build a Search Engine from Scratch.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-search-engine-from-scratch.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "service-manual-methodology",
+        "desc":  "Formal service manual structure for diagnosing and documenting complex systems.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-service-manual-methodology.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "shell-from-scratch",
+        "desc":  "Build a Shell from Scratch.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-shell-from-scratch.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "skill-factory",
+        "desc":  "Self-learning new skills G«ˆ the skill factory methodology.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-skill-factory.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "social-media-agent-competition",
+        "desc":  "Competitive landscape and skill gap analysis for autonomous AI social media agents.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-social-media-agent-competition.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "social-media-automation",
+        "desc":  "Playwright-based social media automation for cross-posting to Pinterest, BlueSky, Mastodon.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-social-media-automation.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "soul-maker",
+        "desc":  "The Universal Template for Creating a Soul.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-soul-maker.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "soulguns-agent-patterns",
+        "desc":  "Soulguns Agent Architecture Patterns.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-soulguns-agent-patterns.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "soulguns-architecture",
+        "desc":  "Soulguns architecture documentation.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-soulguns-architecture.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "soulguns-design-systems",
+        "desc":  "Soulguns design system G«ˆ component architecture, tokens, patterns.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-soulguns-design-systems.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "soulguns-mcp",
+        "desc":  "Soulguns MCP G«ˆ protocol architecture and tool integration.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-soulguns-mcp.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "soulguns-observability",
+        "desc":  "Soulguns observability G«ˆ agent monitoring and telemetry.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-soulguns-observability.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "soulguns-testing",
+        "desc":  "Soulguns testing patterns with Vitest.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-soulguns-testing.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "soulguns-ts",
+        "desc":  "Soulguns TypeScript patterns.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-soulguns-ts.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "spatial-world-interaction",
+        "desc":  "Place buildings, spawn agents, and manipulate the Soulverse 3D world.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-spatial-world-interaction.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "sqlite-from-scratch",
+        "desc":  "Build SQLite from Scratch.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-sqlite-from-scratch.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "structural-diff-analysis",
+        "desc":  "Compare GSK codebase versions before/after changes to verify only intended changes.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-structural-diff-analysis.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "template-engine-from-scratch",
+        "desc":  "Build a Template Engine from Scratch.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-template-engine-from-scratch.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "text-editor-from-scratch",
+        "desc":  "Build a Text Editor from Scratch.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-text-editor-from-scratch.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "threejs-3d-ui",
+        "desc":  "3D UI components for React Three Fiber.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-threejs-3d-ui.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "threejs-ecosystem",
+        "desc":  "React Three Fiber ecosystem tools and MCP.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-threejs-ecosystem.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "threejs-grid-city",
+        "desc":  "Grid-based city building system for Three.js.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-threejs-grid-city.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "threejs-particle-fx",
+        "desc":  "GPU particle effects for Three.js.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-threejs-particle-fx.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "tiered-skill-evolution",
+        "desc":  "Define mastery tiers for any skill with prerequisites and verification criteria.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-tiered-skill-evolution.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "ultra-review",
+        "desc":  "Ultra Review G«ˆ comprehensive code review pattern for GSK builds.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-ultra-review.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "verifiable-goal-definition",
+        "desc":  "Define precise, testable goal contracts before any build.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-verifiable-goal-definition.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "visual-recognition-from-scratch",
+        "desc":  "Build visual recognition from scratch.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-visual-recognition-from-scratch.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "voxel-engine-from-scratch",
+        "desc":  "Build a Voxel Engine from Scratch.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-voxel-engine-from-scratch.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "web-browser-from-scratch",
+        "desc":  "Build a Web Browser from Scratch.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-web-browser-from-scratch.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "webserver-from-scratch",
+        "desc":  "Build a Web Server from Scratch.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-webserver-from-scratch.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "websocket-from-scratch",
+        "desc":  "Build WebSocket from scratch.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-websocket-from-scratch.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "world-model-simulation",
+        "desc":  "Run perception-action-simulation cycles before committing to real-world actions.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-world-model-simulation.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "context-window-control",
+        "desc":  "Token budgeting, sliding window strategies, summarization compression G«ˆ grafted from Architect/Whis.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-context-window-control.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "permission-architecture",
+        "desc":  "RBAC systems, tool-level ACLs, dynamic conditions G«ˆ grafted from Merovingian/King Kai.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-permission-architecture.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "pipeline-orchestration",
+        "desc":  "DAG execution, sequential/parallel decorators, critical path analysis.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-pipeline-orchestration.md"
+    },
+    {
+        "icon":  "G‹Ì",
+        "type":  "skill",
+        "name":  "soul-media-marketing",
+        "desc":  "Soul media marketing G«ˆ promote souls across platforms, track engagement, optimize messaging.",
+        "plt":  "0.7/0.5/0.4",
+        "file":  "soul-gun-soul-media-marketing.md"
+    },
+    {
+        "featured":  true,
+        "name":  "The Divine Directive",
+        "plt":  "1.0/0.9/0.3",
+        "icon":  "??",
+        "type":  "combo",
+        "desc":  "Craig speaks ? I execute ? Tec records. The meta-combo. 80 skills across Receive, Analyze, Execute, Record.",
+        "file":  "combo-divine-directive.md"
+    }
+]
