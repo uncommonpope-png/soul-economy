@@ -442,6 +442,7 @@
                 data.push(row);
             }
             var t = 0;
+            var currentTex = null;
             var iv = setInterval(function() {
                 t += 0.03;
                 ctx.fillStyle = 'rgba(0,0,0,0.15)';
@@ -455,8 +456,9 @@
                         ctx.fillText(ch, c * 9 + 2, r * 12 + 10);
                     }
                 }
-                var tex = new BABYLON.Texture(cv.toDataURL(), scene);
-                mat.emissiveTexture = tex;
+                if (currentTex) currentTex.dispose();
+                currentTex = new BABYLON.Texture(cv.toDataURL(), scene);
+                mat.emissiveTexture = currentTex;
             }, 120);
             matrixClusters.push({ plane: plane, iv: iv });
         }
