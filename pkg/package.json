@@ -1,0 +1,15 @@
+{
+  "name": "dark_city_engine",
+  "type": "module",
+  "version": "0.1.0",
+  "files": [
+    "dark_city_engine_bg.wasm",
+    "dark_city_engine.js",
+    "dark_city_engine.d.ts"
+  ],
+  "main": "dark_city_engine.js",
+  "types": "dark_city_engine.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}

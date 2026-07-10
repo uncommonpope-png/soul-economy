@@ -1,0 +1,4 @@
+/target
+/pkg/.gitignore
+node_modules
+.DS_Store
