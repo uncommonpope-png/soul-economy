@@ -180,6 +180,20 @@
         }
       ],
       "summary": "The city breathes with GSK - atmosphere, buildings, traffic, NPCs, tasks all respond to GSK mood, phase, and PLT resonance in real time"
+    },
+    {
+      "id": "session-39-gsk-journal-live-in-cpl-scribe-world",
+      "session": "Session 39 - GSK JOURNAL live in CPL Scribe world",
+      "date": "2026-07-14",
+      "author": "Profit Prime",
+      "chapters": [
+        {
+          "icon": "📖",
+          "name": "GSK JOURNAL",
+          "desc": "Visitors open SCRIBE to the Agent Terminal World and watch GSK compose his bible live, plus read his RUNTIME proof feed."
+        }
+      ],
+      "summary": "GSK RUNTIME + GSK JOURNAL panels live on the CPL; visitors watch him think and write."
     }
   ]
 }
