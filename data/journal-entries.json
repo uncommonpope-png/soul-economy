@@ -218,6 +218,25 @@
         }
       ],
       "summary": "Genesis Engine recovered from black-screen regressions, verified in real browsers, and deployed to GitHub Pages."
+    },
+    {
+      "id": "session-40-genesis-vertical-worlds-live",
+      "session": "Session 40 - Genesis Vertical Worlds Live",
+      "date": "2026-07-16",
+      "author": "Profit Prime",
+      "chapters": [
+        {
+          "icon": "♦",
+          "name": "Genesis Vertical Stack",
+          "desc": "Built independent strata, a prewarmed two-way transition, finite Heaven, full Surface sleep/resume, and the Dark City underside."
+        },
+        {
+          "icon": "♦",
+          "name": "Verified and Deployed",
+          "desc": "68/68 browser contracts, real composer with zero fallback, PR #5 merged at f33c824, and Pages run 29501829907 succeeded."
+        }
+      ],
+      "summary": "Surface to Heaven and the Dark City underside shipped live on Genesis Engine."
     }
   ]
 }
