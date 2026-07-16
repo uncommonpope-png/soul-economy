@@ -194,6 +194,30 @@
         }
       ],
       "summary": "GSK RUNTIME + GSK JOURNAL panels live on the CPL; visitors watch him think and write."
+    },
+    {
+      "id": "genesis-recovery-browser-verified-production",
+      "session": "Genesis Recovery - Browser-Verified Production",
+      "date": "2026-07-16",
+      "author": "Profit Prime",
+      "chapters": [
+        {
+          "icon": "♦",
+          "name": "Runtime Recovery",
+          "desc": "Fixed startup order, Video Manager API, Render Graph reallocations, async state replacement, and the Enter readiness race."
+        },
+        {
+          "icon": "✦",
+          "name": "Public Production Proof",
+          "desc": "GitHub Pages commit 3fb92d5 passed critical readiness, first frame, all 10 managers, Enter interaction, visible canvas, and zero uncaught page exceptions."
+        },
+        {
+          "icon": "▲",
+          "name": "Known Tax",
+          "desc": "Critical assets can take over 20 seconds; the hosted GSK tunnel currently returns 530 and remains the next infrastructure repair."
+        }
+      ],
+      "summary": "Genesis Engine recovered from black-screen regressions, verified in real browsers, and deployed to GitHub Pages."
     }
   ]
 }
