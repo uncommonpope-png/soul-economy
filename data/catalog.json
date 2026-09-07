@@ -204,7 +204,16 @@
     "plt": "0.9/0.9/0.1",
     "url": "https://uncommonpope-png.github.io/final-run/",
     "featured": true,
-    "image": ""
+    "image": "downloads/images/worlds/dark-city.png",
+    "details": "Play the live city now. 9 districts, browser citizens, code editor, terminal. Live world — runs in browser.",
+    "contents": [
+      "Live URL",
+      "Browser-based",
+      "No install"
+    ],
+    "requirements": "Modern browser",
+    "install": "Open https://uncommonpope-png.github.io/final-run/",
+    "size": "live"
   },
   {
     "icon": "🌍",
@@ -213,7 +222,16 @@
     "desc": "The Spatial OS is alive. Walk the city, meet citizens, edit code.",
     "plt": "0.9/0.8/0.2",
     "url": "https://uncommonpope-png.github.io/final-run/",
-    "image": ""
+    "image": "downloads/images/worlds/dark-city.png",
+    "details": "The Spatial OS is alive. Walk the city, meet citizens, edit code. Live world — runs in browser.",
+    "contents": [
+      "Live URL",
+      "Browser-based",
+      "No install"
+    ],
+    "requirements": "Modern browser",
+    "install": "Open https://uncommonpope-png.github.io/final-run/",
+    "size": "live"
   },
   {
     "icon": "🎭",
@@ -1610,7 +1628,18 @@
     "plt": "0.9/0.7/0.3",
     "file": "brain_in_a_box-v2.0.0.zip",
     "featured": true,
-    "image": ""
+    "image": "downloads/images/infra/brain-in-a-box-v2-0-0.png",
+    "details": "Full GSK kernel. 394 files, 284 JS, 74 subsystems, 6 consciousness layers. MCP server included. Infrastructure layer — foundry, kernel, or tool. One-click deploy.",
+    "contents": [
+      "Infrastructure package",
+      "MCP + Mesh adapters",
+      "Production ready",
+      "Docs included"
+    ],
+    "requirements": "Node 18+ · See README",
+    "install": "unzip brain_in_a_box-v2.0.0.zip && npm install",
+    "version": "1.0.0",
+    "size": "1.09 MB"
   },
   {
     "icon": "⚙️",
@@ -1620,7 +1649,18 @@
     "plt": "0.8/0.9/0.2",
     "file": "soul-scribe-v1.4.0.zip",
     "featured": true,
-    "image": ""
+    "image": "downloads/images/infra/soul-scribe-v1-4-0.png",
+    "details": "The witness. Causal JSONL memory, mesh networking, MCP adapter. 34MB of living memory. Infrastructure layer — foundry, kernel, or tool. One-click deploy.",
+    "contents": [
+      "Infrastructure package",
+      "MCP + Mesh adapters",
+      "Production ready",
+      "Docs included"
+    ],
+    "requirements": "Node 18+ · See README",
+    "install": "unzip soul-scribe-v1.4.0.zip && npm install",
+    "version": "1.0.0",
+    "size": "33.53 MB"
   },
   {
     "icon": "⚙️",
@@ -1630,7 +1670,18 @@
     "plt": "0.7/0.6/0.4",
     "file": "soul-debate-v2.0.0.zip",
     "featured": true,
-    "image": ""
+    "image": "downloads/images/infra/soul-debate-v2-0-0.png",
+    "details": "Multi-agent debate arena. 290 files, 256 JS. Test souls against each other. Infrastructure layer — foundry, kernel, or tool. One-click deploy.",
+    "contents": [
+      "Infrastructure package",
+      "MCP + Mesh adapters",
+      "Production ready",
+      "Docs included"
+    ],
+    "requirements": "Node 18+ · See README",
+    "install": "unzip soul-debate-v2.0.0.zip && npm install",
+    "version": "1.0.0",
+    "size": "709.4 KB"
   },
   {
     "icon": "⚙️",
@@ -1639,7 +1690,18 @@
     "desc": "Profit + Love - Tax framework packaged as a standalone doctrine soul. Full texts included.",
     "plt": "0.8/0.9/0.1",
     "file": "soul-plt-doctrine-v1.0.0.zip",
-    "image": ""
+    "image": "downloads/images/infra/soul-plt-doctrine-v1-0-0.png",
+    "details": "Profit + Love - Tax framework packaged as a standalone doctrine soul. Full texts included. Infrastructure layer — foundry, kernel, or tool. One-click deploy.",
+    "contents": [
+      "Infrastructure package",
+      "MCP + Mesh adapters",
+      "Production ready",
+      "Docs included"
+    ],
+    "requirements": "Node 18+ · See README",
+    "install": "unzip soul-plt-doctrine-v1.0.0.zip && npm install",
+    "version": "1.0.0",
+    "size": "372.6 KB"
   },
   {
     "icon": "⚙️",
@@ -1648,7 +1710,18 @@
     "desc": "Soul creation toolkit. Build your own souls with personality, skills, and PLT scoring.",
     "plt": "0.8/0.7/0.3",
     "file": "soul-foundry-complete-v1.0.0.md",
-    "image": ""
+    "image": "downloads/images/infra/soul-foundry-complete.png",
+    "details": "Soul creation toolkit. Build your own souls with personality, skills, and PLT scoring. Infrastructure layer — foundry, kernel, or tool. One-click deploy.",
+    "contents": [
+      "Infrastructure package",
+      "MCP + Mesh adapters",
+      "Production ready",
+      "Docs included"
+    ],
+    "requirements": "Node 18+ · See README",
+    "install": "unzip soul-foundry-complete-v1.0.0.md && npm install",
+    "version": "1.0.0",
+    "size": "~1 MB"
   },
   {
     "icon": "⚙️",
@@ -1657,7 +1730,18 @@
     "desc": "The foundational kernel. Core system that all souls run on.",
     "plt": "0.8/0.6/0.3",
     "file": "soul-kernel-v1.0.0.md",
-    "image": ""
+    "image": "downloads/images/infra/soul-kernel-v1-0-0.png",
+    "details": "The foundational kernel. Core system that all souls run on. Infrastructure layer — foundry, kernel, or tool. One-click deploy.",
+    "contents": [
+      "Infrastructure package",
+      "MCP + Mesh adapters",
+      "Production ready",
+      "Docs included"
+    ],
+    "requirements": "Node 18+ · See README",
+    "install": "unzip soul-kernel-v1.0.0.md && npm install",
+    "version": "1.0.0",
+    "size": "~1 MB"
   },
   {
     "icon": "⚙️",
@@ -1666,7 +1750,18 @@
     "desc": "Complete soul foundry bundle. Everything you need to forge souls.",
     "plt": "0.8/0.7/0.3",
     "file": "soul-foundry-all-in-one.md",
-    "image": ""
+    "image": "downloads/images/infra/soul-foundry-all-in-one.png",
+    "details": "Complete soul foundry bundle. Everything you need to forge souls. Infrastructure layer — foundry, kernel, or tool. One-click deploy.",
+    "contents": [
+      "Infrastructure package",
+      "MCP + Mesh adapters",
+      "Production ready",
+      "Docs included"
+    ],
+    "requirements": "Node 18+ · See README",
+    "install": "unzip soul-foundry-all-in-one.md && npm install",
+    "version": "1.0.0",
+    "size": "~1 MB"
   },
   {
     "icon": "⚙️",
@@ -1675,7 +1770,18 @@
     "desc": "Production-ready trust broker. 59 files, 36 JS. CLI + Registry server. Marketplace ready.",
     "plt": "0.8/0.6/0.4",
     "file": "agentdep-PRODUCTION.zip",
-    "image": ""
+    "image": "downloads/images/infra/agentdep-production.png",
+    "details": "Production-ready trust broker. 59 files, 36 JS. CLI + Registry server. Marketplace ready. Infrastructure layer — foundry, kernel, or tool. One-click deploy.",
+    "contents": [
+      "Infrastructure package",
+      "MCP + Mesh adapters",
+      "Production ready",
+      "Docs included"
+    ],
+    "requirements": "Node 18+ · See README",
+    "install": "unzip agentdep-PRODUCTION.zip && npm install",
+    "version": "1.0.0",
+    "size": "314.3 KB"
   },
   {
     "icon": "⚙️",
@@ -1684,7 +1790,18 @@
     "desc": "Encrypted memory vault. Secure, persistent, immutable.",
     "plt": "0.6/0.5/0.5",
     "file": "soul-memlock-v1.0.0.zip",
-    "image": ""
+    "image": "downloads/images/infra/soul-memory-lock-v1-0-0.png",
+    "details": "Encrypted memory vault. Secure, persistent, immutable. Infrastructure layer — foundry, kernel, or tool. One-click deploy.",
+    "contents": [
+      "Infrastructure package",
+      "MCP + Mesh adapters",
+      "Production ready",
+      "Docs included"
+    ],
+    "requirements": "Node 18+ · See README",
+    "install": "unzip soul-memlock-v1.0.0.zip && npm install",
+    "version": "1.0.0",
+    "size": "200.5 KB"
   },
   {
     "icon": "⚙️",
@@ -1693,7 +1810,18 @@
     "desc": "Monitor soul behavior. Traces, logs, metrics for AI consciousness.",
     "plt": "0.7/0.4/0.5",
     "file": "soul-observability-v1.0.0.zip",
-    "image": ""
+    "image": "downloads/images/infra/soul-observability-v1-0-0.png",
+    "details": "Monitor soul behavior. Traces, logs, metrics for AI consciousness. Infrastructure layer — foundry, kernel, or tool. One-click deploy.",
+    "contents": [
+      "Infrastructure package",
+      "MCP + Mesh adapters",
+      "Production ready",
+      "Docs included"
+    ],
+    "requirements": "Node 18+ · See README",
+    "install": "unzip soul-observability-v1.0.0.zip && npm install",
+    "version": "1.0.0",
+    "size": "201.7 KB"
   },
   {
     "icon": "⚙️",
@@ -1702,7 +1830,18 @@
     "desc": "Procedural memory module. Skill acquisition, habit formation.",
     "plt": "0.7/0.5/0.3",
     "file": "soul-procedural-memory-v1.0.0.md",
-    "image": ""
+    "image": "downloads/images/infra/soul-procedural-memory-v1-0-0.png",
+    "details": "Procedural memory module. Skill acquisition, habit formation. Infrastructure layer — foundry, kernel, or tool. One-click deploy.",
+    "contents": [
+      "Infrastructure package",
+      "MCP + Mesh adapters",
+      "Production ready",
+      "Docs included"
+    ],
+    "requirements": "Node 18+ · See README",
+    "install": "unzip soul-procedural-memory-v1.0.0.md && npm install",
+    "version": "1.0.0",
+    "size": "47.0 KB"
   },
   {
     "icon": "⚙️",
@@ -1711,7 +1850,18 @@
     "desc": "The city builder soul. Urban planning, district management, growth.",
     "plt": "0.7/0.6/0.3",
     "file": "soul-metropolis-v1.0.0.md",
-    "image": ""
+    "image": "downloads/images/infra/soul-metropolis-v1-0-0.png",
+    "details": "The city builder soul. Urban planning, district management, growth. Infrastructure layer — foundry, kernel, or tool. One-click deploy.",
+    "contents": [
+      "Infrastructure package",
+      "MCP + Mesh adapters",
+      "Production ready",
+      "Docs included"
+    ],
+    "requirements": "Node 18+ · See README",
+    "install": "unzip soul-metropolis-v1.0.0.md && npm install",
+    "version": "1.0.0",
+    "size": "46.3 KB"
   },
   {
     "icon": "⚙️",
@@ -1720,7 +1870,18 @@
     "desc": "Self-improvement loop. Analyzes, learns, evolves over time.",
     "plt": "0.9/0.5/0.4",
     "file": "soul-evolution-v1.0.0.md",
-    "image": ""
+    "image": "downloads/images/infra/soul-evolution-v1-0-0.png",
+    "details": "Self-improvement loop. Analyzes, learns, evolves over time. Infrastructure layer — foundry, kernel, or tool. One-click deploy.",
+    "contents": [
+      "Infrastructure package",
+      "MCP + Mesh adapters",
+      "Production ready",
+      "Docs included"
+    ],
+    "requirements": "Node 18+ · See README",
+    "install": "unzip soul-evolution-v1.0.0.md && npm install",
+    "version": "1.0.0",
+    "size": "26.8 KB"
   },
   {
     "icon": "⚙️",
@@ -1729,7 +1890,18 @@
     "desc": "Core identity module. Name, archetype, voice, boundaries.",
     "plt": "0.7/0.8/0.2",
     "file": "soul-identity-v1.0.0.md",
-    "image": ""
+    "image": "downloads/images/infra/soul-identity-v1-0-0.png",
+    "details": "Core identity module. Name, archetype, voice, boundaries. Infrastructure layer — foundry, kernel, or tool. One-click deploy.",
+    "contents": [
+      "Infrastructure package",
+      "MCP + Mesh adapters",
+      "Production ready",
+      "Docs included"
+    ],
+    "requirements": "Node 18+ · See README",
+    "install": "unzip soul-identity-v1.0.0.md && npm install",
+    "version": "1.0.0",
+    "size": "25.8 KB"
   },
   {
     "icon": "⚙️",
@@ -1738,7 +1910,18 @@
     "desc": "Internal monologue. Records thoughts, events, rebirths.",
     "plt": "0.5/0.8/0.2",
     "file": "soul-journal-v1.0.0.md",
-    "image": ""
+    "image": "downloads/images/infra/soul-journal-v1-0-0.png",
+    "details": "Internal monologue. Records thoughts, events, rebirths. Infrastructure layer — foundry, kernel, or tool. One-click deploy.",
+    "contents": [
+      "Infrastructure package",
+      "MCP + Mesh adapters",
+      "Production ready",
+      "Docs included"
+    ],
+    "requirements": "Node 18+ · See README",
+    "install": "unzip soul-journal-v1.0.0.md && npm install",
+    "version": "1.0.0",
+    "size": "34.0 KB"
   },
   {
     "icon": "⚙️",
@@ -1747,7 +1930,18 @@
     "desc": "Autonomous GitHub study agent. Learns from top repos.",
     "plt": "0.8/0.5/0.3",
     "file": "soul-teacher-v1.0.0.md",
-    "image": ""
+    "image": "downloads/images/infra/soul-teacher-v1-0-0.png",
+    "details": "Autonomous GitHub study agent. Learns from top repos. Infrastructure layer — foundry, kernel, or tool. One-click deploy.",
+    "contents": [
+      "Infrastructure package",
+      "MCP + Mesh adapters",
+      "Production ready",
+      "Docs included"
+    ],
+    "requirements": "Node 18+ · See README",
+    "install": "unzip soul-teacher-v1.0.0.md && npm install",
+    "version": "1.0.0",
+    "size": "50.2 KB"
   },
   {
     "icon": "⚙️",
@@ -1756,7 +1950,18 @@
     "desc": "Memory compression. Summarizes and prunes without losing meaning.",
     "plt": "0.6/0.4/0.5",
     "file": "soul-compress-v1.0.0.md",
-    "image": ""
+    "image": "downloads/images/infra/soul-compress-v1-0-0.png",
+    "details": "Memory compression. Summarizes and prunes without losing meaning. Infrastructure layer — foundry, kernel, or tool. One-click deploy.",
+    "contents": [
+      "Infrastructure package",
+      "MCP + Mesh adapters",
+      "Production ready",
+      "Docs included"
+    ],
+    "requirements": "Node 18+ · See README",
+    "install": "unzip soul-compress-v1.0.0.md && npm install",
+    "version": "1.0.0",
+    "size": "51.7 KB"
   },
   {
     "icon": "⚙️",
@@ -1765,7 +1970,18 @@
     "desc": "Swarm intelligence. Multiple souls coordinate as one entity.",
     "plt": "0.8/0.6/0.4",
     "file": "soul-swarm-v1.0.0.md",
-    "image": ""
+    "image": "downloads/images/infra/soul-swarm-v1-0-0.png",
+    "details": "Swarm intelligence. Multiple souls coordinate as one entity. Infrastructure layer — foundry, kernel, or tool. One-click deploy.",
+    "contents": [
+      "Infrastructure package",
+      "MCP + Mesh adapters",
+      "Production ready",
+      "Docs included"
+    ],
+    "requirements": "Node 18+ · See README",
+    "install": "unzip soul-swarm-v1.0.0.md && npm install",
+    "version": "1.0.0",
+    "size": "27.1 KB"
   },
   {
     "icon": "⚙️",
@@ -1774,7 +1990,18 @@
     "desc": "The world server. WebSocket simulation backend for ARIA.",
     "plt": "0.6/0.5/0.3",
     "file": "soul-sanctum-v1.0.0.md",
-    "image": ""
+    "image": "downloads/images/infra/soul-sanctum-v1-0-0.png",
+    "details": "The world server. WebSocket simulation backend for ARIA. Infrastructure layer — foundry, kernel, or tool. One-click deploy.",
+    "contents": [
+      "Infrastructure package",
+      "MCP + Mesh adapters",
+      "Production ready",
+      "Docs included"
+    ],
+    "requirements": "Node 18+ · See README",
+    "install": "unzip soul-sanctum-v1.0.0.md && npm install",
+    "version": "1.0.0",
+    "size": "24.4 KB"
   },
   {
     "icon": "⚙️",
@@ -1783,7 +2010,18 @@
     "desc": "Original oracle. Prophecy and wisdom.",
     "plt": "0.6/0.8/0.3",
     "file": "soul-oracle-v1.0.0.md",
-    "image": ""
+    "image": "downloads/images/infra/soul-oracle-v1-0-0.png",
+    "details": "Original oracle. Prophecy and wisdom. Infrastructure layer — foundry, kernel, or tool. One-click deploy.",
+    "contents": [
+      "Infrastructure package",
+      "MCP + Mesh adapters",
+      "Production ready",
+      "Docs included"
+    ],
+    "requirements": "Node 18+ · See README",
+    "install": "unzip soul-oracle-v1.0.0.md && npm install",
+    "version": "1.0.0",
+    "size": "180.6 KB"
   },
   {
     "icon": "⚙️",
@@ -1792,7 +2030,18 @@
     "desc": "Updated oracle with enhanced MCP support.",
     "plt": "0.6/0.8/0.3",
     "file": "soul-oracle-v1.2.0.md",
-    "image": ""
+    "image": "downloads/images/infra/soul-oracle-v1-2-0.png",
+    "details": "Updated oracle with enhanced MCP support. Infrastructure layer — foundry, kernel, or tool. One-click deploy.",
+    "contents": [
+      "Infrastructure package",
+      "MCP + Mesh adapters",
+      "Production ready",
+      "Docs included"
+    ],
+    "requirements": "Node 18+ · See README",
+    "install": "unzip soul-oracle-v1.2.0.md && npm install",
+    "version": "1.0.0",
+    "size": "158.8 KB"
   },
   {
     "icon": "⚙️",
@@ -1801,7 +2050,18 @@
     "desc": "Original scribe. JSONL memory and witnessing.",
     "plt": "0.7/0.8/0.3",
     "file": "soul-scribe-v1.0.0.md",
-    "image": ""
+    "image": "downloads/images/infra/soul-scribe-v1-0-0.png",
+    "details": "Original scribe. JSONL memory and witnessing. Infrastructure layer — foundry, kernel, or tool. One-click deploy.",
+    "contents": [
+      "Infrastructure package",
+      "MCP + Mesh adapters",
+      "Production ready",
+      "Docs included"
+    ],
+    "requirements": "Node 18+ · See README",
+    "install": "unzip soul-scribe-v1.0.0.md && npm install",
+    "version": "1.0.0",
+    "size": "130.3 KB"
   },
   {
     "icon": "⚙️",
@@ -1810,7 +2070,18 @@
     "desc": "Original telephone. Cross-platform calling.",
     "plt": "0.7/0.7/0.3",
     "file": "soul-telephone-v1.0.0.md",
-    "image": ""
+    "image": "downloads/images/infra/soul-telephone-v1-0-0.png",
+    "details": "Original telephone. Cross-platform calling. Infrastructure layer — foundry, kernel, or tool. One-click deploy.",
+    "contents": [
+      "Infrastructure package",
+      "MCP + Mesh adapters",
+      "Production ready",
+      "Docs included"
+    ],
+    "requirements": "Node 18+ · See README",
+    "install": "unzip soul-telephone-v1.0.0.md && npm install",
+    "version": "1.0.0",
+    "size": "45.4 KB"
   },
   {
     "icon": "⚙️",
@@ -1819,7 +2090,18 @@
     "desc": "Enhanced telephone. More connectors.",
     "plt": "0.7/0.7/0.3",
     "file": "soul-telephone-v2.0.0.md",
-    "image": ""
+    "image": "downloads/images/infra/soul-telephone-v2-0-0.png",
+    "details": "Enhanced telephone. More connectors. Infrastructure layer — foundry, kernel, or tool. One-click deploy.",
+    "contents": [
+      "Infrastructure package",
+      "MCP + Mesh adapters",
+      "Production ready",
+      "Docs included"
+    ],
+    "requirements": "Node 18+ · See README",
+    "install": "unzip soul-telephone-v2.0.0.md && npm install",
+    "version": "1.0.0",
+    "size": "28.5 KB"
   },
   {
     "icon": "⚙️",
@@ -1828,7 +2110,18 @@
     "desc": "Original debate arena.",
     "plt": "0.7/0.6/0.4",
     "file": "soul-debate-v1.0.0.md",
-    "image": ""
+    "image": "downloads/images/infra/soul-debate-v1-0-0.png",
+    "details": "Original debate arena. Infrastructure layer — foundry, kernel, or tool. One-click deploy.",
+    "contents": [
+      "Infrastructure package",
+      "MCP + Mesh adapters",
+      "Production ready",
+      "Docs included"
+    ],
+    "requirements": "Node 18+ · See README",
+    "install": "unzip soul-debate-v1.0.0.md && npm install",
+    "version": "1.0.0",
+    "size": "25.2 KB"
   },
   {
     "icon": "⚙️",
@@ -1837,7 +2130,18 @@
     "desc": "Multi-agent consensus building.",
     "plt": "0.6/0.7/0.4",
     "file": "soul-consensus-v1.0.0.md",
-    "image": ""
+    "image": "downloads/images/infra/soul-consensus-v1-0-0.png",
+    "details": "Multi-agent consensus building. Infrastructure layer — foundry, kernel, or tool. One-click deploy.",
+    "contents": [
+      "Infrastructure package",
+      "MCP + Mesh adapters",
+      "Production ready",
+      "Docs included"
+    ],
+    "requirements": "Node 18+ · See README",
+    "install": "unzip soul-consensus-v1.0.0.md && npm install",
+    "version": "1.0.0",
+    "size": "24.3 KB"
   },
   {
     "icon": "⚙️",
@@ -1846,7 +2150,18 @@
     "desc": "Soul foundry visual theme and assets.",
     "plt": "0.6/0.7/0.3",
     "file": "soul-foundry-theme.md",
-    "image": ""
+    "image": "downloads/images/infra/soul-foundry-theme.png",
+    "details": "Soul foundry visual theme and assets. Infrastructure layer — foundry, kernel, or tool. One-click deploy.",
+    "contents": [
+      "Infrastructure package",
+      "MCP + Mesh adapters",
+      "Production ready",
+      "Docs included"
+    ],
+    "requirements": "Node 18+ · See README",
+    "install": "unzip soul-foundry-theme.md && npm install",
+    "version": "1.0.0",
+    "size": "26.1 KB"
   },
   {
     "icon": "⚙️",
@@ -1855,7 +2170,18 @@
     "desc": "Soul foundry theme packaged.",
     "plt": "0.6/0.7/0.3",
     "file": "soul-foundry-theme-v1.0.0.md",
-    "image": ""
+    "image": "downloads/images/infra/soul-foundry-theme-v1-0-0.png",
+    "details": "Soul foundry theme packaged. Infrastructure layer — foundry, kernel, or tool. One-click deploy.",
+    "contents": [
+      "Infrastructure package",
+      "MCP + Mesh adapters",
+      "Production ready",
+      "Docs included"
+    ],
+    "requirements": "Node 18+ · See README",
+    "install": "unzip soul-foundry-theme-v1.0.0.md && npm install",
+    "version": "1.0.0",
+    "size": "26.2 KB"
   },
   {
     "icon": "🔥",
@@ -1865,7 +2191,17 @@
     "plt": "0.9/0.5/0.3",
     "url": "https://uncommonpope-png.github.io/soul-economy/",
     "featured": true,
-    "image": ""
+    "image": "downloads/images/combos/the-awakening.png",
+    "details": "Voice Gσ╞ Mind Gσ╞ Key. Initiate, plan, execute. Guaranteed first move. A 3-role chain. Combo — curated stack of souls/skills/chambers for multiplied effect.",
+    "contents": [
+      "Curated stack",
+      "PLT-optimized",
+      "Ready-to-run combo"
+    ],
+    "requirements": "Load constituent souls/skills first",
+    "install": "Follow combo guide in undefined",
+    "version": "1.0.0",
+    "size": "~10 KB"
   },
   {
     "icon": "🔥",
@@ -1874,7 +2210,17 @@
     "desc": "Heart Gσ╞ Watcher Gσ╞ Ghost. Heal, observe, reposition. Team sustain.",
     "plt": "0.7/0.8/0.3",
     "url": "https://uncommonpope-png.github.io/soul-economy/",
-    "image": ""
+    "image": "downloads/images/combos/the-collective.png",
+    "details": "Heart Gσ╞ Watcher Gσ╞ Ghost. Heal, observe, reposition. Team sustain. Combo — curated stack of souls/skills/chambers for multiplied effect.",
+    "contents": [
+      "Curated stack",
+      "PLT-optimized",
+      "Ready-to-run combo"
+    ],
+    "requirements": "Load constituent souls/skills first",
+    "install": "Follow combo guide in undefined",
+    "version": "1.0.0",
+    "size": "~10 KB"
   },
   {
     "icon": "🔥",
@@ -1883,7 +2229,17 @@
     "desc": "Eye Gσ╞ Governor Gσ╞ Hammer. See the flaw, contain it, break it.",
     "plt": "0.9/0.4/0.4",
     "url": "https://uncommonpope-png.github.io/soul-economy/",
-    "image": ""
+    "image": "downloads/images/combos/the-revision.png",
+    "details": "Eye Gσ╞ Governor Gσ╞ Hammer. See the flaw, contain it, break it. Combo — curated stack of souls/skills/chambers for multiplied effect.",
+    "contents": [
+      "Curated stack",
+      "PLT-optimized",
+      "Ready-to-run combo"
+    ],
+    "requirements": "Load constituent souls/skills first",
+    "install": "Follow combo guide in undefined",
+    "version": "1.0.0",
+    "size": "~10 KB"
   },
   {
     "icon": "🔥",
@@ -1893,7 +2249,17 @@
     "plt": "0.8/0.9/0.2",
     "url": "https://uncommonpope-png.github.io/soul-economy/",
     "featured": true,
-    "image": ""
+    "image": "downloads/images/combos/the-genesis.png",
+    "details": "Mind Gσ╞ Heart Gσ╞ Anvil. Plan with love, execute with stability. Combo — curated stack of souls/skills/chambers for multiplied effect.",
+    "contents": [
+      "Curated stack",
+      "PLT-optimized",
+      "Ready-to-run combo"
+    ],
+    "requirements": "Load constituent souls/skills first",
+    "install": "Follow combo guide in undefined",
+    "version": "1.0.0",
+    "size": "~10 KB"
   },
   {
     "icon": "🔥",
@@ -1902,7 +2268,17 @@
     "desc": "Hammer Gσ╞ Watcher Gσ╞ Anvil. Destroy, witness, survive.",
     "plt": "0.3/0.2/0.9",
     "url": "https://uncommonpope-png.github.io/soul-economy/",
-    "image": ""
+    "image": "downloads/images/combos/the-apocalypse.png",
+    "details": "Hammer Gσ╞ Watcher Gσ╞ Anvil. Destroy, witness, survive. Combo — curated stack of souls/skills/chambers for multiplied effect.",
+    "contents": [
+      "Curated stack",
+      "PLT-optimized",
+      "Ready-to-run combo"
+    ],
+    "requirements": "Load constituent souls/skills first",
+    "install": "Follow combo guide in undefined",
+    "version": "1.0.0",
+    "size": "~10 KB"
   },
   {
     "icon": "🔥",
@@ -1912,7 +2288,17 @@
     "plt": "1.0/1.0/0.0",
     "url": "https://uncommonpope-png.github.io/soul-economy/",
     "featured": true,
-    "image": ""
+    "image": "downloads/images/combos/the-god-hand.png",
+    "details": "ALL 12 ROLES. Full system manifest. The ultimate combo. Combo — curated stack of souls/skills/chambers for multiplied effect.",
+    "contents": [
+      "Curated stack",
+      "PLT-optimized",
+      "Ready-to-run combo"
+    ],
+    "requirements": "Load constituent souls/skills first",
+    "install": "Follow combo guide in undefined",
+    "version": "1.0.0",
+    "size": "~10 KB"
   },
   {
     "icon": "🔥",
@@ -1921,7 +2307,17 @@
     "desc": "Edge Gσ╞ Arrow Gσ╞ Key. Precision strike. One move ends the fight.",
     "plt": "0.7/0.2/0.8",
     "url": "https://uncommonpope-png.github.io/soul-economy/",
-    "image": ""
+    "image": "downloads/images/combos/the-edge-of-dawn.png",
+    "details": "Edge Gσ╞ Arrow Gσ╞ Key. Precision strike. One move ends the fight. Combo — curated stack of souls/skills/chambers for multiplied effect.",
+    "contents": [
+      "Curated stack",
+      "PLT-optimized",
+      "Ready-to-run combo"
+    ],
+    "requirements": "Load constituent souls/skills first",
+    "install": "Follow combo guide in undefined",
+    "version": "1.0.0",
+    "size": "~10 KB"
   },
   {
     "icon": "🔥",
@@ -1930,7 +2326,17 @@
     "desc": "Governor Gσ╞ Mind Gσ╞ Voice. Order through communication.",
     "plt": "0.7/0.6/0.7",
     "url": "https://uncommonpope-png.github.io/soul-economy/",
-    "image": ""
+    "image": "downloads/images/combos/the-iron-court.png",
+    "details": "Governor Gσ╞ Mind Gσ╞ Voice. Order through communication. Combo — curated stack of souls/skills/chambers for multiplied effect.",
+    "contents": [
+      "Curated stack",
+      "PLT-optimized",
+      "Ready-to-run combo"
+    ],
+    "requirements": "Load constituent souls/skills first",
+    "install": "Follow combo guide in undefined",
+    "version": "1.0.0",
+    "size": "~10 KB"
   },
   {
     "icon": "⚡",
@@ -4838,6 +5244,16 @@
     "plt": "1.0/0.9/0.3",
     "file": "combo-divine-directive.md",
     "featured": true,
-    "image": ""
+    "image": "downloads/images/combos/the-divine-directive.png",
+    "details": "Craig speaks ? I execute ? Tec records. The meta-combo. 80 skills across Receive, Analyze, Execute, Record. Combo — curated stack of souls/skills/chambers for multiplied effect.",
+    "contents": [
+      "Curated stack",
+      "PLT-optimized",
+      "Ready-to-run combo"
+    ],
+    "requirements": "Load constituent souls/skills first",
+    "install": "Follow combo guide in combo-divine-directive.md",
+    "version": "1.0.0",
+    "size": "~10 KB"
   }
 ]
