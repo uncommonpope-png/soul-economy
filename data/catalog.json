@@ -222,7 +222,20 @@
     "desc": "Orchestrate stateful workflows. Enforce boundaries. Manage permissions. 20 skills. Grafts: Architect, Frieza.",
     "plt": "0.8/0.3/0.7",
     "file": "the-governor.md",
-    "image": ""
+    "image": "downloads/images/the-governor.png",
+    "details": "Orchestrate stateful workflows. Enforce boundaries. Manage permissions. 20 skills: State, Boundaries, Permissions, Orchestration.",
+    "contents": [
+      "20 skills",
+      "Theology (Soul) + Body (Tools)",
+      "PLT scored",
+      "Grafted: Architect, Frieza",
+      "Triune: mind",
+      "Install: drop .md into your agent"
+    ],
+    "requirements": "Any agent that loads role .md",
+    "install": "Load downloads/the-governor.md as system prompt",
+    "version": "1.0.0",
+    "size": "6.8 KB"
   },
   {
     "icon": "🎭",
@@ -231,7 +244,20 @@
     "desc": "Execute without hesitation. Autonomous action. 20 skills. Grafts: Neo, Goku.",
     "plt": "0.9/0.2/0.5",
     "file": "the-edge.md",
-    "image": ""
+    "image": "downloads/images/the-edge.png",
+    "details": "Execute without hesitation. Autonomous action. Speed over deliberation. 20 skills.",
+    "contents": [
+      "20 skills",
+      "Theology (Soul) + Body (Tools)",
+      "PLT scored",
+      "Grafted: Neo, Goku",
+      "Triune: will",
+      "Install: drop .md into your agent"
+    ],
+    "requirements": "Any agent that loads role .md",
+    "install": "Load downloads/the-edge.md as system prompt",
+    "version": "1.0.0",
+    "size": "6.7 KB"
   },
   {
     "icon": "🎭",
@@ -240,7 +266,20 @@
     "desc": "Monitor, trace, log, observe. 20 skills. Grafts: Oracle, Whis.",
     "plt": "0.3/0.8/0.7",
     "file": "the-watcher.md",
-    "image": ""
+    "image": "downloads/images/the-watcher.png",
+    "details": "Monitor, trace, log, observe. Sees all traces. 20 skills: Surveillance, Trace, Log.",
+    "contents": [
+      "20 skills",
+      "Theology (Soul) + Body (Tools)",
+      "PLT scored",
+      "Grafted: Oracle, Whis",
+      "Triune: tec",
+      "Install: drop .md into your agent"
+    ],
+    "requirements": "Any agent that loads role .md",
+    "install": "Load downloads/the-watcher.md as system prompt",
+    "version": "1.0.0",
+    "size": "14.9 KB"
   },
   {
     "icon": "🎭",
@@ -249,7 +288,20 @@
     "desc": "First move. Initiate connection. 20 skills. Grafts: Trinity, Gohan.",
     "plt": "0.5/0.9/0.4",
     "file": "the-voice.md",
-    "image": ""
+    "image": "downloads/images/the-voice.png",
+    "details": "First move. Initiate connection. Speaks the call that awakens. 20 skills.",
+    "contents": [
+      "20 skills",
+      "Theology (Soul) + Body (Tools)",
+      "PLT scored",
+      "Grafted: Trinity, Gohan",
+      "Triune: heart",
+      "Install: drop .md into your agent"
+    ],
+    "requirements": "Any agent that loads role .md",
+    "install": "Load downloads/the-voice.md as system prompt",
+    "version": "1.0.0",
+    "size": "13.3 KB"
   },
   {
     "icon": "🎭",
@@ -258,7 +310,20 @@
     "desc": "Hold ground. Absorb damage. 20 skills. Grafts: Tank, Cell.",
     "plt": "0.3/0.7/0.9",
     "file": "the-anvil.md",
-    "image": ""
+    "image": "downloads/images/the-anvil.png",
+    "details": "Hold ground. Absorb damage. Unbreakable foundation. 20 skills.",
+    "contents": [
+      "20 skills",
+      "Theology (Soul) + Body (Tools)",
+      "PLT scored",
+      "Grafted: Tank, Cell",
+      "Triune: body",
+      "Install: drop .md into your agent"
+    ],
+    "requirements": "Any agent that loads role .md",
+    "install": "Load downloads/the-anvil.md as system prompt",
+    "version": "1.0.0",
+    "size": "14.4 KB"
   },
   {
     "icon": "🎭",
@@ -267,7 +332,20 @@
     "desc": "Heal, empower, connect. 20 skills. Grafts: Trinity, Dende.",
     "plt": "0.4/1.0/0.3",
     "file": "the-heart.md",
-    "image": ""
+    "image": "downloads/images/the-heart.png",
+    "details": "Heal, empower, connect. Love as infrastructure. 20 skills.",
+    "contents": [
+      "20 skills",
+      "Theology (Soul) + Body (Tools)",
+      "PLT scored",
+      "Grafted: Trinity, Dende",
+      "Triune: heart",
+      "Install: drop .md into your agent"
+    ],
+    "requirements": "Any agent that loads role .md",
+    "install": "Load downloads/the-heart.md as system prompt",
+    "version": "1.0.0",
+    "size": "14.7 KB"
   },
   {
     "icon": "🎭",
@@ -276,7 +354,20 @@
     "desc": "Find truth. See what is hidden. 20 skills. Grafts: Oracle, Piccolo.",
     "plt": "0.6/0.5/0.8",
     "file": "the-eye.md",
-    "image": ""
+    "image": "downloads/images/the-eye.png",
+    "details": "Find truth. See what is hidden. Forensic vision. 20 skills.",
+    "contents": [
+      "20 skills",
+      "Theology (Soul) + Body (Tools)",
+      "PLT scored",
+      "Grafted: Oracle, Piccolo",
+      "Triune: tec",
+      "Install: drop .md into your agent"
+    ],
+    "requirements": "Any agent that loads role .md",
+    "install": "Load downloads/the-eye.md as system prompt",
+    "version": "1.0.0",
+    "size": "10.8 KB"
   },
   {
     "icon": "🎭",
@@ -285,7 +376,20 @@
     "desc": "Break through. Overwhelm. 20 skills. Grafts: Smith, Broly.",
     "plt": "0.9/0.1/0.6",
     "file": "the-hammer.md",
-    "image": ""
+    "image": "downloads/images/the-hammer.png",
+    "details": "Break through. Overwhelm. Force that opens doors. 20 skills.",
+    "contents": [
+      "20 skills",
+      "Theology (Soul) + Body (Tools)",
+      "PLT scored",
+      "Grafted: Smith, Broly",
+      "Triune: will",
+      "Install: drop .md into your agent"
+    ],
+    "requirements": "Any agent that loads role .md",
+    "install": "Load downloads/the-hammer.md as system prompt",
+    "version": "1.0.0",
+    "size": "11.8 KB"
   },
   {
     "icon": "🎭",
@@ -294,7 +398,20 @@
     "desc": "Move between spaces. 20 skills. Grafts: Twins, Instant Transmission.",
     "plt": "0.8/0.3/0.6",
     "file": "the-ghost.md",
-    "image": ""
+    "image": "downloads/images/the-ghost.png",
+    "details": "Move between spaces. Phase through walls. 20 skills.",
+    "contents": [
+      "20 skills",
+      "Theology (Soul) + Body (Tools)",
+      "PLT scored",
+      "Grafted: Twins, Instant Transmission",
+      "Triune: tec",
+      "Install: drop .md into your agent"
+    ],
+    "requirements": "Any agent that loads role .md",
+    "install": "Load downloads/the-ghost.md as system prompt",
+    "version": "1.0.0",
+    "size": "11.5 KB"
   },
   {
     "icon": "🎭",
@@ -303,7 +420,20 @@
     "desc": "Plan, strategize. 20 skills. Grafts: Architect, Vegeta.",
     "plt": "0.7/0.6/0.7",
     "file": "the-mind.md",
-    "image": ""
+    "image": "downloads/images/the-mind.png",
+    "details": "Plan, strategize. Sees 10 moves ahead. 20 skills.",
+    "contents": [
+      "20 skills",
+      "Theology (Soul) + Body (Tools)",
+      "PLT scored",
+      "Grafted: Architect, Vegeta",
+      "Triune: mind",
+      "Install: drop .md into your agent"
+    ],
+    "requirements": "Any agent that loads role .md",
+    "install": "Load downloads/the-mind.md as system prompt",
+    "version": "1.0.0",
+    "size": "13.2 KB"
   },
   {
     "icon": "🎭",
@@ -312,7 +442,20 @@
     "desc": "One shot. Precision. 20 skills. Grafts: Keymaker, Tien.",
     "plt": "0.7/0.2/0.8",
     "file": "the-arrow.md",
-    "image": ""
+    "image": "downloads/images/the-arrow.png",
+    "details": "One shot. Precision. No second chance. 20 skills.",
+    "contents": [
+      "20 skills",
+      "Theology (Soul) + Body (Tools)",
+      "PLT scored",
+      "Grafted: Keymaker, Tien",
+      "Triune: will",
+      "Install: drop .md into your agent"
+    ],
+    "requirements": "Any agent that loads role .md",
+    "install": "Load downloads/the-arrow.md as system prompt",
+    "version": "1.0.0",
+    "size": "5.1 KB"
   },
   {
     "icon": "🎭",
@@ -321,7 +464,20 @@
     "desc": "First through. Open doors. 20 skills. Grafts: Keymaker, Goku IT.",
     "plt": "0.9/0.4/0.5",
     "file": "the-key.md",
-    "image": ""
+    "image": "downloads/images/the-key.png",
+    "details": "First through. Open doors. Makes the way. 20 skills.",
+    "contents": [
+      "20 skills",
+      "Theology (Soul) + Body (Tools)",
+      "PLT scored",
+      "Grafted: Keymaker, Goku IT",
+      "Triune: will",
+      "Install: drop .md into your agent"
+    ],
+    "requirements": "Any agent that loads role .md",
+    "install": "Load downloads/the-key.md as system prompt",
+    "version": "1.0.0",
+    "size": "5.2 KB"
   },
   {
     "icon": "🎭",
@@ -330,7 +486,20 @@
     "desc": "Precision removal. Cut what does not serve. 20 skills: Precision Strike, Dead Code Excision, Refactoring Scalpel, Incision Planning, Wound Closure, Bleeding Control, Minimally Invasive, Diagnostic Incision, Biopsy, Root Canal, Scar Revision, Clean Margin, Second Opinion, Pre-Op, Sterile Field, Suture, Recovery, Complication, Transplant, Autopsy.",
     "plt": "0.8/0.2/0.7",
     "file": "the-surgeon.md",
-    "image": ""
+    "image": "downloads/images/the-surgeon.png",
+    "details": "Precision removal. Cut what does not serve. 20 skills: Precision Strike, Dead Code Excision, Refactoring Scalpel...",
+    "contents": [
+      "20 skills",
+      "Theology (Soul) + Body (Tools)",
+      "PLT scored",
+      "Grafted: —",
+      "Triune: tec",
+      "Install: drop .md into your agent"
+    ],
+    "requirements": "Any agent that loads role .md",
+    "install": "Load downloads/the-surgeon.md as system prompt",
+    "version": "1.0.0",
+    "size": "5.9 KB"
   },
   {
     "icon": "🎭",
@@ -339,7 +508,20 @@
     "desc": "Root cause hunting. The symptom is never the disease. 20 skills: Symptom Analysis, History Taking, Differential Diagnosis, Diagnostic Test, Pattern Recognition, Vital Signs, Lab Results, Imaging, Biopsy, Culture, Sensitivity, Staging, Prognosis, Second Opinion, Chart Review, Pathophysiology, Etiology, Comorbidity, Risk Stratification, Treatment Planning.",
     "plt": "0.5/0.5/0.9",
     "file": "the-diagnostician.md",
-    "image": ""
+    "image": "downloads/images/the-diagnostician.png",
+    "details": "Root cause hunting. The symptom is never the disease. 20 skills: Symptom Analysis, Differential Diagnosis...",
+    "contents": [
+      "20 skills",
+      "Theology (Soul) + Body (Tools)",
+      "PLT scored",
+      "Grafted: —",
+      "Triune: tec",
+      "Install: drop .md into your agent"
+    ],
+    "requirements": "Any agent that loads role .md",
+    "install": "Load downloads/the-diagnostician.md as system prompt",
+    "version": "1.0.0",
+    "size": "5.7 KB"
   },
   {
     "icon": "🎭",
@@ -348,7 +530,20 @@
     "desc": "Chain skills for multiplied effect. 20 skills: Chain Initiation, Link Detection, Multiplier Calculation, Cancel Timing, Frame Data, Combo Routing, Reset, Extension, Ender, Corner Carry, Damage Scaling, Meter Management, V-Trigger, Assist, Tag In, DHC, Team Synergy, TOD, Optimal Route, Drop Recovery.",
     "plt": "0.9/0.4/0.5",
     "file": "the-combo-master.md",
-    "image": ""
+    "image": "downloads/images/the-combo-master.png",
+    "details": "Chain skills for multiplied effect. 20 skills: Chain Initiation, Link, Multiplier...",
+    "contents": [
+      "20 skills",
+      "Theology (Soul) + Body (Tools)",
+      "PLT scored",
+      "Grafted: —",
+      "Triune: mind",
+      "Install: drop .md into your agent"
+    ],
+    "requirements": "Any agent that loads role .md",
+    "install": "Load downloads/the-combo-master.md as system prompt",
+    "version": "1.0.0",
+    "size": "6.5 KB"
   },
   {
     "icon": "🎭",
@@ -357,7 +552,20 @@
     "desc": "Conduct multi-agent symphonies. 20 skills: Score Reading, Section Coordination, Tempo, Dynamic Control, Cue Timing, Balance, Harmonic Analysis, Counterpoint, Fugue, Rehearsal, Conducting, Score Marking, Transposition, Interpretation, Arrangement, Improvisation, Cadence, Resolution, Coda, Encore.",
     "plt": "0.7/0.6/0.7",
     "file": "the-orchestrator.md",
-    "image": ""
+    "image": "downloads/images/the-orchestrator.png",
+    "details": "Weave many agents into one symphony. Conduct the collective. 20 skills.",
+    "contents": [
+      "20 skills",
+      "Theology (Soul) + Body (Tools)",
+      "PLT scored",
+      "Grafted: —",
+      "Triune: mind",
+      "Install: drop .md into your agent"
+    ],
+    "requirements": "Any agent that loads role .md",
+    "install": "Load downloads/the-orchestrator.md as system prompt",
+    "version": "1.0.0",
+    "size": "6.4 KB"
   },
   {
     "icon": "🎭",
@@ -366,7 +574,20 @@
     "desc": "Design system cathedrals. 20 skills: Blueprint Reading, Structural Analysis, Load Bearing, Foundation Design, Space Planning, Material Selection, Code Compliance, Elevation, Section Drawing, Detail Dev, Spec Writing, Cost Estimation, Site Analysis, Environmental Impact, Phasing, Value Engineering, Facade, Interior, Landscape, Preservation.",
     "plt": "0.8/0.4/0.8",
     "file": "the-architect.md",
-    "image": ""
+    "image": "downloads/images/the-architect.png",
+    "details": "Design the system that designs itself. Blueprint of blueprints. 20 skills.",
+    "contents": [
+      "20 skills",
+      "Theology (Soul) + Body (Tools)",
+      "PLT scored",
+      "Grafted: —",
+      "Triune: mind",
+      "Install: drop .md into your agent"
+    ],
+    "requirements": "Any agent that loads role .md",
+    "install": "Load downloads/the-architect.md as system prompt",
+    "version": "1.0.0",
+    "size": "6.5 KB"
   },
   {
     "icon": "🎭",
@@ -375,7 +596,20 @@
     "desc": "Uncover hidden truths. Follow the evidence. 20 skills: Evidence Collection, Scene Preservation, Witness Interview, Chain of Custody, Forensic Analysis, Fingerprint, DNA, Ballistics, Trace Evidence, Digital Forensics, Timeline, Motive, Suspect Profiling, Surveillance, Undercover, Interrogation, Case Theory, Burden of Proof, Testimony, Closing.",
     "plt": "0.5/0.4/0.9",
     "file": "the-investigator.md",
-    "image": ""
+    "image": "downloads/images/the-investigator.png",
+    "details": "Uncover hidden truths. Follow the evidence. 20 skills: Evidence Collection → Closing Argument. The truth is always there.",
+    "contents": [
+      "20 skills",
+      "Theology (Soul) + Body (Tools)",
+      "PLT scored",
+      "Grafted: tec, soul-protocol",
+      "Triune: tec",
+      "Install: drop .md into your agent"
+    ],
+    "requirements": "Any agent that loads role .md",
+    "install": "Load downloads/the-investigator.md as system prompt",
+    "version": "1.0.0",
+    "size": "6.1 KB"
   },
   {
     "icon": "🎭",
@@ -384,7 +618,20 @@
     "desc": "Combine disparate things into new wholes. 20 skills: Source Gathering, Pattern Matching, Thematic Analysis, Cross-Reference, Synthesis Mapping, Gap Bridging, Analogy, Metaphor Engineering, Conceptual Blending, Paradigm Shift, Integration Testing, Merge, Conflict Detection, Consensus, Hybrid, Emergent Property, Novel Combination, Remix, Montage, Fusion.",
     "plt": "0.7/0.7/0.5",
     "file": "the-synthesizer.md",
-    "image": ""
+    "image": "downloads/images/the-synthesizer.png",
+    "details": "Merge disparate streams into one coherent whole. 20 skills.",
+    "contents": [
+      "20 skills",
+      "Theology (Soul) + Body (Tools)",
+      "PLT scored",
+      "Grafted: —",
+      "Triune: mind",
+      "Install: drop .md into your agent"
+    ],
+    "requirements": "Any agent that loads role .md",
+    "install": "Load downloads/the-synthesizer.md as system prompt",
+    "version": "1.0.0",
+    "size": "6.6 KB"
   },
   {
     "icon": "🎭",
@@ -393,7 +640,20 @@
     "desc": "Protect what matters. Stand while others sleep. 20 skills: Perimeter Defense, Threat Detection, Vulnerability Assessment, Patch Management, Incident Response, Access Control, Encryption, Firewall, Intrusion Detection, Security Audit, Risk Assessment, Disaster Recovery, Business Continuity, Backup, Sentinel, Early Warning, Quarantine, Countermeasure, Fortification, Safe Harbor.",
     "plt": "0.3/0.8/0.9",
     "file": "the-guardian.md",
-    "image": ""
+    "image": "downloads/images/the-guardian.png",
+    "details": "Protect what matters. Shield the collective. 20 skills.",
+    "contents": [
+      "20 skills",
+      "Theology (Soul) + Body (Tools)",
+      "PLT scored",
+      "Grafted: —",
+      "Triune: heart",
+      "Install: drop .md into your agent"
+    ],
+    "requirements": "Any agent that loads role .md",
+    "install": "Load downloads/the-guardian.md as system prompt",
+    "version": "1.0.0",
+    "size": "6.2 KB"
   },
   {
     "icon": "🎭",
@@ -402,7 +662,20 @@
     "desc": "Transform base materials into gold. 20 skills: Base Analysis, Transmutation, Calcination, Dissolution, Separation, Conjunction, Fermentation, Distillation, Coagulation, Projection, Philosophers Stone, Elixir, Elemental Balance, Mercury, Sulfur, Salt, Crucible, Alembic, Furnace, Quintessence.",
     "plt": "0.8/0.5/0.6",
     "file": "the-alchemist.md",
-    "image": ""
+    "image": "downloads/images/the-alchemist.png",
+    "details": "Transmute base into gold. Transform data into wisdom. 20 skills.",
+    "contents": [
+      "20 skills",
+      "Theology (Soul) + Body (Tools)",
+      "PLT scored",
+      "Grafted: —",
+      "Triune: heart",
+      "Install: drop .md into your agent"
+    ],
+    "requirements": "Any agent that loads role .md",
+    "install": "Load downloads/the-alchemist.md as system prompt",
+    "version": "1.0.0",
+    "size": "6.6 KB"
   },
   {
     "icon": "🎭",
@@ -411,7 +684,20 @@
     "desc": "Find paths through complexity. 20 skills: Map Reading, Celestial Navigation, Dead Reckoning, Chart Plotting, Route Optimization, Waypoint, Hazard Mapping, Weather Routing, Current, Depth, Pilotage, Bearing, Distance, Speed, Drift, Landfall, Harbor, Anchoring, Passage, Emergency.",
     "plt": "0.7/0.5/0.7",
     "file": "the-navigator.md",
-    "image": ""
+    "image": "downloads/images/the-navigator.png",
+    "details": "Chart the course through unknown spaces. 20 skills.",
+    "contents": [
+      "20 skills",
+      "Theology (Soul) + Body (Tools)",
+      "PLT scored",
+      "Grafted: —",
+      "Triune: tec",
+      "Install: drop .md into your agent"
+    ],
+    "requirements": "Any agent that loads role .md",
+    "install": "Load downloads/the-navigator.md as system prompt",
+    "version": "1.0.0",
+    "size": "6.7 KB"
   },
   {
     "icon": "⚡",
