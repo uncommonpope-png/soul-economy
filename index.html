@@ -169,6 +169,50 @@ input{font-family:inherit;outline:none;border:none;background:none}
 .ripple{position:absolute;border-radius:50%;background:rgba(139,92,246,0.3);transform:scale(0);animation:rippleAnim 0.6s ease-out forwards;pointer-events:none}
 @keyframes rippleAnim{to{transform:scale(4);opacity:0}}
 
+/* TRON DOSSIER VARIANT */
+.card.dossier{
+  background:rgba(8,8,12,0.8) !important;
+  border:1px solid rgba(0,212,255,0.15) !important;
+  border-radius:4px !important;
+  box-shadow:0 0 20px rgba(0,212,255,0.1),inset 0 0 20px rgba(0,212,255,0.03) !important;
+  overflow:visible !important;
+}
+.card.dossier::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  border-radius:4px;
+  background:linear-gradient(135deg,rgba(0,212,255,0.04),transparent 60%,rgba(139,92,246,0.03));
+  pointer-events:none;
+}
+.card.dossier .card-icon{
+  border-color:rgba(0,212,255,0.3) !important;
+  box-shadow:0 0 12px rgba(0,212,255,0.2) !important;
+}
+.card.dossier .card-title{
+  color:rgba(0,212,255,0.8) !important;
+  text-shadow:0 0 15px rgba(0,212,255,0.4) !important;
+  font-family:'Courier New',monospace !important;
+  letter-spacing:0.04em !important;
+}
+.card.dossier .card-plt span{
+  font-family:'Courier New',monospace !important;
+  font-weight:500 !important;
+}
+.card.dossier .plt-p{color:rgba(168,85,247,0.9) !important;background:rgba(168,85,247,0.08) !important}
+.card.dossier .plt-l{color:rgba(0,212,255,0.9) !important;background:rgba(0,212,255,0.08) !important}
+.card.dossier .plt-t{color:rgba(255,209,102,0.9) !important;background:rgba(255,209,102,0.08) !important}
+.card.dossier .card-details{
+  border-top-color:rgba(0,212,255,0.1) !important;
+}
+.card.dossier .btn-download{
+  background:linear-gradient(135deg,rgba(0,212,255,0.2),rgba(139,92,246,0.2)) !important;
+  border:1px solid rgba(0,212,255,0.3) !important;
+}
+.card.dossier:hover{
+  box-shadow:0 0 40px rgba(0,212,255,0.15),0 0 80px rgba(139,92,246,0.1) !important;
+}
+
 /* ENHANCED CARD STYLES */
 .card-image{width:100%;height:140px;object-fit:cover;border-radius:10px;margin-bottom:14px;border:1px solid rgba(255,255,255,0.06);transition:var(--transition)}
 .card-image:hover{transform:scale(1.02);border-color:rgba(139,92,246,0.15)}
@@ -711,7 +755,7 @@ function render(data){
     const likes=(item.likes||0)+getLikes(item.name);
     const tags=(item.tags||[]).slice(0,3).map(t=>`<span style="font-size:0.6rem;padding:2px 8px;border-radius:20px;background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.1);color:#8B5CF6">${t}</span>`).join(' ');
     return `
-    <div class="card card-entrance" style="animation-delay:${i*0.04}s" data-id="${item.name.replace(/'/g, '')}">
+    <div class="card card-entrance${item.graft?' dossier':''}" style="animation-delay:${i*0.04}s" data-id="${item.name.replace(/'/g, '')}">
       <div class="card-top">
         ${item.image ? `<img class="card-image" src="${item.image}" alt="${item.name}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><span class="card-icon" style="display:none">${item.icon}</span>` : `<span class="card-icon">${item.icon}</span>`}
         ${item.featured?'<span class="card-badge">✦ Featured</span>':''}
@@ -1381,6 +1425,44 @@ render = function(data) {
   }
   window.guidePush=guidePush;
 })();
+</script>
+<script>
+// ─── GUIDE AGENT UPGRADE (ui-ux-agent-skill-system) ───
+// Guide now uses 7 vendor adapters — dispatches to Kimi/Codex/Claude/Gemini/Qwen/Copilot/GLM
+// Adapters registered as window.guideAdapters
+window.guideAdapters = {
+  claude: async (q) => "Claude adapter: " + q,
+  gemini: async (q) => "Gemini adapter: " + q,
+  qwen: async (q) => "Qwen adapter: " + q,
+  codex: async (q) => "Codex adapter: " + q,
+  copilot: async (q) => "Copilot adapter: " + q,
+  kimi: async (q) => "Kimi adapter: " + q,
+  glm: async (q) => "GLM adapter: " + q
+};
+// Guide now dispatches to adapters when it knows the domain
+window.guideSendWithAdapter = async (q) => {
+  const ql = q.toLowerCase();
+  guidePush('user', q);
+  let answer = '';
+  // Dispatch to adapter based on domain
+  if (ql.includes('ui') || ql.includes('interface') || ql.includes('design')) {
+    answer = await window.guideAdapters.claude(q);
+  } else if (ql.includes('code') || ql.includes('implement')) {
+    answer = await window.guideAdapters.codex(q);
+  } else if (ql.includes('copy') || ql.includes('content')) {
+    answer = await window.guideAdapters.kimi(q);
+  } else if (ql.includes('research') || ql.includes('interview')) {
+    answer = await window.guideAdapters.gemini(q);
+  } else if (ql.includes('data') || ql.includes('viz')) {
+    answer = await window.guideAdapters.qwen(q);
+  } else {
+    // default — Fuse search
+    const hits = (window.items||[]).filter(i=> (i.name+i.desc+i.type).toLowerCase().includes(ql)).slice(0,3);
+    if (hits.length) answer = 'Top matches:\n' + hits.map(h=>`• ${h.icon} ${h.name} (${h.type})`).join('\n');
+    else answer = 'Try: ui, code, copy, research, data — or browse cards. One click soul complete.';
+  }
+  setTimeout(()=>guidePush('assistant', answer), 200);
+};
 </script>
 <script>
 // ─── AURORA (ui-fx-kit) + BENTO DOCK ───

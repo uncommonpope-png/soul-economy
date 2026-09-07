@@ -8250,5 +8250,64 @@
     "install": "Load downloads/soul-gun-figma-context.md",
     "downloads": 0,
     "likes": 5
+  },
+  {
+    "icon": "🎨",
+    "type": "skill",
+    "name": "Figma→Souls",
+    "desc": "Convert Figma designs to soul cards via MCP",
+    "plt": "0.7/0.8/0.3",
+    "file": "soul-gun-figma-souls.md",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "figma",
+      "mcp",
+      "design-to-code"
+    ],
+    "image": "",
+    "version": "1.0.0",
+    "size": "3 KB",
+    "details": "Auto-generates soul cards from Figma via MCP server. Downloads assets, extracts components, injects catalog.json.",
+    "contents": [
+      "Figma MCP",
+      "Asset download",
+      "Auto-catalog gen"
+    ],
+    "requirements": "MCP server @figma-mcp/server-figma-souls + Figma token",
+    "install": "npx tsx downloads/scripts/figma-to-souls.ts",
+    "downloads": 0,
+    "likes": 7
+  },
+  {
+    "icon": "🖥️",
+    "type": "skill",
+    "name": "Tron Dossier",
+    "desc": "HUD-style cyberpunk card variant with cyan/magenta glow, monospace typography, PLT radar strip",
+    "plt": "0.8/0.7/0.4",
+    "file": "soul-gun-tron-dossier.md",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "tron",
+      "hud",
+      "ui",
+      "grafted",
+      "dossier"
+    ],
+    "graft": true,
+    "image": "",
+    "version": "1.0.0",
+    "size": "2 KB",
+    "details": "Activates .dossier CSS variant on cards — black-neon HUD style with cyan/magenta glow, monospace title, radar PLT strip.",
+    "contents": [
+      "CSS dossier variant",
+      "PLT radar strip",
+      "Monospace typography"
+    ],
+    "requirements": "Add graft:true to catalog entry",
+    "install": "CSS auto-applies when graft:true",
+    "downloads": 0,
+    "likes": 9
   }
 ]

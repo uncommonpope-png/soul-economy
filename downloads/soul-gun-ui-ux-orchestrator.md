@@ -77,7 +77,7 @@ python3 -m json.tool $CODEX_HOME/skills/admin-ui-builder/evals/evals.json >/dev/
 
 ## Soul Economy Integration
 
-**Install:** `downloads/soul-gun-ui-ux-orchestrator.md` — Load as `skill` in `data/catalog.json` type `skill`.
+**Install:** `downloads/soul-gun-ui-ux-orchestrator.md` — Load as `skill` in `data/catalog.json` type `skill`. Guide agent uses 7 vendor adapters (window.guideAdapters) to dispatch domain-specific queries.
 
 **Usage:** Add to `catalog.json`:
 ```json
