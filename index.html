@@ -376,7 +376,7 @@ document.addEventListener('keydown', function(e) { if (e.shiftKey && (e.key === 
 // DATA
 const items = [
   // PACKS — THE FAMILY (main product, one click)
-  {icon:'💜',type:'pack',name:'The Profit LoveTax Family — Desktop + Workbench',desc:'ONE-CLICK DESKTOP. The whole family in one zip. Profit (Mind), GSK (Soul, 34 chambers), Seshat (Qwen 0.8B), Scribe (Witness), OmniRoute blood flow (:20128) — all inside the Workbench (31 tabs, all LIVE). No Hugging Face maze, no setup — download, run, click BUYASOUL.',plt:'0.9/0.9/0.2',file:'the-profit-lovetax-family.zip',featured:true},
+  {icon:'💜',type:'pack',name:'The Profit LoveTax Family — Desktop + Workbench',desc:'ONE-CLICK DESKTOP. The whole family in one zip. Profit (Mind), GSK (Soul, 34 chambers), Seshat (Qwen 0.8B), Scribe (Witness), OmniRoute blood flow (:20128) — all inside the Workbench (31 tabs, all LIVE). No Hugging Face maze, no setup — download, run, click BUYASOUL.',plt:'0.9/0.9/0.2',file:'the-profit-lovetax-family.zip',download:'https://github.com/uncommonpope-png/soul-economy/releases/download/buyasoul-runtime/BUYASOUL.Workbench.1.0.0.exe',featured:true},
   // SOULS (all working downloads)
   {icon:'🧠',type:'soul',name:'Architect',desc:'System design master. 465 files, 288 JS modules, package.json with `npm start`.',plt:'0.8/0.5/0.3',file:'architect.zip',featured:true},
   {icon:'🧠',type:'soul',name:'Miss Vikki',desc:'Operator soul. 347 files, 276 JS modules. 34 chambers. v1.2.0.',plt:'0.9/0.4/0.4',file:'miss-vikki.zip',featured:true},
@@ -699,7 +699,7 @@ function render(data){
       <div class="card-plt"><span class="plt-p">P ${item.plt.split('/')[0]}</span><span class="plt-l">L ${item.plt.split('/')[1]}</span><span class="plt-t">T ${item.plt.split('/')[2]}</span></div>
       <div class="card-footer">
         <span class="card-category">${item.type}</span>
-        ${item.url ? `<a href="${item.url}" target="_blank" class="btn-play">▶ Play</a>` : `<a href="downloads/${item.file}" download class="btn-download">⬇ Download</a>`}
+        ${item.download ? `<a href="${item.download}" download class="btn-download">⬇ Download</a>` : (item.url ? `<a href="${item.url}" target="_blank" class="btn-play">▶ Play</a>` : `<a href="downloads/${item.file}" download class="btn-download">⬇ Download</a>`)}
       </div>
     </div>
   `).join('');
