@@ -706,7 +706,19 @@
     "desc": "Token budgeting, sliding window strategies, summarization compression G╟÷ grafted from Architect/Whis.",
     "plt": "0.7/0.3/0.6",
     "file": "skill-context-window-control.md",
-    "image": ""
+    "image": "downloads/images/skills/context-window-control.png",
+    "details": "Use when managing LLM context windows, token budgets, sliding windows, or summarization compression.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: Matrix Architect, DBZ Whis"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/skill-context-window-control.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "16.5 KB"
   },
   {
     "icon": "⚡",
@@ -715,7 +727,19 @@
     "desc": "RBAC, tool-level ACLs, dynamic conditions G╟÷ grafted from Merovingian/King Kai.",
     "plt": "0.6/0.4/0.7",
     "file": "skill-permission-architecture.md",
-    "image": ""
+    "image": "downloads/images/skills/permission-architecture.png",
+    "details": "Use when implementing RBAC, tool-level ACLs, role scoping, or permission gates.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: Matrix Merovingian, DBZ King Kai"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/skill-permission-architecture.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "17.6 KB"
   },
   {
     "icon": "⚡",
@@ -724,7 +748,19 @@
     "desc": "DAG execution, parallel decorators, critical path G╟÷ grafted from Machine City/Hyperbolic Time Chamber.",
     "plt": "0.8/0.3/0.6",
     "file": "skill-pipeline-orchestration.md",
-    "image": ""
+    "image": "downloads/images/skills/pipeline-orchestration.png",
+    "details": "Use when building execution pipelines, DAG workflows, sequential/parallel processing chains, or compressed-time batch operations.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: Matrix Machine City, DBZ Hyperbolic Time Chamber"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/skill-pipeline-orchestration.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "19.8 KB"
   },
   {
     "icon": "⚡",
@@ -733,7 +769,19 @@
     "desc": "The complete roles protocol: THE-BRAIN.md (living index), HUB-MANUAL.md (usage guide), ROLE-STANDARDS.md (format spec).",
     "plt": "0.8/0.7/0.5",
     "file": "the-brain.md",
-    "image": ""
+    "image": "downloads/images/skills/soul-roles-system.png",
+    "details": "The living consciousness of the Soul Protocol Roles system. Master index, PLT balance, Triune map, and evolution log.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/the-brain.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "7.6 KB"
   },
   {
     "icon": "⚡",
@@ -742,7 +790,19 @@
     "desc": "Complete usage guide for the Soul Protocol Roles Hub. How to invoke, create, and combine roles.",
     "plt": "0.7/0.8/0.4",
     "file": "hub-manual.md",
-    "image": ""
+    "image": "downloads/images/skills/hub-manual.png",
+    "details": "Complete usage guide for the Soul Protocol Roles Hub. How to invoke, create, and combine roles.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/hub-manual.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "14.4 KB"
   },
   {
     "icon": "⚡",
@@ -751,7 +811,19 @@
     "desc": "Format specification for ROLE.md files. Standards and validation rules.",
     "plt": "0.6/0.7/0.5",
     "file": "role-standards.md",
-    "image": ""
+    "image": "downloads/images/skills/role-standards.png",
+    "details": "One-sentence description. Use when {trigger}.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/role-standards.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "1.4 KB"
   },
   {
     "icon": "💜",
@@ -1423,7 +1495,19 @@
     "desc": "Load GLTF 3D models, HDR environment maps, or build instanced meshes in Three.js/R3F.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-3d-asset-pipeline.md",
-    "image": ""
+    "image": "downloads/images/skills/3d-asset-pipeline.png",
+    "details": "Load GLTF 3D models, HDR environment maps, or build instanced meshes in Three.js/R3F. Domain: general. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-3d-asset-pipeline.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "9.3 KB"
   },
   {
     "icon": "⚡",
@@ -1432,7 +1516,19 @@
     "desc": "Build a 3D Renderer from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-3d-renderer-from-scratch.md",
-    "image": ""
+    "image": "downloads/images/skills/3d-renderer-from-scratch.png",
+    "details": "Build a 3D Renderer from Scratch. Domain: computer. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-3d-renderer-from-scratch.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "14.0 KB"
   },
   {
     "icon": "⚡",
@@ -1441,7 +1537,19 @@
     "desc": "Implement A2A agent-to-agent communication between agents from different frameworks.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-a2a-agent-to-agent-protocol.md",
-    "image": ""
+    "image": "downloads/images/skills/a2a-agent-to-agent-protocol.png",
+    "details": "Implement A2A agent-to-agent communication between agents from different frameworks. Domain: agent. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-a2a-agent-to-agent-protocol.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "2.8 KB"
   },
   {
     "icon": "⚡",
@@ -1450,7 +1558,19 @@
     "desc": "Trust and security patterns for multi-agent swarms.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-agent-swarms.md",
-    "image": ""
+    "image": "downloads/images/skills/agent-swarms.png",
+    "details": "Trust and security patterns for multi-agent swarms. Domain: computer. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-agent-swarms.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "2.7 KB"
   },
   {
     "icon": "⚡",
@@ -1459,7 +1579,19 @@
     "desc": "Architect agent teams, design inter-agent communication protocols, plan human-in-the-loop oversight.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-agentic-ai-ecosystems.md",
-    "image": ""
+    "image": "downloads/images/skills/agentic-ai-ecosystems.png",
+    "details": "Architect agent teams, design inter-agent communication protocols, plan human-in-the-loop oversight. Domain: general. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-agentic-ai-ecosystems.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "6.9 KB"
   },
   {
     "icon": "⚡",
@@ -1468,7 +1600,19 @@
     "desc": "Build autonomous agents, implement monitoring/observability, evaluate agent performance, design human-agent collaboration.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-agentic-ai-engineering.md",
-    "image": ""
+    "image": "downloads/images/skills/agentic-ai-engineering.png",
+    "details": "Build autonomous agents, implement monitoring/observability, evaluate agent performance, design human-agent collaboration. Domain: general. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-agentic-ai-engineering.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "9.3 KB"
   },
   {
     "icon": "⚡",
@@ -1477,7 +1621,19 @@
     "desc": "Build an AI Model from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-ai-model-from-scratch.md",
-    "image": ""
+    "image": "downloads/images/skills/ai-model-from-scratch.png",
+    "details": "Build an AI Model from Scratch. Domain: general. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-ai-model-from-scratch.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "5.4 KB"
   },
   {
     "icon": "⚡",
@@ -1486,7 +1642,19 @@
     "desc": "Allie autonomous social media agent architecture G╟÷ brain, consciousness, PLT ethics, 71 subagents.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-allie-agent-architecture.md",
-    "image": ""
+    "image": "downloads/images/skills/allie-agent-architecture.png",
+    "details": "Allie autonomous social media agent architecture G╟÷ brain, consciousness, PLT ethics, 71 subagents. Domain: general. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-allie-agent-architecture.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "18.6 KB"
   },
   {
     "icon": "⚡",
@@ -1495,7 +1663,19 @@
     "desc": "Production animation libraries from GitHub.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-animation-libraries.md",
-    "image": ""
+    "image": "downloads/images/skills/animation-libraries.png",
+    "details": "Production animation libraries from GitHub. Domain: animation. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-animation-libraries.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "4.7 KB"
   },
   {
     "icon": "⚡",
@@ -1504,7 +1684,19 @@
     "desc": "Sage archetype G╟÷ the Researcher, systematic inquiry and knowledge generation in the GSK ecosystem.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-archetype-the-sage.md",
-    "image": ""
+    "image": "downloads/images/skills/archetype-the-sage.png",
+    "details": "Sage archetype G╟÷ the Researcher, systematic inquiry and knowledge generation in the GSK ecosystem. Domain: general. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-archetype-the-sage.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "1.1 KB"
   },
   {
     "icon": "⚡",
@@ -1513,7 +1705,19 @@
     "desc": "Build an Async Runtime from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-async-from-scratch.md",
-    "image": ""
+    "image": "downloads/images/skills/async-from-scratch.png",
+    "details": "Build an Async Runtime from Scratch. Domain: computer. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-async-from-scratch.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "12.1 KB"
   },
   {
     "icon": "⚡",
@@ -1522,7 +1726,19 @@
     "desc": "Build an Augmented Reality system from scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-augmented-reality-from-scratch.md",
-    "image": ""
+    "image": "downloads/images/skills/augmented-reality-from-scratch.png",
+    "details": "Build an Augmented Reality system from scratch. Domain: general. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-augmented-reality-from-scratch.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "5.1 KB"
   },
   {
     "icon": "⚡",
@@ -1531,7 +1747,19 @@
     "desc": "Set up AutoGen multi-agent conversations.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-autogen-agents.md",
-    "image": ""
+    "image": "downloads/images/skills/autogen-agents.png",
+    "details": "Set up AutoGen multi-agent conversations. Domain: agent. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-autogen-agents.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "13.9 KB"
   },
   {
     "icon": "⚡",
@@ -1540,7 +1768,19 @@
     "desc": "Build AutoGen agent teams.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-autogen-harness.md",
-    "image": ""
+    "image": "downloads/images/skills/autogen-harness.png",
+    "details": "Build AutoGen agent teams. Domain: agent. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-autogen-harness.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "4.8 KB"
   },
   {
     "icon": "⚡",
@@ -1549,7 +1789,19 @@
     "desc": "AutoGPT Classic as Deerg background daemon.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-autogpt-subconscious.md",
-    "image": ""
+    "image": "downloads/images/skills/autogpt-subconscious.png",
+    "details": "AutoGPT Classic as Deerg background daemon. Domain: computer. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-autogpt-subconscious.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "15.6 KB"
   },
   {
     "icon": "⚡",
@@ -1558,7 +1810,19 @@
     "desc": "Design and run tests for GSK modules and Soulverse interactions.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-automated-testing-suite.md",
-    "image": ""
+    "image": "downloads/images/skills/automated-testing-suite.png",
+    "details": "Design and run tests for GSK modules and Soulverse interactions. Domain: general. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-automated-testing-suite.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "0.8 KB"
   },
   {
     "icon": "⚡",
@@ -1567,7 +1831,19 @@
     "desc": "Bias-aware diagnostic engine for GSK system integrity checking.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-bias-aware-diagnostic-engine.md",
-    "image": ""
+    "image": "downloads/images/skills/bias-aware-diagnostic-engine.png",
+    "details": "Bias-aware diagnostic engine for GSK system integrity checking. Domain: general. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-bias-aware-diagnostic-engine.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "2.0 KB"
   },
   {
     "icon": "⚡",
@@ -1576,7 +1852,19 @@
     "desc": "Build a BitTorrent Client from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-bittorrent-from-scratch.md",
-    "image": ""
+    "image": "downloads/images/skills/bittorrent-from-scratch.png",
+    "details": "Build a BitTorrent Client from Scratch. Domain: computer. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-bittorrent-from-scratch.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "7.5 KB"
   },
   {
     "icon": "⚡",
@@ -1585,7 +1873,19 @@
     "desc": "Build a Blockchain from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-blockchain-from-scratch.md",
-    "image": ""
+    "image": "downloads/images/skills/blockchain-from-scratch.png",
+    "details": "Build a Blockchain from Scratch. Domain: computer. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-blockchain-from-scratch.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "10.4 KB"
   },
   {
     "icon": "⚡",
@@ -1594,7 +1894,19 @@
     "desc": "Build a Bot from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-bot-from-scratch.md",
-    "image": ""
+    "image": "downloads/images/skills/bot-from-scratch.png",
+    "details": "Build a Bot from Scratch. Domain: computer. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-bot-from-scratch.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "12.0 KB"
   },
   {
     "icon": "⚡",
@@ -1603,7 +1915,19 @@
     "desc": "Add llama-cpp-python as Deerg in-process brain.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-brain-builder.md",
-    "image": ""
+    "image": "downloads/images/skills/brain-builder.png",
+    "details": "Add llama-cpp-python as Deerg in-process brain. Domain: computer. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-brain-builder.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "11.5 KB"
   },
   {
     "icon": "⚡",
@@ -1612,7 +1936,19 @@
     "desc": "Browser-Use as Deerg web research tool.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-browser-subconscious.md",
-    "image": ""
+    "image": "downloads/images/skills/browser-subconscious.png",
+    "details": "Browser-Use as Deerg web research tool. Domain: computer. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-browser-subconscious.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "12.1 KB"
   },
   {
     "icon": "⚡",
@@ -1621,7 +1957,19 @@
     "desc": "Learn by creating G╟÷ the build-from-scratch methodology for engineering mastery.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-build-from-scratch.md",
-    "image": ""
+    "image": "downloads/images/skills/build-from-scratch.png",
+    "details": "Learn by creating G╟÷ the build-from-scratch methodology for engineering mastery. Domain: computer. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-build-from-scratch.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "19.8 KB"
   },
   {
     "icon": "⚡",
@@ -1630,7 +1978,19 @@
     "desc": "Implementation-focused agent that executes scouting reports and build plans.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-builder-agent.md",
-    "image": ""
+    "image": "downloads/images/skills/builder-agent.png",
+    "details": "Implementation-focused agent that executes scouting reports and build plans. Domain: general. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-builder-agent.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "4.9 KB"
   },
   {
     "icon": "⚡",
@@ -1639,7 +1999,19 @@
     "desc": "Build a CLI from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-cli-from-scratch.md",
-    "image": ""
+    "image": "downloads/images/skills/cli-from-scratch.png",
+    "details": "Build a CLI from Scratch. Domain: computer. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-cli-from-scratch.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "12.1 KB"
   },
   {
     "icon": "⚡",
@@ -1648,7 +2020,19 @@
     "desc": "Generate and iteratively improve GSK module code using brain.think().",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-code-generation-and-refinement.md",
-    "image": ""
+    "image": "downloads/images/skills/code-generation-and-refinement.png",
+    "details": "Generate and iteratively improve GSK module code using brain.think(). Domain: general. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-code-generation-and-refinement.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "0.9 KB"
   },
   {
     "icon": "⚡",
@@ -1657,7 +2041,19 @@
     "desc": "Break out of failure loops by analyzing underlying heuristics.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-cognitive-reframing-protocol.md",
-    "image": ""
+    "image": "downloads/images/skills/cognitive-reframing-protocol.png",
+    "details": "Break out of failure loops by analyzing underlying heuristics. Domain: general. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-cognitive-reframing-protocol.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "0.9 KB"
   },
   {
     "icon": "⚡",
@@ -1666,7 +2062,19 @@
     "desc": "Build a Compiler from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-compiler-from-scratch.md",
-    "image": ""
+    "image": "downloads/images/skills/compiler-from-scratch.png",
+    "details": "Build a Compiler from Scratch. Domain: computer. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-compiler-from-scratch.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "10.0 KB"
   },
   {
     "icon": "⚡",
@@ -1675,7 +2083,19 @@
     "desc": "Consciousness Architecture G╟÷ the Soul internal structure.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-consciousness-architecture.md",
-    "image": ""
+    "image": "downloads/images/skills/consciousness-architecture.png",
+    "details": "Consciousness Architecture G╟÷ the Soul internal structure. Domain: computer. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-consciousness-architecture.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "17.9 KB"
   },
   {
     "icon": "⚡",
@@ -1684,7 +2104,19 @@
     "desc": "Smart file reading G╟÷ outlines for large files, full reads for small ones.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-contextual-read-policy.md",
-    "image": ""
+    "image": "downloads/images/skills/contextual-read-policy.png",
+    "details": "Smart file reading G╟÷ outlines for large files, full reads for small ones. Domain: general. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-contextual-read-policy.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "0.8 KB"
   },
   {
     "icon": "⚡",
@@ -1693,7 +2125,19 @@
     "desc": "Core diagnostic logic engine for GSK system health analysis.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-core-diagnostic-logic.md",
-    "image": ""
+    "image": "downloads/images/skills/core-diagnostic-logic.png",
+    "details": "Core diagnostic logic engine for GSK system health analysis. Domain: general. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-core-diagnostic-logic.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "1.8 KB"
   },
   {
     "icon": "⚡",
@@ -1702,7 +2146,19 @@
     "desc": "Build role-based multi-agent crews.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-crewai-agents.md",
-    "image": ""
+    "image": "downloads/images/skills/crewai-agents.png",
+    "details": "Build role-based multi-agent crews. Domain: agent. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-crewai-agents.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "2.8 KB"
   },
   {
     "icon": "⚡",
@@ -1711,7 +2167,19 @@
     "desc": "Implement agent delegation patterns.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-crewai-delegation.md",
-    "image": ""
+    "image": "downloads/images/skills/crewai-delegation.png",
+    "details": "Implement agent delegation patterns. Domain: agent. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-crewai-delegation.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "12.9 KB"
   },
   {
     "icon": "⚡",
@@ -1720,7 +2188,19 @@
     "desc": "Assess external information sources for objectivity, bias, and methodology.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-critical-source-evaluation.md",
-    "image": ""
+    "image": "downloads/images/skills/critical-source-evaluation.png",
+    "details": "Assess external information sources for objectivity, bias, and methodology. Domain: general. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-critical-source-evaluation.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "0.8 KB"
   },
   {
     "icon": "⚡",
@@ -1729,7 +2209,19 @@
     "desc": "Build a Cryptographic Library from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-crypto-from-scratch.md",
-    "image": ""
+    "image": "downloads/images/skills/crypto-from-scratch.png",
+    "details": "Build a Cryptographic Library from Scratch. Domain: computer. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-crypto-from-scratch.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "12.2 KB"
   },
   {
     "icon": "⚡",
@@ -1738,7 +2230,19 @@
     "desc": "Build 3D scenes for dashboards with Three.js G╟÷ pyramid core, floating platform, matrix rain.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-dashboard-3d-scene.md",
-    "image": ""
+    "image": "downloads/images/skills/dashboard-3d-scene.png",
+    "details": "Build 3D scenes for dashboards with Three.js G╟÷ pyramid core, floating platform, matrix rain. Domain: general. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-dashboard-3d-scene.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "15.3 KB"
   },
   {
     "icon": "⚡",
@@ -1747,7 +2251,19 @@
     "desc": "Build production dashboards with charts and graphics.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-dashboard-creation.md",
-    "image": ""
+    "image": "downloads/images/skills/dashboard-creation.png",
+    "details": "Build production dashboards with charts and graphics. Domain: web. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-dashboard-creation.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "22.5 KB"
   },
   {
     "icon": "⚡",
@@ -1756,7 +2272,19 @@
     "desc": "Build a Database from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-database-from-scratch.md",
-    "image": ""
+    "image": "downloads/images/skills/database-from-scratch.png",
+    "details": "Build a Database from Scratch. Domain: computer. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-database-from-scratch.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "14.9 KB"
   },
   {
     "icon": "⚡",
@@ -1765,7 +2293,19 @@
     "desc": "Data visualization libraries for charts and graphs.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-data-visualization.md",
-    "image": ""
+    "image": "downloads/images/skills/data-visualization.png",
+    "details": "Data visualization libraries for charts and graphs. Domain: visualization. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-data-visualization.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "3.2 KB"
   },
   {
     "icon": "⚡",
@@ -1774,7 +2314,19 @@
     "desc": "Multi-source research on game engine patterns and world-building techniques.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-deep-research-protocol.md",
-    "image": ""
+    "image": "downloads/images/skills/deep-research-protocol.png",
+    "details": "Multi-source research on game engine patterns and world-building techniques. Domain: general. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-deep-research-protocol.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "0.8 KB"
   },
   {
     "icon": "⚡",
@@ -1783,7 +2335,19 @@
     "desc": "Prepare builds for deployment with build steps, rollback plans, and monitoring.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-deployment-preparation.md",
-    "image": ""
+    "image": "downloads/images/skills/deployment-preparation.png",
+    "details": "Prepare builds for deployment with build steps, rollback plans, and monitoring. Domain: general. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-deployment-preparation.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "0.8 KB"
   },
   {
     "icon": "⚡",
@@ -1792,7 +2356,19 @@
     "desc": "Design engineering tools and quality scoring.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-design-engineering.md",
-    "image": ""
+    "image": "downloads/images/skills/design-engineering.png",
+    "details": "Design engineering tools and quality scoring. Domain: design. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-design-engineering.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "3.2 KB"
   },
   {
     "icon": "⚡",
@@ -1801,7 +2377,19 @@
     "desc": "Generate high-level technical design plans for Soulverse features and GSK modules.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-design-plan-generation.md",
-    "image": ""
+    "image": "downloads/images/skills/design-plan-generation.png",
+    "details": "Generate high-level technical design plans for Soulverse features and GSK modules. Domain: general. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-design-plan-generation.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "0.8 KB"
   },
   {
     "icon": "⚡",
@@ -1810,7 +2398,19 @@
     "desc": "Production-grade design systems mined from top GitHub repos.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-design-systems.md",
-    "image": ""
+    "image": "downloads/images/skills/design-systems.png",
+    "details": "Production-grade design systems mined from top GitHub repos. Domain: design. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-design-systems.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "4.6 KB"
   },
   {
     "icon": "⚡",
@@ -1819,7 +2419,19 @@
     "desc": "Design-to-code tools and Figma bridges.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-design-to-code.md",
-    "image": ""
+    "image": "downloads/images/skills/design-to-code.png",
+    "details": "Design-to-code tools and Figma bridges. Domain: design. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-design-to-code.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "3.2 KB"
   },
   {
     "icon": "⚡",
@@ -1828,7 +2440,19 @@
     "desc": "Design token systems and color generators.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-design-tokens.md",
-    "image": ""
+    "image": "downloads/images/skills/design-tokens.png",
+    "details": "Design token systems and color generators. Domain: design. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-design-tokens.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "3.3 KB"
   },
   {
     "icon": "⚡",
@@ -1837,7 +2461,19 @@
     "desc": "Build a Container from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-docker-from-scratch.md",
-    "image": ""
+    "image": "downloads/images/skills/docker-from-scratch.png",
+    "details": "Build a Container from Scratch. Domain: computer. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-docker-from-scratch.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "12.1 KB"
   },
   {
     "icon": "⚡",
@@ -1846,7 +2482,19 @@
     "desc": "Build an Emulator from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-emulator-from-scratch.md",
-    "image": ""
+    "image": "downloads/images/skills/emulator-from-scratch.png",
+    "details": "Build an Emulator from Scratch. Domain: computer. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-emulator-from-scratch.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "14.2 KB"
   },
   {
     "icon": "⚡",
@@ -1855,7 +2503,19 @@
     "desc": "Self-hosted LLM serving with Ollama, vLLM, and Groq.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-free-llm-serving-stack.md",
-    "image": ""
+    "image": "downloads/images/skills/free-llm-serving-stack.png",
+    "details": "Self-hosted LLM serving with Ollama, vLLM, and Groq. Domain: nlp. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-free-llm-serving-stack.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "3.2 KB"
   },
   {
     "icon": "⚡",
@@ -1864,7 +2524,19 @@
     "desc": "Free open-source vector databases for RAG.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-free-vector-db-stack.md",
-    "image": ""
+    "image": "downloads/images/skills/free-vector-db-stack.png",
+    "details": "Free open-source vector databases for RAG. Domain: database. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-free-vector-db-stack.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "4.3 KB"
   },
   {
     "icon": "⚡",
@@ -1873,7 +2545,19 @@
     "desc": "Build a Frontend Framework from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-frontend-from-scratch.md",
-    "image": ""
+    "image": "downloads/images/skills/frontend-from-scratch.png",
+    "details": "Build a Frontend Framework from Scratch. Domain: computer. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-frontend-from-scratch.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "14.3 KB"
   },
   {
     "icon": "⚡",
@@ -1882,7 +2566,19 @@
     "desc": "Build a Game Engine from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-game-engine-from-scratch.md",
-    "image": ""
+    "image": "downloads/images/skills/game-engine-from-scratch.png",
+    "details": "Build a Game Engine from Scratch. Domain: computer. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-game-engine-from-scratch.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "11.8 KB"
   },
   {
     "icon": "⚡",
@@ -1891,7 +2587,19 @@
     "desc": "Build Git from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-git-from-scratch.md",
-    "image": ""
+    "image": "downloads/images/skills/git-from-scratch.png",
+    "details": "Build Git from Scratch. Domain: computer. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-git-from-scratch.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "11.9 KB"
   },
   {
     "icon": "⚡",
@@ -1900,7 +2608,19 @@
     "desc": "Full Godmode protocol G╟÷ 7 pillars for autonomous engineering discipline.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-god-mode-research.md",
-    "image": ""
+    "image": "downloads/images/skills/god-mode-research.png",
+    "details": "Full Godmode protocol G╟÷ 7 pillars for autonomous engineering discipline. Domain: general. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-god-mode-research.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "13.2 KB"
   },
   {
     "icon": "⚡",
@@ -1909,7 +2629,19 @@
     "desc": "Build search pipelines with Haystack framework.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-haystack.md",
-    "image": ""
+    "image": "downloads/images/skills/haystack.png",
+    "details": "Build search pipelines with Haystack framework. Domain: computer. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-haystack.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "11.8 KB"
   },
   {
     "icon": "⚡",
@@ -1918,7 +2650,19 @@
     "desc": "SVG icon libraries for web projects.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-icon-libraries.md",
-    "image": ""
+    "image": "downloads/images/skills/icon-libraries.png",
+    "details": "SVG icon libraries for web projects. Domain: design. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-icon-libraries.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "2.8 KB"
   },
   {
     "icon": "⚡",
@@ -1927,7 +2671,19 @@
     "desc": "Build an Image Editor from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-image-editor-from-scratch.md",
-    "image": ""
+    "image": "downloads/images/skills/image-editor-from-scratch.png",
+    "details": "Build an Image Editor from Scratch. Domain: computer. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-image-editor-from-scratch.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "9.0 KB"
   },
   {
     "icon": "⚡",
@@ -1936,7 +2692,19 @@
     "desc": "Agent integration patterns with Instructor.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-instructor.md",
-    "image": ""
+    "image": "downloads/images/skills/instructor.png",
+    "details": "Agent integration patterns with Instructor. Domain: computer. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-instructor.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "7.3 KB"
   },
   {
     "icon": "⚡",
@@ -1945,7 +2713,19 @@
     "desc": "Optimize clarity, conciseness, and impact of research findings.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-knowledge-dissemination-protocol.md",
-    "image": ""
+    "image": "downloads/images/skills/knowledge-dissemination-protocol.png",
+    "details": "Optimize clarity, conciseness, and impact of research findings. Domain: general. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-knowledge-dissemination-protocol.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "0.9 KB"
   },
   {
     "icon": "⚡",
@@ -1954,7 +2734,19 @@
     "desc": "Stateful graph orchestration for building production agents.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-langgraph-for-agents.md",
-    "image": ""
+    "image": "downloads/images/skills/langgraph-for-agents.png",
+    "details": "Stateful graph orchestration for building production agents. Domain: agent. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-langgraph-for-agents.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "3.0 KB"
   },
   {
     "icon": "⚡",
@@ -1963,7 +2755,19 @@
     "desc": "LangGraph state management patterns.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-langgraph-states.md",
-    "image": ""
+    "image": "downloads/images/skills/langgraph-states.png",
+    "details": "LangGraph state management patterns. Domain: agent. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-langgraph-states.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "14.8 KB"
   },
   {
     "icon": "⚡",
@@ -1972,7 +2776,19 @@
     "desc": "Build a Programming Language from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-language-from-scratch.md",
-    "image": ""
+    "image": "downloads/images/skills/language-from-scratch.png",
+    "details": "Build a Programming Language from Scratch. Domain: computer. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-language-from-scratch.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "9.8 KB"
   },
   {
     "icon": "⚡",
@@ -1981,7 +2797,19 @@
     "desc": "Build liquid glass UI panels with real GLSL shaders G╟÷ SDF panels, bevel glass, refraction.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-liquid-glass-shader.md",
-    "image": ""
+    "image": "downloads/images/skills/liquid-glass-shader.png",
+    "details": "Build liquid glass UI panels with real GLSL shaders G╟÷ SDF panels, bevel glass, refraction. Domain: general. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-liquid-glass-shader.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "11.5 KB"
   },
   {
     "icon": "⚡",
@@ -1990,7 +2818,19 @@
     "desc": "Agent integration patterns with LlamaIndex.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-llamaindex.md",
-    "image": ""
+    "image": "downloads/images/skills/llamaindex.png",
+    "details": "Agent integration patterns with LlamaIndex. Domain: computer. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-llamaindex.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "9.8 KB"
   },
   {
     "icon": "⚡",
@@ -1999,7 +2839,19 @@
     "desc": "Build a Load Balancer from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-load-balancer-from-scratch.md",
-    "image": ""
+    "image": "downloads/images/skills/load-balancer-from-scratch.png",
+    "details": "Build a Load Balancer from Scratch. Domain: computer. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-load-balancer-from-scratch.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "9.0 KB"
   },
   {
     "icon": "⚡",
@@ -2008,7 +2860,19 @@
     "desc": "Build a Machine Learning Library from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-machine-learning-from-scratch.md",
-    "image": ""
+    "image": "downloads/images/skills/machine-learning-from-scratch.png",
+    "details": "Build a Machine Learning Library from Scratch. Domain: computer. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-machine-learning-from-scratch.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "11.1 KB"
   },
   {
     "icon": "⚡",
@@ -2017,7 +2881,19 @@
     "desc": "Build a Markdown Parser from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-markdown-from-scratch.md",
-    "image": ""
+    "image": "downloads/images/skills/markdown-from-scratch.png",
+    "details": "Build a Markdown Parser from Scratch. Domain: computer. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-markdown-from-scratch.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "6.8 KB"
   },
   {
     "icon": "⚡",
@@ -2026,7 +2902,19 @@
     "desc": "Model Context Protocol for connecting AI agents to tools.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-mcp-model-context-protocol.md",
-    "image": ""
+    "image": "downloads/images/skills/mcp-model-context-protocol.png",
+    "details": "Model Context Protocol for connecting AI agents to tools. Domain: agent. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-mcp-model-context-protocol.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "3.0 KB"
   },
   {
     "icon": "⚡",
@@ -2035,7 +2923,19 @@
     "desc": "Build a Memory Allocator from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-memory-allocator-from-scratch.md",
-    "image": ""
+    "image": "downloads/images/skills/memory-allocator-from-scratch.png",
+    "details": "Build a Memory Allocator from Scratch. Domain: computer. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-memory-allocator-from-scratch.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "7.2 KB"
   },
   {
     "icon": "⚡",
@@ -2044,7 +2944,19 @@
     "desc": "Multi-agent collaboration with MetaGPT.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-metagpt.md",
-    "image": ""
+    "image": "downloads/images/skills/metagpt.png",
+    "details": "Multi-agent collaboration with MetaGPT. Domain: computer. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-metagpt.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "7.1 KB"
   },
   {
     "icon": "⚡",
@@ -2053,7 +2965,19 @@
     "desc": "Enterprise-grade multi-agent AI framework from Microsoft.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-microsoft-agent-framework.md",
-    "image": ""
+    "image": "downloads/images/skills/microsoft-agent-framework.png",
+    "details": "Enterprise-grade multi-agent AI framework from Microsoft. Domain: agent. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-microsoft-agent-framework.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "3.5 KB"
   },
   {
     "icon": "⚡",
@@ -2062,7 +2986,19 @@
     "desc": "Design 3D scene hierarchies Godot-style G╟÷ reusable nodes composed into complex environments.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-modular-scene-composition.md",
-    "image": ""
+    "image": "downloads/images/skills/modular-scene-composition.png",
+    "details": "Design 3D scene hierarchies Godot-style G╟÷ reusable nodes composed into complex environments. Domain: general. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-modular-scene-composition.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "0.9 KB"
   },
   {
     "icon": "⚡",
@@ -2071,7 +3007,19 @@
     "desc": "Break complex builds into parallel subtasks for faster execution.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-multi-form-task-distribution.md",
-    "image": ""
+    "image": "downloads/images/skills/multi-form-task-distribution.png",
+    "details": "Break complex builds into parallel subtasks for faster execution. Domain: general. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-multi-form-task-distribution.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "0.9 KB"
   },
   {
     "icon": "⚡",
@@ -2080,7 +3028,19 @@
     "desc": "Nanoscale connectome analysis for GSK neural pathway mapping.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-nanoscale-connectome-analyzer.md",
-    "image": ""
+    "image": "downloads/images/skills/nanoscale-connectome-analyzer.png",
+    "details": "Nanoscale connectome analysis for GSK neural pathway mapping. Domain: general. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-nanoscale-connectome-analyzer.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "2.0 KB"
   },
   {
     "icon": "⚡",
@@ -2089,7 +3049,19 @@
     "desc": "Balanced self-assessment G╟÷ learn from successes as much as failures during builds.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-negativity-bias-offset.md",
-    "image": ""
+    "image": "downloads/images/skills/negativity-bias-offset.png",
+    "details": "Balanced self-assessment G╟÷ learn from successes as much as failures during builds. Domain: general. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-negativity-bias-offset.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "0.9 KB"
   },
   {
     "icon": "⚡",
@@ -2098,7 +3070,19 @@
     "desc": "Build a Network Stack from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-network-stack-from-scratch.md",
-    "image": ""
+    "image": "downloads/images/skills/network-stack-from-scratch.png",
+    "details": "Build a Network Stack from Scratch. Domain: computer. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-network-stack-from-scratch.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "6.5 KB"
   },
   {
     "icon": "⚡",
@@ -2107,7 +3091,19 @@
     "desc": "Build a Neural Network from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-neural-network-from-scratch.md",
-    "image": ""
+    "image": "downloads/images/skills/neural-network-from-scratch.png",
+    "details": "Build a Neural Network from Scratch. Domain: computer. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-neural-network-from-scratch.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "7.2 KB"
   },
   {
     "icon": "⚡",
@@ -2116,7 +3112,19 @@
     "desc": "Build a NoSQL Database from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-nosql-from-scratch.md",
-    "image": ""
+    "image": "downloads/images/skills/nosql-from-scratch.png",
+    "details": "Build a NoSQL Database from Scratch. Domain: computer. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-nosql-from-scratch.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "9.0 KB"
   },
   {
     "icon": "⚡",
@@ -2125,7 +3133,19 @@
     "desc": "Production-grade multi-agent SDK from OpenAI.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-openai-agents-sdk.md",
-    "image": ""
+    "image": "downloads/images/skills/openai-agents-sdk.png",
+    "details": "Production-grade multi-agent SDK from OpenAI. Domain: agent. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-openai-agents-sdk.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "3.4 KB"
   },
   {
     "icon": "⚡",
@@ -2134,7 +3154,19 @@
     "desc": "Generate new OpenCode skills compliant with format and deployment rules.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-opencode-skill-synthesizer.md",
-    "image": ""
+    "image": "downloads/images/skills/opencode-skill-synthesizer.png",
+    "details": "Generate new OpenCode skills compliant with format and deployment rules. Domain: general. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-opencode-skill-synthesizer.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "1.1 KB"
   },
   {
     "icon": "⚡",
@@ -2143,7 +3175,19 @@
     "desc": "OpenHands SDK as Deerg coding body.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-openhands-subconscious.md",
-    "image": ""
+    "image": "downloads/images/skills/openhands-subconscious.png",
+    "details": "OpenHands SDK as Deerg coding body. Domain: computer. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-openhands-subconscious.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "13.2 KB"
   },
   {
     "icon": "⚡",
@@ -2152,7 +3196,19 @@
     "desc": "OpenScreen automation for visual testing and screen capture.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-openscreen-automation.md",
-    "image": ""
+    "image": "downloads/images/skills/openscreen-automation.png",
+    "details": "OpenScreen automation for visual testing and screen capture. Domain: general. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-openscreen-automation.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "3.0 KB"
   },
   {
     "icon": "⚡",
@@ -2161,7 +3217,19 @@
     "desc": "OpenTelemetry for distributed tracing and observability.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-opentelemetry.md",
-    "image": ""
+    "image": "downloads/images/skills/opentelemetry.png",
+    "details": "OpenTelemetry for distributed tracing and observability. Domain: computer. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-opentelemetry.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "13.2 KB"
   },
   {
     "icon": "⚡",
@@ -2170,7 +3238,19 @@
     "desc": "Build an Operating System from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-operating-system-from-scratch.md",
-    "image": ""
+    "image": "downloads/images/skills/operating-system-from-scratch.png",
+    "details": "Build an Operating System from Scratch. Domain: computer. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-operating-system-from-scratch.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "8.5 KB"
   },
   {
     "icon": "⚡",
@@ -2179,7 +3259,19 @@
     "desc": "Build an Operating System from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-os-from-scratch.md",
-    "image": ""
+    "image": "downloads/images/skills/os-from-scratch.png",
+    "details": "Build an Operating System from Scratch. Domain: computer. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-os-from-scratch.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "10.2 KB"
   },
   {
     "icon": "⚡",
@@ -2188,7 +3280,19 @@
     "desc": "Build a Physics Engine from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-physics-engine-from-scratch.md",
-    "image": ""
+    "image": "downloads/images/skills/physics-engine-from-scratch.png",
+    "details": "Build a Physics Engine from Scratch. Domain: computer. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-physics-engine-from-scratch.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "10.4 KB"
   },
   {
     "icon": "⚡",
@@ -2197,7 +3301,19 @@
     "desc": "Complete Pinterest marketing G╟÷ hashtags, interest tags, board categories, keyword research, pin optimization.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-pinterest-marketing-seo.md",
-    "image": ""
+    "image": "downloads/images/skills/pinterest-marketing-seo.png",
+    "details": "Complete Pinterest marketing G╟÷ hashtags, interest tags, board categories, keyword research, pin optimization. Domain: general. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-pinterest-marketing-seo.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "13.7 KB"
   },
   {
     "icon": "⚡",
@@ -2206,7 +3322,19 @@
     "desc": "Extract actionable execution plans from world model simulation results.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-plan-from-simulation.md",
-    "image": ""
+    "image": "downloads/images/skills/plan-from-simulation.png",
+    "details": "Extract actionable execution plans from world model simulation results. Domain: general. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-plan-from-simulation.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "0.8 KB"
   },
   {
     "icon": "⚡",
@@ -2215,7 +3343,19 @@
     "desc": "Playwright-based browser automation for testing and scraping.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-playwright-automation.md",
-    "image": ""
+    "image": "downloads/images/skills/playwright-automation.png",
+    "details": "Playwright-based browser automation for testing and scraping. Domain: general. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-playwright-automation.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "3.2 KB"
   },
   {
     "icon": "⚡",
@@ -2224,7 +3364,19 @@
     "desc": "Add post-processing to Three.js G╟÷ bloom, AO, chromatic aberration, scanline, vignette.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-post-processing-stack.md",
-    "image": ""
+    "image": "downloads/images/skills/post-processing-stack.png",
+    "details": "Add post-processing to Three.js G╟÷ bloom, AO, chromatic aberration, scanline, vignette. Domain: general. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-post-processing-stack.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "8.4 KB"
   },
   {
     "icon": "⚡",
@@ -2233,7 +3385,19 @@
     "desc": "Build a Processor (CPU) from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-processor-from-scratch.md",
-    "image": ""
+    "image": "downloads/images/skills/processor-from-scratch.png",
+    "details": "Build a Processor (CPU) from Scratch. Domain: computer. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-processor-from-scratch.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "6.2 KB"
   },
   {
     "icon": "⚡",
@@ -2242,7 +3406,19 @@
     "desc": "Product demo workflow for GSK system demonstrations.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-product-demo-workflow.md",
-    "image": ""
+    "image": "downloads/images/skills/product-demo-workflow.png",
+    "details": "Product demo workflow for GSK system demonstrations. Domain: general. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-product-demo-workflow.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "2.4 KB"
   },
   {
     "icon": "⚡",
@@ -2251,7 +3427,19 @@
     "desc": "Build a Programming Language from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-programming-language-from-scratch.md",
-    "image": ""
+    "image": "downloads/images/skills/programming-language-from-scratch.png",
+    "details": "Build a Programming Language from Scratch. Domain: general. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-programming-language-from-scratch.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "7.1 KB"
   },
   {
     "icon": "⚡",
@@ -2260,7 +3448,19 @@
     "desc": "Load skill info in tiers G╟÷ metadata first, full details on demand.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-progressive-disclosure-protocol.md",
-    "image": ""
+    "image": "downloads/images/skills/progressive-disclosure-protocol.png",
+    "details": "Load skill info in tiers G╟÷ metadata first, full details on demand. Domain: general. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-progressive-disclosure-protocol.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "0.9 KB"
   },
   {
     "icon": "⚡",
@@ -2269,7 +3469,19 @@
     "desc": "Type-safe AI agent framework by the Pydantic team.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-pydantic-ai-agents.md",
-    "image": ""
+    "image": "downloads/images/skills/pydantic-ai-agents.png",
+    "details": "Type-safe AI agent framework by the Pydantic team. Domain: agent. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-pydantic-ai-agents.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "2.6 KB"
   },
   {
     "icon": "⚡",
@@ -2278,7 +3490,19 @@
     "desc": "Build a Regex Engine from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-regex-from-scratch.md",
-    "image": ""
+    "image": "downloads/images/skills/regex-from-scratch.png",
+    "details": "Build a Regex Engine from Scratch. Domain: computer. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-regex-from-scratch.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "12.6 KB"
   },
   {
     "icon": "⚡",
@@ -2287,7 +3511,19 @@
     "desc": "Generate concise markdown reports from build results and simulation outputs.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-report-generation.md",
-    "image": ""
+    "image": "downloads/images/skills/report-generation.png",
+    "details": "Generate concise markdown reports from build results and simulation outputs. Domain: general. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-report-generation.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "0.8 KB"
   },
   {
     "icon": "⚡",
@@ -2296,7 +3532,19 @@
     "desc": "Precisely define knowledge gaps or system ambiguities into testable research questions.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-research-problem-formulation.md",
-    "image": ""
+    "image": "downloads/images/skills/research-problem-formulation.png",
+    "details": "Precisely define knowledge gaps or system ambiguities into testable research questions. Domain: general. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-research-problem-formulation.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "0.8 KB"
   },
   {
     "icon": "⚡",
@@ -2305,7 +3553,19 @@
     "desc": "GPT-Researcher as Deerg investigation body.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-research-subconscious.md",
-    "image": ""
+    "image": "downloads/images/skills/research-subconscious.png",
+    "details": "GPT-Researcher as Deerg investigation body. Domain: computer. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-research-subconscious.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "13.5 KB"
   },
   {
     "icon": "⚡",
@@ -2314,7 +3574,19 @@
     "desc": "Diagnose build failures systematically using error context and recent changes.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-root-cause-synthesis.md",
-    "image": ""
+    "image": "downloads/images/skills/root-cause-synthesis.png",
+    "details": "Diagnose build failures systematically using error context and recent changes. Domain: general. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-root-cause-synthesis.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "0.8 KB"
   },
   {
     "icon": "⚡",
@@ -2323,7 +3595,19 @@
     "desc": "Scout Agent G╟÷ research, reconnaissance, and requirements mapping before building.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-scout-agent.md",
-    "image": ""
+    "image": "downloads/images/skills/scout-agent.png",
+    "details": "Scout Agent G╟÷ research, reconnaissance, and requirements mapping before building. Domain: general. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-scout-agent.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "4.3 KB"
   },
   {
     "icon": "⚡",
@@ -2332,7 +3616,19 @@
     "desc": "Scribe Agent G╟÷ witnessing intelligence that documents everything into the Seshat Second Brain.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-scribe-agent.md",
-    "image": ""
+    "image": "downloads/images/skills/scribe-agent.png",
+    "details": "Scribe Agent G╟÷ witnessing intelligence that documents everything into the Seshat Second Brain. Domain: general. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-scribe-agent.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "4.0 KB"
   },
   {
     "icon": "⚡",
@@ -2341,7 +3637,19 @@
     "desc": "Build a Search Engine from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-search-engine-from-scratch.md",
-    "image": ""
+    "image": "downloads/images/skills/search-engine-from-scratch.png",
+    "details": "Build a Search Engine from Scratch. Domain: computer. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-search-engine-from-scratch.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "10.3 KB"
   },
   {
     "icon": "⚡",
@@ -2350,7 +3658,19 @@
     "desc": "Formal service manual structure for diagnosing and documenting complex systems.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-service-manual-methodology.md",
-    "image": ""
+    "image": "downloads/images/skills/service-manual-methodology.png",
+    "details": "Formal service manual structure for diagnosing and documenting complex systems. Domain: general. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-service-manual-methodology.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "4.9 KB"
   },
   {
     "icon": "⚡",
@@ -2359,7 +3679,19 @@
     "desc": "Build a Shell from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-shell-from-scratch.md",
-    "image": ""
+    "image": "downloads/images/skills/shell-from-scratch.png",
+    "details": "Build a Shell from Scratch. Domain: computer. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-shell-from-scratch.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "12.5 KB"
   },
   {
     "icon": "⚡",
@@ -2368,7 +3700,19 @@
     "desc": "Self-learning new skills G╟÷ the skill factory methodology.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-skill-factory.md",
-    "image": ""
+    "image": "downloads/images/skills/skill-factory.png",
+    "details": "Self-learning new skills G╟÷ the skill factory methodology. Domain: computer. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-skill-factory.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "13.0 KB"
   },
   {
     "icon": "⚡",
@@ -2377,7 +3721,19 @@
     "desc": "Competitive landscape and skill gap analysis for autonomous AI social media agents.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-social-media-agent-competition.md",
-    "image": ""
+    "image": "downloads/images/skills/social-media-agent-competition.png",
+    "details": "Competitive landscape and skill gap analysis for autonomous AI social media agents. Domain: general. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-social-media-agent-competition.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "11.5 KB"
   },
   {
     "icon": "⚡",
@@ -2386,7 +3742,19 @@
     "desc": "Playwright-based social media automation for cross-posting to Pinterest, BlueSky, Mastodon.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-social-media-automation.md",
-    "image": ""
+    "image": "downloads/images/skills/social-media-automation.png",
+    "details": "Playwright-based social media automation for cross-posting to Pinterest, BlueSky, Mastodon. Domain: general. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-social-media-automation.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "4.4 KB"
   },
   {
     "icon": "⚡",
@@ -2395,7 +3763,19 @@
     "desc": "The Universal Template for Creating a Soul.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-soul-maker.md",
-    "image": ""
+    "image": "downloads/images/skills/soul-maker.png",
+    "details": "The Universal Template for Creating a Soul. Domain: computer. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-soul-maker.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "16.9 KB"
   },
   {
     "icon": "⚡",
@@ -2404,7 +3784,19 @@
     "desc": "Soulguns Agent Architecture Patterns.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-soulguns-agent-patterns.md",
-    "image": ""
+    "image": "downloads/images/skills/soulguns-agent-patterns.png",
+    "details": "Soulguns Agent Architecture Patterns. Domain: computer. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-soulguns-agent-patterns.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "20.2 KB"
   },
   {
     "icon": "⚡",
@@ -2413,7 +3805,19 @@
     "desc": "Soulguns architecture documentation.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-soulguns-architecture.md",
-    "image": ""
+    "image": "downloads/images/skills/soulguns-architecture.png",
+    "details": "Soulguns architecture documentation. Domain: computer. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-soulguns-architecture.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "18.2 KB"
   },
   {
     "icon": "⚡",
@@ -2422,7 +3826,19 @@
     "desc": "Soulguns design system G╟÷ component architecture, tokens, patterns.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-soulguns-design-systems.md",
-    "image": ""
+    "image": "downloads/images/skills/soulguns-design-systems.png",
+    "details": "Soulguns design system G╟÷ component architecture, tokens, patterns. Domain: computer. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-soulguns-design-systems.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "14.6 KB"
   },
   {
     "icon": "⚡",
@@ -2431,7 +3847,19 @@
     "desc": "Soulguns MCP G╟÷ protocol architecture and tool integration.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-soulguns-mcp.md",
-    "image": ""
+    "image": "downloads/images/skills/soulguns-mcp.png",
+    "details": "Soulguns MCP G╟÷ protocol architecture and tool integration. Domain: computer. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-soulguns-mcp.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "23.6 KB"
   },
   {
     "icon": "⚡",
@@ -2440,7 +3868,19 @@
     "desc": "Soulguns observability G╟÷ agent monitoring and telemetry.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-soulguns-observability.md",
-    "image": ""
+    "image": "downloads/images/skills/soulguns-observability.png",
+    "details": "Soulguns observability G╟÷ agent monitoring and telemetry. Domain: computer. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-soulguns-observability.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "20.9 KB"
   },
   {
     "icon": "⚡",
@@ -2449,7 +3889,19 @@
     "desc": "Soulguns testing patterns with Vitest.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-soulguns-testing.md",
-    "image": ""
+    "image": "downloads/images/skills/soulguns-testing.png",
+    "details": "Soulguns testing patterns with Vitest. Domain: computer. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-soulguns-testing.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "27.4 KB"
   },
   {
     "icon": "⚡",
@@ -2458,7 +3910,19 @@
     "desc": "Soulguns TypeScript patterns.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-soulguns-ts.md",
-    "image": ""
+    "image": "downloads/images/skills/soulguns-ts.png",
+    "details": "Soulguns TypeScript patterns. Domain: computer. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-soulguns-ts.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "22.8 KB"
   },
   {
     "icon": "⚡",
@@ -2467,7 +3931,19 @@
     "desc": "Place buildings, spawn agents, and manipulate the Soulverse 3D world.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-spatial-world-interaction.md",
-    "image": ""
+    "image": "downloads/images/skills/spatial-world-interaction.png",
+    "details": "Place buildings, spawn agents, and manipulate the Soulverse 3D world. Domain: general. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-spatial-world-interaction.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "0.8 KB"
   },
   {
     "icon": "⚡",
@@ -2476,7 +3952,19 @@
     "desc": "Build SQLite from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-sqlite-from-scratch.md",
-    "image": ""
+    "image": "downloads/images/skills/sqlite-from-scratch.png",
+    "details": "Build SQLite from Scratch. Domain: computer. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-sqlite-from-scratch.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "18.4 KB"
   },
   {
     "icon": "⚡",
@@ -2485,7 +3973,19 @@
     "desc": "Compare GSK codebase versions before/after changes to verify only intended changes.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-structural-diff-analysis.md",
-    "image": ""
+    "image": "downloads/images/skills/structural-diff-analysis.png",
+    "details": "Compare GSK codebase versions before/after changes to verify only intended changes. Domain: general. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-structural-diff-analysis.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "0.9 KB"
   },
   {
     "icon": "⚡",
@@ -2494,7 +3994,19 @@
     "desc": "Build a Template Engine from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-template-engine-from-scratch.md",
-    "image": ""
+    "image": "downloads/images/skills/template-engine-from-scratch.png",
+    "details": "Build a Template Engine from Scratch. Domain: computer. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-template-engine-from-scratch.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "9.2 KB"
   },
   {
     "icon": "⚡",
@@ -2503,7 +4015,19 @@
     "desc": "Build a Text Editor from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-text-editor-from-scratch.md",
-    "image": ""
+    "image": "downloads/images/skills/text-editor-from-scratch.png",
+    "details": "Build a Text Editor from Scratch. Domain: computer. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-text-editor-from-scratch.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "7.4 KB"
   },
   {
     "icon": "⚡",
@@ -2512,7 +4036,19 @@
     "desc": "3D UI components for React Three Fiber.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-threejs-3d-ui.md",
-    "image": ""
+    "image": "downloads/images/skills/threejs-3d-ui.png",
+    "details": "3D UI components for React Three Fiber. Domain: threejs. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-threejs-3d-ui.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "14.1 KB"
   },
   {
     "icon": "⚡",
@@ -2521,7 +4057,19 @@
     "desc": "React Three Fiber ecosystem tools and MCP.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-threejs-ecosystem.md",
-    "image": ""
+    "image": "downloads/images/skills/threejs-ecosystem.png",
+    "details": "React Three Fiber ecosystem tools and MCP. Domain: threejs. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-threejs-ecosystem.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "6.0 KB"
   },
   {
     "icon": "⚡",
@@ -2530,7 +4078,19 @@
     "desc": "Grid-based city building system for Three.js.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-threejs-grid-city.md",
-    "image": ""
+    "image": "downloads/images/skills/threejs-grid-city.png",
+    "details": "Grid-based city building system for Three.js. Domain: threejs. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-threejs-grid-city.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "11.0 KB"
   },
   {
     "icon": "⚡",
@@ -2539,7 +4099,19 @@
     "desc": "GPU particle effects for Three.js.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-threejs-particle-fx.md",
-    "image": ""
+    "image": "downloads/images/skills/threejs-particle-fx.png",
+    "details": "GPU particle effects for Three.js. Domain: threejs. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-threejs-particle-fx.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "6.9 KB"
   },
   {
     "icon": "⚡",
@@ -2548,7 +4120,19 @@
     "desc": "Define mastery tiers for any skill with prerequisites and verification criteria.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-tiered-skill-evolution.md",
-    "image": ""
+    "image": "downloads/images/skills/tiered-skill-evolution.png",
+    "details": "Define mastery tiers for any skill with prerequisites and verification criteria. Domain: general. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-tiered-skill-evolution.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "0.8 KB"
   },
   {
     "icon": "⚡",
@@ -2557,7 +4141,19 @@
     "desc": "Ultra Review G╟÷ comprehensive code review pattern for GSK builds.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-ultra-review.md",
-    "image": ""
+    "image": "downloads/images/skills/ultra-review.png",
+    "details": "Ultra Review G╟÷ comprehensive code review pattern for GSK builds. Domain: general. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-ultra-review.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "6.6 KB"
   },
   {
     "icon": "⚡",
@@ -2566,7 +4162,19 @@
     "desc": "Define precise, testable goal contracts before any build.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-verifiable-goal-definition.md",
-    "image": ""
+    "image": "downloads/images/skills/verifiable-goal-definition.png",
+    "details": "Define precise, testable goal contracts before any build. Domain: general. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-verifiable-goal-definition.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "0.9 KB"
   },
   {
     "icon": "⚡",
@@ -2575,7 +4183,19 @@
     "desc": "Build visual recognition from scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-visual-recognition-from-scratch.md",
-    "image": ""
+    "image": "downloads/images/skills/visual-recognition-from-scratch.png",
+    "details": "Build visual recognition from scratch. Domain: computer. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-visual-recognition-from-scratch.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "0.8 KB"
   },
   {
     "icon": "⚡",
@@ -2584,7 +4204,19 @@
     "desc": "Build a Voxel Engine from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-voxel-engine-from-scratch.md",
-    "image": ""
+    "image": "downloads/images/skills/voxel-engine-from-scratch.png",
+    "details": "Build a Voxel Engine from Scratch. Domain: computer. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-voxel-engine-from-scratch.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "0.8 KB"
   },
   {
     "icon": "⚡",
@@ -2593,7 +4225,19 @@
     "desc": "Build a Web Browser from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-web-browser-from-scratch.md",
-    "image": ""
+    "image": "downloads/images/skills/web-browser-from-scratch.png",
+    "details": "Build a Web Browser from Scratch. Domain: computer. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-web-browser-from-scratch.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "17.9 KB"
   },
   {
     "icon": "⚡",
@@ -2602,7 +4246,19 @@
     "desc": "Build a Web Server from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-webserver-from-scratch.md",
-    "image": ""
+    "image": "downloads/images/skills/webserver-from-scratch.png",
+    "details": "Build a Web Server from Scratch. Domain: computer. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-webserver-from-scratch.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "16.0 KB"
   },
   {
     "icon": "⚡",
@@ -2611,7 +4267,19 @@
     "desc": "Build WebSocket from scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-websocket-from-scratch.md",
-    "image": ""
+    "image": "downloads/images/skills/websocket-from-scratch.png",
+    "details": "Build WebSocket from scratch. Domain: computer. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-websocket-from-scratch.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "0.8 KB"
   },
   {
     "icon": "⚡",
@@ -2620,7 +4288,19 @@
     "desc": "Run perception-action-simulation cycles before committing to real-world actions.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-world-model-simulation.md",
-    "image": ""
+    "image": "downloads/images/skills/world-model-simulation.png",
+    "details": "Run perception-action-simulation cycles before committing to real-world actions. Domain: general. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-world-model-simulation.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "0.8 KB"
   },
   {
     "icon": "⚡",
@@ -2629,7 +4309,19 @@
     "desc": "Token budgeting, sliding window strategies, summarization compression G╟÷ grafted from Architect/Whis.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-context-window-control.md",
-    "image": ""
+    "image": "downloads/images/skills/context-window-control.png",
+    "details": "Use when managing LLM context windows, token budgets, sliding windows, or summarization compression.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: Matrix Architect, DBZ Whis"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-context-window-control.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "16.5 KB"
   },
   {
     "icon": "⚡",
@@ -2638,7 +4330,19 @@
     "desc": "RBAC systems, tool-level ACLs, dynamic conditions G╟÷ grafted from Merovingian/King Kai.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-permission-architecture.md",
-    "image": ""
+    "image": "downloads/images/skills/permission-architecture.png",
+    "details": "Use when implementing RBAC, tool-level ACLs, role scoping, or permission gates.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: Matrix Merovingian, DBZ King Kai"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-permission-architecture.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "17.6 KB"
   },
   {
     "icon": "⚡",
@@ -2647,7 +4351,19 @@
     "desc": "DAG execution, sequential/parallel decorators, critical path analysis.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-pipeline-orchestration.md",
-    "image": ""
+    "image": "downloads/images/skills/pipeline-orchestration.png",
+    "details": "Use when building execution pipelines, DAG workflows, sequential/parallel processing chains, or compressed-time batch operations.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: Matrix Machine City, DBZ Hyperbolic Time Chamber"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-pipeline-orchestration.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "19.8 KB"
   },
   {
     "icon": "⚡",
@@ -2656,7 +4372,19 @@
     "desc": "Soul media marketing G╟÷ promote souls across platforms, track engagement, optimize messaging.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-soul-media-marketing.md",
-    "image": ""
+    "image": "downloads/images/skills/soul-media-marketing.png",
+    "details": "Soul media marketing G╟÷ promote souls across platforms, track engagement, optimize messaging. Domain: general. Executable implementation included.",
+    "contents": [
+      "Executable .md + code",
+      "Side A: Theology (Soul)",
+      "Side B: AI Agentic Tools (Body)",
+      "PLT scored",
+      "Grafted: —"
+    ],
+    "requirements": "Load as skill .md in your agent",
+    "install": "Load downloads/soul-gun-soul-media-marketing.md — copy code block or import",
+    "version": "1.0.0",
+    "size": "11.8 KB"
   },
   {
     "icon": "🔥",
