@@ -756,12 +756,10 @@ initFuse(items);
 
 async function checkWorkbench(){
   const status=document.getElementById('wbStatus'), openBtn=document.getElementById('wbOpenLocal'), wrap=document.getElementById('wbFrameWrap'), frame=document.getElementById('wbFrame'), label=document.getElementById('wbFrameLabel'), popout=document.getElementById('wbPopout');
-  // 1) try localhost
-  try{ const r=await fetch('http://localhost:3000/ping',{signal:AbortSignal.timeout(1500)}); if(r.ok){ status.textContent='✅ Local Workbench detected on :3000 — live Family'; openBtn.style.display='inline-block'; wrap.style.display='block'; frame.src='http://localhost:3000'; label.textContent='Local Workbench — http://localhost:3000'; popout.href='http://localhost:3000'; return 'local'; } }catch{}
-  // 2) try Codespace forwarded URL (if inside Codespace, env var)
-  const cs=(location.hostname.includes('app.github.dev') || location.hostname.includes('githubpreview.dev')) ? `https://${location.hostname.replace(/-3000\./,'-3000.').replace(/.*--/,'')}` : null;
-  if(cs){ try{ const u=location.origin.replace(/-3000\./,'-3000.'); const r2=await fetch(u+'/ping',{signal:AbortSignal.timeout(1500)}); if(r2.ok){ status.textContent='✅ Codespace Workbench live'; wrap.style.display='block'; frame.src=u; label.textContent='Codespace — '+u; popout.href=u; return 'codespace'; } }catch{} }
-  status.textContent='⬇ No local workbench — Launch in Browser (Codespaces) or Download Desktop';
+  try{ const r=await fetch('http://localhost:3000/ping',{signal:AbortSignal.timeout(1500)}); if(r.ok){ status.textContent='Local Workbench detected on :3000 - live Family'; openBtn.style.display='inline-block'; wrap.style.display='block'; frame.src='http://localhost:3000'; label.textContent='Local Workbench - http://localhost:3000'; popout.href='http://localhost:3000'; return 'local'; } }catch(e){}
+  const cs=(location.hostname.includes('app.github.dev') || location.hostname.includes('githubpreview.dev')) ? 'https://'+location.hostname.replace(/-3000\./,'-3000.').replace(/.*--/,'') : null;
+  if(cs){ try{ const u=location.origin.replace(/-3000\./,'-3000.'); const r2=await fetch(u+'/ping',{signal:AbortSignal.timeout(1500)}); if(r2.ok){ status.textContent='Codespace Workbench live'; wrap.style.display='block'; frame.src=u; label.textContent='Codespace - '+u; popout.href=u; return 'codespace'; } }catch(e2){} }
+  status.textContent='No local workbench - Launch in Browser (Codespaces) or Download Desktop';
   return 'none';
 }
 function filterAndRender(){
