@@ -1184,6 +1184,7 @@ render = function(data) {
   } catch(e) { console.error('Soul Graph error:', e); const c = document.getElementById('bg-canvas'); if (c) c.style.display = 'none'; }
 })();
 
+</script>
 <!-- ─── SOUL GUIDE — in-page agent helper ─── -->
 <div id="guideBtn" style="position:fixed;right:20px;bottom:20px;z-index:90;width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,#8B5CF6,#00D4FF);display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px;cursor:pointer;box-shadow:0 8px 32px rgba(139,92,246,0.4);border:2px solid rgba(255,255,255,0.1)">✦</div>
 <div id="guidePanel" style="display:none;position:fixed;right:20px;bottom:84px;z-index:90;width:360px;max-height:520px;background:rgba(12,12,16,0.96);backdrop-filter:blur(20px);border:1px solid rgba(139,92,246,0.2);border-radius:16px;overflow:hidden;flex-direction:column;box-shadow:0 16px 64px rgba(0,0,0,0.6)">
@@ -1225,7 +1226,7 @@ render = function(data) {
   window.guidePush=guidePush;
 })();
 </script>
-
+<script>
 console.log('✦ The Digital Library of Souls is alive.');
 </script>
 </body>
