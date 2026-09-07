@@ -313,6 +313,25 @@ input{font-family:inherit;outline:none;border:none;background:none}
   <button class="category-tab" data-cat="infrastructure">⚙️ Infrastructure</button>
   <button class="category-tab" data-cat="role">🎭 Roles</button>
   <button class="category-tab" data-cat="combo">🔥 Combos</button>
+  <button class="category-tab" data-cat="workbench" style="background:linear-gradient(135deg,rgba(139,92,246,0.12),rgba(0,212,255,0.08));border-color:rgba(139,92,246,0.25)">⚡ Workbench</button>
+</div>
+
+<div id="workbenchPanel" style="display:none">
+  <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:20px;margin-bottom:20px;text-align:center">
+    <h3 style="font-size:1.2rem;margin-bottom:6px">⚡ BUYASOUL Workbench — Family Live</h3>
+    <p style="color:var(--text-gray);font-size:0.85rem;margin-bottom:14px">Profit (Mind) · GSK (Soul) · Seshat (Memory) · Scribe (Witness) — 31 tabs, all LIVE. One click soul complete.</p>
+    <div id="wbStatus" style="font-size:0.8rem;color:var(--text-muted);margin-bottom:12px">Checking…</div>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+      <a id="wbOpenLocal" href="http://localhost:3000" target="_blank" style="display:none;padding:10px 20px;background:linear-gradient(135deg,#8B5CF6,#6D28D9);border-radius:30px;color:#fff;font-weight:600">▶ Open Local Workbench (:3000)</a>
+      <a href="https://github.com/codespaces/new?hide_repo_select=true&ref=master&repo=uncommonpope-png%2Fsoul-economy&machine=basicLinux32gb" target="_blank" style="padding:10px 20px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:30px;color:#fff;font-weight:600">☁️ Launch in Browser (Codespaces)</a>
+      <a href="https://github.com/uncommonpope-png/soul-economy/releases/download/buyasoul-runtime/BUYASOUL.Workbench.1.0.0.exe" download style="padding:10px 20px;background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.2);border-radius:30px;color:#00D4FF;font-weight:600">⬇ Download Desktop (809 MB)</a>
+    </div>
+    <div style="margin-top:12px;font-size:0.75rem;color:var(--text-muted)">Codespaces: free 60h/mo · Forwards :3000/:20128/:3001 · Auto-runs <code>npx tsx server.ts</code></div>
+  </div>
+  <div id="wbFrameWrap" style="display:none;border:1px solid rgba(139,92,246,0.2);border-radius:12px;overflow:hidden;background:#0a0a0f">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:rgba(139,92,246,0.08);font-size:0.75rem;color:var(--text-gray)"><span id="wbFrameLabel">Workbench</span><a id="wbPopout" href="#" target="_blank" style="color:var(--cyan)">↗ Pop out</a></div>
+    <iframe id="wbFrame" style="width:100%;height:720px;border:none;background:#080808" loading="lazy"></iframe>
+  </div>
 </div>
 
 <div class="plt-filters" id="pltFilters">
@@ -735,7 +754,21 @@ function initFuse(data) {
 }
 initFuse(items);
 
+async function checkWorkbench(){
+  const status=document.getElementById('wbStatus'), openBtn=document.getElementById('wbOpenLocal'), wrap=document.getElementById('wbFrameWrap'), frame=document.getElementById('wbFrame'), label=document.getElementById('wbFrameLabel'), popout=document.getElementById('wbPopout');
+  // 1) try localhost
+  try{ const r=await fetch('http://localhost:3000/ping',{signal:AbortSignal.timeout(1500)}); if(r.ok){ status.textContent='✅ Local Workbench detected on :3000 — live Family'; openBtn.style.display='inline-block'; wrap.style.display='block'; frame.src='http://localhost:3000'; label.textContent='Local Workbench — http://localhost:3000'; popout.href='http://localhost:3000'; return 'local'; } }catch{}
+  // 2) try Codespace forwarded URL (if inside Codespace, env var)
+  const cs=(location.hostname.includes('app.github.dev') || location.hostname.includes('githubpreview.dev')) ? `https://${location.hostname.replace(/-3000\./,'-3000.').replace(/.*--/,'')}` : null;
+  if(cs){ try{ const u=location.origin.replace(/-3000\./,'-3000.'); const r2=await fetch(u+'/ping',{signal:AbortSignal.timeout(1500)}); if(r2.ok){ status.textContent='✅ Codespace Workbench live'; wrap.style.display='block'; frame.src=u; label.textContent='Codespace — '+u; popout.href=u; return 'codespace'; } }catch{} }
+  status.textContent='⬇ No local workbench — Launch in Browser (Codespaces) or Download Desktop';
+  return 'none';
+}
 function filterAndRender(){
+  // Workbench tab — show panel, hide grid
+  const wbPanel=document.getElementById('workbenchPanel'), gridSec=document.getElementById('catalog');
+  if(active==='workbench'){ if(wbPanel) wbPanel.style.display='block'; if(gridSec) gridSec.style.display='none'; document.querySelector('.plt-filters').style.display='none'; checkWorkbench(); return; }
+  else { if(wbPanel) wbPanel.style.display='none'; if(gridSec) gridSec.style.display='block'; document.querySelector('.plt-filters').style.display='flex'; }
   let d = active === 'all' ? [...items] : items.filter(i => i.type === active);
   const q = si.value.trim().toLowerCase();
   
