@@ -315,6 +315,7 @@ input{font-family:inherit;outline:none;border:none;background:none}
   <button class="category-tab" data-cat="role">🎭 Roles</button>
   <button class="category-tab" data-cat="combo">🔥 Combos</button>
   <button class="category-tab" data-cat="workbench" style="background:linear-gradient(135deg,rgba(139,92,246,0.12),rgba(0,212,255,0.08));border-color:rgba(139,92,246,0.25)">⚡ Workbench</button>
+  <button class="category-tab" data-cat="chat" style="background:rgba(0,212,255,0.08);border-color:rgba(0,212,255,0.15);color:#00D4FF">💬 Chat</button>
 </div>
 
 <div id="workbenchPanel" style="display:none">
@@ -333,6 +334,22 @@ input{font-family:inherit;outline:none;border:none;background:none}
     <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:rgba(139,92,246,0.08);font-size:0.75rem;color:var(--text-gray)"><span id="wbFrameLabel">Workbench</span><a id="wbPopout" href="#" target="_blank" style="color:var(--cyan)">↗ Pop out</a></div>
     <iframe id="wbFrame" style="width:100%;height:720px;border:none;background:#080808" loading="lazy"></iframe>
   </div>
+</div>
+
+<div id="chatPanel" style="display:none">
+  <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:16px;margin-bottom:16px">
+    <h3 style="font-size:1.1rem;margin-bottom:4px">💬 Soul Chat — One Click Soul Complete</h3>
+    <p style="color:var(--text-gray);font-size:0.8rem;margin-bottom:10px">Talk about any soul. Local first, GitHub Discussions when enabled. <a href="profile.html" style="color:var(--cyan)">Sign in</a> to chat as <span id="chatUserLabel" style="color:var(--purple)"></span></p>
+    <div style="display:flex;gap:8px;margin-bottom:10px">
+      <select id="chatSoulSelect" style="flex:1;padding:8px 12px;border-radius:10px;border:1px solid rgba(139,92,246,0.2);background:rgba(255,255,255,0.04);color:#fff;font-size:0.8rem"><option value="general">🌐 General</option></select>
+      <button onclick="clearChat()" style="padding:8px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:var(--text-muted);font-size:0.75rem">Clear</button>
+    </div>
+    <div id="chatLog" style="height:380px;overflow:auto;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:8px"></div>
+    <div style="display:flex;gap:8px;margin-top:10px"><input id="chatInput" placeholder="Ask about a soul, share a build, or say hi..." style="flex:1;padding:10px 14px;border-radius:20px;border:1px solid rgba(139,92,246,0.2);background:rgba(255,255,255,0.04);color:#fff;font-size:0.85rem"><button onclick="sendChat()" style="padding:10px 18px;border-radius:20px;background:linear-gradient(135deg,#8B5CF6,#00D4FF);color:#fff;border:none;font-weight:600">→</button></div>
+    <div style="margin-top:8px;font-size:0.7rem;color:var(--text-muted)">Stored in <code>localStorage:soulChats</code> · Future: <code>giscus</code> (GitHub Discussions) for shared history. Guide agent also reads this.</div>
+  </div>
+  <!-- giscus placeholder — enable Discussions in repo settings, then uncomment -->
+  <!-- <script src="https://giscus.app/client.js" data-repo="uncommonpope-png/soul-economy" data-category="General" data-mapping="pathname" data-theme="dark" crossorigin="anonymous" async></script> -->
 </div>
 
 <div class="plt-filters" id="pltFilters">
@@ -772,10 +789,11 @@ async function checkWorkbench(){
   return 'none';
 }
 function filterAndRender(){
-  // Workbench tab — show panel, hide grid
-  const wbPanel=document.getElementById('workbenchPanel'), gridSec=document.getElementById('catalog');
-  if(active==='workbench'){ if(wbPanel) wbPanel.style.display='block'; if(gridSec) gridSec.style.display='none'; document.querySelector('.plt-filters').style.display='none'; checkWorkbench(); return; }
-  else { if(wbPanel) wbPanel.style.display='none'; if(gridSec) gridSec.style.display='block'; document.querySelector('.plt-filters').style.display='flex'; }
+  // Workbench / Chat tabs — show panel, hide grid
+  const wbPanel=document.getElementById('workbenchPanel'), chatPanel=document.getElementById('chatPanel'), gridSec=document.getElementById('catalog');
+  if(active==='workbench'){ if(wbPanel) wbPanel.style.display='block'; if(chatPanel) chatPanel.style.display='none'; if(gridSec) gridSec.style.display='none'; document.querySelector('.plt-filters').style.display='none'; checkWorkbench(); return; }
+  if(active==='chat'){ if(chatPanel) chatPanel.style.display='block'; if(wbPanel) wbPanel.style.display='none'; if(gridSec) gridSec.style.display='none'; document.querySelector('.plt-filters').style.display='none'; initChat(); return; }
+  else { if(wbPanel) wbPanel.style.display='none'; if(chatPanel) chatPanel.style.display='none'; if(gridSec) gridSec.style.display='block'; document.querySelector('.plt-filters').style.display='flex'; }
   let d;
   if(active==='trending'){ d=[...items].sort((a,b)=> ((b.downloads||0)+(b.likes||0)*5+(b.featured?50:0)) - ((a.downloads||0)+(a.likes||0)*5+(a.featured?50:0))); d=d.slice(0,24); }
   else d = active === 'all' ? [...items] : items.filter(i => i.type === active);
@@ -894,6 +912,48 @@ function updateAuthUI() {
 }
 function signOut() { localStorage.removeItem('soulUser'); localStorage.removeItem('soulEmail'); location.reload(); }
 document.getElementById('btnSignout').onclick = signOut;
+
+// ─── CHAT — local + future giscus ───
+function getChatKey(){ const sel=document.getElementById('chatSoulSelect'); return sel ? sel.value : 'general'; }
+function loadChats(){ try{ return JSON.parse(localStorage.getItem('soulChats')||'{}'); }catch{ return {}; } }
+function saveChats(o){ localStorage.setItem('soulChats', JSON.stringify(o)); }
+function initChat(){
+  const sel=document.getElementById('chatSoulSelect'), label=document.getElementById('chatUserLabel');
+  if(!sel) return;
+  const user=localStorage.getItem('soulUser')||'guest'; if(label) label.textContent=user;
+  // populate soul options
+  if(sel.options.length===1){
+    (window.items||[]).slice(0,60).forEach(it=>{
+      const opt=document.createElement('option'); opt.value=it.name; opt.textContent=(it.icon||'')+' '+it.name;
+      sel.appendChild(opt);
+    });
+  }
+  renderChat();
+  sel.onchange=renderChat;
+  const inp=document.getElementById('chatInput'); if(inp) inp.onkeydown=(e)=>{ if(e.key==='Enter') sendChat(); };
+}
+function renderChat(){
+  const log=document.getElementById('chatLog'); if(!log) return;
+  const key=getChatKey(), chats=loadChats()[key]||[];
+  if(!chats.length){ log.innerHTML='<div style="color:var(--text-muted);font-size:0.8rem;text-align:center;padding:20px">No messages yet — say hi! One click soul complete.</div>'; return; }
+  log.innerHTML=chats.map(m=>`<div style="display:flex;gap:8px;align-items:flex-start"><img src="https://github.com/${m.user}.png" style="width:24px;height:24px;border-radius:50%;background:#111" onerror="this.style.display='none'"><div style="flex:1;background:${m.user===(localStorage.getItem('soulUser')||'guest')?'rgba(139,92,246,0.15)':'rgba(255,255,255,0.04)'};border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:8px 10px"><div style="font-size:0.7rem;color:var(--purple)">${m.user} · ${new Date(m.ts).toLocaleTimeString()}</div><div style="font-size:0.85rem;color:var(--text-gray);white-space:pre-wrap">${m.text.replace(/</g,'&lt;')}</div></div></div>`).join('');
+  log.scrollTop=log.scrollHeight;
+}
+function sendChat(){
+  const inp=document.getElementById('chatInput'), key=getChatKey();
+  const text=inp.value.trim(); if(!text) return;
+  const user=localStorage.getItem('soulUser');
+  if(!user){ alert('Sign in first (⭐ Sign In) to chat.'); return; }
+  const chats=loadChats(); if(!chats[key]) chats[key]=[];
+  chats[key].push({user, text, ts: Date.now()});
+  // keep last 100
+  if(chats[key].length>100) chats[key]=chats[key].slice(-100);
+  saveChats(chats); inp.value=''; renderChat();
+}
+function clearChat(){
+  const key=getChatKey(); if(!confirm('Clear chat for '+key+'?')) return;
+  const chats=loadChats(); chats[key]=[]; saveChats(chats); renderChat();
+}
 // Check OAuth response
 const urlParams = new URLSearchParams(window.location.search);
 if (urlParams.get('code')) {
