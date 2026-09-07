@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Profile — Soul Economy</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet" />
+<style>
+:root{--bg-deep:#080808;--purple:#8B5CF6;--purple-dark:#6D28D9;--cyan:#00D4FF;--gold:#FFD166;--text-white:#FFFFFF;--text-gray:#B8B8B8;--text-muted:#666;font-family:'Inter',sans-serif}
+*{margin:0;padding:0;box-sizing:border-box} body{font-family:var(--font);background:var(--bg-deep);color:var(--text-white);min-height:100vh}
+a{color:inherit;text-decoration:none}
+.navbar{display:flex;align-items:center;justify-content:space-between;padding:12px 28px;background:rgba(255,255,255,0.04);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.06);border-radius:60px;margin:16px auto;max-width:1280px}
+.logo{font-weight:800;background:linear-gradient(135deg,var(--purple),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-size:1.4rem}
+.nav-links{display:flex;gap:24px;list-style:none} .nav-links a{color:var(--text-gray)} .nav-links a:hover{color:#fff}
+.btn-primary{padding:8px 20px;background:linear-gradient(135deg,var(--purple),var(--purple-dark));border-radius:30px;color:#fff;font-weight:600}
+.btn-ghost{padding:8px 20px;border:1px solid rgba(255,255,255,0.06);border-radius:30px;color:var(--text-gray)}
+.wrap{max-width:900px;margin:24px auto;padding:0 20px}
+.card{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:24px;margin-bottom:20px;backdrop-filter:blur(12px)}
+.avatar{width:80px;height:80px;border-radius:50%;border:2px solid var(--purple);object-fit:cover;background:#111}
+.row{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.mini-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:14px}
+.mini-card h4{font-size:0.95rem;margin-bottom:4px} .mini-card p{font-size:0.8rem;color:var(--text-gray)}
+input,select,textarea{width:100%;padding:10px 14px;border-radius:10px;border:1px solid rgba(139,92,246,0.2);background:rgba(255,255,255,0.04);color:#fff;font-family:inherit;margin-top:6px}
+label{font-size:0.8rem;color:var(--text-gray);display:block;margin-top:12px}
+button{cursor:pointer;font-family:inherit}
+.publish{margin-top:16px;padding:12px 28px;background:linear-gradient(135deg,var(--purple),var(--purple-dark));border:none;border-radius:30px;color:#fff;font-weight:700}
+.badge{font-size:0.65rem;padding:3px 10px;border-radius:100px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08)}
+</style>
+</head>
+<body>
+<nav class="navbar">
+  <a class="logo" href="index.html">✦ Soul Economy</a>
+  <ul class="nav-links"><li><a href="index.html">Library</a></li><li><a href="profile.html" style="color:#fff">Profile</a></li><li><a href="https://buyasoul.online" target="_blank">BUYaSOUL</a></li></ul>
+  <div><a href="index.html" class="btn-ghost">← Library</a></div>
+</nav>
+
+<div class="wrap">
+  <div class="card" id="profileCard">
+    <div class="row">
+      <img id="avatar" class="avatar" src="" alt="avatar" style="display:none">
+      <div>
+        <h2 id="uname">Not signed in</h2>
+        <div id="uemail" style="color:var(--text-gray);font-size:0.9rem"></div>
+        <div style="margin-top:8px"><span class="badge" id="badge Souls">0 souls saved</span> <span class="badge" id="badgePublished">0 published</span></div>
+      </div>
+      <div style="margin-left:auto;display:flex;gap:10px">
+        <button class="btn-ghost" onclick="signOut()">Sign Out</button>
+        <button class="btn-primary" id="btnSignin2" onclick="login()">Sign In with GitHub</button>
+      </div>
+    </div>
+    <div id="signinHelp" style="margin-top:12px;color:var(--text-muted);font-size:0.8rem;display:none">Enter your GitHub username — we fetch your avatar via github.com/&lt;user&gt;.png (no OAuth needed). One click soul complete.</div>
+  </div>
+
+  <div class="card">
+    <h3>⭐ My Souls</h3>
+    <p style="color:var(--text-muted);font-size:0.85rem;margin:6px 0 12px">Souls you starred on the Library. Stored locally — one click to re-download.</p>
+    <div id="mySoulsGrid" class="grid"></div>
+  </div>
+
+  <div class="card">
+    <h3>📦 My Published</h3>
+    <p style="color:var(--text-muted);font-size:0.85rem;margin:6px 0 12px">Souls, roles, or skills you published. Pending → awaiting PR to soul-economy.</p>
+    <div id="publishedGrid" class="grid"></div>
+  </div>
+
+  <div class="card">
+    <h3>🚀 Publish a Soul — One Click Soul Complete</h3>
+    <p style="color:var(--text-muted);font-size:0.85rem">Share your soul, role, or skill. It becomes a card for everyone. No backend — we create a ready-to-PR JSON + instructions.</p>
+    <label>Name <input id="pName" placeholder="e.g. Soul Sentinel"></label>
+    <label>Type <select id="pType"><option value="soul">soul</option><option value="role">role</option><option value="skill">skill</option><option value="chamber">chamber</option><option value="infrastructure">infrastructure</option><option value="combo">combo</option></select></label>
+    <label>Description <textarea id="pDesc" rows="3" placeholder="What it does, what the downloader gets"></textarea></label>
+    <label>File or URL <input id="pFile" placeholder="my-soul.zip or https://..."></label>
+    <label>PLT (e.g. 0.8/0.5/0.3) <input id="pPlt" value="0.8/0.5/0.3"></label>
+    <label>Image URL (optional) <input id="pImage" placeholder="https://.../hero.png"></label>
+    <label>Contents (comma separated) <input id="pContents" placeholder="file1, file2"></label>
+    <button class="publish" onclick="publishSoul()">Publish → Generate PR JSON</button>
+    <pre id="publishOut" style="display:none;margin-top:12px;background:#000;padding:12px;border-radius:10px;font-size:0.75rem;overflow:auto;max-height:300px;border:1px solid rgba(139,92,246,0.2)"></pre>
+    <div id="publishHelp" style="display:none;margin-top:10px;font-size:0.8rem;color:var(--text-gray)"></div>
+  </div>
+</div>
+
+<script>
+function getUser(){ return localStorage.getItem('soulUser') || ''; }
+function getEmail(){ return localStorage.getItem('soulEmail') || ''; }
+
+function updateProfile(){
+  const user=getUser(), email=getEmail();
+  document.getElementById('uname').textContent = user || 'Not signed in';
+  document.getElementById('uemail').textContent = email || 'Sign in to create your profile';
+  const av=document.getElementById('avatar');
+  if(user && user!=='guest'){ av.src='https://github.com/'+user+'.png'; av.style.display='block'; av.onerror=()=>av.style.display='none'; } else av.style.display='none';
+  document.getElementById('btnSignin2').style.display = user ? 'none' : 'inline-block';
+  document.getElementById('signinHelp').style.display = user ? 'none' : 'block';
+  const saved=JSON.parse(localStorage.getItem('mySouls')||'[]');
+  document.getElementById('badge Souls').textContent = saved.length+' souls saved';
+  const pub=JSON.parse(localStorage.getItem('pendingSouls')||'[]');
+  document.getElementById('badgePublished').textContent = pub.length+' published';
+  renderMySouls(); renderPublished();
+}
+
+function login(){
+  const u=prompt('Enter your GitHub username (we fetch avatar from github.com/<user>.png):');
+  if(!u) return;
+  const clean=u.trim().replace(/^@/,'');
+  localStorage.setItem('soulUser', clean);
+  localStorage.setItem('soulEmail', clean+'@github');
+  // try to verify via GitHub API
+  fetch('https://api.github.com/users/'+clean).then(r=>r.json()).then(j=>{
+    if(j.login) localStorage.setItem('soulUser', j.login);
+    updateProfile();
+  }).catch(()=>updateProfile());
+  updateProfile();
+}
+
+function signOut(){ localStorage.removeItem('soulUser'); localStorage.removeItem('soulEmail'); location.reload(); }
+
+function renderMySouls(){
+  const grid=document.getElementById('mySoulsGrid');
+  const saved=JSON.parse(localStorage.getItem('mySouls')||'[]');
+  if(!saved.length){ grid.innerHTML='<div style="color:var(--text-muted);font-size:0.85rem">No souls yet — star any card on the Library.</div>'; return; }
+  grid.innerHTML=saved.map(n=>`<div class="mini-card"><h4>${n}</h4><p>Saved locally</p><a href="index.html" style="font-size:0.75rem;color:var(--purple)">→ Open Library</a> <span style="font-size:0.75rem;cursor:pointer;color:var(--text-muted)" onclick="unsave('${n.replace(/'/g,"\\'")}')">✕ unsave</span></div>`).join('');
+}
+function unsave(n){ let s=JSON.parse(localStorage.getItem('mySouls')||'[]'); s=s.filter(x=>x!==n); localStorage.setItem('mySouls', JSON.stringify(s)); updateProfile(); }
+function renderPublished(){
+  const grid=document.getElementById('publishedGrid');
+  const pub=JSON.parse(localStorage.getItem('pendingSouls')||'[]');
+  if(!pub.length){ grid.innerHTML='<div style="color:var(--text-muted);font-size:0.85rem">Nothing published yet — use the form below. One click soul complete.</div>'; return; }
+  grid.innerHTML=pub.map(p=>`<div class="mini-card"><h4>${p.name}</h4><p>${p.type} · ${p.plt}</p><p style="font-size:0.7rem;color:var(--text-muted)">${p.desc.substring(0,80)}</p><span class="badge">pending PR</span></div>`).join('');
+}
+
+function publishSoul(){
+  const user=getUser();
+  if(!user){ alert('Sign in first (GitHub username) to publish.'); return; }
+  const item={
+    name: document.getElementById('pName').value.trim(),
+    type: document.getElementById('pType').value,
+    desc: document.getElementById('pDesc').value.trim(),
+    file: document.getElementById('pFile').value.trim(),
+    plt: document.getElementById('pPlt').value.trim() || '0.8/0.5/0.3',
+    image: document.getElementById('pImage').value.trim(),
+    icon: ({soul:'🧠',role:'🎭',skill:'⚡',chamber:'💜',infrastructure:'⚙️',combo:'🔥'})[document.getElementById('pType').value] || '❓',
+    author: user,
+    featured: false
+  };
+  if(!item.name || !item.desc){ alert('Name + description required'); return; }
+  const contents=document.getElementById('pContents').value.trim();
+  if(contents) item.contents=contents.split(',').map(s=>s.trim());
+  item.download = item.file.startsWith('http') ? item.file : undefined;
+  // store pending
+  const pending=JSON.parse(localStorage.getItem('pendingSouls')||'[]');
+  pending.push(item);
+  localStorage.setItem('pendingSouls', JSON.stringify(pending));
+  // also add to mySouls
+  const saved=JSON.parse(localStorage.getItem('mySouls')||'[]');
+  if(!saved.includes(item.name)){ saved.push(item.name); localStorage.setItem('mySouls', JSON.stringify(saved)); }
+  const out=document.getElementById('publishOut');
+  out.style.display='block';
+  out.textContent=JSON.stringify(item, null, 2);
+  document.getElementById('publishHelp').style.display='block';
+  document.getElementById('publishHelp').innerHTML='Copied to pending. To go live: <br>1. Fork <a href="https://github.com/uncommonpope-png/soul-economy" target="_blank" style="color:var(--cyan)">uncommonpope-png/soul-economy</a><br>2. Add this JSON to <code>data/catalog.json</code><br>3. Put your file in <code>downloads/</code><br>4. Open PR — we merge and it appears on the Library + Graph. <br><br>Or <a href="#" onclick="downloadPending();return false" style="color:var(--purple)">⬇ Download pending JSON</a>';
+  updateProfile();
+}
+function downloadPending(){
+  const pending=JSON.parse(localStorage.getItem('pendingSouls')||'[]');
+  const blob=new Blob([JSON.stringify(pending,null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='pending-souls.json'; a.click();
+}
+
+updateProfile();
+</script>
+</body>
+</html>

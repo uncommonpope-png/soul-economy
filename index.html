@@ -254,9 +254,9 @@ input{font-family:inherit;outline:none;border:none;background:none}
   </ul>
   <div class="nav-actions">
     <div class="auth-bar">
-      <span class="my-souls-badge" id="mySoulsBadge">⭐ 0</span>
+      <a href="profile.html" class="my-souls-badge" id="mySoulsBadge" style="text-decoration:none">⭐ 0</a>
       <button class="btn-signin" id="btnSignin" onclick="loginWithGitHub()">⭐ Sign In</button>
-      <span class="user-email" id="userEmail"></span>
+      <a href="profile.html" class="user-email" id="userEmail" style="text-decoration:none"></a>
       <button class="btn-signout" id="btnSignout">Sign Out</button>
     </div>
     <a href="https://buyasoul.online" target="_blank" class="btn-ghost" aria-label="Visit BUYaSOUL online store">BUYaSOUL.online</a>
@@ -815,21 +815,31 @@ document.querySelectorAll('#pltP, #pltL, #pltT').forEach(el => {
     });
 });
 
-// ─── AUTH SYSTEM — GitHub OAuth ───
-const GITHUB_CLIENT_ID = ''; // Register at github.com/settings/applications/new
+// ─── AUTH SYSTEM — GitHub username (static-site friendly) ───
+const GITHUB_CLIENT_ID = ''; // unused on static Pages
 function loginWithGitHub() {
-    if (!GITHUB_CLIENT_ID) { localStorage.setItem('soulUser', 'guest'); updateAuthUI(); return; }
-    const redirect = window.location.origin + window.location.pathname;
-    window.location.href = `https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&redirect_uri=${redirect}&scope=user:email`;
+    const u = prompt('Enter your GitHub username (we fetch your avatar from github.com/<user>.png):');
+    if (!u) return;
+    const clean = u.trim().replace(/^@/, '');
+    localStorage.setItem('soulUser', clean);
+    localStorage.setItem('soulEmail', clean + '@github');
+    fetch('https://api.github.com/users/' + clean).then(r=>r.json()).then(j=>{ if(j.login) localStorage.setItem('soulUser', j.login); updateAuthUI(); }).catch(()=>updateAuthUI());
+    updateAuthUI();
+    // hint to visit profile
+    setTimeout(()=>{ if(confirm('Signed in as '+clean+' — open your Profile?')) location.href='profile.html'; }, 300);
 }
 function updateAuthUI() {
     const user = localStorage.getItem('soulUser');
     const email = localStorage.getItem('soulEmail');
+    const si=document.getElementById('btnSignin'), so=document.getElementById('btnSignout'), ue=document.getElementById('userEmail');
     if (user) {
-        document.getElementById('btnSignin').style.display = 'none';
-        document.getElementById('btnSignout').style.display = 'inline-block';
-        document.getElementById('userEmail').style.display = 'inline-block';
-        document.getElementById('userEmail').textContent = email || 'Guest';
+        if(si) si.style.display = 'none';
+        if(so) so.style.display = 'inline-block';
+        if(ue){ ue.style.display = 'inline-block'; ue.textContent = user; ue.href='profile.html'; ue.title='View profile — one click soul complete'; }
+    } else {
+        if(si) si.style.display = 'inline-block';
+        if(so) so.style.display = 'none';
+        if(ue) ue.style.display = 'none';
     }
 }
 function signOut() { localStorage.removeItem('soulUser'); localStorage.removeItem('soulEmail'); location.reload(); }
