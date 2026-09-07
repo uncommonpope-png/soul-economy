@@ -1153,6 +1153,48 @@ render = function(data) {
   } catch(e) { console.error('Soul Graph error:', e); const c = document.getElementById('bg-canvas'); if (c) c.style.display = 'none'; }
 })();
 
+<!-- ─── SOUL GUIDE — in-page agent helper ─── -->
+<div id="guideBtn" style="position:fixed;right:20px;bottom:20px;z-index:90;width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,#8B5CF6,#00D4FF);display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px;cursor:pointer;box-shadow:0 8px 32px rgba(139,92,246,0.4);border:2px solid rgba(255,255,255,0.1)">✦</div>
+<div id="guidePanel" style="display:none;position:fixed;right:20px;bottom:84px;z-index:90;width:360px;max-height:520px;background:rgba(12,12,16,0.96);backdrop-filter:blur(20px);border:1px solid rgba(139,92,246,0.2);border-radius:16px;overflow:hidden;flex-direction:column;box-shadow:0 16px 64px rgba(0,0,0,0.6)">
+  <div style="padding:14px 16px;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;justify-content:space-between;align-items:center"><strong style="font-size:0.9rem">✦ Soul Guide</strong><span style="cursor:pointer;color:#666" onclick="document.getElementById('guidePanel').style.display='none'">✕</span></div>
+  <div id="guideLog" style="flex:1;overflow:auto;padding:12px;display:flex;flex-direction:column;gap:10px;max-height:360px"></div>
+  <div style="display:flex;gap:8px;padding:10px;border-top:1px solid rgba(255,255,255,0.06)"><input id="guideInput" placeholder="Ask: which soul for coding? what is PLT?" style="flex:1;padding:10px 14px;border-radius:20px;border:1px solid rgba(139,92,246,0.2);background:rgba(255,255,255,0.04);color:#fff;font-size:0.85rem"><button onclick="guideSend()" style="padding:10px 16px;border-radius:20px;background:#8B5CF6;color:#fff;border:none;font-weight:600">→</button></div>
+  <div style="padding:8px 12px;display:flex;gap:6px;flex-wrap:wrap"><span class="gchip" onclick="guideQuick('which soul for coding?')">coding</span><span class="gchip" onclick="guideQuick('what is PLT?')">PLT?</span><span class="gchip" onclick="guideQuick('how to publish?')">publish</span><span class="gchip" onclick="guideQuick('best for beginners?')">beginners</span></div>
+</div>
+<style>.gchip{font-size:0.7rem;padding:4px 10px;border-radius:20px;background:rgba(139,92,246,0.12);border:1px solid rgba(139,92,246,0.15);color:#B8B8B8;cursor:pointer}.gchip:hover{background:rgba(139,92,246,0.2);color:#fff}</style>
+<script>
+(function(){
+  const btn=document.getElementById('guideBtn'), panel=document.getElementById('guidePanel'), log=document.getElementById('guideLog'), input=document.getElementById('guideInput');
+  btn.onclick=()=>{ panel.style.display = panel.style.display==='none' || !panel.style.display ? 'flex' : 'none'; if(panel.style.display==='flex' && !log.children.length) guidePush('assistant','Hi — I\'m your Soul Guide. Ask me which soul fits your task, what PLT means, or how to publish. One click soul complete.'); };
+  window.guideQuick=(q)=>{ input.value=q; guideSend(); };
+  window.guideSend=()=>{
+    const q=input.value.trim(); if(!q) return;
+    guidePush('user', q); input.value='';
+    // local Fuse search over catalog
+    let answer='';
+    const ql=q.toLowerCase();
+    if(ql.includes('plt')) answer='PLT = Profit + Love - Tax = True Value. Every card is scored P/L/T. High P = profitable, high L = loving, low T = low tax. Filter with the P/L/T sliders.';
+    else if(ql.includes('publish')) answer='Go to Profile → Publish form. Fill name/type/desc/file, click Publish. It saves to pendingSouls. Download pending-souls.json and open a PR adding it to data/catalog.json + file to downloads/.';
+    else if(ql.includes('sign') || ql.includes('profile')) answer='Click ⭐ Sign In (nav) → enter GitHub username or email. Avatar from github.com/<user>.png. View at profile.html — My Souls + Publish live there.';
+    else {
+      // search catalog
+      const hits = (window.items||[]).filter(i=> (i.name+i.desc+i.type).toLowerCase().includes(ql)).slice(0,3);
+      if(hits.length) answer='Top matches:\n' + hits.map(h=>`• ${h.icon} ${h.name} (${h.type}) — ${h.desc.substring(0,80)}...`).join('\n') + '\n\nClick the card → ▼ Details → ⬇ Download.';
+      else if(window.fuse){ const r=window.fuse.search(q).slice(0,3).map(x=>x.item); if(r.length) answer='Fuzzy matches:\n'+r.map(h=>`• ${h.icon} ${h.name} — ${h.desc.substring(0,80)}`).join('\n'); else answer='No direct match. Try: "coding", "oracle", "role", or browse the tabs. All souls need one click — download + npm install.'; }
+      else answer='Try keywords: coding, oracle, role, chamber, or open the Graph and click a node.';
+    }
+    setTimeout(()=>guidePush('assistant', answer), 200);
+  };
+  input.addEventListener('keydown', e=>{ if(e.key==='Enter') guideSend(); });
+  function guidePush(role, text){
+    const d=document.createElement('div');
+    d.style.cssText= role==='user' ? 'align-self:flex-end;background:#8B5CF6;color:#fff;padding:8px 12px;border-radius:14px 14px 4px 14px;max-width:80%;font-size:0.82rem;white-space:pre-wrap' : 'align-self:flex-start;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.06);padding:8px 12px;border-radius:14px 14px 14px 4px;max-width:85%;font-size:0.82rem;white-space:pre-wrap;color:#B8B8B8';
+    d.textContent=text; log.appendChild(d); log.scrollTop=log.scrollHeight;
+  }
+  window.guidePush=guidePush;
+})();
+</script>
+
 console.log('✦ The Digital Library of Souls is alive.');
 </script>
 </body>

@@ -32,17 +32,17 @@
     "plt": "0.8/0.5/0.3",
     "file": "architect.zip",
     "featured": true,
-    "image": "",
+    "image": "downloads/images/architect.png",
     "version": "1.0.0",
-    "size": "45 MB",
-    "requires": "Node.js 18+, npm",
-    "details": "System design master agent. 465 files, 288 JS modules. Full project scaffolding with npm start.",
+    "size": "1.44 MB",
+    "requires": "Node 18+ · npm 9+",
+    "details": "System design master. 465 files, 288 JS modules. Scaffolds full projects with package.json, MCP adapter, mesh. Grafted: Architect/Neo.",
     "contents": [
-      "architect.zip (45 MB)",
-      "465 source files",
+      "465 files",
       "288 JS modules",
-      "package.json with npm start",
-      "MCP adapter included"
+      "MCP stdio/HTTP adapter",
+      "Mesh peer-registry",
+      "npm start ready"
     ],
     "requirements": "Node.js 18+, npm 9+",
     "install": "unzip architect.zip && npm install && npm start",
@@ -56,7 +56,19 @@
     "plt": "0.9/0.4/0.4",
     "file": "miss-vikki.zip",
     "featured": true,
-    "image": ""
+    "image": "downloads/images/miss-vikki.png",
+    "version": "1.2.0",
+    "size": "1.34 MB",
+    "requires": "Node 18+ · 34 chambers",
+    "details": "Operator soul. 347 files, 276 JS modules. Runs 34 GSK chambers. The operator that never sleeps.",
+    "contents": [
+      "347 files",
+      "276 JS modules",
+      "34 chambers",
+      "Operator protocol",
+      "MCP adapter"
+    ],
+    "install": "unzip miss-vikki.zip && npm install && node index.js"
   },
   {
     "icon": "🧠",
@@ -66,21 +78,21 @@
     "plt": "0.9/0.5/0.3",
     "file": "soul-commander.zip",
     "featured": true,
-    "image": "",
+    "image": "downloads/images/soul-commander.png",
     "version": "1.0.0",
-    "size": "150 MB",
-    "requires": "Node.js 18+, npm, Python 3.10+ (optional)",
-    "details": "GOD SOUL. 454 files, 281 JS modules. 19 superpowers from 5M+ GitHub stars. MCP server. Claude Code ready.",
+    "size": "1.44 MB",
+    "requires": "Node 18+ · Python 3.10+ opt",
+    "details": "GOD SOUL. 454 files, 281 JS. 19 superpowers from 5M+ GitHub stars. MCP server. Claude Code ready.",
     "contents": [
-      "soul-commander.zip (150 MB)",
-      "454 source files",
+      "454 files",
       "281 JS modules",
       "19 superpowers",
-      "MCP server for Claude Code/Cursor",
-      "Mesh networking adapter"
+      "MCP server",
+      "Mesh networking",
+      "Claude Code adapter"
     ],
     "requirements": "Node.js 18+, npm 9+, Python 3.10+ for some tools",
-    "install": "unzip && npm install && node soul.js --mcp",
+    "install": "unzip soul-commander.zip && npm install && node soul.js --mcp",
     "updated": "2026-08-20"
   },
   {
@@ -90,7 +102,18 @@
     "desc": "Strategic planner. MCTS planner. Trend radar. v2.0.0.",
     "plt": "0.8/0.6/0.3",
     "file": "strategist.zip",
-    "image": ""
+    "image": "downloads/images/strategist.png",
+    "version": "2.0.0",
+    "size": "1.32 MB",
+    "requires": "Node 18+",
+    "details": "Strategic planner. MCTS planner, trend radar, scenario trees. Thinks 10 moves ahead.",
+    "contents": [
+      "MCTS planner",
+      "Trend radar",
+      "Scenario trees",
+      "PLT optimizer"
+    ],
+    "install": "unzip strategist.zip && npm install"
   },
   {
     "icon": "🧠",
@@ -100,7 +123,19 @@
     "plt": "0.6/0.8/0.3",
     "file": "oracle.zip",
     "featured": true,
-    "image": ""
+    "image": "downloads/images/oracle.png",
+    "version": "2.0.0",
+    "size": "1.33 MB",
+    "requires": "Node 18+ · MCP",
+    "details": "Prophetic oracle. 363 files, 286 JS. Sees patterns across time. MCP adapter, JSON memory.",
+    "contents": [
+      "363 files",
+      "286 JS modules",
+      "Pattern engine",
+      "MCP adapter",
+      "JSON memory"
+    ],
+    "install": "unzip oracle.zip && npm install"
   },
   {
     "icon": "🧠",
@@ -109,7 +144,17 @@
     "desc": "Cross-platform agent calling. 8 connectors. v2.0.0.",
     "plt": "0.7/0.7/0.3",
     "file": "telephone-soul.zip",
-    "image": ""
+    "image": "downloads/images/telephone-soul.png",
+    "version": "2.0.0",
+    "size": "1.29 MB",
+    "requires": "Node 18+ · 8 connectors",
+    "details": "Cross-platform agent calling. 8 connectors (OpenAI, Anthropic, local). v2.0.0.",
+    "contents": [
+      "8 connectors",
+      "Cross-platform calling",
+      "v2.0.0 protocol"
+    ],
+    "install": "unzip telephone-soul.zip && npm install"
   },
   {
     "icon": "🧠",
@@ -118,7 +163,19 @@
     "desc": "Content soul. 12 archetypes, voice system, cadence, calendar, PLT driven.",
     "plt": "0.8/0.7/0.3",
     "file": "soul-allie-v2.0.0.zip",
-    "image": ""
+    "image": "downloads/images/allie.png",
+    "version": "2.0.0",
+    "size": "1.33 MB",
+    "requires": "Node 18+",
+    "details": "Content soul. 12 archetypes, voice system, cadence, calendar, PLT driven.",
+    "contents": [
+      "12 archetypes",
+      "Voice system",
+      "Cadence engine",
+      "Calendar",
+      "PLT driven"
+    ],
+    "install": "unzip soul-allie-v2.0.0.zip && npm install"
   },
   {
     "icon": "🧠",
@@ -127,7 +184,17 @@
     "desc": "Trust broker. 25 commands. Registry server. Production ready.",
     "plt": "0.7/0.5/0.4",
     "file": "agentdep-PRODUCTION.zip",
-    "image": ""
+    "image": "downloads/images/agentdep.png",
+    "version": "1.0.0",
+    "size": "0.31 MB",
+    "requires": "Node 18+ · Registry",
+    "details": "Trust broker. 25 commands. Registry server. Production ready.",
+    "contents": [
+      "25 commands",
+      "Registry server",
+      "Trust protocol"
+    ],
+    "install": "unzip agentdep-PRODUCTION.zip && npm install"
   },
   {
     "icon": "🌍",
