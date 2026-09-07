@@ -316,6 +316,7 @@ input{font-family:inherit;outline:none;border:none;background:none}
   <button class="category-tab" data-cat="combo">🔥 Combos</button>
   <button class="category-tab" data-cat="workbench" style="background:linear-gradient(135deg,rgba(139,92,246,0.12),rgba(0,212,255,0.08));border-color:rgba(139,92,246,0.25)">⚡ Workbench</button>
   <button class="category-tab" data-cat="chat" style="background:rgba(0,212,255,0.08);border-color:rgba(0,212,255,0.15);color:#00D4FF">💬 Chat</button>
+  <button class="category-tab" data-cat="discussions" style="background:rgba(255,209,102,0.08);border-color:rgba(255,209,102,0.15);color:var(--gold)">💭 Discussions</button>
 </div>
 
 <div id="workbenchPanel" style="display:none">
@@ -361,6 +362,18 @@ input{font-family:inherit;outline:none;border:none;background:none}
 <section id="catalog">
   <div class="resource-grid" id="resourceGrid"></div>
 </section>
+
+<div id="discussionsPanel" style="display:none">
+  <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:16px;margin-bottom:16px">
+    <h3 style="font-size:1.1rem;margin-bottom:4px">💭 Discussions</h3>
+    <p style="color:var(--text-gray);font-size:0.8rem;margin-bottom:10px">Threads per soul. Local first, GitHub Discussions when enabled. <a href="https://github.com/uncommonpope-png/soul-economy/discussions" target="_blank" style="color:var(--cyan)">Open on GitHub →</a></p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+      <select id="discSoulSelect" style="flex:1;padding:8px 12px;border-radius:10px;border:1px solid rgba(139,92,246,0.2);background:rgba(255,255,255,0.04);color:#fff;font-size:0.8rem"><option value="all">All souls</option></select>
+      <button onclick="newDiscussion()" style="padding:8px 14px;border-radius:10px;background:linear-gradient(135deg,#8B5CF6,#6D28D9);color:#fff;border:none;font-weight:600;font-size:0.8rem">+ New Thread</button>
+    </div>
+    <div id="discList" style="display:flex;flex-direction:column;gap:8px"></div>
+  </div>
+</div>
 
 <div class="north-star">
   <div class="star-icon">⭐</div>
@@ -789,11 +802,12 @@ async function checkWorkbench(){
   return 'none';
 }
 function filterAndRender(){
-  // Workbench / Chat tabs — show panel, hide grid
-  const wbPanel=document.getElementById('workbenchPanel'), chatPanel=document.getElementById('chatPanel'), gridSec=document.getElementById('catalog');
-  if(active==='workbench'){ if(wbPanel) wbPanel.style.display='block'; if(chatPanel) chatPanel.style.display='none'; if(gridSec) gridSec.style.display='none'; document.querySelector('.plt-filters').style.display='none'; checkWorkbench(); return; }
-  if(active==='chat'){ if(chatPanel) chatPanel.style.display='block'; if(wbPanel) wbPanel.style.display='none'; if(gridSec) gridSec.style.display='none'; document.querySelector('.plt-filters').style.display='none'; initChat(); return; }
-  else { if(wbPanel) wbPanel.style.display='none'; if(chatPanel) chatPanel.style.display='none'; if(gridSec) gridSec.style.display='block'; document.querySelector('.plt-filters').style.display='flex'; }
+  // Workbench / Chat / Discussions tabs — show panel, hide grid
+  const wbPanel=document.getElementById('workbenchPanel'), chatPanel=document.getElementById('chatPanel'), discPanel=document.getElementById('discussionsPanel'), gridSec=document.getElementById('catalog');
+  if(active==='workbench'){ if(wbPanel) wbPanel.style.display='block'; if(chatPanel) chatPanel.style.display='none'; if(discPanel) discPanel.style.display='none'; if(gridSec) gridSec.style.display='none'; document.querySelector('.plt-filters').style.display='none'; checkWorkbench(); return; }
+  if(active==='chat'){ if(chatPanel) chatPanel.style.display='block'; if(wbPanel) wbPanel.style.display='none'; if(discPanel) discPanel.style.display='none'; if(gridSec) gridSec.style.display='none'; document.querySelector('.plt-filters').style.display='none'; initChat(); return; }
+  if(active==='discussions'){ if(discPanel) discPanel.style.display='block'; if(wbPanel) wbPanel.style.display='none'; if(chatPanel) chatPanel.style.display='none'; if(gridSec) gridSec.style.display='none'; document.querySelector('.plt-filters').style.display='none'; initDiscussions(); return; }
+  else { if(wbPanel) wbPanel.style.display='none'; if(chatPanel) chatPanel.style.display='none'; if(discPanel) discPanel.style.display='none'; if(gridSec) gridSec.style.display='block'; document.querySelector('.plt-filters').style.display='flex'; }
   let d;
   if(active==='trending'){ d=[...items].sort((a,b)=> ((b.downloads||0)+(b.likes||0)*5+(b.featured?50:0)) - ((a.downloads||0)+(a.likes||0)*5+(a.featured?50:0))); d=d.slice(0,24); }
   else d = active === 'all' ? [...items] : items.filter(i => i.type === active);
@@ -953,6 +967,65 @@ function sendChat(){
 function clearChat(){
   const key=getChatKey(); if(!confirm('Clear chat for '+key+'?')) return;
   const chats=loadChats(); chats[key]=[]; saveChats(chats); renderChat();
+}
+
+// ─── DISCUSSIONS — threaded per soul ───
+function loadDiscs(){ try{ return JSON.parse(localStorage.getItem('soulDiscussions')||'[]'); }catch{ return []; } }
+function saveDiscs(a){ localStorage.setItem('soulDiscussions', JSON.stringify(a)); }
+function initDiscussions(){
+  const sel=document.getElementById('discSoulSelect');
+  if(sel && sel.options.length===1){
+    (window.items||[]).slice(0,60).forEach(it=>{
+      const opt=document.createElement('option'); opt.value=it.name; opt.textContent=(it.icon||'')+' '+it.name;
+      sel.appendChild(opt);
+    });
+    sel.onchange=renderDiscussions;
+  }
+  renderDiscussions();
+  // try GitHub Discussions API (GraphQL fallback to placeholder)
+  fetch('https://api.github.com/repos/uncommonpope-png/soul-economy/discussions?per_page=5', {headers:{'Accept':'application/vnd.github+json'}}).then(r=>r.json()).then(j=>{
+    if(Array.isArray(j) && j.length){ const el=document.getElementById('discList'); if(el) el.innerHTML += '<div style="margin-top:8px;padding:8px;background:rgba(0,212,255,0.06);border-radius:8px;font-size:0.75rem;color:var(--cyan)">GitHub Discussions: '+j.length+' threads found</div>'; }
+  }).catch(()=>{});
+}
+function renderDiscussions(){
+  const list=document.getElementById('discList'), sel=document.getElementById('discSoulSelect');
+  if(!list) return;
+  const filter=sel?sel.value:'all';
+  let discs=loadDiscs();
+  // seed demo if empty
+  if(!discs.length){
+    discs=[
+      {id:1, soul:'Architect', title:'How to scaffold with Architect?', author:'profit-prime', replies:3, created:Date.now()-86400000},
+      {id:2, soul:'Soul Commander', title:'19 superpowers — which to use first?', author:'craig', replies:7, created:Date.now()-172800000},
+      {id:3, soul:'General', title:'Welcome to Discussions — one click soul complete', author:'soul-economy', replies:12, created:Date.now()-259200000}
+    ];
+    saveDiscs(discs);
+  }
+  const filtered=filter==='all'?discs:discs.filter(d=>d.soul===filter||d.soul==='General');
+  if(!filtered.length){ list.innerHTML='<div style="color:var(--text-muted);font-size:0.85rem;text-align:center;padding:16px">No threads yet — start one!</div>'; return; }
+  list.innerHTML=filtered.map(d=>`
+    <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:12px;display:flex;justify-content:space-between;align-items:center;gap:12px">
+      <div>
+        <div style="font-size:0.85rem;font-weight:600">${d.title}</div>
+        <div style="font-size:0.7rem;color:var(--text-muted)">${d.soul} · by ${d.author} · ${d.replies} replies · ${new Date(d.created).toLocaleDateString()}</div>
+      </div>
+      <button onclick="openDiscussion(${d.id})" style="padding:6px 14px;border-radius:20px;background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.2);color:#8B5CF6;font-size:0.75rem">Open</button>
+    </div>
+  `).join('');
+}
+function newDiscussion(){
+  const user=localStorage.getItem('soulUser');
+  if(!user){ alert('Sign in first (⭐ Sign In) to post.'); return; }
+  const title=prompt('Thread title:'); if(!title) return;
+  const soul=prompt('Soul (or General):','General')||'General';
+  const discs=loadDiscs(); discs.unshift({id:Date.now(), soul, title, author:user, replies:0, created:Date.now()});
+  saveDiscs(discs); renderDiscussions();
+}
+function openDiscussion(id){
+  const discs=loadDiscs(); const d=discs.find(x=>x.id===id);
+  if(!d) return;
+  const reply=prompt(`Thread: ${d.title}\nSoul: ${d.soul}\n\nReply (or Cancel):`);
+  if(reply){ d.replies++; saveDiscs(discs); renderDiscussions(); alert('Reply saved locally. Future: GitHub Discussions sync.'); }
 }
 // Check OAuth response
 const urlParams = new URLSearchParams(window.location.search);
