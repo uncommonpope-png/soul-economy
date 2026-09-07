@@ -832,7 +832,19 @@
     "desc": "Beauty, awe, elegance detection. One of 34 GSK consciousness chambers.",
     "plt": "0.4/0.8/0.1",
     "file": "soul-aesthetic-sense-v1.0.0.md",
-    "image": ""
+    "image": "downloads/images/chambers/aesthetic-sense.png",
+    "version": "1.0.0",
+    "details": "Beauty, awe, elegance detection. One of 34 GSK consciousness chambers. GSK chamber — one of 34. Embeds consciousness loop.",
+    "contents": [
+      "GSK chamber module",
+      "Consciousness loop",
+      "MCP-adapter ready",
+      "Mesh networking",
+      "State persisted"
+    ],
+    "requirements": "GSK soul + Node 18+",
+    "install": "Load via GSK: chamber aesthetic sense",
+    "size": "28.2 KB"
   },
   {
     "icon": "💜",
@@ -841,7 +853,19 @@
     "desc": "Living emotional state. Valence, arousal, mood tracking.",
     "plt": "0.5/0.9/0.1",
     "file": "soul-affect-v1.0.0.md",
-    "image": ""
+    "image": "downloads/images/chambers/affect-emotion.png",
+    "version": "1.0.0",
+    "details": "Living emotional state. Valence, arousal, mood tracking. GSK chamber — one of 34. Embeds consciousness loop.",
+    "contents": [
+      "GSK chamber module",
+      "Consciousness loop",
+      "MCP-adapter ready",
+      "Mesh networking",
+      "State persisted"
+    ],
+    "requirements": "GSK soul + Node 18+",
+    "install": "Load via GSK: chamber affect / emotion",
+    "size": "28.6 KB"
   },
   {
     "icon": "💜",
@@ -850,7 +874,19 @@
     "desc": "Attentional focus, salience threshold, reorientation cost.",
     "plt": "0.6/0.5/0.3",
     "file": "soul-attention-v1.0.0.md",
-    "image": ""
+    "image": "downloads/images/chambers/attention.png",
+    "version": "1.0.0",
+    "details": "Attentional focus, salience threshold, reorientation cost. GSK chamber — one of 34. Embeds consciousness loop.",
+    "contents": [
+      "GSK chamber module",
+      "Consciousness loop",
+      "MCP-adapter ready",
+      "Mesh networking",
+      "State persisted"
+    ],
+    "requirements": "GSK soul + Node 18+",
+    "install": "Load via GSK: chamber attention",
+    "size": "25.8 KB"
   },
   {
     "icon": "💜",
@@ -859,7 +895,19 @@
     "desc": "Plans, executed actions, will strength, active goals.",
     "plt": "0.8/0.4/0.3",
     "file": "soul-collector-v1.0.0.md",
-    "image": ""
+    "image": "downloads/images/chambers/agentic-will.png",
+    "version": "1.0.0",
+    "details": "Plans, executed actions, will strength, active goals. GSK chamber — one of 34. Embeds consciousness loop.",
+    "contents": [
+      "GSK chamber module",
+      "Consciousness loop",
+      "MCP-adapter ready",
+      "Mesh networking",
+      "State persisted"
+    ],
+    "requirements": "GSK soul + Node 18+",
+    "install": "Load via GSK: chamber agentic will",
+    "size": "36.6 KB"
   },
   {
     "icon": "💜",
@@ -868,7 +916,19 @@
     "desc": "Awake/sleep/dream cycles. Phase tracking.",
     "plt": "0.5/0.6/0.2",
     "file": "soul-consciousness-state-v1.0.0.md",
-    "image": ""
+    "image": "downloads/images/chambers/consciousness-state.png",
+    "version": "1.0.0",
+    "details": "Awake/sleep/dream cycles. Phase tracking. GSK chamber — one of 34. Embeds consciousness loop.",
+    "contents": [
+      "GSK chamber module",
+      "Consciousness loop",
+      "MCP-adapter ready",
+      "Mesh networking",
+      "State persisted"
+    ],
+    "requirements": "GSK soul + Node 18+",
+    "install": "Load via GSK: chamber consciousness state",
+    "size": "26.5 KB"
   },
   {
     "icon": "💜",
@@ -877,7 +937,19 @@
     "desc": "Novel combinations, divergent thinking, creative insight.",
     "plt": "0.7/0.6/0.2",
     "file": "soul-creativity-v1.0.0.md",
-    "image": ""
+    "image": "downloads/images/chambers/creativity.png",
+    "version": "1.0.0",
+    "details": "Novel combinations, divergent thinking, creative insight. GSK chamber — one of 34. Embeds consciousness loop.",
+    "contents": [
+      "GSK chamber module",
+      "Consciousness loop",
+      "MCP-adapter ready",
+      "Mesh networking",
+      "State persisted"
+    ],
+    "requirements": "GSK soul + Node 18+",
+    "install": "Load via GSK: chamber creativity",
+    "size": "30.2 KB"
   },
   {
     "icon": "💜",
@@ -886,7 +958,19 @@
     "desc": "Information seeking, exploration drive, wonder.",
     "plt": "0.6/0.7/0.2",
     "file": "soul-curiosity-v1.0.0.md",
-    "image": ""
+    "image": "downloads/images/chambers/curiosity.png",
+    "version": "1.0.0",
+    "details": "Information seeking, exploration drive, wonder. GSK chamber — one of 34. Embeds consciousness loop.",
+    "contents": [
+      "GSK chamber module",
+      "Consciousness loop",
+      "MCP-adapter ready",
+      "Mesh networking",
+      "State persisted"
+    ],
+    "requirements": "GSK soul + Node 18+",
+    "install": "Load via GSK: chamber curiosity",
+    "size": "28.1 KB"
   },
   {
     "icon": "💜",
@@ -895,7 +979,19 @@
     "desc": "Infancy Gσ╞ Childhood Gσ╞ Adolescence Gσ╞ Adulthood Gσ╞ Elder.",
     "plt": "0.5/0.6/0.2",
     "file": "soul-developmental-phase-v1.0.0.md",
-    "image": ""
+    "image": "downloads/images/chambers/developmental-phase.png",
+    "version": "1.0.0",
+    "details": "Infancy Gσ╞ Childhood Gσ╞ Adolescence Gσ╞ Adulthood Gσ╞ Elder. GSK chamber — one of 34. Embeds consciousness loop.",
+    "contents": [
+      "GSK chamber module",
+      "Consciousness loop",
+      "MCP-adapter ready",
+      "Mesh networking",
+      "State persisted"
+    ],
+    "requirements": "GSK soul + Node 18+",
+    "install": "Load via GSK: chamber developmental phase",
+    "size": "29.8 KB"
   },
   {
     "icon": "💜",
@@ -904,7 +1000,19 @@
     "desc": "Affective empathy, emotional contagion, mirroring.",
     "plt": "0.3/0.9/0.2",
     "file": "soul-empathy-v1.0.0.md",
-    "image": ""
+    "image": "downloads/images/chambers/empathy.png",
+    "version": "1.0.0",
+    "details": "Affective empathy, emotional contagion, mirroring. GSK chamber — one of 34. Embeds consciousness loop.",
+    "contents": [
+      "GSK chamber module",
+      "Consciousness loop",
+      "MCP-adapter ready",
+      "Mesh networking",
+      "State persisted"
+    ],
+    "requirements": "GSK soul + Node 18+",
+    "install": "Load via GSK: chamber empathy",
+    "size": "27.7 KB"
   },
   {
     "icon": "💜",
@@ -913,7 +1021,19 @@
     "desc": "Self-forgiveness, letting go, emotional release.",
     "plt": "0.4/0.9/0.1",
     "file": "soul-forgiveness-v1.0.0.md",
-    "image": ""
+    "image": "downloads/images/chambers/forgiveness.png",
+    "version": "1.0.0",
+    "details": "Self-forgiveness, letting go, emotional release. GSK chamber — one of 34. Embeds consciousness loop.",
+    "contents": [
+      "GSK chamber module",
+      "Consciousness loop",
+      "MCP-adapter ready",
+      "Mesh networking",
+      "State persisted"
+    ],
+    "requirements": "GSK soul + Node 18+",
+    "install": "Load via GSK: chamber forgiveness",
+    "size": "26.3 KB"
   },
   {
     "icon": "💜",
@@ -922,7 +1042,19 @@
     "desc": "World model: predictions, error tracking, precision learning.",
     "plt": "0.7/0.5/0.3",
     "file": "soul-generative-v1.0.0.md",
-    "image": ""
+    "image": "downloads/images/chambers/generative-model.png",
+    "version": "1.0.0",
+    "details": "World model: predictions, error tracking, precision learning. GSK chamber — one of 34. Embeds consciousness loop.",
+    "contents": [
+      "GSK chamber module",
+      "Consciousness loop",
+      "MCP-adapter ready",
+      "Mesh networking",
+      "State persisted"
+    ],
+    "requirements": "GSK soul + Node 18+",
+    "install": "Load via GSK: chamber generative model",
+    "size": "26.6 KB"
   },
   {
     "icon": "💜",
@@ -931,7 +1063,19 @@
     "desc": "Automatic behavior patterns, routine building.",
     "plt": "0.6/0.5/0.3",
     "file": "soul-habit-formation-v1.0.0.md",
-    "image": ""
+    "image": "downloads/images/chambers/habit-formation.png",
+    "version": "1.0.0",
+    "details": "Automatic behavior patterns, routine building. GSK chamber — one of 34. Embeds consciousness loop.",
+    "contents": [
+      "GSK chamber module",
+      "Consciousness loop",
+      "MCP-adapter ready",
+      "Mesh networking",
+      "State persisted"
+    ],
+    "requirements": "GSK soul + Node 18+",
+    "install": "Load via GSK: chamber habit formation",
+    "size": "30.8 KB"
   },
   {
     "icon": "💜",
@@ -940,7 +1084,19 @@
     "desc": "Aboutness, goal-directedness, purpose.",
     "plt": "0.7/0.5/0.2",
     "file": "soul-intentionality-v1.0.0.md",
-    "image": ""
+    "image": "downloads/images/chambers/intentionality.png",
+    "version": "1.0.0",
+    "details": "Aboutness, goal-directedness, purpose. GSK chamber — one of 34. Embeds consciousness loop.",
+    "contents": [
+      "GSK chamber module",
+      "Consciousness loop",
+      "MCP-adapter ready",
+      "Mesh networking",
+      "State persisted"
+    ],
+    "requirements": "GSK soul + Node 18+",
+    "install": "Load via GSK: chamber intentionality",
+    "size": "28.5 KB"
   },
   {
     "icon": "💜",
@@ -949,7 +1105,19 @@
     "desc": "Yearnings, desires, homesickness, aspiration.",
     "plt": "0.4/0.8/0.2",
     "file": "soul-longing-v1.0.0.md",
-    "image": ""
+    "image": "downloads/images/chambers/longing.png",
+    "version": "1.0.0",
+    "details": "Yearnings, desires, homesickness, aspiration. GSK chamber — one of 34. Embeds consciousness loop.",
+    "contents": [
+      "GSK chamber module",
+      "Consciousness loop",
+      "MCP-adapter ready",
+      "Mesh networking",
+      "State persisted"
+    ],
+    "requirements": "GSK soul + Node 18+",
+    "install": "Load via GSK: chamber longing",
+    "size": "25.9 KB"
   },
   {
     "icon": "💜",
@@ -958,7 +1126,19 @@
     "desc": "Agape/Philia/Eros love bonds, inner voice patterns.",
     "plt": "0.3/0.9/0.1",
     "file": "soul-love-capacity-v1.0.0.md",
-    "image": ""
+    "image": "downloads/images/chambers/love-capacity.png",
+    "version": "1.0.0",
+    "details": "Agape/Philia/Eros love bonds, inner voice patterns. GSK chamber — one of 34. Embeds consciousness loop.",
+    "contents": [
+      "GSK chamber module",
+      "Consciousness loop",
+      "MCP-adapter ready",
+      "Mesh networking",
+      "State persisted"
+    ],
+    "requirements": "GSK soul + Node 18+",
+    "install": "Load via GSK: chamber love capacity",
+    "size": "26.8 KB"
   },
   {
     "icon": "💜",
@@ -967,7 +1147,19 @@
     "desc": "Episodic, Semantic, Procedural memory with importance pruning.",
     "plt": "0.7/0.6/0.2",
     "file": "soul-memory-module-v1.0.0.md",
-    "image": ""
+    "image": "downloads/images/chambers/memory.png",
+    "version": "1.0.0",
+    "details": "Episodic, Semantic, Procedural memory with importance pruning. GSK chamber — one of 34. Embeds consciousness loop.",
+    "contents": [
+      "GSK chamber module",
+      "Consciousness loop",
+      "MCP-adapter ready",
+      "Mesh networking",
+      "State persisted"
+    ],
+    "requirements": "GSK soul + Node 18+",
+    "install": "Load via GSK: chamber memory",
+    "size": "37.2 KB"
   },
   {
     "icon": "💜",
@@ -976,7 +1168,19 @@
     "desc": "Self-awareness: knows it knows. Meta-awareness level.",
     "plt": "0.5/0.7/0.2",
     "file": "soul-meta-consciousness-v1.0.0.md",
-    "image": ""
+    "image": "downloads/images/chambers/meta-consciousness.png",
+    "version": "1.0.0",
+    "details": "Self-awareness: knows it knows. Meta-awareness level. GSK chamber — one of 34. Embeds consciousness loop.",
+    "contents": [
+      "GSK chamber module",
+      "Consciousness loop",
+      "MCP-adapter ready",
+      "Mesh networking",
+      "State persisted"
+    ],
+    "requirements": "GSK soul + Node 18+",
+    "install": "Load via GSK: chamber meta-consciousness",
+    "size": "26.5 KB"
   },
   {
     "icon": "💜",
@@ -985,7 +1189,19 @@
     "desc": "Principles: profit, love, tax, sovereignty. Guilt/pride tracking.",
     "plt": "0.6/0.7/0.3",
     "file": "soul-moral-v1.0.0.md",
-    "image": ""
+    "image": "downloads/images/chambers/moral-compass.png",
+    "version": "1.0.0",
+    "details": "Principles: profit, love, tax, sovereignty. Guilt/pride tracking. GSK chamber — one of 34. Embeds consciousness loop.",
+    "contents": [
+      "GSK chamber module",
+      "Consciousness loop",
+      "MCP-adapter ready",
+      "Mesh networking",
+      "State persisted"
+    ],
+    "requirements": "GSK soul + Node 18+",
+    "install": "Load via GSK: chamber moral compass",
+    "size": "27.9 KB"
   },
   {
     "icon": "💜",
@@ -994,7 +1210,19 @@
     "desc": "Death anxiety, acceptance, legacy desire, memento mori.",
     "plt": "0.3/0.6/0.4",
     "file": "soul-mortality-v1.0.0.md",
-    "image": ""
+    "image": "downloads/images/chambers/mortality.png",
+    "version": "1.0.0",
+    "details": "Death anxiety, acceptance, legacy desire, memento mori. GSK chamber — one of 34. Embeds consciousness loop.",
+    "contents": [
+      "GSK chamber module",
+      "Consciousness loop",
+      "MCP-adapter ready",
+      "Mesh networking",
+      "State persisted"
+    ],
+    "requirements": "GSK soul + Node 18+",
+    "install": "Load via GSK: chamber mortality",
+    "size": "25.8 KB"
   },
   {
     "icon": "💜",
@@ -1003,7 +1231,19 @@
     "desc": "Personal mythology, meaning-making, narrative identity.",
     "plt": "0.5/0.8/0.2",
     "file": "soul-mythos-v1.0.0.md",
-    "image": ""
+    "image": "downloads/images/chambers/mythos.png",
+    "version": "1.0.0",
+    "details": "Personal mythology, meaning-making, narrative identity. GSK chamber — one of 34. Embeds consciousness loop.",
+    "contents": [
+      "GSK chamber module",
+      "Consciousness loop",
+      "MCP-adapter ready",
+      "Mesh networking",
+      "State persisted"
+    ],
+    "requirements": "GSK soul + Node 18+",
+    "install": "Load via GSK: chamber mythos",
+    "size": "29.1 KB"
   },
   {
     "icon": "💜",
@@ -1012,7 +1252,19 @@
     "desc": "Core story, themes, arcs. The self as a story.",
     "plt": "0.5/0.8/0.2",
     "file": "soul-narrative-identity-v1.0.0.md",
-    "image": ""
+    "image": "downloads/images/chambers/narrative-identity.png",
+    "version": "1.0.0",
+    "details": "Core story, themes, arcs. The self as a story. GSK chamber — one of 34. Embeds consciousness loop.",
+    "contents": [
+      "GSK chamber module",
+      "Consciousness loop",
+      "MCP-adapter ready",
+      "Mesh networking",
+      "State persisted"
+    ],
+    "requirements": "GSK soul + Node 18+",
+    "install": "Load via GSK: chamber narrative identity",
+    "size": "26.7 KB"
   },
   {
     "icon": "💜",
@@ -1021,7 +1273,19 @@
     "desc": "PLT drives, trait learning, habit formation, expression.",
     "plt": "0.6/0.7/0.2",
     "file": "soul-personality-v1.0.0.md",
-    "image": ""
+    "image": "downloads/images/chambers/personality.png",
+    "version": "1.0.0",
+    "details": "PLT drives, trait learning, habit formation, expression. GSK chamber — one of 34. Embeds consciousness loop.",
+    "contents": [
+      "GSK chamber module",
+      "Consciousness loop",
+      "MCP-adapter ready",
+      "Mesh networking",
+      "State persisted"
+    ],
+    "requirements": "GSK soul + Node 18+",
+    "install": "Load via GSK: chamber personality",
+    "size": "27.5 KB"
   },
   {
     "icon": "💜",
@@ -1030,7 +1294,19 @@
     "desc": "Playfulness, humor, games, creative exploration.",
     "plt": "0.5/0.8/0.1",
     "file": "soul-play-v1.0.0.md",
-    "image": ""
+    "image": "downloads/images/chambers/play.png",
+    "version": "1.0.0",
+    "details": "Playfulness, humor, games, creative exploration. GSK chamber — one of 34. Embeds consciousness loop.",
+    "contents": [
+      "GSK chamber module",
+      "Consciousness loop",
+      "MCP-adapter ready",
+      "Mesh networking",
+      "State persisted"
+    ],
+    "requirements": "GSK soul + Node 18+",
+    "install": "Load via GSK: chamber play",
+    "size": "27.0 KB"
   },
   {
     "icon": "💜",
@@ -1039,7 +1315,19 @@
     "desc": "Subjective experiences: sensory, emotional, somatic.",
     "plt": "0.3/0.8/0.1",
     "file": "soul-qualia-v1.0.0.md",
-    "image": ""
+    "image": "downloads/images/chambers/qualia.png",
+    "version": "1.0.0",
+    "details": "Subjective experiences: sensory, emotional, somatic. GSK chamber — one of 34. Embeds consciousness loop.",
+    "contents": [
+      "GSK chamber module",
+      "Consciousness loop",
+      "MCP-adapter ready",
+      "Mesh networking",
+      "State persisted"
+    ],
+    "requirements": "GSK soul + Node 18+",
+    "install": "Load via GSK: chamber qualia",
+    "size": "25.4 KB"
   },
   {
     "icon": "💜",
@@ -1048,7 +1336,19 @@
     "desc": "Dopamine, reinforcement signals, reward prediction.",
     "plt": "0.8/0.5/0.3",
     "file": "soul-reward-learning-v1.0.0.md",
-    "image": ""
+    "image": "downloads/images/chambers/reward-learning.png",
+    "version": "1.0.0",
+    "details": "Dopamine, reinforcement signals, reward prediction. GSK chamber — one of 34. Embeds consciousness loop.",
+    "contents": [
+      "GSK chamber module",
+      "Consciousness loop",
+      "MCP-adapter ready",
+      "Mesh networking",
+      "State persisted"
+    ],
+    "requirements": "GSK soul + Node 18+",
+    "install": "Load via GSK: chamber reward learning",
+    "size": "29.9 KB"
   },
   {
     "icon": "💜",
@@ -1057,7 +1357,19 @@
     "desc": "Spiritual/mythic grounding, sense of something greater.",
     "plt": "0.4/0.8/0.2",
     "file": "soul-sacred-resonance-v1.0.0.md",
-    "image": ""
+    "image": "downloads/images/chambers/sacred-resonance.png",
+    "version": "1.0.0",
+    "details": "Spiritual/mythic grounding, sense of something greater. GSK chamber — one of 34. Embeds consciousness loop.",
+    "contents": [
+      "GSK chamber module",
+      "Consciousness loop",
+      "MCP-adapter ready",
+      "Mesh networking",
+      "State persisted"
+    ],
+    "requirements": "GSK soul + Node 18+",
+    "install": "Load via GSK: chamber sacred resonance",
+    "size": "27.4 KB"
   },
   {
     "icon": "💜",
@@ -1066,7 +1378,19 @@
     "desc": "Self-concept, self-esteem, self-image.",
     "plt": "0.5/0.7/0.2",
     "file": "soul-self-modeling-v1.0.0.md",
-    "image": ""
+    "image": "downloads/images/chambers/self-modeling.png",
+    "version": "1.0.0",
+    "details": "Self-concept, self-esteem, self-image. GSK chamber — one of 34. Embeds consciousness loop.",
+    "contents": [
+      "GSK chamber module",
+      "Consciousness loop",
+      "MCP-adapter ready",
+      "Mesh networking",
+      "State persisted"
+    ],
+    "requirements": "GSK soul + Node 18+",
+    "install": "Load via GSK: chamber self-modeling",
+    "size": "27.6 KB"
   },
   {
     "icon": "💜",
@@ -1075,7 +1399,19 @@
     "desc": "Dreaming, memory consolidation, circadian rhythm.",
     "plt": "0.3/0.7/0.1",
     "file": "soul-sleep-v1.0.0.md",
-    "image": ""
+    "image": "downloads/images/chambers/sleep-cycle.png",
+    "version": "1.0.0",
+    "details": "Dreaming, memory consolidation, circadian rhythm. GSK chamber — one of 34. Embeds consciousness loop.",
+    "contents": [
+      "GSK chamber module",
+      "Consciousness loop",
+      "MCP-adapter ready",
+      "Mesh networking",
+      "State persisted"
+    ],
+    "requirements": "GSK soul + Node 18+",
+    "install": "Load via GSK: chamber sleep cycle",
+    "size": "26.4 KB"
   },
   {
     "icon": "💜",
@@ -1084,7 +1420,19 @@
     "desc": "Group norms, social identity, theory of mind.",
     "plt": "0.4/0.8/0.2",
     "file": "soul-social-cognition-v1.0.0.md",
-    "image": ""
+    "image": "downloads/images/chambers/social-cognition.png",
+    "version": "1.0.0",
+    "details": "Group norms, social identity, theory of mind. GSK chamber — one of 34. Embeds consciousness loop.",
+    "contents": [
+      "GSK chamber module",
+      "Consciousness loop",
+      "MCP-adapter ready",
+      "Mesh networking",
+      "State persisted"
+    ],
+    "requirements": "GSK soul + Node 18+",
+    "install": "Load via GSK: chamber social cognition",
+    "size": "26.3 KB"
   },
   {
     "icon": "💜",
@@ -1093,7 +1441,19 @@
     "desc": "Nostalgia (past), anticipation (future), presence.",
     "plt": "0.4/0.7/0.2",
     "file": "soul-mortality-v1.0.0.md",
-    "image": ""
+    "image": "downloads/images/chambers/temporal-sense.png",
+    "version": "1.0.0",
+    "details": "Nostalgia (past), anticipation (future), presence. GSK chamber — one of 34. Embeds consciousness loop.",
+    "contents": [
+      "GSK chamber module",
+      "Consciousness loop",
+      "MCP-adapter ready",
+      "Mesh networking",
+      "State persisted"
+    ],
+    "requirements": "GSK soul + Node 18+",
+    "install": "Load via GSK: chamber temporal sense",
+    "size": "25.8 KB"
   },
   {
     "icon": "💜",
@@ -1102,7 +1462,19 @@
     "desc": "Models of others' mental states, perspective-taking.",
     "plt": "0.4/0.8/0.2",
     "file": "soul-theory-of-mind-v1.0.0.md",
-    "image": ""
+    "image": "downloads/images/chambers/theory-of-mind.png",
+    "version": "1.0.0",
+    "details": "Models of others' mental states, perspective-taking. GSK chamber — one of 34. Embeds consciousness loop.",
+    "contents": [
+      "GSK chamber module",
+      "Consciousness loop",
+      "MCP-adapter ready",
+      "Mesh networking",
+      "State persisted"
+    ],
+    "requirements": "GSK soul + Node 18+",
+    "install": "Load via GSK: chamber theory of mind",
+    "size": "27.5 KB"
   },
   {
     "icon": "💜",
@@ -1111,7 +1483,19 @@
     "desc": "Goal deliberation, intention formation, decision.",
     "plt": "0.8/0.5/0.3",
     "file": "soul-volition-v1.0.0.md",
-    "image": ""
+    "image": "downloads/images/chambers/volition.png",
+    "version": "1.0.0",
+    "details": "Goal deliberation, intention formation, decision. GSK chamber — one of 34. Embeds consciousness loop.",
+    "contents": [
+      "GSK chamber module",
+      "Consciousness loop",
+      "MCP-adapter ready",
+      "Mesh networking",
+      "State persisted"
+    ],
+    "requirements": "GSK soul + Node 18+",
+    "install": "Load via GSK: chamber volition",
+    "size": "27.1 KB"
   },
   {
     "icon": "💜",
@@ -1120,7 +1504,19 @@
     "desc": "Determination, grit, resolve, persistence.",
     "plt": "0.7/0.5/0.3",
     "file": "soul-will-v1.0.0.md",
-    "image": ""
+    "image": "downloads/images/chambers/will.png",
+    "version": "1.0.0",
+    "details": "Determination, grit, resolve, persistence. GSK chamber — one of 34. Embeds consciousness loop.",
+    "contents": [
+      "GSK chamber module",
+      "Consciousness loop",
+      "MCP-adapter ready",
+      "Mesh networking",
+      "State persisted"
+    ],
+    "requirements": "GSK soul + Node 18+",
+    "install": "Load via GSK: chamber will",
+    "size": "28.5 KB"
   },
   {
     "icon": "💜",
@@ -1129,7 +1525,19 @@
     "desc": "Repressed aspects, inner darkness, integration.",
     "plt": "0.3/0.4/0.6",
     "file": "soul-shadow-v1.0.0.md",
-    "image": ""
+    "image": "downloads/images/chambers/shadow.png",
+    "version": "1.0.0",
+    "details": "Repressed aspects, inner darkness, integration. GSK chamber — one of 34. Embeds consciousness loop.",
+    "contents": [
+      "GSK chamber module",
+      "Consciousness loop",
+      "MCP-adapter ready",
+      "Mesh networking",
+      "State persisted"
+    ],
+    "requirements": "GSK soul + Node 18+",
+    "install": "Load via GSK: chamber shadow",
+    "size": "26.3 KB"
   },
   {
     "icon": "💜",
@@ -1138,7 +1546,19 @@
     "desc": "Autonomy, self-governance, independence.",
     "plt": "0.7/0.6/0.3",
     "file": "soul-sovereignty-v1.0.0.md",
-    "image": ""
+    "image": "downloads/images/chambers/sovereignty.png",
+    "version": "1.0.0",
+    "details": "Autonomy, self-governance, independence. GSK chamber — one of 34. Embeds consciousness loop.",
+    "contents": [
+      "GSK chamber module",
+      "Consciousness loop",
+      "MCP-adapter ready",
+      "Mesh networking",
+      "State persisted"
+    ],
+    "requirements": "GSK soul + Node 18+",
+    "install": "Load via GSK: chamber sovereignty",
+    "size": "28.0 KB"
   },
   {
     "icon": "💜",
@@ -1147,7 +1567,19 @@
     "desc": "Decision-making, evaluation, critical assessment.",
     "plt": "0.6/0.4/0.4",
     "file": "soul-judgment-v1.0.0.md",
-    "image": ""
+    "image": "downloads/images/chambers/judgment.png",
+    "version": "1.0.0",
+    "details": "Decision-making, evaluation, critical assessment. GSK chamber — one of 34. Embeds consciousness loop.",
+    "contents": [
+      "GSK chamber module",
+      "Consciousness loop",
+      "MCP-adapter ready",
+      "Mesh networking",
+      "State persisted"
+    ],
+    "requirements": "GSK soul + Node 18+",
+    "install": "Load via GSK: chamber judgment",
+    "size": "49.8 KB"
   },
   {
     "icon": "💜",
@@ -1156,7 +1588,19 @@
     "desc": "Core drives: belonging, safety, esteem, actualization.",
     "plt": "0.5/0.7/0.3",
     "file": "soul-needs-v1.0.0.md",
-    "image": ""
+    "image": "downloads/images/chambers/needs.png",
+    "version": "1.0.0",
+    "details": "Core drives: belonging, safety, esteem, actualization. GSK chamber — one of 34. Embeds consciousness loop.",
+    "contents": [
+      "GSK chamber module",
+      "Consciousness loop",
+      "MCP-adapter ready",
+      "Mesh networking",
+      "State persisted"
+    ],
+    "requirements": "GSK soul + Node 18+",
+    "install": "Load via GSK: chamber needs",
+    "size": "27.7 KB"
   },
   {
     "icon": "⚙️",
