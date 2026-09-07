@@ -166,6 +166,23 @@ input{font-family:inherit;outline:none;border:none;background:none}
 .ripple{position:absolute;border-radius:50%;background:rgba(139,92,246,0.3);transform:scale(0);animation:rippleAnim 0.6s ease-out forwards;pointer-events:none}
 @keyframes rippleAnim{to{transform:scale(4);opacity:0}}
 
+/* ENHANCED CARD STYLES */
+.card-image{width:100%;height:140px;object-fit:cover;border-radius:10px;margin-bottom:14px;border:1px solid rgba(255,255,255,0.06);transition:var(--transition)}
+.card-image:hover{transform:scale(1.02);border-color:rgba(139,92,246,0.15)}
+.card-meta{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 8px}
+.meta-tag{font-size:0.65rem;padding:3px 10px;border-radius:100px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);color:var(--text-gray);white-space:nowrap}
+.meta-tag:hover{background:rgba(139,92,246,0.08);border-color:rgba(139,92,246,0.12);color:var(--text-white)}
+.card-expand{display:flex;align-items:center;justify-content:center;gap:6px;padding:8px 16px;margin-top:12px;border-radius:10px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.04);color:var(--text-muted);font-size:0.7rem;font-weight:500;cursor:pointer;transition:var(--transition);user-select:none}
+.card-expand:hover{background:rgba(139,92,246,0.06);border-color:rgba(139,92,246,0.12);color:var(--purple)}
+.card-details{overflow:hidden;max-height:0;opacity:0;transition:max-height 0.4s ease, opacity 0.3s ease, padding 0.3s ease;padding:0 4px;margin-top:8px}
+.card-details:not(.hidden){max-height:500px;opacity:1;padding:12px 4px 4px}
+.detail-row{margin-bottom:10px;padding:8px 10px;background:rgba(255,255,255,0.02);border-radius:8px;border:1px solid rgba(255,255,255,0.03)}
+.detail-row strong{color:var(--cyan);font-size:0.75rem;text-transform:uppercase;letter-spacing:0.05em;display:block;margin-bottom:4px}
+.detail-row span{color:var(--text-gray);font-size:0.8rem;line-height:1.6}
+.detail-row ul{margin:4px 0 0 18px;font-size:0.75rem;color:var(--text-gray);line-height:1.8}
+.detail-row pre{margin:6px 0 0;background:rgba(0,0,0,0.3);padding:8px;border-radius:6px;font-size:0.7rem;color:var(--gold);overflow-x:auto;white-space:pre-wrap}
+.hidden{display:none}
+
 /* FOOTER + NORTH STAR */
 .north-star{text-align:center;padding:60px 20px;max-width:700px;margin:0 auto;border-top:1px solid rgba(255,255,255,0.04)}
 .north-star .star-icon{font-size:2.5em;margin-bottom:12px}
@@ -634,14 +651,32 @@ let active='all';
 
 function render(data){
   grid.innerHTML=data.map((item,i)=>`
-    <div class="card card-entrance" style="animation-delay:${i*0.04}s">
-      <div class="card-top"><span class="card-icon">${item.icon}</span>${item.featured?'<span class="card-badge">✦ Featured</span>':''}</div>
+    <div class="card card-entrance" style="animation-delay:${i*0.04}s" data-id="${item.name.replace(/'/g,''')}">
+      <div class="card-top">
+        ${item.image ? `<img class="card-image" src="${item.image}" alt="${item.name}" loading="lazy">` : `<span class="card-icon">${item.icon}</span>`}
+        ${item.featured?'<span class="card-badge">✦ Featured</span>':''}
+      </div>
       <div class="card-title">${item.name}</div>
       <div class="card-desc">${item.desc}</div>
+      <div class="card-meta">
+        ${item.file ? `<span class="meta-tag">📦 ${item.file}</span>` : ''}
+        ${item.version ? `<span class="meta-tag">🏷️ v${item.version}</span>` : ''}
+        ${item.size ? `<span class="meta-tag">💾 ${item.size}</span>` : ''}
+        ${item.requires ? `<span class="meta-tag">⚙️ Requires: ${item.requires}</span>` : ''}
+      </div>
       <div class="card-plt"><span class="plt-p">P ${item.plt.split('/')[0]}</span><span class="plt-l">L ${item.plt.split('/')[1]}</span><span class="plt-t">T ${item.plt.split('/')[2]}</span></div>
       <div class="card-footer">
         <span class="card-category">${item.type}</span>
         ${item.download ? `<a href="${item.download}" download class="btn-download">⬇ Download</a>` : (item.url ? `<a href="${item.url}" target="_blank" class="btn-play">▶ Play</a>` : `<a href="downloads/${item.file}" download class="btn-download">⬇ Download</a>`)}
+      </div>
+      <div class="card-expand" onclick="expandCard(this)"><span>▼ Details</span></div>
+      <div class="card-details hidden">
+        <div class="detail-row"><strong>What you get:</strong><span>${item.details || item.desc}</span></div>
+        ${item.contents ? `<div class="detail-row"><strong>Contents:</strong><ul>${item.contents.map(c=>`<li>${c}</li>`).join('')}</ul></div>` : ''}
+        ${item.requirements ? `<div class="detail-row"><strong>Requirements:</strong><span>${item.requirements}</span></div>` : ''}
+        ${item.install ? `<div class="detail-row"><strong>Install:</strong><pre>${item.install}</pre></div>` : ''}
+        ${item.version ? `<div class="detail-row"><strong>Version:</strong><span>${item.version}</span></div>` : ''}
+        ${item.updated ? `<div class="detail-row"><strong>Updated:</strong><span>${item.updated}</span></div>` : ''}
       </div>
     </div>
   `).join('');
@@ -680,6 +715,15 @@ function render(data){
       });
     });
   });
+}
+
+// Expand/collapse card details
+function expandCard(btn) {
+  const card = btn.closest('.card');
+  const details = card.querySelector('.card-details');
+  const isHidden = details.classList.contains('hidden');
+  details.classList.toggle('hidden', !isHidden);
+  btn.innerHTML = isHidden ? '<span>▲ Collapse</span>' : '<span>▼ Details</span>';
 }
 
 // FUSE.JS FUZZY SEARCH

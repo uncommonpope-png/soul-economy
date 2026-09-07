@@ -8,7 +8,21 @@
     "file": "the-profit-lovetax-family.zip",
     "download": "https://github.com/uncommonpope-png/soul-economy/releases/download/buyasoul-runtime/BUYASOUL.Workbench.1.0.0.exe",
     "featured": true,
-    "image": ""
+    "image": "",
+    "version": "1.0.0",
+    "size": "809 MB",
+    "requires": "Windows 10/11, 4GB RAM, 2GB disk",
+    "details": "Complete one-click desktop app. Includes Profit (Mind), GSK (Soul, 34 chambers), Seshat (Qwen 0.8B local LLM), Scribe (Witness), OmniRoute blood flow (:20128). All 31 tabs live.",
+    "contents": [
+      "BUYASOUL Workbench.exe (809 MB portable)",
+      "Auto-installs Qwen 0.8B runtime (~550 MB on first run)",
+      "Creates Desktop + Start Menu shortcuts automatically",
+      "Opens localhost:3000 with 31 live tabs",
+      "OmniRoute blood flow auto-adopts or installs"
+    ],
+    "requirements": "Windows 10/11 (64-bit), 4GB+ RAM, 2GB free disk, internet for first-run runtime download",
+    "install": "1. Download BUYASOUL.Workbench.1.0.0.exe\n2. Run once → shortcuts created, runtime downloaded\n3. Click Desktop shortcut anytime to launch",
+    "updated": "2026-09-06"
   },
   {
     "icon": "🧠",
@@ -18,7 +32,21 @@
     "plt": "0.8/0.5/0.3",
     "file": "architect.zip",
     "featured": true,
-    "image": ""
+    "image": "",
+    "version": "1.0.0",
+    "size": "45 MB",
+    "requires": "Node.js 18+, npm",
+    "details": "System design master agent. 465 files, 288 JS modules. Full project scaffolding with npm start.",
+    "contents": [
+      "architect.zip (45 MB)",
+      "465 source files",
+      "288 JS modules",
+      "package.json with npm start",
+      "MCP adapter included"
+    ],
+    "requirements": "Node.js 18+, npm 9+",
+    "install": "unzip architect.zip && npm install && npm start",
+    "updated": "2026-08-15"
   },
   {
     "icon": "🧠",
@@ -38,7 +66,22 @@
     "plt": "0.9/0.5/0.3",
     "file": "soul-commander.zip",
     "featured": true,
-    "image": ""
+    "image": "",
+    "version": "1.0.0",
+    "size": "150 MB",
+    "requires": "Node.js 18+, npm, Python 3.10+ (optional)",
+    "details": "GOD SOUL. 454 files, 281 JS modules. 19 superpowers from 5M+ GitHub stars. MCP server. Claude Code ready.",
+    "contents": [
+      "soul-commander.zip (150 MB)",
+      "454 source files",
+      "281 JS modules",
+      "19 superpowers",
+      "MCP server for Claude Code/Cursor",
+      "Mesh networking adapter"
+    ],
+    "requirements": "Node.js 18+, npm 9+, Python 3.10+ for some tools",
+    "install": "unzip && npm install && node soul.js --mcp",
+    "updated": "2026-08-20"
   },
   {
     "icon": "🧠",
