@@ -7940,5 +7940,315 @@
     ],
     "downloads": 0,
     "likes": 22
+  },
+  {
+    "icon": "⚡",
+    "type": "skill",
+    "name": "UI/UX Orchestrator",
+    "desc": "Vendor-neutral orchestration for Kimi/Codex/Claude/Gemini/Qwen/Copilot/GLM",
+    "plt": "0.9/0.7/0.5",
+    "file": "soul-gun-ui-ux-orchestrator.md",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "ui",
+      "ux",
+      "design",
+      "grafted",
+      "ui/ux"
+    ],
+    "image": "",
+    "version": "1.0.0",
+    "size": "3 KB",
+    "details": "Vendor-neutral orchestration for Kimi/Codex/Claude/Gemini/Qwen/Copilot/GLM Grafted from ui-ux-agent-skill-system.",
+    "contents": [
+      "SKILL.md graft",
+      "Side A Theology",
+      "Side B Body",
+      "PLT scored"
+    ],
+    "requirements": "Load as skill .md",
+    "install": "Load downloads/soul-gun-ui-ux-orchestrator.md",
+    "downloads": 0,
+    "likes": 5
+  },
+  {
+    "icon": "⚡",
+    "type": "skill",
+    "name": "UI Craft",
+    "desc": "Design engineering for AI agents — a11y, motion, layout, typography, dashboards",
+    "plt": "0.8/0.6/0.5",
+    "file": "soul-gun-ui-craft.md",
+    "author": "educlopez",
+    "license": "MIT",
+    "tags": [
+      "ui",
+      "ux",
+      "design",
+      "grafted",
+      "ui"
+    ],
+    "image": "",
+    "version": "1.0.0",
+    "size": "4 KB",
+    "details": "Design engineering for AI agents — a11y, motion, layout, typography, dashboards Grafted from ui-craft.",
+    "contents": [
+      "SKILL.md graft",
+      "Side A Theology",
+      "Side B Body",
+      "PLT scored"
+    ],
+    "requirements": "Load as skill .md",
+    "install": "Load downloads/soul-gun-ui-craft.md",
+    "downloads": 0,
+    "likes": 5
+  },
+  {
+    "icon": "⚡",
+    "type": "skill",
+    "name": "Open Design",
+    "desc": "Branded DESIGN.md + templates + functional skills for AI workflows",
+    "plt": "0.7/0.8/0.4",
+    "file": "soul-gun-open-design.md",
+    "author": "sugarforever",
+    "license": "MIT",
+    "tags": [
+      "ui",
+      "ux",
+      "design",
+      "grafted",
+      "open"
+    ],
+    "image": "",
+    "version": "1.0.0",
+    "size": "9 KB",
+    "details": "Branded DESIGN.md + templates + functional skills for AI workflows Grafted from open-design-skill.",
+    "contents": [
+      "SKILL.md graft",
+      "Side A Theology",
+      "Side B Body",
+      "PLT scored"
+    ],
+    "requirements": "Load as skill .md",
+    "install": "Load downloads/soul-gun-open-design.md",
+    "downloads": 0,
+    "likes": 5
+  },
+  {
+    "icon": "⚡",
+    "type": "skill",
+    "name": "Tasteful UI",
+    "desc": "Taste-driven exploration → executable docs + verification",
+    "plt": "0.8/0.7/0.4",
+    "file": "soul-gun-tasteful-ui.md",
+    "author": "DonkeyKing01",
+    "license": "MIT",
+    "tags": [
+      "ui",
+      "ux",
+      "design",
+      "grafted",
+      "tasteful"
+    ],
+    "image": "",
+    "version": "1.0.0",
+    "size": "9 KB",
+    "details": "Taste-driven exploration → executable docs + verification Grafted from tasteful-ui-skill.",
+    "contents": [
+      "SKILL.md graft",
+      "Side A Theology",
+      "Side B Body",
+      "PLT scored"
+    ],
+    "requirements": "Load as skill .md",
+    "install": "Load downloads/soul-gun-tasteful-ui.md",
+    "downloads": 0,
+    "likes": 5
+  },
+  {
+    "icon": "⚡",
+    "type": "skill",
+    "name": "UX Discovery Interviewer",
+    "desc": "Structured UX interviews → journeys, pain points, opportunities",
+    "plt": "0.6/0.9/0.4",
+    "file": "soul-gun-ux-discovery.md",
+    "author": "JacobLinCool",
+    "license": "MIT",
+    "tags": [
+      "ui",
+      "ux",
+      "design",
+      "grafted",
+      "ux"
+    ],
+    "image": "",
+    "version": "1.0.0",
+    "size": "6 KB",
+    "details": "Structured UX interviews → journeys, pain points, opportunities Grafted from ux-discovery-interviewer-skill.",
+    "contents": [
+      "SKILL.md graft",
+      "Side A Theology",
+      "Side B Body",
+      "PLT scored"
+    ],
+    "requirements": "Load as skill .md",
+    "install": "Load downloads/soul-gun-ux-discovery.md",
+    "downloads": 0,
+    "likes": 5
+  },
+  {
+    "icon": "⚡",
+    "type": "skill",
+    "name": "Apple Design Review",
+    "desc": "Cross-platform HIG review for Flutter/Tauri/Electron/RN",
+    "plt": "0.7/0.5/0.6",
+    "file": "soul-gun-apple-design.md",
+    "author": "dickwu",
+    "license": "MIT",
+    "tags": [
+      "ui",
+      "ux",
+      "design",
+      "grafted",
+      "apple"
+    ],
+    "image": "",
+    "version": "1.0.0",
+    "size": "9 KB",
+    "details": "Cross-platform HIG review for Flutter/Tauri/Electron/RN Grafted from apple-design-skill.",
+    "contents": [
+      "SKILL.md graft",
+      "Side A Theology",
+      "Side B Body",
+      "PLT scored"
+    ],
+    "requirements": "Load as skill .md",
+    "install": "Load downloads/soul-gun-apple-design.md",
+    "downloads": 0,
+    "likes": 5
+  },
+  {
+    "icon": "⚡",
+    "type": "skill",
+    "name": "UXUI Principles",
+    "desc": "UX evaluation, auditing, AI interface review, flow checking",
+    "plt": "0.6/0.7/0.5",
+    "file": "soul-gun-uxui-principles.md",
+    "author": "uxuiprinciples",
+    "license": "MIT",
+    "tags": [
+      "ui",
+      "ux",
+      "design",
+      "grafted",
+      "uxui"
+    ],
+    "image": "",
+    "version": "1.0.0",
+    "size": "9 KB",
+    "details": "UX evaluation, auditing, AI interface review, flow checking Grafted from agent-skills.",
+    "contents": [
+      "SKILL.md graft",
+      "Side A Theology",
+      "Side B Body",
+      "PLT scored"
+    ],
+    "requirements": "Load as skill .md",
+    "install": "Load downloads/soul-gun-uxui-principles.md",
+    "downloads": 0,
+    "likes": 5
+  },
+  {
+    "icon": "⚡",
+    "type": "skill",
+    "name": "Figma AI Bridge",
+    "desc": "Control Figma, a11y audits, research, workflow diagrams",
+    "plt": "0.7/0.6/0.5",
+    "file": "soul-gun-figma-bridge.md",
+    "author": "renfei-design",
+    "license": "MIT",
+    "tags": [
+      "ui",
+      "ux",
+      "design",
+      "grafted",
+      "figma"
+    ],
+    "image": "",
+    "version": "1.0.0",
+    "size": "7 KB",
+    "details": "Control Figma, a11y audits, research, workflow diagrams Grafted from Figma-AI-Bridge.",
+    "contents": [
+      "SKILL.md graft",
+      "Side A Theology",
+      "Side B Body",
+      "PLT scored"
+    ],
+    "requirements": "Load as skill .md",
+    "install": "Load downloads/soul-gun-figma-bridge.md",
+    "downloads": 0,
+    "likes": 5
+  },
+  {
+    "icon": "⚡",
+    "type": "skill",
+    "name": "Agent Ready",
+    "desc": "Evaluates if design files are ready for AI workflows",
+    "plt": "0.7/0.5/0.4",
+    "file": "soul-gun-agent-ready.md",
+    "author": "Owl-Listener",
+    "license": "MIT",
+    "tags": [
+      "ui",
+      "ux",
+      "design",
+      "grafted",
+      "agent"
+    ],
+    "image": "",
+    "version": "1.0.0",
+    "size": "9 KB",
+    "details": "Evaluates if design files are ready for AI workflows Grafted from agent-ready.",
+    "contents": [
+      "SKILL.md graft",
+      "Side A Theology",
+      "Side B Body",
+      "PLT scored"
+    ],
+    "requirements": "Load as skill .md",
+    "install": "Load downloads/soul-gun-agent-ready.md",
+    "downloads": 0,
+    "likes": 5
+  },
+  {
+    "icon": "⚡",
+    "type": "skill",
+    "name": "Figma Context MCP",
+    "desc": "Figma MCP — context retrieval, asset downloads, component impl",
+    "plt": "0.7/0.6/0.5",
+    "file": "soul-gun-figma-context.md",
+    "author": "HowardTangOvO",
+    "license": "MIT",
+    "tags": [
+      "ui",
+      "ux",
+      "design",
+      "grafted",
+      "figma"
+    ],
+    "image": "",
+    "version": "1.0.0",
+    "size": "6 KB",
+    "details": "Figma MCP — context retrieval, asset downloads, component impl Grafted from Figma-Context-MCP-Skill.",
+    "contents": [
+      "SKILL.md graft",
+      "Side A Theology",
+      "Side B Body",
+      "PLT scored"
+    ],
+    "requirements": "Load as skill .md",
+    "install": "Load downloads/soul-gun-figma-context.md",
+    "downloads": 0,
+    "likes": 5
   }
 ]
