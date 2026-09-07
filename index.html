@@ -651,7 +651,7 @@ let active='all';
 
 function render(data){
   grid.innerHTML=data.map((item,i)=>`
-    <div class="card card-entrance" style="animation-delay:${i*0.04}s" data-id="${item.name.replace(/'/g,''')}">
+    <div class="card card-entrance" style="animation-delay:${i*0.04}s" data-id="${item.name.replace(/'/g, '')}">
       <div class="card-top">
         ${item.image ? `<img class="card-image" src="${item.image}" alt="${item.name}" loading="lazy">` : `<span class="card-icon">${item.icon}</span>`}
         ${item.featured?'<span class="card-badge">✦ Featured</span>':''}
