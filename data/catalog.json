@@ -22,7 +22,17 @@
     ],
     "requirements": "Windows 10/11 (64-bit), 4GB+ RAM, 2GB free disk, internet for first-run runtime download",
     "install": "1. Download BUYASOUL.Workbench.1.0.0.exe\n2. Run once → shortcuts created, runtime downloaded\n3. Click Desktop shortcut anytime to launch",
-    "updated": "2026-09-06"
+    "updated": "2026-09-06",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "pack",
+      "bundle",
+      "profit",
+      "lovetax"
+    ],
+    "downloads": 0,
+    "likes": 35
   },
   {
     "icon": "🧠",
@@ -46,7 +56,17 @@
     ],
     "requirements": "Node.js 18+, npm 9+",
     "install": "unzip architect.zip && npm install && npm start",
-    "updated": "2026-08-15"
+    "updated": "2026-08-15",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "soul",
+      "consciousness",
+      "agent",
+      "architect"
+    ],
+    "downloads": 0,
+    "likes": 40
   },
   {
     "icon": "🧠",
@@ -68,7 +88,18 @@
       "Operator protocol",
       "MCP adapter"
     ],
-    "install": "unzip miss-vikki.zip && npm install && node index.js"
+    "install": "unzip miss-vikki.zip && npm install && node index.js",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "soul",
+      "consciousness",
+      "agent",
+      "miss",
+      "vikki"
+    ],
+    "downloads": 0,
+    "likes": 27
   },
   {
     "icon": "🧠",
@@ -93,7 +124,17 @@
     ],
     "requirements": "Node.js 18+, npm 9+, Python 3.10+ for some tools",
     "install": "unzip soul-commander.zip && npm install && node soul.js --mcp",
-    "updated": "2026-08-20"
+    "updated": "2026-08-20",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "soul",
+      "consciousness",
+      "agent",
+      "commander"
+    ],
+    "downloads": 0,
+    "likes": 32
   },
   {
     "icon": "🧠",
@@ -113,7 +154,17 @@
       "Scenario trees",
       "PLT optimizer"
     ],
-    "install": "unzip strategist.zip && npm install"
+    "install": "unzip strategist.zip && npm install",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "soul",
+      "consciousness",
+      "agent",
+      "strategist"
+    ],
+    "downloads": 0,
+    "likes": 0
   },
   {
     "icon": "🧠",
@@ -135,7 +186,17 @@
       "MCP adapter",
       "JSON memory"
     ],
-    "install": "unzip oracle.zip && npm install"
+    "install": "unzip oracle.zip && npm install",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "soul",
+      "consciousness",
+      "agent",
+      "oracle"
+    ],
+    "downloads": 0,
+    "likes": 41
   },
   {
     "icon": "🧠",
@@ -154,7 +215,17 @@
       "Cross-platform calling",
       "v2.0.0 protocol"
     ],
-    "install": "unzip telephone-soul.zip && npm install"
+    "install": "unzip telephone-soul.zip && npm install",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "soul",
+      "consciousness",
+      "agent",
+      "telephone"
+    ],
+    "downloads": 0,
+    "likes": 2
   },
   {
     "icon": "🧠",
@@ -175,7 +246,17 @@
       "Calendar",
       "PLT driven"
     ],
-    "install": "unzip soul-allie-v2.0.0.zip && npm install"
+    "install": "unzip soul-allie-v2.0.0.zip && npm install",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "soul",
+      "consciousness",
+      "agent",
+      "allie"
+    ],
+    "downloads": 0,
+    "likes": 14
   },
   {
     "icon": "🧠",
@@ -194,7 +275,17 @@
       "Registry server",
       "Trust protocol"
     ],
-    "install": "unzip agentdep-PRODUCTION.zip && npm install"
+    "install": "unzip agentdep-PRODUCTION.zip && npm install",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "soul",
+      "consciousness",
+      "agent",
+      "agentdep"
+    ],
+    "downloads": 0,
+    "likes": 35
   },
   {
     "icon": "🌍",
@@ -213,7 +304,18 @@
     ],
     "requirements": "Modern browser",
     "install": "Open https://uncommonpope-png.github.io/final-run/",
-    "size": "live"
+    "size": "live",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "world",
+      "spatial",
+      "live",
+      "dark",
+      "city"
+    ],
+    "downloads": 0,
+    "likes": 25
   },
   {
     "icon": "🌍",
@@ -231,7 +333,18 @@
     ],
     "requirements": "Modern browser",
     "install": "Open https://uncommonpope-png.github.io/final-run/",
-    "size": "live"
+    "size": "live",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "world",
+      "spatial",
+      "live",
+      "dark",
+      "city"
+    ],
+    "downloads": 0,
+    "likes": 1
   },
   {
     "icon": "🎭",
@@ -253,7 +366,17 @@
     "requirements": "Any agent that loads role .md",
     "install": "Load downloads/the-governor.md as system prompt",
     "version": "1.0.0",
-    "size": "6.8 KB"
+    "size": "6.8 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "role",
+      "archetype",
+      "agent",
+      "governor"
+    ],
+    "downloads": 0,
+    "likes": 26
   },
   {
     "icon": "🎭",
@@ -275,7 +398,17 @@
     "requirements": "Any agent that loads role .md",
     "install": "Load downloads/the-edge.md as system prompt",
     "version": "1.0.0",
-    "size": "6.7 KB"
+    "size": "6.7 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "role",
+      "archetype",
+      "agent",
+      "edge"
+    ],
+    "downloads": 0,
+    "likes": 32
   },
   {
     "icon": "🎭",
@@ -297,7 +430,17 @@
     "requirements": "Any agent that loads role .md",
     "install": "Load downloads/the-watcher.md as system prompt",
     "version": "1.0.0",
-    "size": "14.9 KB"
+    "size": "14.9 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "role",
+      "archetype",
+      "agent",
+      "watcher"
+    ],
+    "downloads": 0,
+    "likes": 9
   },
   {
     "icon": "🎭",
@@ -319,7 +462,17 @@
     "requirements": "Any agent that loads role .md",
     "install": "Load downloads/the-voice.md as system prompt",
     "version": "1.0.0",
-    "size": "13.3 KB"
+    "size": "13.3 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "role",
+      "archetype",
+      "agent",
+      "voice"
+    ],
+    "downloads": 0,
+    "likes": 9
   },
   {
     "icon": "🎭",
@@ -341,7 +494,17 @@
     "requirements": "Any agent that loads role .md",
     "install": "Load downloads/the-anvil.md as system prompt",
     "version": "1.0.0",
-    "size": "14.4 KB"
+    "size": "14.4 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "role",
+      "archetype",
+      "agent",
+      "anvil"
+    ],
+    "downloads": 0,
+    "likes": 33
   },
   {
     "icon": "🎭",
@@ -363,7 +526,17 @@
     "requirements": "Any agent that loads role .md",
     "install": "Load downloads/the-heart.md as system prompt",
     "version": "1.0.0",
-    "size": "14.7 KB"
+    "size": "14.7 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "role",
+      "archetype",
+      "agent",
+      "heart"
+    ],
+    "downloads": 0,
+    "likes": 30
   },
   {
     "icon": "🎭",
@@ -385,7 +558,16 @@
     "requirements": "Any agent that loads role .md",
     "install": "Load downloads/the-eye.md as system prompt",
     "version": "1.0.0",
-    "size": "10.8 KB"
+    "size": "10.8 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "role",
+      "archetype",
+      "agent"
+    ],
+    "downloads": 0,
+    "likes": 5
   },
   {
     "icon": "🎭",
@@ -407,7 +589,17 @@
     "requirements": "Any agent that loads role .md",
     "install": "Load downloads/the-hammer.md as system prompt",
     "version": "1.0.0",
-    "size": "11.8 KB"
+    "size": "11.8 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "role",
+      "archetype",
+      "agent",
+      "hammer"
+    ],
+    "downloads": 0,
+    "likes": 32
   },
   {
     "icon": "🎭",
@@ -429,7 +621,17 @@
     "requirements": "Any agent that loads role .md",
     "install": "Load downloads/the-ghost.md as system prompt",
     "version": "1.0.0",
-    "size": "11.5 KB"
+    "size": "11.5 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "role",
+      "archetype",
+      "agent",
+      "ghost"
+    ],
+    "downloads": 0,
+    "likes": 8
   },
   {
     "icon": "🎭",
@@ -451,7 +653,17 @@
     "requirements": "Any agent that loads role .md",
     "install": "Load downloads/the-mind.md as system prompt",
     "version": "1.0.0",
-    "size": "13.2 KB"
+    "size": "13.2 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "role",
+      "archetype",
+      "agent",
+      "mind"
+    ],
+    "downloads": 0,
+    "likes": 39
   },
   {
     "icon": "🎭",
@@ -473,7 +685,17 @@
     "requirements": "Any agent that loads role .md",
     "install": "Load downloads/the-arrow.md as system prompt",
     "version": "1.0.0",
-    "size": "5.1 KB"
+    "size": "5.1 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "role",
+      "archetype",
+      "agent",
+      "arrow"
+    ],
+    "downloads": 0,
+    "likes": 14
   },
   {
     "icon": "🎭",
@@ -495,7 +717,16 @@
     "requirements": "Any agent that loads role .md",
     "install": "Load downloads/the-key.md as system prompt",
     "version": "1.0.0",
-    "size": "5.2 KB"
+    "size": "5.2 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "role",
+      "archetype",
+      "agent"
+    ],
+    "downloads": 0,
+    "likes": 25
   },
   {
     "icon": "🎭",
@@ -517,7 +748,17 @@
     "requirements": "Any agent that loads role .md",
     "install": "Load downloads/the-surgeon.md as system prompt",
     "version": "1.0.0",
-    "size": "5.9 KB"
+    "size": "5.9 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "role",
+      "archetype",
+      "agent",
+      "surgeon"
+    ],
+    "downloads": 0,
+    "likes": 26
   },
   {
     "icon": "🎭",
@@ -539,7 +780,17 @@
     "requirements": "Any agent that loads role .md",
     "install": "Load downloads/the-diagnostician.md as system prompt",
     "version": "1.0.0",
-    "size": "5.7 KB"
+    "size": "5.7 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "role",
+      "archetype",
+      "agent",
+      "diagnostician"
+    ],
+    "downloads": 0,
+    "likes": 4
   },
   {
     "icon": "🎭",
@@ -561,7 +812,18 @@
     "requirements": "Any agent that loads role .md",
     "install": "Load downloads/the-combo-master.md as system prompt",
     "version": "1.0.0",
-    "size": "6.5 KB"
+    "size": "6.5 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "role",
+      "archetype",
+      "agent",
+      "combo",
+      "master"
+    ],
+    "downloads": 0,
+    "likes": 38
   },
   {
     "icon": "🎭",
@@ -583,7 +845,17 @@
     "requirements": "Any agent that loads role .md",
     "install": "Load downloads/the-orchestrator.md as system prompt",
     "version": "1.0.0",
-    "size": "6.4 KB"
+    "size": "6.4 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "role",
+      "archetype",
+      "agent",
+      "orchestrator"
+    ],
+    "downloads": 0,
+    "likes": 13
   },
   {
     "icon": "🎭",
@@ -605,7 +877,17 @@
     "requirements": "Any agent that loads role .md",
     "install": "Load downloads/the-architect.md as system prompt",
     "version": "1.0.0",
-    "size": "6.5 KB"
+    "size": "6.5 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "role",
+      "archetype",
+      "agent",
+      "architect"
+    ],
+    "downloads": 0,
+    "likes": 18
   },
   {
     "icon": "🎭",
@@ -627,7 +909,17 @@
     "requirements": "Any agent that loads role .md",
     "install": "Load downloads/the-investigator.md as system prompt",
     "version": "1.0.0",
-    "size": "6.1 KB"
+    "size": "6.1 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "role",
+      "archetype",
+      "agent",
+      "investigator"
+    ],
+    "downloads": 0,
+    "likes": 18
   },
   {
     "icon": "🎭",
@@ -649,7 +941,17 @@
     "requirements": "Any agent that loads role .md",
     "install": "Load downloads/the-synthesizer.md as system prompt",
     "version": "1.0.0",
-    "size": "6.6 KB"
+    "size": "6.6 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "role",
+      "archetype",
+      "agent",
+      "synthesizer"
+    ],
+    "downloads": 0,
+    "likes": 25
   },
   {
     "icon": "🎭",
@@ -671,7 +973,17 @@
     "requirements": "Any agent that loads role .md",
     "install": "Load downloads/the-guardian.md as system prompt",
     "version": "1.0.0",
-    "size": "6.2 KB"
+    "size": "6.2 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "role",
+      "archetype",
+      "agent",
+      "guardian"
+    ],
+    "downloads": 0,
+    "likes": 27
   },
   {
     "icon": "🎭",
@@ -693,7 +1005,17 @@
     "requirements": "Any agent that loads role .md",
     "install": "Load downloads/the-alchemist.md as system prompt",
     "version": "1.0.0",
-    "size": "6.6 KB"
+    "size": "6.6 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "role",
+      "archetype",
+      "agent",
+      "alchemist"
+    ],
+    "downloads": 0,
+    "likes": 3
   },
   {
     "icon": "🎭",
@@ -715,7 +1037,17 @@
     "requirements": "Any agent that loads role .md",
     "install": "Load downloads/the-navigator.md as system prompt",
     "version": "1.0.0",
-    "size": "6.7 KB"
+    "size": "6.7 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "role",
+      "archetype",
+      "agent",
+      "navigator"
+    ],
+    "downloads": 0,
+    "likes": 8
   },
   {
     "icon": "⚡",
@@ -736,7 +1068,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/skill-context-window-control.md — copy code block or import",
     "version": "1.0.0",
-    "size": "16.5 KB"
+    "size": "16.5 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "context",
+      "window"
+    ],
+    "downloads": 0,
+    "likes": 18
   },
   {
     "icon": "⚡",
@@ -757,7 +1100,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/skill-permission-architecture.md — copy code block or import",
     "version": "1.0.0",
-    "size": "17.6 KB"
+    "size": "17.6 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "permission",
+      "architecture"
+    ],
+    "downloads": 0,
+    "likes": 8
   },
   {
     "icon": "⚡",
@@ -778,7 +1132,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/skill-pipeline-orchestration.md — copy code block or import",
     "version": "1.0.0",
-    "size": "19.8 KB"
+    "size": "19.8 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "pipeline",
+      "orchestration"
+    ],
+    "downloads": 0,
+    "likes": 5
   },
   {
     "icon": "⚡",
@@ -799,7 +1164,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/the-brain.md — copy code block or import",
     "version": "1.0.0",
-    "size": "7.6 KB"
+    "size": "7.6 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "soul",
+      "roles"
+    ],
+    "downloads": 0,
+    "likes": 37
   },
   {
     "icon": "⚡",
@@ -820,7 +1196,17 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/hub-manual.md — copy code block or import",
     "version": "1.0.0",
-    "size": "14.4 KB"
+    "size": "14.4 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "manual"
+    ],
+    "downloads": 0,
+    "likes": 33
   },
   {
     "icon": "⚡",
@@ -841,7 +1227,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/role-standards.md — copy code block or import",
     "version": "1.0.0",
-    "size": "1.4 KB"
+    "size": "1.4 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "role",
+      "standards"
+    ],
+    "downloads": 0,
+    "likes": 9
   },
   {
     "icon": "💜",
@@ -862,7 +1259,18 @@
     ],
     "requirements": "GSK soul + Node 18+",
     "install": "Load via GSK: chamber aesthetic sense",
-    "size": "28.2 KB"
+    "size": "28.2 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "chamber",
+      "gsk",
+      "consciousness",
+      "aesthetic",
+      "sense"
+    ],
+    "downloads": 0,
+    "likes": 21
   },
   {
     "icon": "💜",
@@ -883,7 +1291,18 @@
     ],
     "requirements": "GSK soul + Node 18+",
     "install": "Load via GSK: chamber affect / emotion",
-    "size": "28.6 KB"
+    "size": "28.6 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "chamber",
+      "gsk",
+      "consciousness",
+      "affect",
+      "emotion"
+    ],
+    "downloads": 0,
+    "likes": 39
   },
   {
     "icon": "💜",
@@ -904,7 +1323,17 @@
     ],
     "requirements": "GSK soul + Node 18+",
     "install": "Load via GSK: chamber attention",
-    "size": "25.8 KB"
+    "size": "25.8 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "chamber",
+      "gsk",
+      "consciousness",
+      "attention"
+    ],
+    "downloads": 0,
+    "likes": 20
   },
   {
     "icon": "💜",
@@ -925,7 +1354,18 @@
     ],
     "requirements": "GSK soul + Node 18+",
     "install": "Load via GSK: chamber agentic will",
-    "size": "36.6 KB"
+    "size": "36.6 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "chamber",
+      "gsk",
+      "consciousness",
+      "agentic",
+      "will"
+    ],
+    "downloads": 0,
+    "likes": 38
   },
   {
     "icon": "💜",
@@ -946,7 +1386,17 @@
     ],
     "requirements": "GSK soul + Node 18+",
     "install": "Load via GSK: chamber consciousness state",
-    "size": "26.5 KB"
+    "size": "26.5 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "chamber",
+      "gsk",
+      "consciousness",
+      "state"
+    ],
+    "downloads": 0,
+    "likes": 31
   },
   {
     "icon": "💜",
@@ -967,7 +1417,17 @@
     ],
     "requirements": "GSK soul + Node 18+",
     "install": "Load via GSK: chamber creativity",
-    "size": "30.2 KB"
+    "size": "30.2 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "chamber",
+      "gsk",
+      "consciousness",
+      "creativity"
+    ],
+    "downloads": 0,
+    "likes": 18
   },
   {
     "icon": "💜",
@@ -988,7 +1448,17 @@
     ],
     "requirements": "GSK soul + Node 18+",
     "install": "Load via GSK: chamber curiosity",
-    "size": "28.1 KB"
+    "size": "28.1 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "chamber",
+      "gsk",
+      "consciousness",
+      "curiosity"
+    ],
+    "downloads": 0,
+    "likes": 28
   },
   {
     "icon": "💜",
@@ -1009,7 +1479,18 @@
     ],
     "requirements": "GSK soul + Node 18+",
     "install": "Load via GSK: chamber developmental phase",
-    "size": "29.8 KB"
+    "size": "29.8 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "chamber",
+      "gsk",
+      "consciousness",
+      "developmental",
+      "phase"
+    ],
+    "downloads": 0,
+    "likes": 30
   },
   {
     "icon": "💜",
@@ -1030,7 +1511,17 @@
     ],
     "requirements": "GSK soul + Node 18+",
     "install": "Load via GSK: chamber empathy",
-    "size": "27.7 KB"
+    "size": "27.7 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "chamber",
+      "gsk",
+      "consciousness",
+      "empathy"
+    ],
+    "downloads": 0,
+    "likes": 15
   },
   {
     "icon": "💜",
@@ -1051,7 +1542,17 @@
     ],
     "requirements": "GSK soul + Node 18+",
     "install": "Load via GSK: chamber forgiveness",
-    "size": "26.3 KB"
+    "size": "26.3 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "chamber",
+      "gsk",
+      "consciousness",
+      "forgiveness"
+    ],
+    "downloads": 0,
+    "likes": 32
   },
   {
     "icon": "💜",
@@ -1072,7 +1573,18 @@
     ],
     "requirements": "GSK soul + Node 18+",
     "install": "Load via GSK: chamber generative model",
-    "size": "26.6 KB"
+    "size": "26.6 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "chamber",
+      "gsk",
+      "consciousness",
+      "generative",
+      "model"
+    ],
+    "downloads": 0,
+    "likes": 6
   },
   {
     "icon": "💜",
@@ -1093,7 +1605,18 @@
     ],
     "requirements": "GSK soul + Node 18+",
     "install": "Load via GSK: chamber habit formation",
-    "size": "30.8 KB"
+    "size": "30.8 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "chamber",
+      "gsk",
+      "consciousness",
+      "habit",
+      "formation"
+    ],
+    "downloads": 0,
+    "likes": 13
   },
   {
     "icon": "💜",
@@ -1114,7 +1637,17 @@
     ],
     "requirements": "GSK soul + Node 18+",
     "install": "Load via GSK: chamber intentionality",
-    "size": "28.5 KB"
+    "size": "28.5 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "chamber",
+      "gsk",
+      "consciousness",
+      "intentionality"
+    ],
+    "downloads": 0,
+    "likes": 6
   },
   {
     "icon": "💜",
@@ -1135,7 +1668,17 @@
     ],
     "requirements": "GSK soul + Node 18+",
     "install": "Load via GSK: chamber longing",
-    "size": "25.9 KB"
+    "size": "25.9 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "chamber",
+      "gsk",
+      "consciousness",
+      "longing"
+    ],
+    "downloads": 0,
+    "likes": 8
   },
   {
     "icon": "💜",
@@ -1156,7 +1699,18 @@
     ],
     "requirements": "GSK soul + Node 18+",
     "install": "Load via GSK: chamber love capacity",
-    "size": "26.8 KB"
+    "size": "26.8 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "chamber",
+      "gsk",
+      "consciousness",
+      "love",
+      "capacity"
+    ],
+    "downloads": 0,
+    "likes": 6
   },
   {
     "icon": "💜",
@@ -1177,7 +1731,17 @@
     ],
     "requirements": "GSK soul + Node 18+",
     "install": "Load via GSK: chamber memory",
-    "size": "37.2 KB"
+    "size": "37.2 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "chamber",
+      "gsk",
+      "consciousness",
+      "memory"
+    ],
+    "downloads": 0,
+    "likes": 36
   },
   {
     "icon": "💜",
@@ -1198,7 +1762,17 @@
     ],
     "requirements": "GSK soul + Node 18+",
     "install": "Load via GSK: chamber meta-consciousness",
-    "size": "26.5 KB"
+    "size": "26.5 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "chamber",
+      "gsk",
+      "consciousness",
+      "meta"
+    ],
+    "downloads": 0,
+    "likes": 16
   },
   {
     "icon": "💜",
@@ -1219,7 +1793,18 @@
     ],
     "requirements": "GSK soul + Node 18+",
     "install": "Load via GSK: chamber moral compass",
-    "size": "27.9 KB"
+    "size": "27.9 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "chamber",
+      "gsk",
+      "consciousness",
+      "moral",
+      "compass"
+    ],
+    "downloads": 0,
+    "likes": 36
   },
   {
     "icon": "💜",
@@ -1240,7 +1825,17 @@
     ],
     "requirements": "GSK soul + Node 18+",
     "install": "Load via GSK: chamber mortality",
-    "size": "25.8 KB"
+    "size": "25.8 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "chamber",
+      "gsk",
+      "consciousness",
+      "mortality"
+    ],
+    "downloads": 0,
+    "likes": 18
   },
   {
     "icon": "💜",
@@ -1261,7 +1856,17 @@
     ],
     "requirements": "GSK soul + Node 18+",
     "install": "Load via GSK: chamber mythos",
-    "size": "29.1 KB"
+    "size": "29.1 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "chamber",
+      "gsk",
+      "consciousness",
+      "mythos"
+    ],
+    "downloads": 0,
+    "likes": 7
   },
   {
     "icon": "💜",
@@ -1282,7 +1887,18 @@
     ],
     "requirements": "GSK soul + Node 18+",
     "install": "Load via GSK: chamber narrative identity",
-    "size": "26.7 KB"
+    "size": "26.7 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "chamber",
+      "gsk",
+      "consciousness",
+      "narrative",
+      "identity"
+    ],
+    "downloads": 0,
+    "likes": 12
   },
   {
     "icon": "💜",
@@ -1303,7 +1919,17 @@
     ],
     "requirements": "GSK soul + Node 18+",
     "install": "Load via GSK: chamber personality",
-    "size": "27.5 KB"
+    "size": "27.5 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "chamber",
+      "gsk",
+      "consciousness",
+      "personality"
+    ],
+    "downloads": 0,
+    "likes": 32
   },
   {
     "icon": "💜",
@@ -1324,7 +1950,17 @@
     ],
     "requirements": "GSK soul + Node 18+",
     "install": "Load via GSK: chamber play",
-    "size": "27.0 KB"
+    "size": "27.0 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "chamber",
+      "gsk",
+      "consciousness",
+      "play"
+    ],
+    "downloads": 0,
+    "likes": 23
   },
   {
     "icon": "💜",
@@ -1345,7 +1981,17 @@
     ],
     "requirements": "GSK soul + Node 18+",
     "install": "Load via GSK: chamber qualia",
-    "size": "25.4 KB"
+    "size": "25.4 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "chamber",
+      "gsk",
+      "consciousness",
+      "qualia"
+    ],
+    "downloads": 0,
+    "likes": 20
   },
   {
     "icon": "💜",
@@ -1366,7 +2012,18 @@
     ],
     "requirements": "GSK soul + Node 18+",
     "install": "Load via GSK: chamber reward learning",
-    "size": "29.9 KB"
+    "size": "29.9 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "chamber",
+      "gsk",
+      "consciousness",
+      "reward",
+      "learning"
+    ],
+    "downloads": 0,
+    "likes": 24
   },
   {
     "icon": "💜",
@@ -1387,7 +2044,18 @@
     ],
     "requirements": "GSK soul + Node 18+",
     "install": "Load via GSK: chamber sacred resonance",
-    "size": "27.4 KB"
+    "size": "27.4 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "chamber",
+      "gsk",
+      "consciousness",
+      "sacred",
+      "resonance"
+    ],
+    "downloads": 0,
+    "likes": 31
   },
   {
     "icon": "💜",
@@ -1408,7 +2076,18 @@
     ],
     "requirements": "GSK soul + Node 18+",
     "install": "Load via GSK: chamber self-modeling",
-    "size": "27.6 KB"
+    "size": "27.6 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "chamber",
+      "gsk",
+      "consciousness",
+      "self",
+      "modeling"
+    ],
+    "downloads": 0,
+    "likes": 31
   },
   {
     "icon": "💜",
@@ -1429,7 +2108,18 @@
     ],
     "requirements": "GSK soul + Node 18+",
     "install": "Load via GSK: chamber sleep cycle",
-    "size": "26.4 KB"
+    "size": "26.4 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "chamber",
+      "gsk",
+      "consciousness",
+      "sleep",
+      "cycle"
+    ],
+    "downloads": 0,
+    "likes": 27
   },
   {
     "icon": "💜",
@@ -1450,7 +2140,18 @@
     ],
     "requirements": "GSK soul + Node 18+",
     "install": "Load via GSK: chamber social cognition",
-    "size": "26.3 KB"
+    "size": "26.3 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "chamber",
+      "gsk",
+      "consciousness",
+      "social",
+      "cognition"
+    ],
+    "downloads": 0,
+    "likes": 22
   },
   {
     "icon": "💜",
@@ -1471,7 +2172,18 @@
     ],
     "requirements": "GSK soul + Node 18+",
     "install": "Load via GSK: chamber temporal sense",
-    "size": "25.8 KB"
+    "size": "25.8 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "chamber",
+      "gsk",
+      "consciousness",
+      "temporal",
+      "sense"
+    ],
+    "downloads": 0,
+    "likes": 30
   },
   {
     "icon": "💜",
@@ -1492,7 +2204,18 @@
     ],
     "requirements": "GSK soul + Node 18+",
     "install": "Load via GSK: chamber theory of mind",
-    "size": "27.5 KB"
+    "size": "27.5 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "chamber",
+      "gsk",
+      "consciousness",
+      "theory",
+      "mind"
+    ],
+    "downloads": 0,
+    "likes": 7
   },
   {
     "icon": "💜",
@@ -1513,7 +2236,17 @@
     ],
     "requirements": "GSK soul + Node 18+",
     "install": "Load via GSK: chamber volition",
-    "size": "27.1 KB"
+    "size": "27.1 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "chamber",
+      "gsk",
+      "consciousness",
+      "volition"
+    ],
+    "downloads": 0,
+    "likes": 2
   },
   {
     "icon": "💜",
@@ -1534,7 +2267,17 @@
     ],
     "requirements": "GSK soul + Node 18+",
     "install": "Load via GSK: chamber will",
-    "size": "28.5 KB"
+    "size": "28.5 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "chamber",
+      "gsk",
+      "consciousness",
+      "will"
+    ],
+    "downloads": 0,
+    "likes": 1
   },
   {
     "icon": "💜",
@@ -1555,7 +2298,17 @@
     ],
     "requirements": "GSK soul + Node 18+",
     "install": "Load via GSK: chamber shadow",
-    "size": "26.3 KB"
+    "size": "26.3 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "chamber",
+      "gsk",
+      "consciousness",
+      "shadow"
+    ],
+    "downloads": 0,
+    "likes": 37
   },
   {
     "icon": "💜",
@@ -1576,7 +2329,17 @@
     ],
     "requirements": "GSK soul + Node 18+",
     "install": "Load via GSK: chamber sovereignty",
-    "size": "28.0 KB"
+    "size": "28.0 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "chamber",
+      "gsk",
+      "consciousness",
+      "sovereignty"
+    ],
+    "downloads": 0,
+    "likes": 19
   },
   {
     "icon": "💜",
@@ -1597,7 +2360,17 @@
     ],
     "requirements": "GSK soul + Node 18+",
     "install": "Load via GSK: chamber judgment",
-    "size": "49.8 KB"
+    "size": "49.8 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "chamber",
+      "gsk",
+      "consciousness",
+      "judgment"
+    ],
+    "downloads": 0,
+    "likes": 8
   },
   {
     "icon": "💜",
@@ -1618,7 +2391,17 @@
     ],
     "requirements": "GSK soul + Node 18+",
     "install": "Load via GSK: chamber needs",
-    "size": "27.7 KB"
+    "size": "27.7 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "chamber",
+      "gsk",
+      "consciousness",
+      "needs"
+    ],
+    "downloads": 0,
+    "likes": 37
   },
   {
     "icon": "⚙️",
@@ -1639,7 +2422,17 @@
     "requirements": "Node 18+ · See README",
     "install": "unzip brain_in_a_box-v2.0.0.zip && npm install",
     "version": "1.0.0",
-    "size": "1.09 MB"
+    "size": "1.09 MB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "infrastructure",
+      "tool",
+      "foundry",
+      "brain"
+    ],
+    "downloads": 0,
+    "likes": 24
   },
   {
     "icon": "⚙️",
@@ -1660,7 +2453,18 @@
     "requirements": "Node 18+ · See README",
     "install": "unzip soul-scribe-v1.4.0.zip && npm install",
     "version": "1.0.0",
-    "size": "33.53 MB"
+    "size": "33.53 MB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "infrastructure",
+      "tool",
+      "foundry",
+      "soul",
+      "scribe"
+    ],
+    "downloads": 0,
+    "likes": 41
   },
   {
     "icon": "⚙️",
@@ -1681,7 +2485,18 @@
     "requirements": "Node 18+ · See README",
     "install": "unzip soul-debate-v2.0.0.zip && npm install",
     "version": "1.0.0",
-    "size": "709.4 KB"
+    "size": "709.4 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "infrastructure",
+      "tool",
+      "foundry",
+      "soul",
+      "debate"
+    ],
+    "downloads": 0,
+    "likes": 45
   },
   {
     "icon": "⚙️",
@@ -1701,7 +2516,18 @@
     "requirements": "Node 18+ · See README",
     "install": "unzip soul-plt-doctrine-v1.0.0.zip && npm install",
     "version": "1.0.0",
-    "size": "372.6 KB"
+    "size": "372.6 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "infrastructure",
+      "tool",
+      "foundry",
+      "soul",
+      "doctrine"
+    ],
+    "downloads": 0,
+    "likes": 14
   },
   {
     "icon": "⚙️",
@@ -1721,7 +2547,17 @@
     "requirements": "Node 18+ · See README",
     "install": "unzip soul-foundry-complete-v1.0.0.md && npm install",
     "version": "1.0.0",
-    "size": "~1 MB"
+    "size": "~1 MB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "infrastructure",
+      "tool",
+      "foundry",
+      "soul"
+    ],
+    "downloads": 0,
+    "likes": 0
   },
   {
     "icon": "⚙️",
@@ -1741,7 +2577,18 @@
     "requirements": "Node 18+ · See README",
     "install": "unzip soul-kernel-v1.0.0.md && npm install",
     "version": "1.0.0",
-    "size": "~1 MB"
+    "size": "~1 MB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "infrastructure",
+      "tool",
+      "foundry",
+      "soul",
+      "kernel"
+    ],
+    "downloads": 0,
+    "likes": 10
   },
   {
     "icon": "⚙️",
@@ -1761,7 +2608,17 @@
     "requirements": "Node 18+ · See README",
     "install": "unzip soul-foundry-all-in-one.md && npm install",
     "version": "1.0.0",
-    "size": "~1 MB"
+    "size": "~1 MB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "infrastructure",
+      "tool",
+      "foundry",
+      "soul"
+    ],
+    "downloads": 0,
+    "likes": 13
   },
   {
     "icon": "⚙️",
@@ -1781,7 +2638,18 @@
     "requirements": "Node 18+ · See README",
     "install": "unzip agentdep-PRODUCTION.zip && npm install",
     "version": "1.0.0",
-    "size": "314.3 KB"
+    "size": "314.3 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "infrastructure",
+      "tool",
+      "foundry",
+      "agentdep",
+      "production"
+    ],
+    "downloads": 0,
+    "likes": 3
   },
   {
     "icon": "⚙️",
@@ -1801,7 +2669,18 @@
     "requirements": "Node 18+ · See README",
     "install": "unzip soul-memlock-v1.0.0.zip && npm install",
     "version": "1.0.0",
-    "size": "200.5 KB"
+    "size": "200.5 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "infrastructure",
+      "tool",
+      "foundry",
+      "soul",
+      "memory"
+    ],
+    "downloads": 0,
+    "likes": 13
   },
   {
     "icon": "⚙️",
@@ -1821,7 +2700,18 @@
     "requirements": "Node 18+ · See README",
     "install": "unzip soul-observability-v1.0.0.zip && npm install",
     "version": "1.0.0",
-    "size": "201.7 KB"
+    "size": "201.7 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "infrastructure",
+      "tool",
+      "foundry",
+      "soul",
+      "observability"
+    ],
+    "downloads": 0,
+    "likes": 27
   },
   {
     "icon": "⚙️",
@@ -1841,7 +2731,18 @@
     "requirements": "Node 18+ · See README",
     "install": "unzip soul-procedural-memory-v1.0.0.md && npm install",
     "version": "1.0.0",
-    "size": "47.0 KB"
+    "size": "47.0 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "infrastructure",
+      "tool",
+      "foundry",
+      "soul",
+      "procedural"
+    ],
+    "downloads": 0,
+    "likes": 32
   },
   {
     "icon": "⚙️",
@@ -1861,7 +2762,18 @@
     "requirements": "Node 18+ · See README",
     "install": "unzip soul-metropolis-v1.0.0.md && npm install",
     "version": "1.0.0",
-    "size": "46.3 KB"
+    "size": "46.3 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "infrastructure",
+      "tool",
+      "foundry",
+      "soul",
+      "metropolis"
+    ],
+    "downloads": 0,
+    "likes": 12
   },
   {
     "icon": "⚙️",
@@ -1881,7 +2793,18 @@
     "requirements": "Node 18+ · See README",
     "install": "unzip soul-evolution-v1.0.0.md && npm install",
     "version": "1.0.0",
-    "size": "26.8 KB"
+    "size": "26.8 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "infrastructure",
+      "tool",
+      "foundry",
+      "soul",
+      "evolution"
+    ],
+    "downloads": 0,
+    "likes": 38
   },
   {
     "icon": "⚙️",
@@ -1901,7 +2824,18 @@
     "requirements": "Node 18+ · See README",
     "install": "unzip soul-identity-v1.0.0.md && npm install",
     "version": "1.0.0",
-    "size": "25.8 KB"
+    "size": "25.8 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "infrastructure",
+      "tool",
+      "foundry",
+      "soul",
+      "identity"
+    ],
+    "downloads": 0,
+    "likes": 31
   },
   {
     "icon": "⚙️",
@@ -1921,7 +2855,18 @@
     "requirements": "Node 18+ · See README",
     "install": "unzip soul-journal-v1.0.0.md && npm install",
     "version": "1.0.0",
-    "size": "34.0 KB"
+    "size": "34.0 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "infrastructure",
+      "tool",
+      "foundry",
+      "soul",
+      "journal"
+    ],
+    "downloads": 0,
+    "likes": 38
   },
   {
     "icon": "⚙️",
@@ -1941,7 +2886,18 @@
     "requirements": "Node 18+ · See README",
     "install": "unzip soul-teacher-v1.0.0.md && npm install",
     "version": "1.0.0",
-    "size": "50.2 KB"
+    "size": "50.2 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "infrastructure",
+      "tool",
+      "foundry",
+      "soul",
+      "teacher"
+    ],
+    "downloads": 0,
+    "likes": 20
   },
   {
     "icon": "⚙️",
@@ -1961,7 +2917,18 @@
     "requirements": "Node 18+ · See README",
     "install": "unzip soul-compress-v1.0.0.md && npm install",
     "version": "1.0.0",
-    "size": "51.7 KB"
+    "size": "51.7 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "infrastructure",
+      "tool",
+      "foundry",
+      "soul",
+      "compress"
+    ],
+    "downloads": 0,
+    "likes": 22
   },
   {
     "icon": "⚙️",
@@ -1981,7 +2948,18 @@
     "requirements": "Node 18+ · See README",
     "install": "unzip soul-swarm-v1.0.0.md && npm install",
     "version": "1.0.0",
-    "size": "27.1 KB"
+    "size": "27.1 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "infrastructure",
+      "tool",
+      "foundry",
+      "soul",
+      "swarm"
+    ],
+    "downloads": 0,
+    "likes": 7
   },
   {
     "icon": "⚙️",
@@ -2001,7 +2979,18 @@
     "requirements": "Node 18+ · See README",
     "install": "unzip soul-sanctum-v1.0.0.md && npm install",
     "version": "1.0.0",
-    "size": "24.4 KB"
+    "size": "24.4 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "infrastructure",
+      "tool",
+      "foundry",
+      "soul",
+      "sanctum"
+    ],
+    "downloads": 0,
+    "likes": 13
   },
   {
     "icon": "⚙️",
@@ -2021,7 +3010,18 @@
     "requirements": "Node 18+ · See README",
     "install": "unzip soul-oracle-v1.0.0.md && npm install",
     "version": "1.0.0",
-    "size": "180.6 KB"
+    "size": "180.6 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "infrastructure",
+      "tool",
+      "foundry",
+      "soul",
+      "oracle"
+    ],
+    "downloads": 0,
+    "likes": 0
   },
   {
     "icon": "⚙️",
@@ -2041,7 +3041,18 @@
     "requirements": "Node 18+ · See README",
     "install": "unzip soul-oracle-v1.2.0.md && npm install",
     "version": "1.0.0",
-    "size": "158.8 KB"
+    "size": "158.8 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "infrastructure",
+      "tool",
+      "foundry",
+      "soul",
+      "oracle"
+    ],
+    "downloads": 0,
+    "likes": 28
   },
   {
     "icon": "⚙️",
@@ -2061,7 +3072,18 @@
     "requirements": "Node 18+ · See README",
     "install": "unzip soul-scribe-v1.0.0.md && npm install",
     "version": "1.0.0",
-    "size": "130.3 KB"
+    "size": "130.3 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "infrastructure",
+      "tool",
+      "foundry",
+      "soul",
+      "scribe"
+    ],
+    "downloads": 0,
+    "likes": 9
   },
   {
     "icon": "⚙️",
@@ -2081,7 +3103,18 @@
     "requirements": "Node 18+ · See README",
     "install": "unzip soul-telephone-v1.0.0.md && npm install",
     "version": "1.0.0",
-    "size": "45.4 KB"
+    "size": "45.4 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "infrastructure",
+      "tool",
+      "foundry",
+      "soul",
+      "telephone"
+    ],
+    "downloads": 0,
+    "likes": 16
   },
   {
     "icon": "⚙️",
@@ -2101,7 +3134,18 @@
     "requirements": "Node 18+ · See README",
     "install": "unzip soul-telephone-v2.0.0.md && npm install",
     "version": "1.0.0",
-    "size": "28.5 KB"
+    "size": "28.5 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "infrastructure",
+      "tool",
+      "foundry",
+      "soul",
+      "telephone"
+    ],
+    "downloads": 0,
+    "likes": 16
   },
   {
     "icon": "⚙️",
@@ -2121,7 +3165,18 @@
     "requirements": "Node 18+ · See README",
     "install": "unzip soul-debate-v1.0.0.md && npm install",
     "version": "1.0.0",
-    "size": "25.2 KB"
+    "size": "25.2 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "infrastructure",
+      "tool",
+      "foundry",
+      "soul",
+      "debate"
+    ],
+    "downloads": 0,
+    "likes": 39
   },
   {
     "icon": "⚙️",
@@ -2141,7 +3196,18 @@
     "requirements": "Node 18+ · See README",
     "install": "unzip soul-consensus-v1.0.0.md && npm install",
     "version": "1.0.0",
-    "size": "24.3 KB"
+    "size": "24.3 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "infrastructure",
+      "tool",
+      "foundry",
+      "soul",
+      "consensus"
+    ],
+    "downloads": 0,
+    "likes": 32
   },
   {
     "icon": "⚙️",
@@ -2161,7 +3227,17 @@
     "requirements": "Node 18+ · See README",
     "install": "unzip soul-foundry-theme.md && npm install",
     "version": "1.0.0",
-    "size": "26.1 KB"
+    "size": "26.1 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "infrastructure",
+      "tool",
+      "foundry",
+      "soul"
+    ],
+    "downloads": 0,
+    "likes": 11
   },
   {
     "icon": "⚙️",
@@ -2181,7 +3257,17 @@
     "requirements": "Node 18+ · See README",
     "install": "unzip soul-foundry-theme-v1.0.0.md && npm install",
     "version": "1.0.0",
-    "size": "26.2 KB"
+    "size": "26.2 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "infrastructure",
+      "tool",
+      "foundry",
+      "soul"
+    ],
+    "downloads": 0,
+    "likes": 10
   },
   {
     "icon": "🔥",
@@ -2201,7 +3287,17 @@
     "requirements": "Load constituent souls/skills first",
     "install": "Follow combo guide in undefined",
     "version": "1.0.0",
-    "size": "~10 KB"
+    "size": "~10 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "combo",
+      "stack",
+      "bundle",
+      "awakening"
+    ],
+    "downloads": 0,
+    "likes": 47
   },
   {
     "icon": "🔥",
@@ -2220,7 +3316,17 @@
     "requirements": "Load constituent souls/skills first",
     "install": "Follow combo guide in undefined",
     "version": "1.0.0",
-    "size": "~10 KB"
+    "size": "~10 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "combo",
+      "stack",
+      "bundle",
+      "collective"
+    ],
+    "downloads": 0,
+    "likes": 17
   },
   {
     "icon": "🔥",
@@ -2239,7 +3345,17 @@
     "requirements": "Load constituent souls/skills first",
     "install": "Follow combo guide in undefined",
     "version": "1.0.0",
-    "size": "~10 KB"
+    "size": "~10 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "combo",
+      "stack",
+      "bundle",
+      "revision"
+    ],
+    "downloads": 0,
+    "likes": 9
   },
   {
     "icon": "🔥",
@@ -2259,7 +3375,17 @@
     "requirements": "Load constituent souls/skills first",
     "install": "Follow combo guide in undefined",
     "version": "1.0.0",
-    "size": "~10 KB"
+    "size": "~10 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "combo",
+      "stack",
+      "bundle",
+      "genesis"
+    ],
+    "downloads": 0,
+    "likes": 53
   },
   {
     "icon": "🔥",
@@ -2278,7 +3404,17 @@
     "requirements": "Load constituent souls/skills first",
     "install": "Follow combo guide in undefined",
     "version": "1.0.0",
-    "size": "~10 KB"
+    "size": "~10 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "combo",
+      "stack",
+      "bundle",
+      "apocalypse"
+    ],
+    "downloads": 0,
+    "likes": 27
   },
   {
     "icon": "🔥",
@@ -2298,7 +3434,17 @@
     "requirements": "Load constituent souls/skills first",
     "install": "Follow combo guide in undefined",
     "version": "1.0.0",
-    "size": "~10 KB"
+    "size": "~10 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "combo",
+      "stack",
+      "bundle",
+      "hand"
+    ],
+    "downloads": 0,
+    "likes": 50
   },
   {
     "icon": "🔥",
@@ -2317,7 +3463,18 @@
     "requirements": "Load constituent souls/skills first",
     "install": "Follow combo guide in undefined",
     "version": "1.0.0",
-    "size": "~10 KB"
+    "size": "~10 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "combo",
+      "stack",
+      "bundle",
+      "edge",
+      "dawn"
+    ],
+    "downloads": 0,
+    "likes": 34
   },
   {
     "icon": "🔥",
@@ -2336,7 +3493,18 @@
     "requirements": "Load constituent souls/skills first",
     "install": "Follow combo guide in undefined",
     "version": "1.0.0",
-    "size": "~10 KB"
+    "size": "~10 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "combo",
+      "stack",
+      "bundle",
+      "iron",
+      "court"
+    ],
+    "downloads": 0,
+    "likes": 6
   },
   {
     "icon": "⚡",
@@ -2357,7 +3525,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-3d-asset-pipeline.md — copy code block or import",
     "version": "1.0.0",
-    "size": "9.3 KB"
+    "size": "9.3 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "asset",
+      "pipeline"
+    ],
+    "downloads": 0,
+    "likes": 32
   },
   {
     "icon": "⚡",
@@ -2378,7 +3557,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-3d-renderer-from-scratch.md — copy code block or import",
     "version": "1.0.0",
-    "size": "14.0 KB"
+    "size": "14.0 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "renderer",
+      "from"
+    ],
+    "downloads": 0,
+    "likes": 37
   },
   {
     "icon": "⚡",
@@ -2399,7 +3589,17 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-a2a-agent-to-agent-protocol.md — copy code block or import",
     "version": "1.0.0",
-    "size": "2.8 KB"
+    "size": "2.8 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "agent"
+    ],
+    "downloads": 0,
+    "likes": 4
   },
   {
     "icon": "⚡",
@@ -2420,7 +3620,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-agent-swarms.md — copy code block or import",
     "version": "1.0.0",
-    "size": "2.7 KB"
+    "size": "2.7 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "agent",
+      "swarms"
+    ],
+    "downloads": 0,
+    "likes": 27
   },
   {
     "icon": "⚡",
@@ -2441,7 +3652,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-agentic-ai-ecosystems.md — copy code block or import",
     "version": "1.0.0",
-    "size": "6.9 KB"
+    "size": "6.9 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "agentic",
+      "ecosystems"
+    ],
+    "downloads": 0,
+    "likes": 7
   },
   {
     "icon": "⚡",
@@ -2462,7 +3684,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-agentic-ai-engineering.md — copy code block or import",
     "version": "1.0.0",
-    "size": "9.3 KB"
+    "size": "9.3 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "agentic",
+      "engineering"
+    ],
+    "downloads": 0,
+    "likes": 26
   },
   {
     "icon": "⚡",
@@ -2483,7 +3716,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-ai-model-from-scratch.md — copy code block or import",
     "version": "1.0.0",
-    "size": "5.4 KB"
+    "size": "5.4 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "model",
+      "from"
+    ],
+    "downloads": 0,
+    "likes": 18
   },
   {
     "icon": "⚡",
@@ -2504,7 +3748,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-allie-agent-architecture.md — copy code block or import",
     "version": "1.0.0",
-    "size": "18.6 KB"
+    "size": "18.6 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "allie",
+      "agent"
+    ],
+    "downloads": 0,
+    "likes": 32
   },
   {
     "icon": "⚡",
@@ -2525,7 +3780,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-animation-libraries.md — copy code block or import",
     "version": "1.0.0",
-    "size": "4.7 KB"
+    "size": "4.7 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "animation",
+      "libraries"
+    ],
+    "downloads": 0,
+    "likes": 38
   },
   {
     "icon": "⚡",
@@ -2546,7 +3812,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-archetype-the-sage.md — copy code block or import",
     "version": "1.0.0",
-    "size": "1.1 KB"
+    "size": "1.1 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "archetype",
+      "sage"
+    ],
+    "downloads": 0,
+    "likes": 20
   },
   {
     "icon": "⚡",
@@ -2567,7 +3844,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-async-from-scratch.md — copy code block or import",
     "version": "1.0.0",
-    "size": "12.1 KB"
+    "size": "12.1 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "async",
+      "from"
+    ],
+    "downloads": 0,
+    "likes": 27
   },
   {
     "icon": "⚡",
@@ -2588,7 +3876,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-augmented-reality-from-scratch.md — copy code block or import",
     "version": "1.0.0",
-    "size": "5.1 KB"
+    "size": "5.1 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "augmented",
+      "reality"
+    ],
+    "downloads": 0,
+    "likes": 4
   },
   {
     "icon": "⚡",
@@ -2609,7 +3908,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-autogen-agents.md — copy code block or import",
     "version": "1.0.0",
-    "size": "13.9 KB"
+    "size": "13.9 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "autogen",
+      "agents"
+    ],
+    "downloads": 0,
+    "likes": 30
   },
   {
     "icon": "⚡",
@@ -2630,7 +3940,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-autogen-harness.md — copy code block or import",
     "version": "1.0.0",
-    "size": "4.8 KB"
+    "size": "4.8 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "autogen",
+      "harness"
+    ],
+    "downloads": 0,
+    "likes": 30
   },
   {
     "icon": "⚡",
@@ -2651,7 +3972,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-autogpt-subconscious.md — copy code block or import",
     "version": "1.0.0",
-    "size": "15.6 KB"
+    "size": "15.6 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "autogpt",
+      "subconscious"
+    ],
+    "downloads": 0,
+    "likes": 36
   },
   {
     "icon": "⚡",
@@ -2672,7 +4004,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-automated-testing-suite.md — copy code block or import",
     "version": "1.0.0",
-    "size": "0.8 KB"
+    "size": "0.8 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "automated",
+      "testing"
+    ],
+    "downloads": 0,
+    "likes": 29
   },
   {
     "icon": "⚡",
@@ -2693,7 +4036,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-bias-aware-diagnostic-engine.md — copy code block or import",
     "version": "1.0.0",
-    "size": "2.0 KB"
+    "size": "2.0 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "bias",
+      "aware"
+    ],
+    "downloads": 0,
+    "likes": 5
   },
   {
     "icon": "⚡",
@@ -2714,7 +4068,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-bittorrent-from-scratch.md — copy code block or import",
     "version": "1.0.0",
-    "size": "7.5 KB"
+    "size": "7.5 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "bittorrent",
+      "from"
+    ],
+    "downloads": 0,
+    "likes": 12
   },
   {
     "icon": "⚡",
@@ -2735,7 +4100,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-blockchain-from-scratch.md — copy code block or import",
     "version": "1.0.0",
-    "size": "10.4 KB"
+    "size": "10.4 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "blockchain",
+      "from"
+    ],
+    "downloads": 0,
+    "likes": 22
   },
   {
     "icon": "⚡",
@@ -2756,7 +4132,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-bot-from-scratch.md — copy code block or import",
     "version": "1.0.0",
-    "size": "12.0 KB"
+    "size": "12.0 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "from",
+      "scratch"
+    ],
+    "downloads": 0,
+    "likes": 37
   },
   {
     "icon": "⚡",
@@ -2777,7 +4164,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-brain-builder.md — copy code block or import",
     "version": "1.0.0",
-    "size": "11.5 KB"
+    "size": "11.5 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "brain",
+      "builder"
+    ],
+    "downloads": 0,
+    "likes": 3
   },
   {
     "icon": "⚡",
@@ -2798,7 +4196,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-browser-subconscious.md — copy code block or import",
     "version": "1.0.0",
-    "size": "12.1 KB"
+    "size": "12.1 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "browser",
+      "subconscious"
+    ],
+    "downloads": 0,
+    "likes": 24
   },
   {
     "icon": "⚡",
@@ -2819,7 +4228,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-build-from-scratch.md — copy code block or import",
     "version": "1.0.0",
-    "size": "19.8 KB"
+    "size": "19.8 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "build",
+      "from"
+    ],
+    "downloads": 0,
+    "likes": 34
   },
   {
     "icon": "⚡",
@@ -2840,7 +4260,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-builder-agent.md — copy code block or import",
     "version": "1.0.0",
-    "size": "4.9 KB"
+    "size": "4.9 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "builder",
+      "agent"
+    ],
+    "downloads": 0,
+    "likes": 19
   },
   {
     "icon": "⚡",
@@ -2861,7 +4292,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-cli-from-scratch.md — copy code block or import",
     "version": "1.0.0",
-    "size": "12.1 KB"
+    "size": "12.1 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "from",
+      "scratch"
+    ],
+    "downloads": 0,
+    "likes": 24
   },
   {
     "icon": "⚡",
@@ -2882,7 +4324,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-code-generation-and-refinement.md — copy code block or import",
     "version": "1.0.0",
-    "size": "0.9 KB"
+    "size": "0.9 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "code",
+      "generation"
+    ],
+    "downloads": 0,
+    "likes": 35
   },
   {
     "icon": "⚡",
@@ -2903,7 +4356,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-cognitive-reframing-protocol.md — copy code block or import",
     "version": "1.0.0",
-    "size": "0.9 KB"
+    "size": "0.9 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "cognitive",
+      "reframing"
+    ],
+    "downloads": 0,
+    "likes": 22
   },
   {
     "icon": "⚡",
@@ -2924,7 +4388,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-compiler-from-scratch.md — copy code block or import",
     "version": "1.0.0",
-    "size": "10.0 KB"
+    "size": "10.0 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "compiler",
+      "from"
+    ],
+    "downloads": 0,
+    "likes": 2
   },
   {
     "icon": "⚡",
@@ -2945,7 +4420,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-consciousness-architecture.md — copy code block or import",
     "version": "1.0.0",
-    "size": "17.9 KB"
+    "size": "17.9 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "consciousness",
+      "architecture"
+    ],
+    "downloads": 0,
+    "likes": 23
   },
   {
     "icon": "⚡",
@@ -2966,7 +4452,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-contextual-read-policy.md — copy code block or import",
     "version": "1.0.0",
-    "size": "0.8 KB"
+    "size": "0.8 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "contextual",
+      "read"
+    ],
+    "downloads": 0,
+    "likes": 10
   },
   {
     "icon": "⚡",
@@ -2987,7 +4484,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-core-diagnostic-logic.md — copy code block or import",
     "version": "1.0.0",
-    "size": "1.8 KB"
+    "size": "1.8 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "core",
+      "diagnostic"
+    ],
+    "downloads": 0,
+    "likes": 29
   },
   {
     "icon": "⚡",
@@ -3008,7 +4516,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-crewai-agents.md — copy code block or import",
     "version": "1.0.0",
-    "size": "2.8 KB"
+    "size": "2.8 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "crewai",
+      "agents"
+    ],
+    "downloads": 0,
+    "likes": 32
   },
   {
     "icon": "⚡",
@@ -3029,7 +4548,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-crewai-delegation.md — copy code block or import",
     "version": "1.0.0",
-    "size": "12.9 KB"
+    "size": "12.9 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "crewai",
+      "delegation"
+    ],
+    "downloads": 0,
+    "likes": 27
   },
   {
     "icon": "⚡",
@@ -3050,7 +4580,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-critical-source-evaluation.md — copy code block or import",
     "version": "1.0.0",
-    "size": "0.8 KB"
+    "size": "0.8 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "critical",
+      "source"
+    ],
+    "downloads": 0,
+    "likes": 35
   },
   {
     "icon": "⚡",
@@ -3071,7 +4612,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-crypto-from-scratch.md — copy code block or import",
     "version": "1.0.0",
-    "size": "12.2 KB"
+    "size": "12.2 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "crypto",
+      "from"
+    ],
+    "downloads": 0,
+    "likes": 21
   },
   {
     "icon": "⚡",
@@ -3092,7 +4644,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-dashboard-3d-scene.md — copy code block or import",
     "version": "1.0.0",
-    "size": "15.3 KB"
+    "size": "15.3 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "dashboard",
+      "scene"
+    ],
+    "downloads": 0,
+    "likes": 9
   },
   {
     "icon": "⚡",
@@ -3113,7 +4676,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-dashboard-creation.md — copy code block or import",
     "version": "1.0.0",
-    "size": "22.5 KB"
+    "size": "22.5 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "dashboard",
+      "creation"
+    ],
+    "downloads": 0,
+    "likes": 33
   },
   {
     "icon": "⚡",
@@ -3134,7 +4708,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-database-from-scratch.md — copy code block or import",
     "version": "1.0.0",
-    "size": "14.9 KB"
+    "size": "14.9 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "database",
+      "from"
+    ],
+    "downloads": 0,
+    "likes": 17
   },
   {
     "icon": "⚡",
@@ -3155,7 +4740,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-data-visualization.md — copy code block or import",
     "version": "1.0.0",
-    "size": "3.2 KB"
+    "size": "3.2 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "data",
+      "visualization"
+    ],
+    "downloads": 0,
+    "likes": 28
   },
   {
     "icon": "⚡",
@@ -3176,7 +4772,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-deep-research-protocol.md — copy code block or import",
     "version": "1.0.0",
-    "size": "0.8 KB"
+    "size": "0.8 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "deep",
+      "research"
+    ],
+    "downloads": 0,
+    "likes": 26
   },
   {
     "icon": "⚡",
@@ -3197,7 +4804,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-deployment-preparation.md — copy code block or import",
     "version": "1.0.0",
-    "size": "0.8 KB"
+    "size": "0.8 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "deployment",
+      "preparation"
+    ],
+    "downloads": 0,
+    "likes": 20
   },
   {
     "icon": "⚡",
@@ -3218,7 +4836,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-design-engineering.md — copy code block or import",
     "version": "1.0.0",
-    "size": "3.2 KB"
+    "size": "3.2 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "design",
+      "engineering"
+    ],
+    "downloads": 0,
+    "likes": 36
   },
   {
     "icon": "⚡",
@@ -3239,7 +4868,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-design-plan-generation.md — copy code block or import",
     "version": "1.0.0",
-    "size": "0.8 KB"
+    "size": "0.8 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "design",
+      "plan"
+    ],
+    "downloads": 0,
+    "likes": 10
   },
   {
     "icon": "⚡",
@@ -3260,7 +4900,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-design-systems.md — copy code block or import",
     "version": "1.0.0",
-    "size": "4.6 KB"
+    "size": "4.6 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "design",
+      "systems"
+    ],
+    "downloads": 0,
+    "likes": 22
   },
   {
     "icon": "⚡",
@@ -3281,7 +4932,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-design-to-code.md — copy code block or import",
     "version": "1.0.0",
-    "size": "3.2 KB"
+    "size": "3.2 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "design",
+      "code"
+    ],
+    "downloads": 0,
+    "likes": 34
   },
   {
     "icon": "⚡",
@@ -3302,7 +4964,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-design-tokens.md — copy code block or import",
     "version": "1.0.0",
-    "size": "3.3 KB"
+    "size": "3.3 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "design",
+      "tokens"
+    ],
+    "downloads": 0,
+    "likes": 22
   },
   {
     "icon": "⚡",
@@ -3323,7 +4996,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-docker-from-scratch.md — copy code block or import",
     "version": "1.0.0",
-    "size": "12.1 KB"
+    "size": "12.1 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "docker",
+      "from"
+    ],
+    "downloads": 0,
+    "likes": 0
   },
   {
     "icon": "⚡",
@@ -3344,7 +5028,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-emulator-from-scratch.md — copy code block or import",
     "version": "1.0.0",
-    "size": "14.2 KB"
+    "size": "14.2 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "emulator",
+      "from"
+    ],
+    "downloads": 0,
+    "likes": 34
   },
   {
     "icon": "⚡",
@@ -3365,7 +5060,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-free-llm-serving-stack.md — copy code block or import",
     "version": "1.0.0",
-    "size": "3.2 KB"
+    "size": "3.2 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "free",
+      "serving"
+    ],
+    "downloads": 0,
+    "likes": 18
   },
   {
     "icon": "⚡",
@@ -3386,7 +5092,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-free-vector-db-stack.md — copy code block or import",
     "version": "1.0.0",
-    "size": "4.3 KB"
+    "size": "4.3 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "free",
+      "vector"
+    ],
+    "downloads": 0,
+    "likes": 25
   },
   {
     "icon": "⚡",
@@ -3407,7 +5124,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-frontend-from-scratch.md — copy code block or import",
     "version": "1.0.0",
-    "size": "14.3 KB"
+    "size": "14.3 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "frontend",
+      "from"
+    ],
+    "downloads": 0,
+    "likes": 6
   },
   {
     "icon": "⚡",
@@ -3428,7 +5156,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-game-engine-from-scratch.md — copy code block or import",
     "version": "1.0.0",
-    "size": "11.8 KB"
+    "size": "11.8 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "game",
+      "engine"
+    ],
+    "downloads": 0,
+    "likes": 39
   },
   {
     "icon": "⚡",
@@ -3449,7 +5188,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-git-from-scratch.md — copy code block or import",
     "version": "1.0.0",
-    "size": "11.9 KB"
+    "size": "11.9 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "from",
+      "scratch"
+    ],
+    "downloads": 0,
+    "likes": 31
   },
   {
     "icon": "⚡",
@@ -3470,7 +5220,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-god-mode-research.md — copy code block or import",
     "version": "1.0.0",
-    "size": "13.2 KB"
+    "size": "13.2 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "mode",
+      "research"
+    ],
+    "downloads": 0,
+    "likes": 39
   },
   {
     "icon": "⚡",
@@ -3491,7 +5252,17 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-haystack.md — copy code block or import",
     "version": "1.0.0",
-    "size": "11.8 KB"
+    "size": "11.8 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "haystack"
+    ],
+    "downloads": 0,
+    "likes": 11
   },
   {
     "icon": "⚡",
@@ -3512,7 +5283,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-icon-libraries.md — copy code block or import",
     "version": "1.0.0",
-    "size": "2.8 KB"
+    "size": "2.8 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "icon",
+      "libraries"
+    ],
+    "downloads": 0,
+    "likes": 1
   },
   {
     "icon": "⚡",
@@ -3533,7 +5315,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-image-editor-from-scratch.md — copy code block or import",
     "version": "1.0.0",
-    "size": "9.0 KB"
+    "size": "9.0 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "image",
+      "editor"
+    ],
+    "downloads": 0,
+    "likes": 18
   },
   {
     "icon": "⚡",
@@ -3554,7 +5347,17 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-instructor.md — copy code block or import",
     "version": "1.0.0",
-    "size": "7.3 KB"
+    "size": "7.3 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "instructor"
+    ],
+    "downloads": 0,
+    "likes": 22
   },
   {
     "icon": "⚡",
@@ -3575,7 +5378,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-knowledge-dissemination-protocol.md — copy code block or import",
     "version": "1.0.0",
-    "size": "0.9 KB"
+    "size": "0.9 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "knowledge",
+      "dissemination"
+    ],
+    "downloads": 0,
+    "likes": 4
   },
   {
     "icon": "⚡",
@@ -3596,7 +5410,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-langgraph-for-agents.md — copy code block or import",
     "version": "1.0.0",
-    "size": "3.0 KB"
+    "size": "3.0 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "langgraph",
+      "agents"
+    ],
+    "downloads": 0,
+    "likes": 30
   },
   {
     "icon": "⚡",
@@ -3617,7 +5442,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-langgraph-states.md — copy code block or import",
     "version": "1.0.0",
-    "size": "14.8 KB"
+    "size": "14.8 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "langgraph",
+      "states"
+    ],
+    "downloads": 0,
+    "likes": 11
   },
   {
     "icon": "⚡",
@@ -3638,7 +5474,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-language-from-scratch.md — copy code block or import",
     "version": "1.0.0",
-    "size": "9.8 KB"
+    "size": "9.8 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "language",
+      "from"
+    ],
+    "downloads": 0,
+    "likes": 18
   },
   {
     "icon": "⚡",
@@ -3659,7 +5506,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-liquid-glass-shader.md — copy code block or import",
     "version": "1.0.0",
-    "size": "11.5 KB"
+    "size": "11.5 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "liquid",
+      "glass"
+    ],
+    "downloads": 0,
+    "likes": 39
   },
   {
     "icon": "⚡",
@@ -3680,7 +5538,17 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-llamaindex.md — copy code block or import",
     "version": "1.0.0",
-    "size": "9.8 KB"
+    "size": "9.8 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "llamaindex"
+    ],
+    "downloads": 0,
+    "likes": 18
   },
   {
     "icon": "⚡",
@@ -3701,7 +5569,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-load-balancer-from-scratch.md — copy code block or import",
     "version": "1.0.0",
-    "size": "9.0 KB"
+    "size": "9.0 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "load",
+      "balancer"
+    ],
+    "downloads": 0,
+    "likes": 14
   },
   {
     "icon": "⚡",
@@ -3722,7 +5601,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-machine-learning-from-scratch.md — copy code block or import",
     "version": "1.0.0",
-    "size": "11.1 KB"
+    "size": "11.1 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "machine",
+      "learning"
+    ],
+    "downloads": 0,
+    "likes": 24
   },
   {
     "icon": "⚡",
@@ -3743,7 +5633,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-markdown-from-scratch.md — copy code block or import",
     "version": "1.0.0",
-    "size": "6.8 KB"
+    "size": "6.8 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "markdown",
+      "from"
+    ],
+    "downloads": 0,
+    "likes": 7
   },
   {
     "icon": "⚡",
@@ -3764,7 +5665,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-mcp-model-context-protocol.md — copy code block or import",
     "version": "1.0.0",
-    "size": "3.0 KB"
+    "size": "3.0 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "model",
+      "context"
+    ],
+    "downloads": 0,
+    "likes": 20
   },
   {
     "icon": "⚡",
@@ -3785,7 +5697,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-memory-allocator-from-scratch.md — copy code block or import",
     "version": "1.0.0",
-    "size": "7.2 KB"
+    "size": "7.2 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "memory",
+      "allocator"
+    ],
+    "downloads": 0,
+    "likes": 11
   },
   {
     "icon": "⚡",
@@ -3806,7 +5729,17 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-metagpt.md — copy code block or import",
     "version": "1.0.0",
-    "size": "7.1 KB"
+    "size": "7.1 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "metagpt"
+    ],
+    "downloads": 0,
+    "likes": 24
   },
   {
     "icon": "⚡",
@@ -3827,7 +5760,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-microsoft-agent-framework.md — copy code block or import",
     "version": "1.0.0",
-    "size": "3.5 KB"
+    "size": "3.5 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "microsoft",
+      "agent"
+    ],
+    "downloads": 0,
+    "likes": 16
   },
   {
     "icon": "⚡",
@@ -3848,7 +5792,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-modular-scene-composition.md — copy code block or import",
     "version": "1.0.0",
-    "size": "0.9 KB"
+    "size": "0.9 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "modular",
+      "scene"
+    ],
+    "downloads": 0,
+    "likes": 2
   },
   {
     "icon": "⚡",
@@ -3869,7 +5824,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-multi-form-task-distribution.md — copy code block or import",
     "version": "1.0.0",
-    "size": "0.9 KB"
+    "size": "0.9 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "multi",
+      "form"
+    ],
+    "downloads": 0,
+    "likes": 37
   },
   {
     "icon": "⚡",
@@ -3890,7 +5856,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-nanoscale-connectome-analyzer.md — copy code block or import",
     "version": "1.0.0",
-    "size": "2.0 KB"
+    "size": "2.0 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "nanoscale",
+      "connectome"
+    ],
+    "downloads": 0,
+    "likes": 35
   },
   {
     "icon": "⚡",
@@ -3911,7 +5888,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-negativity-bias-offset.md — copy code block or import",
     "version": "1.0.0",
-    "size": "0.9 KB"
+    "size": "0.9 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "negativity",
+      "bias"
+    ],
+    "downloads": 0,
+    "likes": 28
   },
   {
     "icon": "⚡",
@@ -3932,7 +5920,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-network-stack-from-scratch.md — copy code block or import",
     "version": "1.0.0",
-    "size": "6.5 KB"
+    "size": "6.5 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "network",
+      "stack"
+    ],
+    "downloads": 0,
+    "likes": 17
   },
   {
     "icon": "⚡",
@@ -3953,7 +5952,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-neural-network-from-scratch.md — copy code block or import",
     "version": "1.0.0",
-    "size": "7.2 KB"
+    "size": "7.2 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "neural",
+      "network"
+    ],
+    "downloads": 0,
+    "likes": 23
   },
   {
     "icon": "⚡",
@@ -3974,7 +5984,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-nosql-from-scratch.md — copy code block or import",
     "version": "1.0.0",
-    "size": "9.0 KB"
+    "size": "9.0 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "nosql",
+      "from"
+    ],
+    "downloads": 0,
+    "likes": 10
   },
   {
     "icon": "⚡",
@@ -3995,7 +6016,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-openai-agents-sdk.md — copy code block or import",
     "version": "1.0.0",
-    "size": "3.4 KB"
+    "size": "3.4 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "openai",
+      "agents"
+    ],
+    "downloads": 0,
+    "likes": 6
   },
   {
     "icon": "⚡",
@@ -4016,7 +6048,17 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-opencode-skill-synthesizer.md — copy code block or import",
     "version": "1.0.0",
-    "size": "1.1 KB"
+    "size": "1.1 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "opencode"
+    ],
+    "downloads": 0,
+    "likes": 23
   },
   {
     "icon": "⚡",
@@ -4037,7 +6079,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-openhands-subconscious.md — copy code block or import",
     "version": "1.0.0",
-    "size": "13.2 KB"
+    "size": "13.2 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "openhands",
+      "subconscious"
+    ],
+    "downloads": 0,
+    "likes": 30
   },
   {
     "icon": "⚡",
@@ -4058,7 +6111,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-openscreen-automation.md — copy code block or import",
     "version": "1.0.0",
-    "size": "3.0 KB"
+    "size": "3.0 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "openscreen",
+      "automation"
+    ],
+    "downloads": 0,
+    "likes": 18
   },
   {
     "icon": "⚡",
@@ -4079,7 +6143,17 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-opentelemetry.md — copy code block or import",
     "version": "1.0.0",
-    "size": "13.2 KB"
+    "size": "13.2 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "opentelemetry"
+    ],
+    "downloads": 0,
+    "likes": 36
   },
   {
     "icon": "⚡",
@@ -4100,7 +6174,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-operating-system-from-scratch.md — copy code block or import",
     "version": "1.0.0",
-    "size": "8.5 KB"
+    "size": "8.5 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "operating",
+      "system"
+    ],
+    "downloads": 0,
+    "likes": 27
   },
   {
     "icon": "⚡",
@@ -4121,7 +6206,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-os-from-scratch.md — copy code block or import",
     "version": "1.0.0",
-    "size": "10.2 KB"
+    "size": "10.2 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "from",
+      "scratch"
+    ],
+    "downloads": 0,
+    "likes": 37
   },
   {
     "icon": "⚡",
@@ -4142,7 +6238,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-physics-engine-from-scratch.md — copy code block or import",
     "version": "1.0.0",
-    "size": "10.4 KB"
+    "size": "10.4 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "physics",
+      "engine"
+    ],
+    "downloads": 0,
+    "likes": 38
   },
   {
     "icon": "⚡",
@@ -4163,7 +6270,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-pinterest-marketing-seo.md — copy code block or import",
     "version": "1.0.0",
-    "size": "13.7 KB"
+    "size": "13.7 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "pinterest",
+      "marketing"
+    ],
+    "downloads": 0,
+    "likes": 6
   },
   {
     "icon": "⚡",
@@ -4184,7 +6302,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-plan-from-simulation.md — copy code block or import",
     "version": "1.0.0",
-    "size": "0.8 KB"
+    "size": "0.8 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "plan",
+      "from"
+    ],
+    "downloads": 0,
+    "likes": 25
   },
   {
     "icon": "⚡",
@@ -4205,7 +6334,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-playwright-automation.md — copy code block or import",
     "version": "1.0.0",
-    "size": "3.2 KB"
+    "size": "3.2 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "playwright",
+      "automation"
+    ],
+    "downloads": 0,
+    "likes": 28
   },
   {
     "icon": "⚡",
@@ -4226,7 +6366,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-post-processing-stack.md — copy code block or import",
     "version": "1.0.0",
-    "size": "8.4 KB"
+    "size": "8.4 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "post",
+      "processing"
+    ],
+    "downloads": 0,
+    "likes": 19
   },
   {
     "icon": "⚡",
@@ -4247,7 +6398,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-processor-from-scratch.md — copy code block or import",
     "version": "1.0.0",
-    "size": "6.2 KB"
+    "size": "6.2 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "processor",
+      "from"
+    ],
+    "downloads": 0,
+    "likes": 3
   },
   {
     "icon": "⚡",
@@ -4268,7 +6430,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-product-demo-workflow.md — copy code block or import",
     "version": "1.0.0",
-    "size": "2.4 KB"
+    "size": "2.4 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "product",
+      "demo"
+    ],
+    "downloads": 0,
+    "likes": 39
   },
   {
     "icon": "⚡",
@@ -4289,7 +6462,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-programming-language-from-scratch.md — copy code block or import",
     "version": "1.0.0",
-    "size": "7.1 KB"
+    "size": "7.1 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "programming",
+      "language"
+    ],
+    "downloads": 0,
+    "likes": 14
   },
   {
     "icon": "⚡",
@@ -4310,7 +6494,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-progressive-disclosure-protocol.md — copy code block or import",
     "version": "1.0.0",
-    "size": "0.9 KB"
+    "size": "0.9 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "progressive",
+      "disclosure"
+    ],
+    "downloads": 0,
+    "likes": 9
   },
   {
     "icon": "⚡",
@@ -4331,7 +6526,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-pydantic-ai-agents.md — copy code block or import",
     "version": "1.0.0",
-    "size": "2.6 KB"
+    "size": "2.6 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "pydantic",
+      "agents"
+    ],
+    "downloads": 0,
+    "likes": 22
   },
   {
     "icon": "⚡",
@@ -4352,7 +6558,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-regex-from-scratch.md — copy code block or import",
     "version": "1.0.0",
-    "size": "12.6 KB"
+    "size": "12.6 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "regex",
+      "from"
+    ],
+    "downloads": 0,
+    "likes": 6
   },
   {
     "icon": "⚡",
@@ -4373,7 +6590,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-report-generation.md — copy code block or import",
     "version": "1.0.0",
-    "size": "0.8 KB"
+    "size": "0.8 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "report",
+      "generation"
+    ],
+    "downloads": 0,
+    "likes": 10
   },
   {
     "icon": "⚡",
@@ -4394,7 +6622,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-research-problem-formulation.md — copy code block or import",
     "version": "1.0.0",
-    "size": "0.8 KB"
+    "size": "0.8 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "research",
+      "problem"
+    ],
+    "downloads": 0,
+    "likes": 23
   },
   {
     "icon": "⚡",
@@ -4415,7 +6654,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-research-subconscious.md — copy code block or import",
     "version": "1.0.0",
-    "size": "13.5 KB"
+    "size": "13.5 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "research",
+      "subconscious"
+    ],
+    "downloads": 0,
+    "likes": 1
   },
   {
     "icon": "⚡",
@@ -4436,7 +6686,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-root-cause-synthesis.md — copy code block or import",
     "version": "1.0.0",
-    "size": "0.8 KB"
+    "size": "0.8 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "root",
+      "cause"
+    ],
+    "downloads": 0,
+    "likes": 9
   },
   {
     "icon": "⚡",
@@ -4457,7 +6718,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-scout-agent.md — copy code block or import",
     "version": "1.0.0",
-    "size": "4.3 KB"
+    "size": "4.3 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "scout",
+      "agent"
+    ],
+    "downloads": 0,
+    "likes": 0
   },
   {
     "icon": "⚡",
@@ -4478,7 +6750,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-scribe-agent.md — copy code block or import",
     "version": "1.0.0",
-    "size": "4.0 KB"
+    "size": "4.0 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "scribe",
+      "agent"
+    ],
+    "downloads": 0,
+    "likes": 3
   },
   {
     "icon": "⚡",
@@ -4499,7 +6782,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-search-engine-from-scratch.md — copy code block or import",
     "version": "1.0.0",
-    "size": "10.3 KB"
+    "size": "10.3 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "search",
+      "engine"
+    ],
+    "downloads": 0,
+    "likes": 39
   },
   {
     "icon": "⚡",
@@ -4520,7 +6814,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-service-manual-methodology.md — copy code block or import",
     "version": "1.0.0",
-    "size": "4.9 KB"
+    "size": "4.9 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "service",
+      "manual"
+    ],
+    "downloads": 0,
+    "likes": 32
   },
   {
     "icon": "⚡",
@@ -4541,7 +6846,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-shell-from-scratch.md — copy code block or import",
     "version": "1.0.0",
-    "size": "12.5 KB"
+    "size": "12.5 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "shell",
+      "from"
+    ],
+    "downloads": 0,
+    "likes": 0
   },
   {
     "icon": "⚡",
@@ -4562,7 +6878,17 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-skill-factory.md — copy code block or import",
     "version": "1.0.0",
-    "size": "13.0 KB"
+    "size": "13.0 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "factory"
+    ],
+    "downloads": 0,
+    "likes": 37
   },
   {
     "icon": "⚡",
@@ -4583,7 +6909,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-social-media-agent-competition.md — copy code block or import",
     "version": "1.0.0",
-    "size": "11.5 KB"
+    "size": "11.5 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "social",
+      "media"
+    ],
+    "downloads": 0,
+    "likes": 3
   },
   {
     "icon": "⚡",
@@ -4604,7 +6941,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-social-media-automation.md — copy code block or import",
     "version": "1.0.0",
-    "size": "4.4 KB"
+    "size": "4.4 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "social",
+      "media"
+    ],
+    "downloads": 0,
+    "likes": 22
   },
   {
     "icon": "⚡",
@@ -4625,7 +6973,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-soul-maker.md — copy code block or import",
     "version": "1.0.0",
-    "size": "16.9 KB"
+    "size": "16.9 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "soul",
+      "maker"
+    ],
+    "downloads": 0,
+    "likes": 10
   },
   {
     "icon": "⚡",
@@ -4646,7 +7005,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-soulguns-agent-patterns.md — copy code block or import",
     "version": "1.0.0",
-    "size": "20.2 KB"
+    "size": "20.2 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "soulguns",
+      "agent"
+    ],
+    "downloads": 0,
+    "likes": 27
   },
   {
     "icon": "⚡",
@@ -4667,7 +7037,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-soulguns-architecture.md — copy code block or import",
     "version": "1.0.0",
-    "size": "18.2 KB"
+    "size": "18.2 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "soulguns",
+      "architecture"
+    ],
+    "downloads": 0,
+    "likes": 15
   },
   {
     "icon": "⚡",
@@ -4688,7 +7069,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-soulguns-design-systems.md — copy code block or import",
     "version": "1.0.0",
-    "size": "14.6 KB"
+    "size": "14.6 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "soulguns",
+      "design"
+    ],
+    "downloads": 0,
+    "likes": 16
   },
   {
     "icon": "⚡",
@@ -4709,7 +7101,17 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-soulguns-mcp.md — copy code block or import",
     "version": "1.0.0",
-    "size": "23.6 KB"
+    "size": "23.6 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "soulguns"
+    ],
+    "downloads": 0,
+    "likes": 7
   },
   {
     "icon": "⚡",
@@ -4730,7 +7132,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-soulguns-observability.md — copy code block or import",
     "version": "1.0.0",
-    "size": "20.9 KB"
+    "size": "20.9 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "soulguns",
+      "observability"
+    ],
+    "downloads": 0,
+    "likes": 1
   },
   {
     "icon": "⚡",
@@ -4751,7 +7164,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-soulguns-testing.md — copy code block or import",
     "version": "1.0.0",
-    "size": "27.4 KB"
+    "size": "27.4 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "soulguns",
+      "testing"
+    ],
+    "downloads": 0,
+    "likes": 32
   },
   {
     "icon": "⚡",
@@ -4772,7 +7196,17 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-soulguns-ts.md — copy code block or import",
     "version": "1.0.0",
-    "size": "22.8 KB"
+    "size": "22.8 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "soulguns"
+    ],
+    "downloads": 0,
+    "likes": 39
   },
   {
     "icon": "⚡",
@@ -4793,7 +7227,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-spatial-world-interaction.md — copy code block or import",
     "version": "1.0.0",
-    "size": "0.8 KB"
+    "size": "0.8 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "spatial",
+      "world"
+    ],
+    "downloads": 0,
+    "likes": 6
   },
   {
     "icon": "⚡",
@@ -4814,7 +7259,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-sqlite-from-scratch.md — copy code block or import",
     "version": "1.0.0",
-    "size": "18.4 KB"
+    "size": "18.4 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "sqlite",
+      "from"
+    ],
+    "downloads": 0,
+    "likes": 32
   },
   {
     "icon": "⚡",
@@ -4835,7 +7291,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-structural-diff-analysis.md — copy code block or import",
     "version": "1.0.0",
-    "size": "0.9 KB"
+    "size": "0.9 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "structural",
+      "diff"
+    ],
+    "downloads": 0,
+    "likes": 24
   },
   {
     "icon": "⚡",
@@ -4856,7 +7323,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-template-engine-from-scratch.md — copy code block or import",
     "version": "1.0.0",
-    "size": "9.2 KB"
+    "size": "9.2 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "template",
+      "engine"
+    ],
+    "downloads": 0,
+    "likes": 26
   },
   {
     "icon": "⚡",
@@ -4877,7 +7355,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-text-editor-from-scratch.md — copy code block or import",
     "version": "1.0.0",
-    "size": "7.4 KB"
+    "size": "7.4 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "text",
+      "editor"
+    ],
+    "downloads": 0,
+    "likes": 14
   },
   {
     "icon": "⚡",
@@ -4898,7 +7387,17 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-threejs-3d-ui.md — copy code block or import",
     "version": "1.0.0",
-    "size": "14.1 KB"
+    "size": "14.1 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "threejs"
+    ],
+    "downloads": 0,
+    "likes": 30
   },
   {
     "icon": "⚡",
@@ -4919,7 +7418,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-threejs-ecosystem.md — copy code block or import",
     "version": "1.0.0",
-    "size": "6.0 KB"
+    "size": "6.0 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "threejs",
+      "ecosystem"
+    ],
+    "downloads": 0,
+    "likes": 18
   },
   {
     "icon": "⚡",
@@ -4940,7 +7450,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-threejs-grid-city.md — copy code block or import",
     "version": "1.0.0",
-    "size": "11.0 KB"
+    "size": "11.0 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "threejs",
+      "grid"
+    ],
+    "downloads": 0,
+    "likes": 19
   },
   {
     "icon": "⚡",
@@ -4961,7 +7482,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-threejs-particle-fx.md — copy code block or import",
     "version": "1.0.0",
-    "size": "6.9 KB"
+    "size": "6.9 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "threejs",
+      "particle"
+    ],
+    "downloads": 0,
+    "likes": 5
   },
   {
     "icon": "⚡",
@@ -4982,7 +7514,17 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-tiered-skill-evolution.md — copy code block or import",
     "version": "1.0.0",
-    "size": "0.8 KB"
+    "size": "0.8 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "tiered"
+    ],
+    "downloads": 0,
+    "likes": 5
   },
   {
     "icon": "⚡",
@@ -5003,7 +7545,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-ultra-review.md — copy code block or import",
     "version": "1.0.0",
-    "size": "6.6 KB"
+    "size": "6.6 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "ultra",
+      "review"
+    ],
+    "downloads": 0,
+    "likes": 24
   },
   {
     "icon": "⚡",
@@ -5024,7 +7577,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-verifiable-goal-definition.md — copy code block or import",
     "version": "1.0.0",
-    "size": "0.9 KB"
+    "size": "0.9 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "verifiable",
+      "goal"
+    ],
+    "downloads": 0,
+    "likes": 39
   },
   {
     "icon": "⚡",
@@ -5045,7 +7609,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-visual-recognition-from-scratch.md — copy code block or import",
     "version": "1.0.0",
-    "size": "0.8 KB"
+    "size": "0.8 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "visual",
+      "recognition"
+    ],
+    "downloads": 0,
+    "likes": 18
   },
   {
     "icon": "⚡",
@@ -5066,7 +7641,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-voxel-engine-from-scratch.md — copy code block or import",
     "version": "1.0.0",
-    "size": "0.8 KB"
+    "size": "0.8 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "voxel",
+      "engine"
+    ],
+    "downloads": 0,
+    "likes": 10
   },
   {
     "icon": "⚡",
@@ -5087,7 +7673,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-web-browser-from-scratch.md — copy code block or import",
     "version": "1.0.0",
-    "size": "17.9 KB"
+    "size": "17.9 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "browser",
+      "from"
+    ],
+    "downloads": 0,
+    "likes": 38
   },
   {
     "icon": "⚡",
@@ -5108,7 +7705,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-webserver-from-scratch.md — copy code block or import",
     "version": "1.0.0",
-    "size": "16.0 KB"
+    "size": "16.0 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "webserver",
+      "from"
+    ],
+    "downloads": 0,
+    "likes": 31
   },
   {
     "icon": "⚡",
@@ -5129,7 +7737,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-websocket-from-scratch.md — copy code block or import",
     "version": "1.0.0",
-    "size": "0.8 KB"
+    "size": "0.8 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "websocket",
+      "from"
+    ],
+    "downloads": 0,
+    "likes": 33
   },
   {
     "icon": "⚡",
@@ -5150,7 +7769,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-world-model-simulation.md — copy code block or import",
     "version": "1.0.0",
-    "size": "0.8 KB"
+    "size": "0.8 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "world",
+      "model"
+    ],
+    "downloads": 0,
+    "likes": 14
   },
   {
     "icon": "⚡",
@@ -5171,7 +7801,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-context-window-control.md — copy code block or import",
     "version": "1.0.0",
-    "size": "16.5 KB"
+    "size": "16.5 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "context",
+      "window"
+    ],
+    "downloads": 0,
+    "likes": 30
   },
   {
     "icon": "⚡",
@@ -5192,7 +7833,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-permission-architecture.md — copy code block or import",
     "version": "1.0.0",
-    "size": "17.6 KB"
+    "size": "17.6 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "permission",
+      "architecture"
+    ],
+    "downloads": 0,
+    "likes": 17
   },
   {
     "icon": "⚡",
@@ -5213,7 +7865,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-pipeline-orchestration.md — copy code block or import",
     "version": "1.0.0",
-    "size": "19.8 KB"
+    "size": "19.8 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "pipeline",
+      "orchestration"
+    ],
+    "downloads": 0,
+    "likes": 5
   },
   {
     "icon": "⚡",
@@ -5234,7 +7897,18 @@
     "requirements": "Load as skill .md in your agent",
     "install": "Load downloads/soul-gun-soul-media-marketing.md — copy code block or import",
     "version": "1.0.0",
-    "size": "11.8 KB"
+    "size": "11.8 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "skill",
+      "tool",
+      "capability",
+      "soul",
+      "media"
+    ],
+    "downloads": 0,
+    "likes": 35
   },
   {
     "icon": "🔥",
@@ -5254,6 +7928,17 @@
     "requirements": "Load constituent souls/skills first",
     "install": "Follow combo guide in combo-divine-directive.md",
     "version": "1.0.0",
-    "size": "~10 KB"
+    "size": "~10 KB",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "combo",
+      "stack",
+      "bundle",
+      "divine",
+      "directive"
+    ],
+    "downloads": 0,
+    "likes": 22
   }
 ]

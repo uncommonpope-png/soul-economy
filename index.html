@@ -303,6 +303,7 @@ input{font-family:inherit;outline:none;border:none;background:none}
 
 <div class="categories" id="categoryTabs">
   <button class="category-tab active" data-cat="all">✦ All</button>
+  <button class="category-tab" data-cat="trending" style="background:rgba(255,209,102,0.08);border-color:rgba(255,209,102,0.2);color:var(--gold)">🔥 Trending</button>
   <button class="category-tab" data-cat="soul">🧠 Souls</button>
   <button class="category-tab" data-cat="skill">⚡ Skills</button>
   <button class="category-tab" data-cat="pack">📦 Packs</button>
@@ -668,13 +669,21 @@ const items = [
 const grid=document.getElementById('resourceGrid'),si=document.getElementById('searchInput'),sc=document.getElementById('searchClear'),sr=document.getElementById('searchResults'),tabs=document.querySelectorAll('.category-tab');
 let active='all';
 
+function getLikes(name){ try{ const m=JSON.parse(localStorage.getItem('soulLikes')||'{}'); return m[name]||0; }catch{ return 0; } }
+function toggleLike(name, btn){ const m=JSON.parse(localStorage.getItem('soulLikes')||'{}'); const liked=localStorage.getItem('liked_'+name)==='1'; if(liked){ m[name]=Math.max(0,(m[name]||1)-1); localStorage.removeItem('liked_'+name); btn.textContent='♡ '+m[name]; } else { m[name]=(m[name]||0)+1; localStorage.setItem('liked_'+name,'1'); btn.textContent='♥ '+m[name]; } localStorage.setItem('soulLikes', JSON.stringify(m)); }
 function render(data){
-  grid.innerHTML=data.map((item,i)=>`
+  grid.innerHTML=data.map((item,i)=>{
+    const dl=item.downloads||0;
+    const likes=(item.likes||0)+getLikes(item.name);
+    const tags=(item.tags||[]).slice(0,3).map(t=>`<span style="font-size:0.6rem;padding:2px 8px;border-radius:20px;background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.1);color:#8B5CF6">${t}</span>`).join(' ');
+    return `
     <div class="card card-entrance" style="animation-delay:${i*0.04}s" data-id="${item.name.replace(/'/g, '')}">
       <div class="card-top">
-        ${item.image ? `<img class="card-image" src="${item.image}" alt="${item.name}" loading="lazy">` : `<span class="card-icon">${item.icon}</span>`}
+        ${item.image ? `<img class="card-image" src="${item.image}" alt="${item.name}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><span class="card-icon" style="display:none">${item.icon}</span>` : `<span class="card-icon">${item.icon}</span>`}
         ${item.featured?'<span class="card-badge">✦ Featured</span>':''}
       </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;font-size:0.65rem;color:var(--text-muted)"><span>👤 ${item.author||'profit-prime'}</span><span>•</span><span>${item.license||'MIT'}</span><span>•</span><span>⬇ ${dl}</span><span>•</span><span style="cursor:pointer" onclick="toggleLike('${item.name.replace(/'/g,"\\'")}', this)">♡ ${likes}</span></div>
+      ${tags?`<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px">${tags}</div>`:''}
       <div class="card-title">${item.name}</div>
       <div class="card-desc">${item.desc}</div>
       <div class="card-meta">
@@ -694,11 +703,11 @@ function render(data){
         ${item.contents ? `<div class="detail-row"><strong>Contents:</strong><ul>${item.contents.map(c=>`<li>${c}</li>`).join('')}</ul></div>` : ''}
         ${item.requirements ? `<div class="detail-row"><strong>Requirements:</strong><span>${item.requirements}</span></div>` : ''}
         ${item.install ? `<div class="detail-row"><strong>Install:</strong><pre>${item.install}</pre></div>` : ''}
-        ${item.version ? `<div class="detail-row"><strong>Version:</strong><span>${item.version}</span></div>` : ''}
+        <div class="detail-row"><strong>Author:</strong><span>${item.author||'profit-prime'}</span> · <strong>License:</strong><span>${item.license||'MIT'}</span> · <strong>Tags:</strong><span>${(item.tags||[]).join(', ')}</span></div>
         ${item.updated ? `<div class="detail-row"><strong>Updated:</strong><span>${item.updated}</span></div>` : ''}
       </div>
     </div>
-  `).join('');
+  `}).join('');
   // 3D tilt + ripple
   function burstParticles(x,y){
     const colors=['#8B5CF6','#00D4FF','#FFD166','#FF6B9D','#A855F7'];
@@ -767,7 +776,9 @@ function filterAndRender(){
   const wbPanel=document.getElementById('workbenchPanel'), gridSec=document.getElementById('catalog');
   if(active==='workbench'){ if(wbPanel) wbPanel.style.display='block'; if(gridSec) gridSec.style.display='none'; document.querySelector('.plt-filters').style.display='none'; checkWorkbench(); return; }
   else { if(wbPanel) wbPanel.style.display='none'; if(gridSec) gridSec.style.display='block'; document.querySelector('.plt-filters').style.display='flex'; }
-  let d = active === 'all' ? [...items] : items.filter(i => i.type === active);
+  let d;
+  if(active==='trending'){ d=[...items].sort((a,b)=> ((b.downloads||0)+(b.likes||0)*5+(b.featured?50:0)) - ((a.downloads||0)+(a.likes||0)*5+(a.featured?50:0))); d=d.slice(0,24); }
+  else d = active === 'all' ? [...items] : items.filter(i => i.type === active);
   const q = si.value.trim().toLowerCase();
   
   // PLT filters
@@ -820,7 +831,7 @@ si.addEventListener('keydown',e=>{
 
 render(items);
 
-// ─── ASYNC CATALOG LOADER ───
+// ─── ASYNC CATALOG LOADER + LIVE DOWNLOADS ───
 (async function loadExternalCatalog() {
     try {
         const res = await fetch('./data/catalog.json');
@@ -830,7 +841,15 @@ render(items);
                 window.items = external;
                 initFuse(external);
                 render(external);
-                console.log(`✦ Catalog loaded externally: ${external.length} items`);
+                console.log(`Catalog loaded externally: ${external.length} items`);
+                // fetch live GitHub download counts
+                try{
+                  const r2=await fetch('https://api.github.com/repos/uncommonpope-png/soul-economy/releases/tags/buyasoul-runtime', {headers:{'Accept':'application/vnd.github+json'}});
+                  if(r2.ok){ const j=await r2.json(); const total=(j.assets||[]).reduce((s,a)=>s+(a.download_count||0),0);
+                    // spread total to Family pack and show
+                    const fam=external.find(x=>x.name.includes('Profit LoveTax')); if(fam){ fam.downloads=total; render(external); }
+                  }
+                }catch(e2){}
             }
         }
     } catch(e) { console.log('Catalog fallback: using embedded data'); }
