@@ -8845,22 +8845,5 @@
     ],
     "author": "profit-prime",
     "graft": true
-  },
-  {
-    "icon": "❤",
-    "type": "skill",
-    "name": "heart-city",
-    "desc": "A beating heart city living entirely on the floor canvas under the knowledge graph: data-driven lub-dub heartbeat (BPM from catalog Profit), 96-building neon metropolis, code+PLT arteries flowing to 16 named pyramids, return canals, ring traffic, floor ECG, and beat shockwaves. Graph untouched.",
-    "plt": "0.8/0.7/0.6",
-    "file": "soul-gun-heart-city.md",
-    "tags": [
-      "threejs",
-      "city",
-      "heartbeat",
-      "particles",
-      "instancing"
-    ],
-    "author": "profit-prime",
-    "graft": true
   }
 ]
