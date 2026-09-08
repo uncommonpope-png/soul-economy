@@ -146,20 +146,12 @@ input{font-family:inherit;outline:none;border:none;background:none}
 .card:hover::after{opacity:1}
 @keyframes shimmer{0%{transform:translateX(-100%) rotate(25deg)}100%{transform:translateX(100%) rotate(25deg)}}
 .card:hover{transform:translateY(-8px) scale(1.01);border-color:var(--glass-hover);box-shadow:0 20px 80px rgba(139,92,246,0.08),0 0 60px rgba(139,92,246,0.03)}
-/* FLIP-ON-HOVER — card shows soul manifest on the back */
-.card-inner{position:relative;display:grid;width:100%;height:100%;transform-style:preserve-3d;transition:transform 0.6s cubic-bezier(0.22,1,0.36,1)}
-.card.flip .card-inner{transform:rotateY(180deg)}
-.card-face{grid-area:1/1;backface-visibility:hidden;-webkit-backface-visibility:hidden}
-.card-front{transform:translateZ(0)}
-.card-back{display:flex;flex-direction:column;gap:10px;padding:24px;border-radius:14px;background:linear-gradient(160deg,rgba(18,16,30,0.98),rgba(34,10,44,0.98));border:1px solid rgba(255,105,180,0.18);box-shadow:0 20px 80px rgba(255,105,180,0.10);transform:rotateY(180deg) translateZ(0);overflow:visible}
-.card-back .bb-title{font-size:1.05rem;font-weight:700;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,0.6)}
-.card-back .bb-type{font-size:0.62rem;text-transform:uppercase;letter-spacing:0.10em;color:#A855F7}
-.card-back .bb-plt{display:flex;gap:6px;flex-wrap:wrap;margin:2px 0 4px}
-.card-back .bb-plt span{padding:2px 10px;border-radius:6px;font-size:0.72rem;font-weight:600;background:rgba(255,105,180,0.10);color:#FF6B9D;border:1px solid rgba(255,105,180,0.16)}
-.card-back .bb-desc{font-size:0.8rem;color:var(--text-muted);line-height:1.6}
-.card-back .bb-tags{display:flex;gap:5px;flex-wrap:wrap}
-.card-back .bb-tags span{font-size:0.62rem;padding:2px 8px;border-radius:20px;background:rgba(139,92,246,0.10);border:1px solid rgba(139,92,246,0.14);color:#8B5CF6}
-.card-back .bb-file{font-size:0.7rem;color:var(--text-muted);font-family:monospace;word-break:break-all;margin-top:auto}
+/* ALWAYS-VISIBLE SOUL MANIFEST — full content on every card */
+.card-extra{display:flex;align-items:center;gap:8px;margin:14px 0 4px;font-size:0.62rem;text-transform:uppercase;letter-spacing:0.12em;color:#A855F7}
+.card-extra::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(255,105,180,0.28),transparent)}
+.card-plt span{box-shadow:0 0 14px rgba(255,105,180,0.10);border:1px solid rgba(255,255,255,0.05)}
+.card-plt span:hover{box-shadow:0 0 22px rgba(255,105,180,0.32)}
+.card-desc{font-size:0.85rem;line-height:1.6;color:var(--text-gray);margin-bottom:8px}
 .card:hover::before{background:linear-gradient(135deg,var(--purple),transparent 60%,var(--cyan))}
 .card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px}
 .card-icon{font-size:1.8rem;width:48px;height:48px;display:flex;align-items:center;justify-content:center;background:rgba(139,92,246,0.06);border-radius:12px;border:1px solid rgba(139,92,246,0.06);transition:var(--transition)}
@@ -235,8 +227,7 @@ input{font-family:inherit;outline:none;border:none;background:none}
 .meta-tag:hover{background:rgba(139,92,246,0.08);border-color:rgba(139,92,246,0.12);color:var(--text-white)}
 .card-expand{display:flex;align-items:center;justify-content:center;gap:6px;padding:8px 16px;margin-top:12px;border-radius:10px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.04);color:var(--text-muted);font-size:0.7rem;font-weight:500;cursor:pointer;transition:var(--transition);user-select:none}
 .card-expand:hover{background:rgba(139,92,246,0.06);border-color:rgba(139,92,246,0.12);color:var(--purple)}
-.card-details{overflow:hidden;max-height:0;opacity:0;transition:max-height 0.4s ease, opacity 0.3s ease, padding 0.3s ease;padding:0 4px;margin-top:8px}
-.card-details:not(.hidden){max-height:500px;opacity:1;padding:12px 4px 4px}
+.card-details{overflow:visible;max-height:none;opacity:1;padding:12px 4px 4px;margin-top:8px;border-top:1px dashed rgba(255,105,180,0.15)}
 .detail-row{margin-bottom:10px;padding:8px 10px;background:rgba(255,255,255,0.02);border-radius:8px;border:1px solid rgba(255,255,255,0.03)}
 .detail-row strong{color:var(--cyan);font-size:0.75rem;text-transform:uppercase;letter-spacing:0.05em;display:block;margin-bottom:4px}
 .detail-row span{color:var(--text-gray);font-size:0.8rem;line-height:1.6}
@@ -768,7 +759,7 @@ function render(data){
   grid.innerHTML=data.map((item,i)=>{
     const dl=item.downloads||0;
     const likes=(item.likes||0)+getLikes(item.name);
-    const tags=(item.tags||[]).slice(0,3).map(t=>`<span style="font-size:0.6rem;padding:2px 8px;border-radius:20px;background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.1);color:#8B5CF6">${t}</span>`).join(' ');
+    const tags=(item.tags||[]).map(t=>`<span style="font-size:0.6rem;padding:2px 8px;border-radius:20px;background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.1);color:#8B5CF6">${t}</span>`).join(' ');
     return `
     <div class="card card-entrance${item.graft?' dossier':''}" style="animation-delay:${i*0.04}s" data-id="${item.name.replace(/'/g, '')}">
       <div class="card-top">
@@ -791,8 +782,8 @@ function render(data){
         <span class="card-category">${item.type}</span>
         ${item.download ? `<a href="${item.download}" download class="btn-download">⬇ Download</a>` : (item.url ? `<a href="${item.url}" target="_blank" class="btn-play">▶ Play</a>` : `<a href="downloads/${item.file}" download class="btn-download">⬇ Download</a>`)}
       </div>
-      <div class="card-expand" onclick="expandCard(this)"><span>▼ Details</span></div>
-      <div class="card-details hidden">
+      <div class="card-extra">✦ full manifest</div>
+      <div class="card-details">
         <div class="detail-row"><strong>What you get:</strong><span>${item.details || item.desc}</span></div>
         ${item.contents ? `<div class="detail-row"><strong>Contents:</strong><ul>${item.contents.map(c=>`<li>${c}</li>`).join('')}</ul></div>` : ''}
         ${item.requirements ? `<div class="detail-row"><strong>Requirements:</strong><span>${item.requirements}</span></div>` : ''}
@@ -1602,59 +1593,6 @@ window.guideSendWithAdapter = async (q) => {
 spinOnce(card);
       });
   })();
-</script>
-<script>
-// ─── CARD FLIP-ON-HOVER — back face = soul manifest (DOM cards only) ───
-(function(){
-  const grid = document.getElementById('resourceGrid');
-  if (!grid) return;
-  function buildBack(card){
-    const titleEl = card.querySelector('.card-title'); const title = titleEl ? titleEl.textContent.trim() : 'Soul';
-    const typeEl = card.querySelector('.card-category'); const type = typeEl ? typeEl.textContent.trim() : '';
-    const ptEl = card.querySelector('.card-plt'); let p='0.5', l='0.5', t='0.5';
-    if (ptEl) { const s = ptEl.querySelectorAll('span'); if (s.length === 3) { const val=(x)=>{ const m=x.textContent.match(/(\d\.\d+)/); return m ? m[1] : '0.5'; }; p=val(s[0]); l=val(s[1]); t=val(s[2]); } }
-    const descEl = card.querySelector('.card-desc'); const desc = descEl ? descEl.textContent.trim() : '';
-    let file = '';
-    const meta = card.querySelector('.card-meta');
-    if (meta) { const m = meta.querySelector('.meta-tag'); if (m) { const clean = m.textContent.replace(/[📦🏷️💾⚙️]/g, '').trim(); file = (clean.split(' ')[0] || clean); } }
-    const tags = [];
-    card.querySelectorAll('span').forEach(sp => { if (sp.style && sp.style.color === 'rgb(139, 92, 246)') tags.push(sp.textContent); });
-    const tagHtml = tags.slice(0,5).map(x => '<span>'+x+'</span>').join('');
-    return '<div class="bb-title">'+title+'</div>' +
-      '<div class="bb-type">' + type + ' · soul manifest</div>' +
-      '<div class="bb-plt"><span>P '+p+'</span><span>L '+l+'</span><span>T '+t+'</span></div>' +
-      '<div class="bb-desc">' + (desc || '') + '</div>' +
-      (tagHtml ? '<div class="bb-tags">' + tagHtml + '</div>' : '') +
-      (file ? '<div class="bb-file">' + file + '</div>' : '');
-  }
-  function enableFlip(card){
-    if (card._flipDone) return; card._flipDone = true;
-    const inner = document.createElement('div'); inner.className = 'card-inner';
-    const front = document.createElement('div'); front.className = 'card-face card-front';
-    while (card.firstChild && card.firstChild.nodeType === 1) front.appendChild(card.firstChild);
-    while (card.firstChild) card.removeChild(card.firstChild);
-    inner.appendChild(front);
-    const back = document.createElement('div'); back.className = 'card-face card-back';
-    back.innerHTML = buildBack(card); inner.appendChild(back);
-    card.appendChild(inner);
-  }
-  function wrapAll(){ document.querySelectorAll('#resourceGrid .card').forEach(enableFlip); }
-  wrapAll();
-  const mo = new MutationObserver(wrapAll);
-  mo.observe(grid, { childList: true });
-  // Flip gate — only when pointer is over the card's TOP half (keeps Download/Details reachable) and never while spinning
-  let flipCard = null;
-  grid.addEventListener('mousemove', (e) => {
-    const card = e.target && e.target.closest ? e.target.closest('.card') : null;
-    if (flipCard && flipCard !== card) { flipCard.classList.remove('flip'); flipCard = null; }
-    if (!card) return;
-    if (card.classList.contains('card-glowing')) return;
-    const r = card.getBoundingClientRect();
-    const onTop = e.clientY < (r.top + r.height * 0.5);
-    if (onTop) { card.classList.add('flip'); flipCard = card; } else card.classList.remove('flip');
-  });
-  grid.addEventListener('mouseleave', () => { if (flipCard) { flipCard.classList.remove('flip'); flipCard = null; } });
-})();
 </script>
 <script type="module">
 // ─── GRAPH OVERLAYS — read-only: fog, FXAA+bloom, matrix rain floor (real soul data), star twinkle ───
