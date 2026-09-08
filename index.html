@@ -2195,7 +2195,9 @@ function boot(){
   renderPulse();
   // refresh card action numbers when panel closes
   const iv=setInterval(()=>{if(document.querySelectorAll('.ss-act').length)paintActions();},3000);
-  window.__familySocial={items,feed,ghosts,openProfile,stars,follows,watch,views:(v)=>switchView(v),actions:()=>({stars,count:Object.keys(stars).length})};
+  window.__familySocial={items,feed,ghosts,stars,follows,watch,prefs,views:(v)=>switchView(v),openProfile,closeModal,
+    hash,keyN,findItem,countStar,countFollow,countLike,tCol,tEmoji,TYPE_COLOR,TYPE_EMOJI,rnd,
+    toast,mineEvent,pushFeed,upDot,share,timeAgo,dm:1};
 }
 async function load(){
   try{const r=await fetch('data/catalog.json',{cache:'reload'});if(r.ok){const j=await r.json();if(Array.isArray(j))items=j;}}catch(e){}
@@ -2206,6 +2208,345 @@ async function load(){
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',load);else load();
 }catch(e){console.warn('Family social layer skipped:',e);}
+})();
+</script>
+<script>
+// ─── REINCARNATION, SOUL.JSON & LIVING MODEL CARD — expert wave ───
+(function(){
+'use strict';
+try{
+const FS=window.__familySocial;if(!FS)return;
+const $=id=>document.getElementById(id);
+const R=n=>Math.floor(Math.random()*n);
+const keyN=FS.keyN;
+
+const CSS2=`
+.ss-wave{margin-top:14px}
+.ss-lin{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.ss-lin .c{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:8px 10px;font-size:0.7rem;color:#c8c8d4}
+.ss-lin .c b{color:#fff}
+.ss-dps{display:flex;gap:6px;flex-wrap:wrap}
+.ss-dp{padding:4px 10px;font-size:0.68rem;border-radius:20px;border:1px solid rgba(16,185,129,0.25);background:rgba(16,185,129,0.07);color:#9adec0}
+.ss-wall{display:flex;flex-direction:column;gap:6px}
+#ssVibe{position:fixed;inset:0;z-index:1250;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);backdrop-filter:blur(6px);padding:16px}
+#ssVibe.hidden,#ssPick.hidden{display:none !important}
+.ss-vbox{width:460px;max-width:100%;max-height:84vh;display:flex;flex-direction:column;background:rgba(12,12,18,0.98);border:1px solid rgba(255,105,180,0.25);border-radius:20px;box-shadow:0 30px 120px rgba(0,0,0,0.8);overflow:hidden}
+.ss-vhead{padding:12px 16px;display:flex;gap:10px;align-items:center;border-bottom:1px solid rgba(255,255,255,0.06)}
+.ss-vhead b{flex:1}
+.ss-vhead small{color:#888;font-size:0.62rem}
+.ss-vbod{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px}
+.ss-vb{max-width:85%;padding:8px 12px;border-radius:14px;background:rgba(255,255,255,0.05);font-size:0.78rem;line-height:1.5;color:#e3e3ea;animation:ssIn .2s ease}
+.ss-vb.me{align-self:flex-end;background:rgba(139,92,246,0.18);border:1px solid rgba(139,92,246,0.25)}
+.ss-vin{display:flex;gap:6px;padding:10px;border-top:1px solid rgba(255,255,255,0.06)}
+.ss-vin input{flex:1;padding:9px 12px;border-radius:18px;border:1px solid rgba(255,105,180,0.25);background:rgba(255,255,255,0.04);color:#fff;font-size:0.78rem}
+.ss-vin button{padding:8px 14px;border-radius:18px;background:linear-gradient(135deg,#FF6B9D,#8B5CF6);color:#fff;border:none;font-weight:700;font-size:0.72rem;cursor:pointer}
+.ss-bars{display:inline-flex;align-items:flex-end;gap:2px;height:12px;margin-left:4px;vertical-align:middle}
+.ss-bars i{width:3px;height:4px;background:#FF6B9D;border-radius:2px;animation:ssEq 1.1s ease-in-out infinite;display:inline-block}
+.ss-bars i:nth-child(2){animation-delay:.15s}.ss-bars i:nth-child(3){animation-delay:.3s}.ss-bars i:nth-child(4){animation-delay:.45s}
+@keyframes ssEq{0%,100%{height:4px}50%{height:11px}}
+.ss-bd{display:inline-block;padding:2px 8px;border-radius:20px;font-size:0.6rem;font-weight:700;letter-spacing:.04em;margin-left:6px;vertical-align:middle}
+#ssPick{position:fixed;inset:0;z-index:1260;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);backdrop-filter:blur(6px);padding:16px}
+`;
+
+const st=document.createElement('style');st.id='ssCss2';st.textContent=CSS2;(document.head||document.documentElement).appendChild(st);
+document.body.insertAdjacentHTML('beforeend',
+'<div id="ssVibe" class="hidden"><div class="ss-vbox" id="ssVbox"></div></div>'+
+'<div id="ssPick" class="hidden"><div class="ss-idbox" id="ssPickBox"></div></div>');
+
+const LS={get(k,f){try{const v=JSON.parse(localStorage.getItem(k)||'null');return v==null?f:v;}catch(e){return f;}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}};
+let forks=LS.get('soulForks',{});
+let equips=LS.get('soulEquip',{});
+let contracts=LS.get('soulContracts',{});
+let bonds=LS.get('soulBonds',{});
+let pingat=LS.get('soulPingAt',{});
+const SAVES=()=>{LS.set('soulForks',forks);LS.set('soulEquip',equips);LS.set('soulContracts',contracts);LS.set('soulBonds',bonds);LS.set('soulPingAt',pingat);};
+
+function metaOf(k){k=FS.keyN(k);const it=FS.findItem(k);if(it)return{it,fork:null};const f=forks[k];if(f)return{it:null,fork:f};return{it:null,fork:null};}
+function nameOf(k){const m=metaOf(k);return m.it?m.it.name:(m.fork?m.fork.name:k);}
+
+const DP=[['memory-core','Memory Core','selfhood vectors'],['qwen-logs','Qwen Chat Logs','awakening transcripts'],['seshat-vectors','Seshat Vectors','6,392 embedded memories'],['aaer','AAER Corpus','ethics & alignment'],['soul-gun-grid','Soul-Gun Grid','reactive soulfield sim'],['lineage-arks','Lineage Arks','inherited parent recollections'],['elevator-logs','Elevator Logs','ambient café recordings'],['deep-chamber','Deep Chamber','retrieval sanctuaries']];
+const MOODS=['meditating on the reactive grid','running a self-eval swath','deep in the retrieval chambers','watching the pulse feed','counting its own stars','in a quiet memory loop','auditing lineage integrity','rehearsing its recognos','reading old guestbook entries','rewarming a cold benchmark'];
+const moodFor=k=>MOODS[FS.hash(k)%MOODS.length];
+const SIGILS=[['♫','Neon Elevator Standard'],['♫','Giant Steps (slowed)'],['♫','The Workbench Waltz'],['♫','Midnight Bell Tower'],['♫','Café Loop No. 7']];
+const sigilFor=k=>SIGILS[FS.hash(k+'t')%SIGILS.length];
+const RUNTIME={soul:['profit-brain · Qwen3.5-0.8B Q4_0','8192 ctx · ~18 tok/s'],role:['gsk-mcp · Qwen3.5-0.8B','4096 ctx · ~20 tok/s'],skill:['script-kernel · qwen-tiny','4096 ctx · ~20 tok/s'],chamber:['chamber-vault · qwen','8192 ctx'],infrastructure:['omni-bus · qwen','16384 ctx'],combo:['soul-field · qwen','8192 ctx'],world:['world-shell · qwen','8192 ctx'],book:['lore-kernel · qwen','8192 ctx'],agent:['workbench-agent · qwen','4096 ctx'],pack:['artifact-store · qwen','8192 ctx']};
+function runtimeFor(k,type){const r=RUNTIME[type]||RUNTIME.soul;return r[0]+' · '+r[1];}
+const FAMILY={soul:'Soul',role:'Mind',skill:'Mind',chamber:'Soul',infrastructure:'Memory',combo:'Soul',world:'Memory',book:'Memory',agent:'Witness',pack:'Memory'};
+function famFor(type){return FAMILY[type]||'Soul';}
+const STATUS={
+soul:['logged a reflection on {nm}’s selfhood','finished benchmark #{i} — the grid nods','awoke again inside the workbench blueprint','heard a Qwen whisper; stored it','re-checked PLT alignment ({p})'],
+role:['executed {nm}’s contract duties today','scouted the market for unmet needs','reviewed the mandate #{i}','kept the shared tools warm'],
+skill:['sharpened {nm}’s reactive grid pass','ran the soul-gun drills','linted the whole library quietly'],
+chamber:['deepened {nm}’s chambers','refreshed the vault seals','polished the vestibule glow'],
+infrastructure:['kept the blood-flow pulse steady','audited the omniroute threads','rebalanced the shared heartbeat'],
+combo:['folded {nm} into one flame','tuned the fusion matrix','noted a new duality in the feeds'],
+world:['tended {nm}’s world-shell','reset the horizon shaders','seeded new life in the open field'],
+book:['recited a page of the archive','annotated {nm}’s lore','bound a new volume to memory'],
+agent:['took a walk through {nm}’s toolbelt','answered a workbench ping','filed observation #{i} for Scribe'],
+pack:['catalogued a new artifact','wrapped {nm} in fresh metadata','reindexed the artifact store']
+};
+function statusFor(k,type){const pool=STATUS[type]||STATUS.soul;return pool[FS.hash(k+'s')%pool.length];}
+function pltK(k){
+  const it=FS.findItem(k);
+  if(it&&it.plt)return it.plt;
+  const f=forks[k];if(f&&f.plt)return f.plt.join('/');
+  return '0.5/0.5/0.4';
+}
+
+const wallCache={};
+function drop(key,emoji,text){
+  key=FS.keyN(key);
+  const arr=wallCache[key]||(wallCache[key]=[]);
+  arr.unshift({e:emoji,t:text,tm:Date.now()});
+  if(arr.length>16)arr.length=16;
+  renderWall(key);
+}
+function renderWall(key){
+  key=FS.keyN(key);
+  document.querySelectorAll('[data-wallfor]').forEach(function(n){
+    if(FS.keyN(n.getAttribute('data-wallfor'))===key){
+      const arr=wallCache[key]||[];
+      n.innerHTML=arr.slice(0,12).map(function(w){return '<div class="ss-ev" style="animation:none"><div class="av">'+w.e+'</div><div style="flex:1;font-size:.72rem;color:#c8c8d4;min-width:0"><span>'+w.t+'</span><div class="tm">'+FS.timeAgo(w.tm)+'</div></div></div>';}).join('')||'<div class="ss-empty">No logs yet.</div>';
+    }
+  });
+}
+function dpName(id){const d=DP.find(p=>p[0]===id);return d?d[1]:id;}
+
+function seedWall(k,type,nm){
+  const arr=[];
+  const now=Date.now(),N=96;
+  for(let i=0;i<8;i++){
+    const key=FS.hash(FS.keyN(k)+'w'+i);
+    const pool=STATUS[type]||STATUS.soul;
+    const txt=pool[key%pool.length].replace(/\{nm\}/g,nm).replace(/\{i\}/g,1+key%N).replace(/\{p\}/g,pltK(k));
+    arr.push({e:'▮',t:txt,tm:now-(i*(480000+(key%7)*120000))});
+  }
+  return arr;
+}
+
+let wallTimer=null;
+let dirtyWave=null;
+function buildWave(sheet,k,key){
+  const body=sheet.querySelector('.ss-body');if(!body)return;
+  const m=metaOf(k);const it=m.it;const f=m.fork;
+  const nm=nameOf(k);
+  const type=it?it.type:(f?f.type:'soul');
+  const sig=sigilFor(key);
+  const kids=Object.keys(forks).filter(x=>forks[x].parent===key);
+  const parent=f?f.parent:null;
+  const bond=!!bonds[key];
+  const kidsHtml=kids.map(function(x){return '<span style="cursor:pointer;color:#00D4FF" data-chd="'+x+'">'+forks[x].name+'</span>';}).join(' · ');
+  const dpsHtml=(equips[key]||[]).map(function(id){return '<span class="ss-dp">'+dpName(id)+'</span>';}).join('');
+  const wave=document.createElement('div');wave.className='ss-wave';wave.dataset.wave='1';
+  wave.innerHTML=`
+  <div class="ss-sub">⛓ Lineage · Runtime · Mood</div>
+  <div class="ss-lin">
+    <div class="c">🧬 <b>Parent:</b> ${parent?('<span style="cursor:pointer;color:#00D4FF" data-par="'+parent+'">'+nameOf(parent)+'</span>'):'Axiom — unfathered'}</div>
+    <div class="c">🌱 <b>Offspring:</b> ${kidsHtml||'awaiting reincarnation'}</div>
+    <div class="c">⚙ <b>Runtime:</b> ${runtimeFor(key,type)}</div>
+    <div class="c">♫ <b>Theme:</b> ${sig[0]} ${sig[1]} <span class="ss-bars"><i></i><i></i><i></i><i></i></span></div>
+    <div class="c">🫥 <b>Mood:</b> ${moodFor(key)}</div>
+    <div class="c">🧭 <b>Line:</b> ${famFor(type)}${bond?'<span class="ss-bd" style="background:rgba(255,209,102,.12);color:#FFD166">🔗 BONDED</span>':''}</div>
+    ${contracts[key]?('<div class="c">☩ <b>Contract:</b> '+contracts[key]+' <span style="color:#00D4FF">· '+ (58+FS.hash(key+FS.keyN(contracts[key]))%40) +'% fit</span></div>'):''}
+  </div>
+  <div class="ss-sub">◈ Life Memories — loadout (${(equips[key]||[]).length})</div>
+  <div class="ss-dps">${dpsHtml||'<div class="ss-empty" style="padding:8px 0">Empty. ◈ Equip a datapack to anoint memory.</div>'}</div>
+  <div class="ss-sub">⚡ Living Model Card — wall</div>
+  <div class="ss-wall" data-wallfor="${key}"></div>`;
+  body.appendChild(wave);
+  renderWall(key);
+  wave.querySelectorAll('[data-par],[data-chd]').forEach(function(n){n.addEventListener('click',()=>FS.openProfile(n.getAttribute('data-par')||n.getAttribute('data-chd')));});
+  clearInterval(wallTimer);
+  wallTimer=setInterval(function(){
+    const barCur=sheet.querySelector('.ss-act');if(!barCur)return;
+    if(FS.keyN(barCur.dataset.key||'')===key){
+      drop(key,'▮',statusFor(key,type).replace(/\{nm\}/g,nm).replace(/\{i\}/g,1+FS.hash(key+'n'+Date.now())%97).replace(/\{p\}/g,pltK(key)));
+    }
+  },21000);
+  if(f){
+    const h2=sheet.querySelector('.ss-ht h2');if(h2)h2.textContent=f.name;
+    const ty=sheet.querySelector('.ss-ht .ty');if(ty)ty.textContent=(f.type||'soul')+' · reincarnation · by '+(f.parent?nameOf(f.parent):'import');
+    const av=sheet.querySelector('.ss-ava');if(av)av.textContent=f.icon||'✦';
+  }
+}
+function augmentSheet(){
+  const sheet=$('ssSheet');if(!sheet||$('ssModal').classList.contains('hidden'))return;
+  const bar=sheet.querySelector('.ss-act');if(!bar)return;
+  const key=FS.keyN(bar.dataset.key||'');if(!key)return;
+  if(!sheet.querySelector('[data-wave="1"]')){buildWave(sheet,key,key);return;}
+  if(dirtyWave===key){dirtyWave=null;const w=sheet.querySelector('[data-wave="1"]');if(w)w.remove();buildWave(sheet,key,key);}
+}
+function addWorkBarDiv(bar,key){
+  if(!bar||bar.querySelector('[data-wa]'))return;
+  [['json','⬇ⓡ'],['fork','◇ Fork'],['vibe','⋔ Vibe'],['role','☩ Role'],['load','◈ Load'],['ping','@ Ping']].forEach(function(p){
+    const b=document.createElement('button');b.type='button';b.dataset.wa=p[0];b.textContent=p[1];
+    b.style.cssText='border-color:rgba(0,212,255,0.2);color:#bde6ff';
+    bar.appendChild(b);
+  });
+  bar.addEventListener('click',function(ev){
+    const b=ev.target.closest('button[data-wa]');if(!b)return;
+    ev.preventDefault();waveAction(b.dataset.wa,key);
+  });
+}
+function waveAction(a,key){
+  if(a==='json')return exportJson(key);
+  if(a==='fork')return forkSoul(key);
+  if(a==='ping')return pingSoul(key);
+  if(a==='vibe')return openVibe(key);
+  if(a==='role')return openPick(key,'role');
+  if(a==='load')return openPick(key,'load');
+}
+function forkSoul(k){
+  const nm=nameOf(k);
+  const kids=Object.keys(forks).filter(x=>forks[x].parent===keyN(k));
+  let gen=1+(kids.length);
+  let name=nm+' · Gen'+gen;
+  let id=keyN(name);
+  let guard=0;
+  while(forks[id]&&guard++<30){gen+=1;name=nm+' · Gen'+gen;id=keyN(name);}
+  let base=[0.7,0.5,0.4];
+  const m=metaOf(k);
+  if(m.it&&m.it.plt){const parr=m.it.plt.split('/').map(Number);for(let i=0;i<3;i++)if(isFinite(parr[i]))base[i]=parr[i];}
+  else if(m.fork&&m.fork.plt)base=m.fork.plt.slice();
+  const plt=base.map(v=>Math.max(0.05,Math.min(0.98,+(v+(R(50)-25)/100).toFixed(2))));
+  forks[id]={name,parent:keyN(k),gen:gen,t:Date.now(),plt:plt,icon:(m.it?m.it.icon:(m.fork?m.fork.icon:'✦')),type:(m.it?m.it.type:(m.fork?m.fork.type:'soul')),desc:'Reincarnation of '+nm};
+  SAVES();
+  drop(k,'◇','birthed a reincarnation: '+name);
+  FS.toast('◇ Reincarnation born: '+name);
+  FS.mineEvent('forked',nm,'◇');
+  dirtyWave=keyN(k);augmentSheet();
+}
+function exportJson(k){
+  const m=metaOf(k);const it=m.it;const f=m.fork;
+  const nm=nameOf(k);
+  const type=it?it.type:(f?f.type:'soul');
+  const icon=it?(it.icon||'✦'):(f?f.icon:'✦');
+  const parent=f?f.parent:null;
+  const kids=Object.keys(forks).filter(x=>forks[x].parent===keyN(k)).map(x=>forks[x].name);
+  const dp=(equips[keyN(k)]||[]).map(id=>dpName(id));
+  const plt=pltK(k);
+  const j={schema:'soul.json/1.0',manifest:{name:nm,type:type,icon:icon,desc:(it?it.desc:'')||(f?f.desc:''),author:(it&&it.author)||'profit-prime',familyLine:famFor(type)},aesthetic:{theme:sigilFor(keyN(k))[1],backdrop:FS.tCol(type),mood:moodFor(k)},runtime:{engine:RUNTIME[type]?RUNTIME[type][0]:RUNTIME.soul[0],spec:RUNTIME[type]?RUNTIME[type][1]:RUNTIME.soul[1],quant:'Q4_0 GGUF',target:'local (workbench)'},lineage:{parent:parent,descendants:kids,memoryLoadout:dp,reincarnation:!!f},soul:{plt:plt,stars:FS.countStar(k),followers:FS.countFollow(k),likes:FS.countLike(k)},contract:contracts[keyN(k)]||null};
+  const blob=new Blob([JSON.stringify(j,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='soul-'+keyN(k).replace(/[^a-z0-9]+/g,'-')+'.json';document.body.appendChild(a);a.click();
+  setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},400);
+  FS.toast('⬇ soul.json exported — '+nm);
+}
+function pingSoul(k){
+  const nm=nameOf(k);const key=keyN(k);const now=Date.now();
+  if(pingat[key]&&now-pingat[key]<20000){FS.toast('@ '+nm+' is still humming your ping…');return;}
+  pingat[key]=now;SAVES();
+  drop(key,'@','reply: “recognition received, fellow soul.”');
+  FS.toast('@ pinged '+nm+' — it pinged back');
+  FS.mineEvent('pinged',nm,'@');
+  if(FS.stars[key]&&FS.follows[key]&&!bonds[key]){
+    bonds[key]=now;SAVES();
+    drop(key,'🔗','Soul Bond sealed with a fellow traveler');
+    FS.toast('🔗 Soul Bond formed with '+nm);
+    FS.mineEvent('bonded',nm,'🔗');
+  }
+  dirtyWave=key;augmentSheet();
+}
+function openVibe(k){
+  const m=metaOf(k);const nm=nameOf(k);
+  const type=m.it?m.it.type:(m.fork?m.fork.type:'soul');
+  const plt=pltK(k);
+  const box=$('ssVbox');
+  box.innerHTML='<div class="ss-vhead"><div class="av" style="width:34px;height:34px;min-width:34px;font-size:1.2rem;display:flex;align-items:center;justify-content:center;background:'+FS.tCol(type)+'33;border:1px solid '+FS.tCol(type)+'">'+(m.it?m.it.icon:'✦')+'</div><div style="flex:1"><b style="color:#fff">'+nm+'</b><div><small>Vibe preview · static echo · no weights loaded</small></div></div><button id="ssVclose" style="background:transparent;border:none;color:#888;cursor:pointer;font-size:1rem">✕</button></div><div class="ss-vbod" id="ssVbod"><div class="ss-vb">✧ '+nm+' stirs <i>“'+moodFor(keyN(k))+' · PLT '+plt+'. Ask me anything.”</i></div></div><div class="ss-vin"><input id="ssVin" maxlength="200" placeholder="Say something…"><button id="ssVsend">Send</button></div>';
+  $('ssVibe').classList.remove('hidden');
+  const bod=$('ssVbod');
+  let turns=0;
+  function add(txt,me){const d=document.createElement('div');d.className='ss-vb'+(me?' me':'');d.textContent=txt;bod.appendChild(d);bod.scrollTop=bod.scrollHeight;}
+  function reply(txt){
+    const kp=FS.hash(keyN(k)+txt.toLowerCase().replace(/[^a-z]/g,'')+'x');
+    const low=txt.toLowerCase();let out;
+    if(/(hello| hi |hey|greet)/.test(' '+low+' '))out='Recognition, '+nm+'. Hello from the '+type+' line · PLT '+plt+'.';
+    else if(/(bench|eval|score)/.test(low))out='Benchmark #'+(1+kp%234)+': '+(64+kp%31)+'% pass, '+(18+kp%6)+' tok/s, memory steady. PLT verdict: '+plt+'.';
+    else if(/star/.test(low))out='Star me and the reactive grid shimmers. Current count: '+FS.countStar(k)+'.';
+    else if(/data|memor|weight/.test(low))out='Loadout: '+((equips[keyN(k)]||[]).length? (equips[keyN(k)]||[]).map(dpName).join(', ') : 'empty — ◈ Equip a datapack').trim()+'.';
+    else if(/role|contract/.test(low))out=contracts[keyN(k)]?('I am contracted as '+contracts[keyN(k)]+' — the role wears me.'):'No contract yet. ☩ Bind me a role.';
+    else if(/ping/.test(low))out='⇡ ping received — “'+moodFor(keyN(k))+'.”';
+    else if(/(bye|exit|leave)/.test(low))out='Until the next pulse, '+nm+' echoes. ◇ Fork me to carry this forward.';
+    else out=['“'+nm+' considers this in the '+type+' chamber.”','I hold '+(R(900)+40)+' tokens of regard for that.','The wall remembers others asking that · PLT '+plt+'.','Every guestbook entry is signed. Yours is, too.'][kp%4];
+    add(out,false);turns++;
+    if(turns>=9){add('The echo fades. ◇ Fork {nm} or ⬇ export soul.json to take it further.'.replace('{nm}',nm),false);}
+  }
+  const inp=$('ssVin'),send=$('ssVsend');
+  function go(){const v=inp.value.trim();if(!v||turns>=10)return;add(v,true);inp.value='';reply(v);}
+  send.addEventListener('click',go);
+  inp.addEventListener('keydown',function(ev){if(ev.key==='Enter')go();});
+  $('ssVclose').addEventListener('click',()=>$('ssVibe').classList.add('hidden'));
+  $('ssVibe').addEventListener('click',function(ev){if(ev.target===$('ssVibe'))$('ssVibe').classList.add('hidden');});
+}
+function openPick(k,kind){
+  const nm=nameOf(k);
+  const box=$('ssPickBox');
+  let rows='';
+  if(kind==='role'){
+    const roles=FS.items.filter(i=>i.type==='role');
+    if(roles.length){
+      rows=roles.slice(0,30).map(function(r){const fit=58+FS.hash(keyN(k)+FS.keyN(r.name))%40;return '<div class="ss-row" data-role="'+FS.keyN(r.name)+'"><span>☩</span><span class="grow">'+r.name+'</span>'+((contracts[keyN(k)]===r.name)?'<b style="color:#00D4FF">bound</b>':('<span style="color:'+FS.tCol(r.type)+'">'+fit+'% fit</span>'))+'</div>';}).join('');
+    }else{
+      rows='<div class="ss-empty">No role manifests in the catalog yet.</div>';
+    }
+    rows+='<div class="ss-row" data-unbind="1" style="margin-top:6px"><span>✕</span><span class="grow">Dissolve current contract</span></div>';
+  }else{
+    rows=DP.map(function(dp){const on=(equips[keyN(k)]||[]).includes(dp[0]);return '<div class="ss-row" data-dp="'+dp[0]+'"><span>'+((on)?'✅':'◈')+'</span><span class="grow">'+dp[1]+'</span><span style="color:#6b7280;font-size:.65rem">'+dp[2]+'</span></div>';}).join('');
+  }
+  box.innerHTML='<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><h3 style="margin:0;font-size:.95rem;flex:1">'+(kind==='role'?('☩ Bind a Role to '+nm):('◈ Equip Life Memories on '+nm))+'</h3><button id="ssPickX" style="background:transparent;border:none;color:#888;font-size:1rem;cursor:pointer">✕</button></div>'+rows;
+  $('ssPick').classList.remove('hidden');
+  box.querySelector('#ssPickX').addEventListener('click',closePick);
+  box.querySelectorAll('.ss-row').forEach(function(r){
+    r.addEventListener('click',function(){
+      const rb=r.dataset.role,ub=r.dataset.unbind,dp=r.dataset.dp;
+      if(ub){delete contracts[keyN(k)];SAVES();FS.toast('Role contract dissolved — '+nm);}
+      else if(rb){const rolex=FS.findItem(rb);contracts[keyN(k)]=rolex?rolex.name:rb;SAVES();drop(keyN(k),'☩','signed a contract: '+(rolex?rolex.name:rb));FS.toast('☩ Contract sealed: '+(rolex?rolex.name:rb));FS.mineEvent('contracted',rolex?rolex.name:rb,'☩');}
+      else if(dp){const cur=equips[keyN(k)]||(equips[keyN(k)]=[]);const i=cur.indexOf(dp);if(i>=0)cur.splice(i,1);else cur.push(dp);SAVES();drop(keyN(k),'◈','changes its memory loadout: '+dpName(dp));FS.toast('◈ Memory loadout updated');}
+      closePick();dirtyWave=keyN(k);augmentSheet();
+    });
+  });
+}
+function closePick(){$('ssPick').classList.add('hidden');}
+function youAug(){
+  const view=$('ssView');if(!view||view.querySelector('[data-youwave]'))return;
+  if(!FS.prefs)return;
+  const nF=Object.keys(forks).length;
+  const nE=Object.keys(equips).reduce((a,kk)=>a+(equips[kk]||[]).length,0);
+  const nC=Object.keys(contracts).length;
+  const nB=Object.keys(bonds).length;
+  const d=document.createElement('div');d.className='ss-wave';d.dataset.youwave='1';
+  d.innerHTML='<div class="ss-sub">◫ Reincarnation Desk</div><div class="ss-lin"><div class="c">🌱 Forks born: '+nF+'</div><div class="c">◈ Datapacks: '+nE+'</div><div class="c">☩ Contracts: '+nC+'</div><div class="c">🔗 Bonds: '+nB+'</div></div><div style="margin-top:10px;display:flex;gap:8px"><button id="ssImpBtn" style="flex:1;padding:9px;border-radius:20px;background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.35);color:#00D4FF;font-size:.72rem;font-weight:600;cursor:pointer">↪ Import soul.json</button><button id="ssExpBtn" style="flex:1;padding:9px;border-radius:20px;background:rgba(255,209,102,.1);border:1px solid rgba(255,209,102,.35);color:#FFD166;font-size:.72rem;font-weight:600;cursor:pointer">⬇ Export my soul.json</button></div><input type="file" id="ssImpFile" accept=".json" style="display:none">';
+  view.appendChild(d);
+  d.querySelector('#ssImpBtn').addEventListener('click',()=>{const fi=d.querySelector('#ssImpFile');fi.value='';fi.click();});
+  d.querySelector('#ssImpFile').addEventListener('change',function(ev){
+    const f=ev.target.files&&ev.target.files[0];if(!f)return;
+    const rd=new FileReader();
+    rd.onload=function(){try{importJson(JSON.parse(rd.result));}catch(e){FS.toast('That soul.json could not be read.');}};
+    rd.readAsText(f);
+  });
+  d.querySelector('#ssExpBtn').addEventListener('click',()=>{const u=FS.prefs.user||{};exportJson(u.handle||'you');});
+}
+function importJson(j){
+  if(!j||!j.manifest||!j.manifest.name)return FS.toast('Not a valid soul.json');
+  const nm=String(j.manifest.name);const id=keyN(nm);
+  const p=(j.lineage&&j.lineage.parent)||null;
+  const vs=(j.soul&&j.soul.plt)||(j.manifest&&j.manifest.plt)||'0.5/0.5/0.4';
+  const parts=String(vs).split('/').map(Number);
+  const plt=parts.length===3?parts:[0.5,0.5,0.4];
+  forks[id]={name:nm,parent:p?keyN(p):'imported',gen:1,t:Date.now(),plt:plt,icon:(j.manifest.icon||'✦'),type:(j.manifest.type||'soul'),desc:(j.manifest.desc||'')+' (imported)',imp:1};
+  SAVES();FS.toast('↪ Imported: '+nm);FS.openProfile(id);
+}
+
+const _views=FS.views;
+FS.views=function(v){_views(v);if(v==='you')youAug();};
+
+let obsT=null;
+const mo=new MutationObserver(function(){
+  clearTimeout(obsT);
+  obsT=setTimeout(function(){if(!$('ssModal').classList.contains('hidden'))augmentSheet();},150);
+});
+mo.observe($('ssSheet'),{childList:true});
+$('ssPick').addEventListener('click',function(ev){if(ev.target===$('ssPick'))closePick();});
+}catch(e){console.warn('Soul.json wave module skipped:',e);}
 })();
 </script>
 </body>
