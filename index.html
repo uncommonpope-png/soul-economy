@@ -759,6 +759,7 @@ function render(data){
       <div class="card-top">
         ${item.image ? `<img class="card-image" src="${item.image}" alt="${item.name}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><span class="card-icon" style="display:none">${item.icon}</span>` : `<span class="card-icon">${item.icon}</span>`}
         ${item.featured?'<span class="card-badge">✦ Featured</span>':''}
+        ${item.file&&item.file.startsWith('soul-gun-')?'<span class="card-badge" style="background:rgba(16,185,129,0.1);border-color:rgba(16,185,129,0.2);color:#10B981">✧ New</span>':''}
       </div>
       <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;font-size:0.65rem;color:var(--text-muted)"><span>👤 ${item.author||'profit-prime'}</span><span>•</span><span>${item.license||'MIT'}</span><span>•</span><span>⬇ ${dl}</span><span>•</span><span style="cursor:pointer" onclick="toggleLike('${item.name.replace(/'/g,"\\'")}', this)">♡ ${likes}</span></div>
       ${tags?`<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px">${tags}</div>`:''}
