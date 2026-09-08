@@ -55,3 +55,8 @@
 #upcEditor .edBtns button{flex:1;padding:10px;border-radius:30px;cursor:pointer;font-weight:700;font-size:0.78rem;font-family:inherit}
 #upcEditor .save{background:linear-gradient(135deg,var(--purple),#00D4FF);border:none;color:#fff}
 #upcEditor .cancel{background:transparent;border:1px solid rgba(255,255,255,0.12);color:#999}
+.upc-soul .adh{display:block;width:100%;margin:8px 0 2px;padding:6px 8px;border:1px solid rgba(0,212,255,0.4);border-radius:30px;background:rgba(0,212,255,0.08);color:#9be8ff;font-size:0.68rem;font-weight:600;cursor:pointer;font-family:inherit}
+.upc-soul .adh:hover{background:rgba(0,212,255,0.2)}
+.upc-regline{margin-top:10px;font-size:0.75rem}
+.upc-regline .upc-tchip{cursor:default}
+.upc-tchip a{color:#00D4FF;text-decoration:underline}

@@ -26,6 +26,34 @@ function saveState(){ if(VISITOR) return; try{ localStorage.setItem(LS_KEY,JSON.
 /* ---- SIP-5: public identity routing (share engine) ---- */
 function toB64(s){ try{ return btoa(unescape(encodeURIComponent(s))); }catch(e){ return ''; } }
 function fromB64(b){ try{ return decodeURIComponent(escape(atob(b))); }catch(e){ return null; } }
+var HAVE_COMP=false;
+try{ HAVE_COMP=(typeof CompressionStream!=='undefined')&&(typeof DecompressionStream!=='undefined'); }catch(e){ HAVE_COMP=false; }
+function minCss(c){ return String(c||'').replace(/\/\*[\s\S]*?\*\//g,'').replace(/\s+/g,' ').trim(); }
+function u8ToB64(u8){
+  var s='';
+  for(var i=0;i<u8.length;i+=0x8000){ s+=String.fromCharCode.apply(null,u8.subarray(i,i+0x8000)); }
+  return btoa(s);
+}
+function u8FromB64(b64){
+  var bin=atob(b64), u8=new Uint8Array(bin.length);
+  for(var i=0;i<bin.length;i++){ u8[i]=bin.charCodeAt(i); }
+  return u8;
+}
+function compressPayload(json){
+  try{
+    var obj=JSON.parse(json);
+    if(obj&&obj.profile&&obj.profile.themeCSS){ obj.profile.themeCSS=minCss(obj.profile.themeCSS); json=JSON.stringify(obj); }
+  }catch(e){}
+  var bytes=new TextEncoder().encode(json);
+  var cs=new CompressionStream('deflate-raw');
+  var pipe=new Response(new Blob([bytes]).stream()).body.pipeThrough(cs);
+  return new Response(pipe).arrayBuffer().then(function(buf){ return u8ToB64(new Uint8Array(buf)); });
+}
+function decompressPayload(b64){
+  var ds=new DecompressionStream('deflate-raw');
+  var pipe=new Blob([u8FromB64(b64)]).stream().pipeThrough(ds);
+  return new Response(pipe).arrayBuffer().then(function(buf){ return new TextDecoder().decode(new Uint8Array(buf)); });
+}
 function buildPayload(){
   return {schema:'user_profile.json/1.0',profile:{handle:state.handle,bio:state.bio,mood:state.mood,audio:state.audio,themeCSS:state.themeCSS,public:state.public},
     equippedSouls:state.top8.slice(),guestbook:state.guests.slice(0,20)};
@@ -38,17 +66,25 @@ function applyPayload(p){
     guests:(p.guestbook&&Array.isArray(p.guestbook)?p.guestbook:[]).slice()};
   VISITOR=true;
 }
-function readShareHash(){
+function readShareHash(cb){
   try{
     var h=location.hash||'';
-    if(h.indexOf('#view=')!==0) return false;
-    var json=fromB64(decodeURIComponent(h.slice(6)));
-    if(!json) return false;
-    var p=JSON.parse(json);
-    if(!p||typeof p!=='object') return false;
-    applyPayload(p);
-    return true;
-  }catch(e){ return false; }
+    if(h.indexOf('#view=')!==0){ cb(false); return; }
+    var raw=decodeURIComponent(h.slice(6));
+    var finish=function(json){
+      try{
+        var p=JSON.parse(json);
+        if(!p||typeof p!=='object'){ cb(false); return; }
+        applyPayload(p); cb(true);
+      }catch(e){ cb(false); }
+    };
+    if(raw.indexOf('lz:')===0){
+      if(!HAVE_COMP){ cb(false); return; }
+      decompressPayload(raw.slice(3)).then(finish).catch(function(){ cb(false); });
+      return;
+    }
+    finish(fromB64(raw));
+  }catch(e){ cb(false); }
 }
 function normalizeHandle(h){
   return String(h||'').trim().toLowerCase().replace(/^@/,'').replace(/[^a-z0-9-]/g,'').slice(0,39);
@@ -94,25 +130,52 @@ function reportToast(m){
 }
 function shareProfile(){
   if(VISITOR) return;
-  var b=toB64(JSON.stringify(buildPayload()));
-  if(!b){ alert('Could not encode share link.'); return; }
-  var url=location.origin+location.pathname.replace(/profile\.html$/i,'profile.html')+'#view='+b;
+  var json=JSON.stringify(buildPayload());
+  var base=location.origin+location.pathname.replace(/profile\.html$/i,'profile.html')+'#view=';
+  if(HAVE_COMP){
+    compressPayload(json).then(function(b){ finishShare(base+'lz:'+b); })
+      .catch(function(){ finishShare(base+toB64(json)); });
+    return;
+  }
+  finishShare(base+toB64(json));
+}
+function finishShare(url){
   if(navigator.clipboard&&navigator.clipboard.writeText){
     navigator.clipboard.writeText(url).then(function(){ reportToast('⇪ Share link copied — paste it anywhere'); },
       function(){ copyText(url,'⇪ Share link copied — paste it anywhere'); });
   } else copyText(url,'⇪ Share link copied — paste it anywhere');
 }
+function openRegModal(){
+  var h=normalizeHandle(state.handle);
+  var title='Profile Submission: @'+state.handle;
+  var payload=JSON.stringify(buildPayload(),null,2);
+  var body='### Soul Economy Registry Submission\n\n- **Handle:** @'+state.handle+'\n- **Target File:** `profiles/'+h+'.json`\n\n```json\n'+payload+'\n```';
+  var ov=document.createElement('div'); ov.id='upcRegModal';
+  ov.style.cssText='position:fixed;inset:0;z-index:2200;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.68);backdrop-filter:blur(6px);padding:16px';
+  var box=document.createElement('div');
+  box.style.cssText='width:640px;max-width:100%;max-height:90vh;overflow-y:auto;background:#0c0c12;border:1px solid rgba(255,209,102,0.3);border-radius:20px;padding:20px;box-shadow:0 30px 120px rgba(0,0,0,0.8)';
+  box.innerHTML='<h3 style="margin:0 0 6px;font-size:1.05rem">⛭ Publish to Registry</h3>'+
+    '<p style="margin:0 0 12px;color:#8b8b98;font-size:0.78rem">Opens a pre-filled GitHub issue; once approved, your profile lands at <code>profiles/'+h+'.json</code> and becomes a permanent <b>#@'+esc(state.handle)+'</b> link. If the URL gets too long for your browser, use <b>Copy Full Payload</b> and paste it into the issue manually.</p>'+
+    '<textarea id="upcRegBody" rows="9" spellcheck="false" readonly style="white-space:pre-wrap;font-size:0.72rem;min-height:190px;width:100%">'+esc(body)+'</textarea>'+
+    '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px">'+
+      '<button id="upcRegOpen" class="upc-btn prim" style="flex:1;min-width:160px">Open GitHub Issue</button>'+
+      '<button id="upcRegCopyJson" class="upc-btn cyan">Copy Raw JSON</button>'+
+      '<button id="upcRegCopyAll" class="upc-btn">Copy Full Payload</button>'+
+      '<button id="upcRegClose" class="upc-btn">Close</button>'+
+    '</div>';
+  ov.appendChild(box); document.body.appendChild(ov);
+  box.querySelector('#upcRegOpen').addEventListener('click',function(){
+    window.open('https://github.com/uncommonpope-png/soul-economy/issues/new?title='+encodeURIComponent(title)+'&body='+encodeURIComponent(body),'_blank');
+  });
+  box.querySelector('#upcRegCopyJson').addEventListener('click',function(){ copyText(payload,'JSON payload copied to clipboard'); });
+  box.querySelector('#upcRegCopyAll').addEventListener('click',function(){ copyText(body,'Full submission payload copied to clipboard'); });
+  box.querySelector('#upcRegClose').addEventListener('click',function(){ document.body.removeChild(ov); });
+  ov.addEventListener('click',function(ev){ if(ev.target===ov) document.body.removeChild(ov); });
+}
 function publishRegistry(){
   if(VISITOR) return;
   if(!state.handle){ alert('Give yourself a handle first (✎ Edit Profile).'); return; }
-  var payload=buildPayload();
-  var title='Profile Submission: @'+state.handle;
-  var body='# Public Profile Registry Submission\n\n'+
-    '- **Registry:** /profiles/<handle>.json\n'+
-    '- **Handle:** @'+state.handle+'\n\n```json\n'+JSON.stringify(payload,null,2)+'\n```';
-  var url='https://github.com/uncommonpope-png/soul-economy/issues/new?title='+
-    encodeURIComponent(title)+'&body='+encodeURIComponent(body);
-  window.open(url,'_blank');
+  openRegModal();
 }
 function wireVisitor(){
   if(!VISITOR) return;
@@ -125,10 +188,13 @@ function wireVisitor(){
   badge.style.cssText='display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:12px 16px;border-radius:16px;background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.35);font-size:0.8rem;color:#fff;box-shadow:0 10px 40px rgba(0,212,255,0.15);margin-bottom:16px';
   badge.innerHTML='<span>👁 Viewing <b>@'+esc(state.handle||'guest')+'</b>\u2019s Sanctuary</span>'+
     (REGISTRY?'<span style="background:rgba(0,212,255,0.14);border:1px solid rgba(0,212,255,0.5);color:#9be8ff;border-radius:100px;padding:3px 10px;font-size:0.7rem">✔ Verified Registry Soul</span>':'')+
+    '<button class="upc-btn cyan" id="upcAdoptAll">+ Equip Entire Squad</button>'+
     '<button class="upc-btn prim" id="upcFork">◇ Fork This Profile</button>'+
     '<button class="upc-btn cyan" id="upcCreate">✦ Create Yours</button>'+
     '<button class="upc-btn" id="upcMine">View My Own</button>';
   cv.insertBefore(badge,cv.firstChild);
+  var ad=badge.querySelector('#upcAdoptAll');
+  if(ad) ad.addEventListener('click',adoptAll);
   badge.querySelector('#upcFork').addEventListener('click',function(){
     VISITOR=false; saveState();
     history.replaceState(null,'',location.pathname+location.search);
@@ -239,7 +305,8 @@ function renderIdentity(){
 function renderTop8(){
   var box=$('upcTop8'); if(!box) return;
   if(!state.top8.length){
-    box.innerHTML='<div class="upc-empty">My Active Squad is empty. Click “◇ Equip Souls” to feature up to 8 souls from the Library on your shelf.</div>';
+    box.innerHTML=VISITOR?'<div class="upc-empty">This sanctuary has no equipped souls yet.</div>'
+      :'<div class="upc-empty">My Active Squad is empty. Click “◇ Equip Souls” to feature up to 8 souls from the Library on your shelf.</div>';
     return;
   }
   box.innerHTML='<div class="upc-grid">'+state.top8.map(function(nm){
@@ -247,16 +314,26 @@ function renderTop8(){
     var icon=it?(it.icon||'✦'):'✦';
     var ty=it?(it.type||'soul'):'catalog item';
     var slug=encodeURIComponent(keyN(nm));
+    var action=VISITOR
+      ?'<button class="adh" data-adh="'+esc(nm)+'" title="Add this soul to your own Squad">+ Adopt to My Squad</button>'
+      :'<button class="rm" data-rm="'+esc(nm)+'" title="Remove from shelf">✕</button>';
     return '<div class="upc-soul"><a href="index.html#soul-'+slug+'" style="display:block" title="Open in Library">'+
       '<div class="ic">'+esc(icon)+'</div><div class="nm">'+esc(nm)+'</div><div class="ty">'+esc(ty)+'</div></a>'+
-      '<button class="rm" data-rm="'+esc(nm)+'" title="Remove from shelf">✕</button></div>';
+      action+'</div>';
   }).join('')+'</div>';
-  box.querySelectorAll('.rm').forEach(function(b){
-    b.addEventListener('click',function(){
-      state.top8=state.top8.filter(function(n){return n!==b.getAttribute('data-rm');});
-      saveState(); renderTop8();
+  if(VISITOR){
+    box.querySelectorAll('.adh').forEach(function(b){
+      b.addEventListener('click',function(ev){ ev.preventDefault(); adoptToSquad(b.getAttribute('data-adh'),b); });
     });
-  });
+    updateAdoptLabels();
+  } else {
+    box.querySelectorAll('.rm').forEach(function(b){
+      b.addEventListener('click',function(){
+        state.top8=state.top8.filter(function(n){return n!==b.getAttribute('data-rm');});
+        saveState(); renderTop8();
+      });
+    });
+  }
 }
 function renderTheme(){
   var box=$('upcCss'); if(!box) return;
@@ -269,7 +346,18 @@ function renderTheme(){
       '<span class="upc-tchip">audio: '+(state.audio?'linked':'none')+'</span>'+
       '<span class="upc-tchip">guestbook: '+state.guests.length+' signed</span>'+
       (state.public?'<span class="upc-tchip" style="color:#00D4FF">public share: on</span>':'')+
-    '</div>';
+    '</div>'+
+    (!VISITOR?'<div class="upc-regline"><span class="upc-tchip" id="upcRegStatus">● checking registry…</span></div>':'');
+}
+function checkRegistryStatus(){
+  var el=$('upcRegStatus'); if(!el) return;
+  var h=state.handle||'';
+  if(!h){ el.textContent='● Unregistered Soul (Saved locally) · ✎ set a handle to claim yours'; el.style.color='#9a937f'; return; }
+  var okf=function(){ el.textContent='✔ Verified Registry Soul'; el.style.color='#00D4FF'; };
+  var unreg=function(){ el.innerHTML='● Unregistered Soul (Saved locally) · <a href="#" id="upcClaim" style="color:#00D4FF">Claim Verified Handle</a>'; var a=el.querySelector('#upcClaim'); if(a) a.addEventListener('click',function(ev){ ev.preventDefault(); publishRegistry(); }); };
+  fetch('profiles/'+normalizeHandle(h)+'.json',{cache:'no-store'}).then(function(r){
+    if(r.ok) okf(); else unreg();
+  }).catch(unreg);
 }
 function renderGuests(){
   var box=$('upcGuests'); if(!box) return;
@@ -301,6 +389,42 @@ function signGuest(){
   saveState(); renderGuests();
 }
 
+/* ---- visitor → local squad adoption (SIP-7) ---- */
+function localSquad(){
+  try{ var v=JSON.parse(localStorage.getItem(LS_KEY)||'null'); return (v&&Array.isArray(v.top8))?v.top8:[]; }catch(e){ return []; }
+}
+function setLocalSquad(a){
+  try{ var v=JSON.parse(localStorage.getItem(LS_KEY)||'{}')||{}; v.top8=a; localStorage.setItem(LS_KEY,JSON.stringify(v)); }catch(e){}
+}
+function adoptToSquad(name,btn){
+  var s=localSquad(), k=keyN(name);
+  if(s.some(function(n){return keyN(n)===k;})){ if(btn) btn.textContent='✓ In your Squad'; reportToast('◇ '+name+' is already in your Squad'); return; }
+  if(s.length>=8){ reportToast('Squad full (8/8) — unequip one on your own profile'); return; }
+  s.push(name); setLocalSquad(s);
+  try{ window.dispatchEvent(new CustomEvent('squad-updated')); }catch(e){}
+  if(btn) btn.textContent='✓ In your Squad';
+  reportToast('✦ Added '+name+' to your squad! ('+s.length+'/8)');
+}
+function adoptAll(){
+  var s=localSquad(), added=0;
+  state.top8.forEach(function(nm){
+    if(s.length>=8) return;
+    if(s.some(function(n){return keyN(n)===keyN(nm);})) return;
+    s.push(nm); added++;
+  });
+  setLocalSquad(s);
+  try{ window.dispatchEvent(new CustomEvent('squad-updated')); }catch(e){}
+  updateAdoptLabels();
+  reportToast(added?('✦ Adopted '+added+' souls into your squad! ('+s.length+'/8)'):'◇ All of those souls are already in your Squad');
+}
+function updateAdoptLabels(){
+  var box=$('upcTop8'); if(!box) return;
+  var s=localSquad();
+  box.querySelectorAll('.adh').forEach(function(b){
+    if(s.some(function(n){return keyN(n)===keyN(b.getAttribute('data-adh'));})) b.textContent='✓ In your Squad';
+  });
+}
+
 /* ---- editor modal ---- */
 function openEditor(){
   var ed=$('upcEditor'); if(!ed) return;
@@ -321,7 +445,7 @@ function openEditor(){
     state.audio=body.querySelector('#editAudio').value.trim();
     state.themeCSS=body.querySelector('#editCss').value;
     state.public=body.querySelector('#editPublic').checked;
-    saveState(); applyTheme(); render(); ed.classList.add('hidden');
+    saveState(); applyTheme(); render(); checkRegistryStatus(); ed.classList.add('hidden');
   });
   ed.querySelector('#editCancel').addEventListener('click',function(){ ed.classList.add('hidden'); });
   ed.addEventListener('click',function(ev){ if(ev.target===ed) ed.classList.add('hidden'); });
@@ -401,12 +525,18 @@ function importJson(file){
 }
 
 function boot(){
-  if(readShareHash()){ finishBoot(); return; }
+  if(location.hash.indexOf('#view=')===0){
+    readShareHash(function(ok){
+      if(!ok) loadState();
+      finishBoot();
+    });
+    return;
+  }
   if(resolveRegistry()){ return; }
   loadState();
   finishBoot();
 }
-function finishBoot(){ applyTheme(); render(); wireVisitor(); }
+function finishBoot(){ applyTheme(); render(); wireVisitor(); checkRegistryStatus(); }
 
 /* wire the canvas shell */
 window.addEventListener('DOMContentLoaded',function(){
