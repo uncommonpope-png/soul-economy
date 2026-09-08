@@ -266,6 +266,9 @@ input{font-family:inherit;outline:none;border:none;background:none}
 
 .card-entrance{opacity:0;transform:translateY(30px) scale(0.96);animation:cardIn 0.6s cubic-bezier(0.22,1,0.36,1) forwards}
 @keyframes cardIn{to{opacity:1;transform:translateY(0) scale(1)}}
+.card-reactive{transform-style:preserve-3d;will-change:transform}
+.card-spin{animation:cardSpinOnce 0.9s cubic-bezier(0.22,1,0.36,1)}
+@keyframes cardSpinOnce{0%{transform:perspective(1000px) rotateY(0deg) rotateX(0deg)}100%{transform:perspective(1000px) rotateY(360deg) rotateX(0deg)}}
 
 @media(max-width:820px){
   .nav-links{display:none}
@@ -1520,6 +1523,43 @@ window.guideSendWithAdapter = async (q) => {
       tabs.forEach(tab=> tab.style.transform='');
     });
   }
+})();
+</script>
+<script>
+// ─── REACTIVE SPINNING CARDS (DOM grid only — knowledge graph untouched) ───
+(function(){
+  const grid = document.getElementById('resourceGrid');
+  if (!grid) return;
+  function cardFrom(e){ return e.target && e.target.closest ? e.target.closest('.card') : null; }
+  function spinOnce(card){
+    card.classList.remove('card-spin');
+    void card.offsetWidth;
+    card.classList.add('card-spin');
+  }
+  // Tilt — cards react to cursor in 3D
+  grid.addEventListener('mousemove', (e) => {
+    const card = cardFrom(e);
+    if (!card) return;
+    const r = card.getBoundingClientRect();
+    const px = (e.clientX - r.left) / r.width - 0.5;
+    const py = (e.clientY - r.top) / r.height - 0.5;
+    card.classList.add('card-reactive');
+    card.style.transform = 'perspective(1000px) rotateY(' + (px * 16).toFixed(1) + 'deg) rotateX(' + (-py * 16).toFixed(1) + 'deg) translateY(-6px) scale(1.02)';
+    card.style.zIndex = '20';
+  });
+  grid.addEventListener('mouseleave', () => {
+    const cards = grid.querySelectorAll('.card');
+    cards.forEach(c => { c.style.transform = ''; c.style.zIndex = ''; c.classList.remove('card-reactive'); });
+  });
+  // Click — full 360° spin reaction (ignore inner buttons/links)
+  grid.addEventListener('click', (e) => {
+    const card = cardFrom(e);
+    if (!card) return;
+    if (e.target.closest('.btn-download, .btn-play, .card-expand, .meta-tag, a, .card-details')) return;
+    spinOnce(card);
+    const onEnd = () => { card.removeEventListener('animationend', onEnd); card.classList.remove('card-spin'); };
+    card.addEventListener('animationend', onEnd);
+  });
 })();
 </script>
 <script>
