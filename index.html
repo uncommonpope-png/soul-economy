@@ -146,6 +146,20 @@ input{font-family:inherit;outline:none;border:none;background:none}
 .card:hover::after{opacity:1}
 @keyframes shimmer{0%{transform:translateX(-100%) rotate(25deg)}100%{transform:translateX(100%) rotate(25deg)}}
 .card:hover{transform:translateY(-8px) scale(1.01);border-color:var(--glass-hover);box-shadow:0 20px 80px rgba(139,92,246,0.08),0 0 60px rgba(139,92,246,0.03)}
+/* FLIP-ON-HOVER — card shows soul manifest on the back */
+.card-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform 0.6s cubic-bezier(0.22,1,0.36,1)}
+.card:hover .card-inner{transform:rotateY(180deg)}
+.card-face{backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.card-front{transform:translateZ(0)}
+.card-back{position:absolute;inset:0;display:flex;flex-direction:column;gap:8px;padding:24px;border-radius:14px;background:linear-gradient(160deg,rgba(18,16,30,0.98),rgba(34,10,44,0.98));border:1px solid rgba(255,105,180,0.18);box-shadow:0 20px 80px rgba(255,105,180,0.10);transform:rotateY(180deg) translateZ(0);overflow:hidden}
+.card-back .bb-title{font-size:1.05rem;font-weight:700;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,0.6)}
+.card-back .bb-type{font-size:0.62rem;text-transform:uppercase;letter-spacing:0.10em;color:#A855F7}
+.card-back .bb-plt{display:flex;gap:6px;flex-wrap:wrap;margin:2px 0 4px}
+.card-back .bb-plt span{padding:2px 10px;border-radius:6px;font-size:0.72rem;font-weight:600;background:rgba(255,105,180,0.10);color:#FF6B9D;border:1px solid rgba(255,105,180,0.16)}
+.card-back .bb-desc{font-size:0.78rem;color:var(--text-muted);line-height:1.55;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.card-back .bb-tags{display:flex;gap:5px;flex-wrap:wrap}
+.card-back .bb-tags span{font-size:0.62rem;padding:2px 8px;border-radius:20px;background:rgba(139,92,246,0.10);border:1px solid rgba(139,92,246,0.14);color:#8B5CF6}
+.card-back .bb-file{font-size:0.7rem;color:var(--text-muted);font-family:monospace;word-break:break-all;margin-top:auto}
 .card:hover::before{background:linear-gradient(135deg,var(--purple),transparent 60%,var(--cyan))}
 .card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px}
 .card-icon{font-size:1.8rem;width:48px;height:48px;display:flex;align-items:center;justify-content:center;background:rgba(139,92,246,0.06);border-radius:12px;border:1px solid rgba(139,92,246,0.06);transition:var(--transition)}
@@ -1366,6 +1380,8 @@ render = function(data) {
       if (pan.classList.contains('active')) pan.classList.remove('active');
     } catch(e) { console.error('Click error:', e); } });
     pc.onclick = () => pan.classList.remove('active');
+    // Graph internals exposed for read-only overlays (fog / FXAA / bloom / matrix floor)
+    window.__soulGraph = { scene, camera, renderer, root, items, nodeData };
 
     function animate() {
       requestAnimationFrame(animate); controls.update();
@@ -1583,8 +1599,188 @@ window.guideSendWithAdapter = async (q) => {
     if (e.target.closest('.btn-download, .btn-play')) { spinOnce(card); return; }
     // Skip spin for expand toggles / tags / details
     if (e.target.closest('.card-expand, .meta-tag, .card-details')) return;
-    spinOnce(card);
-  });
+spinOnce(card);
+      });
+  })();
+</script>
+<script>
+// ─── CARD FLIP-ON-HOVER — back face = soul manifest (DOM cards only) ───
+(function(){
+  const grid = document.getElementById('resourceGrid');
+  if (!grid) return;
+  function buildBack(card){
+    const titleEl = card.querySelector('.card-title'); const title = titleEl ? titleEl.textContent.trim() : 'Soul';
+    const typeEl = card.querySelector('.card-category'); const type = typeEl ? typeEl.textContent.trim() : '';
+    const ptEl = card.querySelector('.card-plt'); let p='0.5', l='0.5', t='0.5';
+    if (ptEl) { const s = ptEl.querySelectorAll('span'); if (s.length === 3) { const val=(x)=>{ const m=x.textContent.match(/(\d\.\d+)/); return m ? m[1] : '0.5'; }; p=val(s[0]); l=val(s[1]); t=val(s[2]); } }
+    const descEl = card.querySelector('.card-desc'); const desc = descEl ? descEl.textContent.trim() : '';
+    let file = '';
+    const meta = card.querySelector('.card-meta');
+    if (meta) { const m = meta.querySelector('.meta-tag'); if (m) { const clean = m.textContent.replace(/[📦🏷️💾⚙️]/g, '').trim(); file = (clean.split(' ')[0] || clean); } }
+    const tags = [];
+    card.querySelectorAll('span').forEach(sp => { if (sp.style && sp.style.color === 'rgb(139, 92, 246)') tags.push(sp.textContent); });
+    const tagHtml = tags.slice(0,5).map(x => '<span>'+x+'</span>').join('');
+    return '<div class="bb-title">'+title+'</div>' +
+      '<div class="bb-type">' + type + ' · soul manifest</div>' +
+      '<div class="bb-plt"><span>P '+p+'</span><span>L '+l+'</span><span>T '+t+'</span></div>' +
+      '<div class="bb-desc">' + (desc || '') + '</div>' +
+      (tagHtml ? '<div class="bb-tags">' + tagHtml + '</div>' : '') +
+      (file ? '<div class="bb-file">' + file + '</div>' : '');
+  }
+  function enableFlip(card){
+    if (card._flipDone) return; card._flipDone = true;
+    const inner = document.createElement('div'); inner.className = 'card-inner';
+    const front = document.createElement('div'); front.className = 'card-face card-front';
+    while (card.firstChild && card.firstChild.nodeType === 1) front.appendChild(card.firstChild);
+    while (card.firstChild) card.removeChild(card.firstChild);
+    inner.appendChild(front);
+    const back = document.createElement('div'); back.className = 'card-face card-back';
+    back.innerHTML = buildBack(card); inner.appendChild(back);
+    card.appendChild(inner);
+  }
+  function wrapAll(){ document.querySelectorAll('#resourceGrid .card').forEach(enableFlip); }
+  wrapAll();
+  const mo = new MutationObserver(wrapAll);
+  mo.observe(grid, { childList: true });
+})();
+</script>
+<script type="module">
+// ─── GRAPH OVERLAYS — read-only: fog, FXAA+bloom, matrix rain floor (real soul data), star twinkle ───
+(async function graphOverlays(){
+  try{
+    const g = window.__soulGraph;
+    if (!g || !g.renderer || !g.scene || !g.camera) { console.info('graph overlays skipped (graph not ready)'); return; }
+    const { scene, camera, renderer, items } = g;
+    const T = await import('three');
+    const { EffectComposer } = await import('three/addons/postprocessing/EffectComposer.js');
+    const { RenderPass } = await import('three/addons/postprocessing/RenderPass.js');
+    const { UnrealBloomPass } = await import('three/addons/postprocessing/UnrealBloomPass.js');
+    const { ShaderPass } = await import('three/addons/postprocessing/ShaderPass.js');
+    const { FXAAShader } = await import('three/addons/shaders/FXAAShader.js');
+
+    // #25 Depth fog
+    scene.fog = new T.FogExp2(0x080808, 0.05);
+
+    // #26 + #27 FXAA + UnrealBloom — wrap renderer.render safely (no recursion)
+    const w = window.innerWidth, h = window.innerHeight;
+    const composer = new EffectComposer(renderer);
+    composer.addPass(new RenderPass(scene, camera));
+    const bloom = new UnrealBloomPass(new T.Vector2(w, h), 0.45, 0.6, 0.8);
+    composer.addPass(bloom);
+    const fxaa = new ShaderPass(FXAAShader);
+    fxaa.uniforms['resolution'].value.set(1/w, 1/h);
+    composer.addPass(fxaa);
+    let composing = false;
+    const rawRender = renderer.render.bind(renderer);
+    renderer.render = function(){
+      if (composing) return rawRender.apply(this, arguments);
+      composing = true; composer.render(); composing = false;
+    };
+
+    // #24 Star slow drift + twinkle surface
+    let starField = null;
+    scene.children.forEach(c => { if (!starField && c.isPoints && c.geometry && c.geometry.attributes && c.geometry.attributes.position) starField = c; });
+
+    // #31 Matrix code-rain floor — glyph stream built from REAL catalog names + PLT
+    const floorCanvas = document.createElement('canvas');
+    floorCanvas.width = 768; floorCanvas.height = 384;
+    const fctx = floorCanvas.getContext('2d');
+    let glyphStr = 'PLT/0123456789.';
+    (items || []).forEach(it => {
+      const n = (it.name || '') + ' ' + (it.plt || '') + ' ' + (it.type || '');
+      for (const ch of n) { const c = ch.toUpperCase(); if (/[A-Z0-9/.\-+]/.test(c) && !glyphStr.includes(c)) glyphStr += c; }
+    });
+    glyphStr = glyphStr.slice(0, 96);
+    const FCOLS = 64, FROWS = 32;
+    const drops = [];
+    for (let i = 0; i < FCOLS; i++) drops.push({ y: Math.random() * FROWS, sp: 0.5 + Math.random() * 1.4, ch: Math.floor(Math.random() * glyphStr.length), glow: 0.2 + Math.random() * 0.5 });
+    const floorTex = new T.CanvasTexture(floorCanvas);
+    floorTex.magFilter = T.NearestFilter; floorTex.minFilter = T.NearestFilter;
+    const floor = new T.Mesh(new T.PlaneGeometry(30, 20), new T.MeshBasicMaterial({ map: floorTex, transparent: true, opacity: 0.3, blending: T.AdditiveBlending, depthWrite: false }));
+    floor.rotation.x = -Math.PI / 2; floor.position.set(0, -2.6, 0);
+    scene.add(floor);
+    function drawFloor(){
+      fctx.clearRect(0, 0, 768, 384);
+      const base = fctx.createLinearGradient(0, 0, 0, 384);
+      base.addColorStop(0, 'rgba(4,2,10,0.9)'); base.addColorStop(1, 'rgba(30,10,40,0.95)');
+      fctx.fillStyle = base; fctx.fillRect(0, 0, 768, 384);
+      fctx.strokeStyle = 'rgba(139,92,246,0.06)'; fctx.lineWidth = 1;
+      for (let c = 1; c < FCOLS; c++) { fctx.beginPath(); fctx.moveTo(c * (768/FCOLS), 0); fctx.lineTo(c * (768/FCOLS), 384); fctx.stroke(); }
+      for (let r = 1; r < FROWS; r++) { fctx.beginPath(); fctx.moveTo(0, r * (384/FROWS)); fctx.lineTo(768, r * (384/FROWS)); fctx.stroke(); }
+      const cw = 768/FCOLS, chh = 384/FROWS;
+      fctx.font = 'bold 14px monospace'; fctx.textAlign = 'center'; fctx.textBaseline = 'middle';
+      for (let i = 0; i < FCOLS; i++) {
+        const d = drops[i];
+        d.y += d.sp; if (d.y > FROWS + 6) { d.y = 0; d.sp = 0.5 + Math.random() * 1.4; d.glow = 0.2 + Math.random() * 0.5; }
+        const row = Math.floor(d.y);
+        if (row >= 0 && row < FROWS) {
+          for (let t = 0; t < 6 && row - t >= 0; t++) {
+            const a = Math.pow(0.72, 5 - t) * d.glow;
+            fctx.fillStyle = 'rgba(0,212,255,' + (0.35 * a).toFixed(2) + ')';
+            if ((row - t) % 7 === 3) d.ch = Math.floor(Math.random() * glyphStr.length);
+            fctx.fillText(glyphStr[(d.ch + row - t + t*3) % glyphStr.length], i*cw + cw/2, (row - t)*chh + chh/2);
+          }
+          fctx.fillStyle = 'rgba(255,105,180,' + d.glow.toFixed(2) + ')';
+          fctx.fillText(glyphStr[Math.floor(Math.random() * glyphStr.length)], i*cw + cw/2, row*chh + chh/2);
+          fctx.fillStyle = 'rgba(255,105,180,0.05)'; fctx.fillRect(i*cw, row*chh + 1, cw, chh - 2);
+        }
+      }
+      floorTex.needsUpdate = true;
+    }
+    // Drifting real-soul name sprites across the floor
+    const pool = [];
+    function makeSoulSprite(it){
+      const c2 = document.createElement('canvas'); c2.width = 512; c2.height = 96;
+      const x2 = c2.getContext('2d');
+      const g2 = x2.createLinearGradient(0, 0, 512, 0);
+      g2.addColorStop(0, '#8B5CF6'); g2.addColorStop(0.5, '#00D4FF'); g2.addColorStop(1, '#FF6B9D');
+      x2.shadowColor = 'rgba(255,105,180,0.9)'; x2.shadowBlur = 12;
+      x2.font = '700 26px Inter, sans-serif'; x2.textAlign = 'center'; x2.textBaseline = 'middle';
+      x2.fillStyle = g2;
+      x2.fillText('✦ ' + (it.name || 'Soul') + '   ·   PLT ' + (it.plt || '0.5/0.5/0.5'), 256, 48);
+      const tex = new T.CanvasTexture(c2);
+      const sp = new T.Sprite(new T.SpriteMaterial({ map: tex, transparent: true, depthWrite: false, depthTest: false, sizeAttenuation: true, blending: T.AdditiveBlending }));
+      sp.scale.set(2.6, 0.5, 1); sp.position.y = -2.15; sp.visible = false; scene.add(sp);
+      return { sp, life: Math.random() * 8, spd: 0.6 + Math.random() * 1.2, delay: Math.floor(Math.random() * 200) };
+    }
+    (items || []).slice(0, 8).forEach(it => pool.push(makeSoulSprite(it)));
+    const ITEMS = (items && items.length) ? items : [];
+
+    let last = 0, tick = 0;
+    (function overlayLoop(now){
+      requestAnimationFrame(overlayLoop);
+      if (!last) last = now;
+      const dt = now - last; last = now;
+      tick -= dt; if (tick <= 0) { tick = 90; drawFloor(); }
+      if (starField) starField.rotation.y += 0.0006;
+      for (let i = 0; i < pool.length; i++) {
+        const p = pool[i];
+        if (p.delay > 0) { p.delay--; p.sp.visible = false; continue; }
+        p.sp.visible = true;
+        p.life -= dt / 1000;
+        if (p.life <= 0) {
+          p.life = 6 + Math.random() * 6;
+          p.spd = 0.5 + Math.random() * 1.4;
+          p.sp.position.x = (Math.random() - 0.5) * 22; p.sp.position.z = 10 + Math.random() * 6;
+          const src = ITEMS[Math.floor(Math.random() * ITEMS.length)]; if (src) {
+            const img = p.sp.material.map.image; const x3 = img.getContext('2d');
+            x3.clearRect(0, 0, img.width, img.height);
+            const g3 = x3.createLinearGradient(0, 0, img.width, 0);
+            g3.addColorStop(0, '#8B5CF6'); g3.addColorStop(0.5, '#00D4FF'); g3.addColorStop(1, '#FF6B9D');
+            x3.shadowColor = 'rgba(255,105,180,0.9)'; x3.shadowBlur = 12;
+            x3.font = '700 26px Inter, sans-serif'; x3.textAlign = 'center'; x3.textBaseline = 'middle'; x3.fillStyle = g3;
+            x3.fillText('✦ ' + (src.name || 'Soul') + '   ·   PLT ' + (src.plt || '0.5/0.5/0.5'), img.width/2, img.height/2);
+            p.sp.material.map.needsUpdate = true;
+          }
+        }
+        p.sp.position.z -= p.spd * dt / 1000 * 1.6;
+        p.sp.material.opacity = Math.max(0, Math.min(0.85, p.sp.position.z < 0 ? 0.85 - Math.abs(p.sp.position.z) * 0.06 : 0.85));
+        if (p.sp.position.z < -10) { p.sp.position.z = 10 + Math.random() * 6; }
+      }
+    })(0);
+
+    window.addEventListener('resize', () => { composer.setSize(window.innerWidth, window.innerHeight); bloom.setSize(window.innerWidth, window.innerHeight); });
+  }catch(e){ console.warn('Graph overlays skipped:', e); }
 })();
 </script>
 <script>
