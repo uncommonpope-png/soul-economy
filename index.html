@@ -2568,6 +2568,7 @@ function addSquad(name){
   if(s.length>=8){ toast('Squad full (8/8) — unequip one on your profile'); return; }
   s.push(name); setSquad(s);
   toast('✧ Equipped to Squad ('+s.length+'/8)');
+  try{ window.dispatchEvent(new CustomEvent('squad-updated')); }catch(e){}
 }
 function attach(card){
   var bar=card.querySelector('.ss-act'); if(!bar||bar.querySelector('[data-squad]'))return;
@@ -2595,15 +2596,28 @@ function initObs(){
   mo.observe(grid,{childList:true,subtree:true});
   scan();
 }
-function showHandle(){
-  var el=document.getElementById('userEmail'); if(!el) return;
+function squadCount(){ try{ return (getSquad()||[]).length; }catch(e){ return 0; } }
+function identity(){
   var v='';
-  try{ var p=JSON.parse(localStorage.getItem('soulProfileV1')||'null'); if(p&&p.handle) v=p.handle; }catch(e){}
+  try{ var p=JSON.parse(localStorage.getItem('soulProfileV1')||'null'); if(p&&p.handle) v=String(p.handle); }catch(e){}
   if(!v){ try{ v=localStorage.getItem('soulUser')||''; }catch(e){} }
-  if(v&&v!=='guest'){ el.textContent='✦ @'+v; el.style.fontWeight='600'; el.title=v; }
+  return (v==='guest')?'':v;
+}
+function renderNavBadge(){
+  var el=document.getElementById('userEmail'); if(!el) return;
+  var v=identity(); var c=squadCount();
+  if(!v&&!c) return;
+  var txt=v?('✦ @'+v):'✦ Squad';
+  if(c>0) txt+=' ['+c+'/8]';
+  el.textContent=txt; el.style.fontWeight='600'; if(v) el.title=v;
 }
 (function waiter(){
-  if(window.__familySocial){ FS=window.__familySocial; showHandle(); initObs(); }
+  if(window.__familySocial){
+    FS=window.__familySocial;
+    renderNavBadge();
+    initObs();
+    window.addEventListener('squad-updated',renderNavBadge);
+  }
   else setTimeout(waiter,120);
 })();
 })();

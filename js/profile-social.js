@@ -8,6 +8,7 @@ var PREF='#user-profile-canvas';
 var DEFAULTS={handle:'',bio:'',mood:'',audio:'',themeCSS:'',top8:[],guests:[],public:false};
 var state, items=[];
 var VISITOR=false;
+var REGISTRY=false;
 
 function loadState(){
   try{
@@ -29,6 +30,14 @@ function buildPayload(){
   return {schema:'user_profile.json/1.0',profile:{handle:state.handle,bio:state.bio,mood:state.mood,audio:state.audio,themeCSS:state.themeCSS,public:state.public},
     equippedSouls:state.top8.slice(),guestbook:state.guests.slice(0,20)};
 }
+function applyPayload(p){
+  var pr=(p.profile)||p;
+  state={handle:String(pr.handle||'guest').replace(/^@/,''),bio:String(pr.bio||''),mood:String(pr.mood||''),
+    audio:String(pr.audio||''),themeCSS:String(pr.themeCSS||''),public:!!pr.public,
+    top8:(p.equippedSouls&&Array.isArray(p.equippedSouls)?p.equippedSouls:[]).slice(0,8),
+    guests:(p.guestbook&&Array.isArray(p.guestbook)?p.guestbook:[]).slice()};
+  VISITOR=true;
+}
 function readShareHash(){
   try{
     var h=location.hash||'';
@@ -37,14 +46,39 @@ function readShareHash(){
     if(!json) return false;
     var p=JSON.parse(json);
     if(!p||typeof p!=='object') return false;
-    var pr=(p.profile)||p;
-    state={handle:String(pr.handle||'guest').replace(/^@/,''),bio:String(pr.bio||''),mood:String(pr.mood||''),
-      audio:String(pr.audio||''),themeCSS:String(pr.themeCSS||''),public:!!pr.public,
-      top8:(p.equippedSouls&&Array.isArray(p.equippedSouls)?p.equippedSouls:[]).slice(0,8),
-      guests:(p.guestbook&&Array.isArray(p.guestbook)?p.guestbook:[]).slice()};
-    VISITOR=true;
+    applyPayload(p);
     return true;
   }catch(e){ return false; }
+}
+function normalizeHandle(h){
+  return String(h||'').trim().toLowerCase().replace(/^@/,'').replace(/[^a-z0-9-]/g,'').slice(0,39);
+}
+function getRegHandle(){
+  try{
+    var h=location.hash||'';
+    var m=/^#@([A-Za-z0-9_-]+)$/.exec(h);
+    if(m) return normalizeHandle(m[1]);
+    var sp=new URLSearchParams(location.search.split('#')[0]);
+    var u=sp.get('user');
+    if(u) return normalizeHandle(u);
+  }catch(e){}
+  return '';
+}
+function resolveRegistry(){
+  var handle=getRegHandle();
+  if(!handle) return false;
+  fetch('profiles/'+handle+'.json',{cache:'no-store'}).then(function(r){
+    if(!r.ok){ throw {code:r.status}; }
+    return r.json();
+  }).then(function(p){
+    applyPayload(p); REGISTRY=true;
+    finishBoot();
+  }).catch(function(){
+    reportToast('Profile @'+handle+' has not yet settled in the registry. Showing local sanctuary.');
+    loadState(); REGISTRY=false;
+    finishBoot();
+  });
+  return true;
 }
 function copyText(t,label){
   var ta=document.createElement('textarea');
@@ -90,6 +124,7 @@ function wireVisitor(){
   var badge=document.createElement('div');
   badge.style.cssText='display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:12px 16px;border-radius:16px;background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.35);font-size:0.8rem;color:#fff;box-shadow:0 10px 40px rgba(0,212,255,0.15);margin-bottom:16px';
   badge.innerHTML='<span>👁 Viewing <b>@'+esc(state.handle||'guest')+'</b>\u2019s Sanctuary</span>'+
+    (REGISTRY?'<span style="background:rgba(0,212,255,0.14);border:1px solid rgba(0,212,255,0.5);color:#9be8ff;border-radius:100px;padding:3px 10px;font-size:0.7rem">✔ Verified Registry Soul</span>':'')+
     '<button class="upc-btn prim" id="upcFork">◇ Fork This Profile</button>'+
     '<button class="upc-btn cyan" id="upcCreate">✦ Create Yours</button>'+
     '<button class="upc-btn" id="upcMine">View My Own</button>';
@@ -366,11 +401,12 @@ function importJson(file){
 }
 
 function boot(){
-  if(!readShareHash()) loadState();
-  applyTheme();
-  render();
-  wireVisitor();
+  if(readShareHash()){ finishBoot(); return; }
+  if(resolveRegistry()){ return; }
+  loadState();
+  finishBoot();
 }
+function finishBoot(){ applyTheme(); render(); wireVisitor(); }
 
 /* wire the canvas shell */
 window.addEventListener('DOMContentLoaded',function(){
