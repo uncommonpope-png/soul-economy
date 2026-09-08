@@ -2549,5 +2549,64 @@ $('ssPick').addEventListener('click',function(ev){if(ev.target===$('ssPick'))clo
 }catch(e){console.warn('Soul.json wave module skipped:',e);}
 })();
 </script>
+<script>
+// ─── SIP-5 — PUBLIC IDENTITY ROUTING: squad equip + nav handle sync ───
+(function(){
+'use strict';
+var FS=null;
+function toast(m){ try{ if(FS&&FS.toast)FS.toast(m); }catch(e){} }
+function getSquad(){
+  try{ var v=JSON.parse(localStorage.getItem('soulProfileV1')||'null'); return (v&&Array.isArray(v.top8))?v.top8:[]; }catch(e){ return []; }
+}
+function setSquad(a){
+  try{ var v=JSON.parse(localStorage.getItem('soulProfileV1')||'{}')||{}; v.top8=a; localStorage.setItem('soulProfileV1',JSON.stringify(v)); }catch(e){}
+}
+function lk(n){ return String(n||'').trim().toLowerCase(); }
+function addSquad(name){
+  var s=getSquad();
+  if(lk(name)!=='you'&&s.some(function(n){return lk(n)===lk(name);})){ toast('◇ This soul is already in your Squad'); return; }
+  if(s.length>=8){ toast('Squad full (8/8) — unequip one on your profile'); return; }
+  s.push(name); setSquad(s);
+  toast('✧ Equipped to Squad ('+s.length+'/8)');
+}
+function attach(card){
+  var bar=card.querySelector('.ss-act'); if(!bar||bar.querySelector('[data-squad]'))return;
+  var k=(card.dataset.id||'').trim(); if(!k)return;
+  var b=document.createElement('button');
+  b.type='button'; b.dataset.squad='1'; b.textContent='◇ Squad';
+  b.title='Equip this soul to your Squad (Top 8 shelf on your profile)';
+  b.style.cssText='border-color:rgba(16,185,129,0.25);color:#6ee7b7';
+  b.addEventListener('click',function(ev){
+    ev.stopPropagation(); ev.preventDefault();
+    var nm=k;
+    try{ var it=FS&&FS.findItem?FS.findItem(k):null; if(it) nm=it.name; }catch(e){}
+    addSquad(nm);
+  });
+  bar.appendChild(b);
+}
+function initObs(){
+  var grid=document.getElementById('resourceGrid'); if(!grid) return;
+  function scan(){
+    grid.querySelectorAll('.card').forEach(function(c){
+      if(c.querySelector('.ss-act')&&!c.querySelector('[data-squad]')) attach(c);
+    });
+  }
+  var mo=new MutationObserver(scan);
+  mo.observe(grid,{childList:true,subtree:true});
+  scan();
+}
+function showHandle(){
+  var el=document.getElementById('userEmail'); if(!el) return;
+  var v='';
+  try{ var p=JSON.parse(localStorage.getItem('soulProfileV1')||'null'); if(p&&p.handle) v=p.handle; }catch(e){}
+  if(!v){ try{ v=localStorage.getItem('soulUser')||''; }catch(e){} }
+  if(v&&v!=='guest'){ el.textContent='✦ @'+v; el.style.fontWeight='600'; el.title=v; }
+}
+(function waiter(){
+  if(window.__familySocial){ FS=window.__familySocial; showHandle(); initObs(); }
+  else setTimeout(waiter,120);
+})();
+})();
+</script>
 </body>
 </html>

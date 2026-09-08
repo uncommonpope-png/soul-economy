@@ -7,6 +7,7 @@ var LS_KEY='soulProfileV1';
 var PREF='#user-profile-canvas';
 var DEFAULTS={handle:'',bio:'',mood:'',audio:'',themeCSS:'',top8:[],guests:[],public:false};
 var state, items=[];
+var VISITOR=false;
 
 function loadState(){
   try{
@@ -19,7 +20,103 @@ function loadState(){
   if(!Array.isArray(state.top8)) state.top8=[];
   if(!Array.isArray(state.guests)) state.guests=[];
 }
-function saveState(){ try{ localStorage.setItem(LS_KEY,JSON.stringify(state)); }catch(e){} }
+function saveState(){ if(VISITOR) return; try{ localStorage.setItem(LS_KEY,JSON.stringify(state)); }catch(e){} }
+
+/* ---- SIP-5: public identity routing (share engine) ---- */
+function toB64(s){ try{ return btoa(unescape(encodeURIComponent(s))); }catch(e){ return ''; } }
+function fromB64(b){ try{ return decodeURIComponent(escape(atob(b))); }catch(e){ return null; } }
+function buildPayload(){
+  return {schema:'user_profile.json/1.0',profile:{handle:state.handle,bio:state.bio,mood:state.mood,audio:state.audio,themeCSS:state.themeCSS,public:state.public},
+    equippedSouls:state.top8.slice(),guestbook:state.guests.slice(0,20)};
+}
+function readShareHash(){
+  try{
+    var h=location.hash||'';
+    if(h.indexOf('#view=')!==0) return false;
+    var json=fromB64(decodeURIComponent(h.slice(6)));
+    if(!json) return false;
+    var p=JSON.parse(json);
+    if(!p||typeof p!=='object') return false;
+    var pr=(p.profile)||p;
+    state={handle:String(pr.handle||'guest').replace(/^@/,''),bio:String(pr.bio||''),mood:String(pr.mood||''),
+      audio:String(pr.audio||''),themeCSS:String(pr.themeCSS||''),public:!!pr.public,
+      top8:(p.equippedSouls&&Array.isArray(p.equippedSouls)?p.equippedSouls:[]).slice(0,8),
+      guests:(p.guestbook&&Array.isArray(p.guestbook)?p.guestbook:[]).slice()};
+    VISITOR=true;
+    return true;
+  }catch(e){ return false; }
+}
+function copyText(t,label){
+  var ta=document.createElement('textarea');
+  ta.value=t; ta.style.cssText='position:fixed;left:-9999px';
+  document.body.appendChild(ta); ta.select();
+  try{ document.execCommand('copy'); reportToast(label||'Link copied'); }catch(e){ alert('Copy manually: '+t); }
+  ta.remove();
+}
+function reportToast(m){
+  var el=$('upcToast')||(function(){ var d=document.createElement('div'); d.id='upcToast'; d.style.cssText='position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:3000;background:#0c0c12;color:#fff;border:1px solid rgba(0,212,255,0.45);border-radius:30px;padding:10px 20px;font-size:0.8rem;box-shadow:0 10px 40px rgba(0,0,0,0.7);transition:opacity .3s'; document.body.appendChild(d); return d; })();
+  el.textContent=m; el.style.opacity='1';
+  setTimeout(function(){ el.style.opacity='0'; },2600);
+}
+function shareProfile(){
+  if(VISITOR) return;
+  var b=toB64(JSON.stringify(buildPayload()));
+  if(!b){ alert('Could not encode share link.'); return; }
+  var url=location.origin+location.pathname.replace(/profile\.html$/i,'profile.html')+'#view='+b;
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(url).then(function(){ reportToast('⇪ Share link copied — paste it anywhere'); },
+      function(){ copyText(url,'⇪ Share link copied — paste it anywhere'); });
+  } else copyText(url,'⇪ Share link copied — paste it anywhere');
+}
+function publishRegistry(){
+  if(VISITOR) return;
+  if(!state.handle){ alert('Give yourself a handle first (✎ Edit Profile).'); return; }
+  var payload=buildPayload();
+  var title='Profile Submission: @'+state.handle;
+  var body='# Public Profile Registry Submission\n\n'+
+    '- **Registry:** /profiles/<handle>.json\n'+
+    '- **Handle:** @'+state.handle+'\n\n```json\n'+JSON.stringify(payload,null,2)+'\n```';
+  var url='https://github.com/uncommonpope-png/soul-economy/issues/new?title='+
+    encodeURIComponent(title)+'&body='+encodeURIComponent(body);
+  window.open(url,'_blank');
+}
+function wireVisitor(){
+  if(!VISITOR) return;
+  ['upcEdit','upcPick','upcExport','upcImport','upcReg','upcShare','upcImportFile'].forEach(function(id){
+    var b=$(id); if(b) b.style.display='none';
+  });
+  document.querySelectorAll('.wrap > .card').forEach(function(c){ c.style.display='none'; });
+  var cv=$('user-profile-canvas'); if(!cv) return;
+  var badge=document.createElement('div');
+  badge.style.cssText='display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:12px 16px;border-radius:16px;background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.35);font-size:0.8rem;color:#fff;box-shadow:0 10px 40px rgba(0,212,255,0.15);margin-bottom:16px';
+  badge.innerHTML='<span>👁 Viewing <b>@'+esc(state.handle||'guest')+'</b>\u2019s Sanctuary</span>'+
+    '<button class="upc-btn prim" id="upcFork">◇ Fork This Profile</button>'+
+    '<button class="upc-btn cyan" id="upcCreate">✦ Create Yours</button>'+
+    '<button class="upc-btn" id="upcMine">View My Own</button>';
+  cv.insertBefore(badge,cv.firstChild);
+  badge.querySelector('#upcFork').addEventListener('click',function(){
+    VISITOR=false; saveState();
+    history.replaceState(null,'',location.pathname+location.search);
+    exitVisitor();
+    reportToast('◇ This sanctuary is now yours — edit it in ✎ Edit Profile');
+  });
+  badge.querySelector('#upcCreate').addEventListener('click',function(){
+    history.replaceState(null,'',location.pathname+location.search);
+    location.reload();
+  });
+  badge.querySelector('#upcMine').addEventListener('click',function(){
+    history.replaceState(null,'',location.pathname+location.search);
+    location.reload();
+  });
+}
+function exitVisitor(){
+  ['upcEdit','upcPick','upcExport','upcImport','upcReg','upcShare','upcImportFile'].forEach(function(id){
+    var b=$(id); if(b) b.style.display='';
+  });
+  document.querySelectorAll('.wrap > .card').forEach(function(c){ c.style.display=''; });
+  var badge=document.querySelector('#user-profile-canvas > div[style*="0,212,255,0.08"]');
+  if(badge) badge.remove();
+}
 
 function $(id){ return document.getElementById(id); }
 function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
@@ -269,9 +366,10 @@ function importJson(file){
 }
 
 function boot(){
-  loadState();
+  if(!readShareHash()) loadState();
   applyTheme();
   render();
+  wireVisitor();
 }
 
 /* wire the canvas shell */
@@ -280,6 +378,8 @@ window.addEventListener('DOMContentLoaded',function(){
   var editBtn=$('upcEdit'); if(editBtn) editBtn.addEventListener('click',openEditor);
   var pickBtn=$('upcPick'); if(pickBtn) pickBtn.addEventListener('click',openPicker);
   var expBtn=$('upcExport'); if(expBtn) expBtn.addEventListener('click',exportJson);
+  var shrBtn=$('upcShare'); if(shrBtn) shrBtn.addEventListener('click',shareProfile);
+  var regBtn=$('upcReg'); if(regBtn) regBtn.addEventListener('click',publishRegistry);
   var impBtn=$('upcImport'); if(impBtn) impBtn.addEventListener('click',function(){ $('upcImportFile').click(); });
   var impFile=$('upcImportFile'); if(impFile) impFile.addEventListener('change',function(ev){ var f=ev.target.files&&ev.target.files[0]; if(f) importJson(f); ev.target.value=''; });
   fetch('data/catalog.json',{cache:'no-store'}).then(function(r){ return r.json(); }).then(function(j){
