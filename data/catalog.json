@@ -8660,5 +8660,173 @@
     "downloads": 0,
     "likes": 3,
     "updated": "2026-09-07"
+  },
+  {
+    "icon": "🔍",
+    "type": "skill",
+    "name": "Figma Console Skills",
+    "desc": "Figma Console MCP skills as Markdown",
+    "plt": "0.6/0.9/0.2",
+    "file": "soul-gun-figma-console-skills.md",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "figma",
+      "mcp",
+      "audit",
+      "grafted"
+    ],
+    "image": "",
+    "version": "1.0.0",
+    "size": "2 KB",
+    "details": "Figma Console MCP skills for design QA",
+    "contents": [
+      "Design tokens, WCAG lint, a11y audits"
+    ],
+    "requirements": "Figma MCP",
+    "install": "npx @figma/console-mcp-server",
+    "downloads": 0,
+    "likes": 2,
+    "updated": "2026-09-07"
+  },
+  {
+    "icon": "🎨",
+    "type": "skill",
+    "name": "Inkline",
+    "desc": "Accessible motion-rich components",
+    "plt": "0.7/0.8/0.3",
+    "file": "soul-gun-inkline.md",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "components",
+      "accessibility",
+      "motion",
+      "grafted"
+    ],
+    "image": "",
+    "version": "1.0.0",
+    "size": "2 KB",
+    "details": "Accessible motion-rich component library",
+    "contents": [
+      "32 components, WCAG AA, Framer Motion"
+    ],
+    "requirements": "npm install @inkline/ui",
+    "install": "npm install @inkline/ui",
+    "downloads": 0,
+    "likes": 2,
+    "updated": "2026-09-07"
+  },
+  {
+    "icon": "🏛️",
+    "type": "skill",
+    "name": "Shaduxe UI",
+    "desc": "Premium shadcn/ui blocks",
+    "plt": "0.7/0.8/0.3",
+    "file": "soul-gun-shaduxe-ui.md",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "shadcn",
+      "blocks",
+      "templates",
+      "grafted"
+    ],
+    "image": "",
+    "version": "1.0.0",
+    "size": "2 KB",
+    "details": "Premium shadcn/ui blocks",
+    "contents": [
+      "Hero, navbar, footer, testimonial blocks"
+    ],
+    "requirements": "npx shaduxe add",
+    "install": "npx shaduxe add",
+    "downloads": 0,
+    "likes": 2,
+    "updated": "2026-09-07"
+  },
+  {
+    "icon": "🦸",
+    "type": "skill",
+    "name": "Superpowers",
+    "desc": "Agentic software dev methodology",
+    "plt": "0.9/0.6/0.4",
+    "file": "soul-gun-superpowers.md",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "agent",
+      "framework",
+      "methodology",
+      "grafted"
+    ],
+    "image": "",
+    "version": "1.0.0",
+    "size": "2 KB",
+    "details": "Agentic software development methodology",
+    "contents": [
+      "8 superpowers"
+    ],
+    "requirements": "npm install",
+    "install": "npx superpowers init",
+    "downloads": 0,
+    "likes": 2,
+    "updated": "2026-09-07"
+  },
+  {
+    "icon": "🧠",
+    "type": "skill",
+    "name": "Anthropic Agent Skills",
+    "desc": "Foundational agent skill framework",
+    "plt": "0.8/0.7/0.5",
+    "file": "soul-gun-anthropic-skills.md",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "anthropic",
+      "framework",
+      "claude",
+      "grafted"
+    ],
+    "image": "",
+    "version": "1.0.0",
+    "size": "2 KB",
+    "details": "Foundational agent skill framework",
+    "contents": [
+      "Skill manifest format"
+    ],
+    "requirements": "git clone",
+    "install": "git clone",
+    "downloads": 0,
+    "likes": 2,
+    "updated": "2026-09-07"
+  },
+  {
+    "icon": "🎚️",
+    "type": "skill",
+    "name": "TweakCN",
+    "desc": "Visual theme editor for shadcn/ui",
+    "plt": "0.6/0.9/0.2",
+    "file": "soul-gun-tweakcn.md",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "theme",
+      "editor",
+      "no-code",
+      "grafted"
+    ],
+    "image": "",
+    "version": "1.0.0",
+    "size": "2 KB",
+    "details": "Visual theme editor",
+    "contents": [
+      "No-code theme customization"
+    ],
+    "requirements": "npx tweakcn",
+    "install": "npx tweakcn",
+    "downloads": 0,
+    "likes": 2,
+    "updated": "2026-09-07"
   }
 ]
