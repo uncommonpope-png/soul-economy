@@ -1579,7 +1579,10 @@ window.guideSendWithAdapter = async (q) => {
   grid.addEventListener('click', (e) => {
     const card = cardFrom(e);
     if (!card) return;
-    if (e.target.closest('.btn-download, .btn-play, .card-expand, .meta-tag, a, .card-details')) return;
+    // Download / Play triggers spin too
+    if (e.target.closest('.btn-download, .btn-play')) { spinOnce(card); return; }
+    // Skip spin for expand toggles / tags / details
+    if (e.target.closest('.card-expand, .meta-tag, .card-details')) return;
     spinOnce(card);
   });
 })();
