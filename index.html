@@ -1614,14 +1614,7 @@ spinOnce(card);
 // ─── GRAPH OVERLAYS — read-only: fog, FXAA+bloom, matrix rain floor (real soul data), star twinkle ───
 (async function graphOverlays(){
   try{
-    let g = window.__soulGraph;
-    if (!g || !g.renderer || !g.scene || !g.camera){
-      const began = Date.now();
-      while ((!g || !g.renderer || !g.scene || !g.camera) && Date.now() - began < 5000){
-        await new Promise(r => setTimeout(r, 60));
-        g = window.__soulGraph;
-      }
-    }
+    const g = window.__soulGraph;
     if (!g || !g.renderer || !g.scene || !g.camera) { console.info('graph overlays skipped (graph not ready)'); return; }
     const { scene, camera, renderer, items } = g;
     const T = await import('three');
@@ -1758,14 +1751,7 @@ spinOnce(card);
 
 ( async function heartCity(){
   try{
-    let g = window.__soulGraph;
-    if (!g || !g.renderer || !g.scene || !g.camera){
-      const began = Date.now();
-      while ((!g || !g.renderer || !g.scene || !g.camera) && Date.now() - began < 5000){
-        await new Promise(r => setTimeout(r, 60));
-        g = window.__soulGraph;
-      }
-    }
+    const g = window.__soulGraph;
     if (!g || !g.renderer || !g.scene || !g.camera) { console.info('heart city skipped (graph not ready)'); return; }
     const { scene, camera, renderer } = g;
     const T = await import('three');
@@ -1903,8 +1889,8 @@ spinOnce(card);
       scene.add(m); return m;
     }
     const arteryCurves = [];
-    const A_PER = 16, ACOUNT = Math.min(16, recPyr.m.count), C_PER = 12, CCOUNT = 8;
-    const flowPos = new T.Float32BufferAttribute(new Float32Array(A_PER * ACOUNT * 3), 3);
+    const A_PER = 16, ACOUNT = Math.min(16, recPyr.m.count);
+    const flowPos = new Float32BufferAttribute(new Float32Array(A_PER * ACOUNT * 3), 3);
     const flowGeo = new T.BufferGeometry(); flowGeo.setAttribute('position', flowPos);
     const flow = buildFlow(flowGeo, 0x5ef6ff, 0.16, A_PER * ACOUNT);
     const flowPhase = new Float32Array(A_PER * ACOUNT + C_PER * CCOUNT);
@@ -1917,7 +1903,8 @@ spinOnce(card);
       for (let i = 0; i < A_PER; i++) flowPhase[a * A_PER + i] = Math.random();
     }
     const canalCurves = [];
-    const canalPos = new T.Float32BufferAttribute(new Float32Array(C_PER * CCOUNT * 3), 3);
+    const C_PER = 12, CCOUNT = 8;
+    const canalPos = new Float32BufferAttribute(new Float32Array(C_PER * CCOUNT * 3), 3);
     const canalGeo = new T.BufferGeometry(); canalGeo.setAttribute('position', canalPos);
     const canal = buildFlow(canalGeo, 0xff3b6b, 0.12, C_PER * CCOUNT);
     const cSamples = [];
@@ -1937,7 +1924,7 @@ spinOnce(card);
       for (let i = 0; i < C_PER; i++) flowPhase[(ACOUNT * A_PER) + c0 * C_PER + i] = Math.random();
     }
     const TR_N = 42;
-    const trafficPos = new T.Float32BufferAttribute(new Float32Array(TR_N * 3), 3);
+    const trafficPos = new Float32BufferAttribute(new Float32Array(TR_N * 3), 3);
     const trafficGeo = new T.BufferGeometry(); trafficGeo.setAttribute('position', trafficPos);
     const traffic = buildFlow(trafficGeo, 0x9df7ff, 0.09, TR_N);
     const trState = [];
@@ -2028,10 +2015,10 @@ spinOnce(card);
       }
       tp.needsUpdate = true;
     }
-    let last = 0, acc = 0, beatP = 0, prevBeat = 0, kick = 0, tRot = 0;
     stepFlow(0); stepCanal(0); stepTraffic(0);
 
     // #HC9 the beat — one clock drives the whole city
+    let last = 0, acc = 0, beatP = 0, prevBeat = 0, kick = 0, tRot = 0;
     const _c = new T.Color();
     (function cityLoop(now){
       requestAnimationFrame(cityLoop);
