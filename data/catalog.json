@@ -8828,5 +8828,22 @@
     "downloads": 0,
     "likes": 2,
     "updated": "2026-09-07"
+  },
+  {
+    "icon": "🌀",
+    "type": "skill",
+    "name": "reactive-soul-grid",
+    "desc": "Alien-grade reactive grid + living graph overlays: jitter-free flower-tracking tilt, pink 360° spin on click/download, always-visible card manifests, FXAA+UnrealBloom pipeline, fog, star drift, and a matrix code-rain floor dripping real soul names & PLT.",
+    "plt": "0.8/0.7/0.6",
+    "file": "soul-gun-reactive-soul-grid.md",
+    "tags": [
+      "threejs",
+      "ui",
+      "reactive",
+      "graph",
+      "grid"
+    ],
+    "author": "profit-prime",
+    "graft": true
   }
 ]
