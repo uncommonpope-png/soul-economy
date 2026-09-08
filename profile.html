@@ -27,6 +27,8 @@ button{cursor:pointer;font-family:inherit}
 .publish{margin-top:16px;padding:12px 28px;background:linear-gradient(135deg,var(--purple),var(--purple-dark));border:none;border-radius:30px;color:#fff;font-weight:700}
 .badge{font-size:0.65rem;padding:3px 10px;border-radius:100px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08)}
 </style>
+<link rel="stylesheet" href="css/profile-themes.css" />
+<script defer src="js/profile-social.js"></script>
 </head>
 <body>
 <nav class="navbar">
@@ -36,6 +38,30 @@ button{cursor:pointer;font-family:inherit}
 </nav>
 
 <div class="wrap">
+  <!-- ── SIP-4 ADDITIVE SOCIAL CANVAS (SHIELDED: everything here is scoped to
+       #user-profile-canvas; global nav, PLT counters & workbench docks are exempt) ── -->
+  <div id="user-profile-canvas" class="upc">
+    <div class="upc-card"><div id="upcIdentity"></div></div>
+
+    <div class="upc-card">
+      <h3>◇ Equipped Souls — My Active Squad</h3>
+      <p class="upc-sub">Up to 8 favorite souls from the master Library, showcased on your shelf. Every tile deep-links straight into the catalog card.</p>
+      <div id="upcTop8"></div>
+      <div class="upc-dock">
+        <button class="upc-btn prim" id="upcEdit">✎ Edit Profile</button>
+        <button class="upc-btn cyan" id="upcPick">◇ Equip Souls</button>
+        <button class="upc-btn" id="upcExport">⬇ Export user_profile.json</button>
+        <button class="upc-btn" id="upcImport">↪ Import</button>
+        <input type="file" id="upcImportFile" accept=".json" style="display:none">
+      </div>
+    </div>
+
+    <div class="upc-card" id="upcCss"></div>
+    <div class="upc-card" id="upcGuests"></div>
+  </div>
+  <div id="upcEditor" class="hidden"><div class="ed"></div></div>
+  <!-- ── end SIP-4 canvas ── -->
+
   <div class="card" id="profileCard">
     <div class="row">
       <img id="avatar" class="avatar" src="" alt="avatar" style="display:none">
