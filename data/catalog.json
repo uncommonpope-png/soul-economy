@@ -8309,5 +8309,356 @@
     "install": "CSS auto-applies when graft:true",
     "downloads": 0,
     "likes": 9
+  },
+  {
+    "icon": "🎨",
+    "type": "skill",
+    "name": "Design Extract",
+    "desc": "Extract design systems to DTCG tokens + shadcn/ui",
+    "plt": "0.7/0.8/0.3",
+    "file": "soul-gun-design-extract.md",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "design-system",
+      "figma",
+      "tokens",
+      "mcp"
+    ],
+    "image": "",
+    "version": "1.0.0",
+    "size": "2 KB",
+    "details": "Extract any website Figma file to structured DTCG tokens, shadcn/ui registry, WCAG remediation",
+    "contents": [
+      "DTCG tokens",
+      "shadcn registry",
+      "WCAG remediation"
+    ],
+    "requirements": "DTCG tokens input",
+    "install": "npx design-extract",
+    "downloads": 0,
+    "likes": 3,
+    "updated": "2026-09-07"
+  },
+  {
+    "icon": "🌀",
+    "type": "skill",
+    "name": "Motion Primitives",
+    "desc": "Animated interface primitives for React/Svelte",
+    "plt": "0.6/0.8/0.4",
+    "file": "soul-gun-motion-primitives.md",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "motion",
+      "animation",
+      "react",
+      "grafted"
+    ],
+    "image": "",
+    "version": "1.0.0",
+    "size": "2 KB",
+    "details": "UI kit for beautiful animated interfaces",
+    "contents": [
+      "Spring physics",
+      "particles",
+      "SVG"
+    ],
+    "requirements": "npm install @motion-primitives/react",
+    "install": "npx motion-primitives add",
+    "downloads": 0,
+    "likes": 3,
+    "updated": "2026-09-07"
+  },
+  {
+    "icon": "⚛️",
+    "type": "skill",
+    "name": "Skills for Figma",
+    "desc": "Native Figma MCP agent skills — tokens, a11y, slides",
+    "plt": "0.6/0.9/0.2",
+    "file": "soul-gun-skills-for-figma.md",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "figma",
+      "mcp",
+      "grafted"
+    ],
+    "image": "",
+    "version": "1.0.0",
+    "size": "2 KB",
+    "details": "Agent skills for native Figma MCP",
+    "contents": [
+      "Token export",
+      "a11y audit"
+    ],
+    "requirements": "FIGMA_ACCESS_TOKEN",
+    "install": "npx -y @figma/mcp-server-figma",
+    "downloads": 0,
+    "likes": 3,
+    "updated": "2026-09-07"
+  },
+  {
+    "icon": "🎨",
+    "type": "skill",
+    "name": "Tinte",
+    "desc": "Design system to agent plugin compiler",
+    "plt": "0.8/0.7/0.5",
+    "file": "soul-gun-tinte.md",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "design-system",
+      "compiler",
+      "grafted"
+    ],
+    "image": "",
+    "version": "1.0.0",
+    "size": "2 KB",
+    "details": "Compile design systems into agent plugins",
+    "contents": [
+      "SKILL.md",
+      "tokens.css"
+    ],
+    "requirements": "DTCG tokens input",
+    "install": "npx tinte compile",
+    "downloads": 0,
+    "likes": 3,
+    "updated": "2026-09-07"
+  },
+  {
+    "icon": "🎨",
+    "type": "skill",
+    "name": "Better Design",
+    "desc": "31 brand themes + WCAG rules via MCP + shadcn registry",
+    "plt": "0.7/0.8/0.3",
+    "file": "soul-gun-better-design.md",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "theme",
+      "mcp",
+      "shadcn",
+      "grafted"
+    ],
+    "image": "",
+    "version": "1.0.0",
+    "size": "2 KB",
+    "details": "31 themes + WCAG via MCP",
+    "contents": [
+      "31 themes",
+      "WCAG rules"
+    ],
+    "requirements": "npx better-design-mcp",
+    "install": "npx better-design-mcp",
+    "downloads": 0,
+    "likes": 3,
+    "updated": "2026-09-07"
+  },
+  {
+    "icon": "⚡",
+    "type": "skill",
+    "name": "Lightswind",
+    "desc": "160+ animated accessible React components with MCP",
+    "plt": "0.7/0.8/0.4",
+    "file": "soul-gun-lightswind.md",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "react",
+      "components",
+      "animation",
+      "mcp"
+    ],
+    "image": "",
+    "version": "1.0.0",
+    "size": "2 KB",
+    "details": "160+ animated accessible React components",
+    "contents": [
+      "160 components",
+      "MCP",
+      "WCAG"
+    ],
+    "requirements": "npm install lightswind",
+    "install": "npx lightswind add",
+    "downloads": 0,
+    "likes": 3,
+    "updated": "2026-09-07"
+  },
+  {
+    "icon": "⚛️",
+    "type": "skill",
+    "name": "Alpha Shadcn",
+    "desc": "Figma shadcn/ui sync plugin + MCP",
+    "plt": "0.8/0.9/0.2",
+    "file": "soul-gun-alpha-shadcn.md",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "figma",
+      "shadcn",
+      "sync",
+      "mcp",
+      "grafted"
+    ],
+    "image": "",
+    "version": "1.0.0",
+    "size": "2 KB",
+    "details": "Figma↔shadcn sync plugin",
+    "contents": [
+      "One-click export",
+      "MCP integration"
+    ],
+    "requirements": "Figma plugin",
+    "install": "npx alpha-shadcn-mcp",
+    "downloads": 0,
+    "likes": 3,
+    "updated": "2026-09-07"
+  },
+  {
+    "icon": "🏗️",
+    "type": "skill",
+    "name": "Refly",
+    "desc": "Open-source agent skills builder — compose, deploy",
+    "plt": "0.9/0.6/0.4",
+    "file": "soul-gun-refly.md",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "agent",
+      "builder",
+      "framework",
+      "grafted"
+    ],
+    "image": "",
+    "version": "1.0.0",
+    "size": "2 KB",
+    "details": "Agent skills builder framework",
+    "contents": [
+      "Visual composer",
+      "registry"
+    ],
+    "requirements": "npm create refly@latest",
+    "install": "npx refly dev",
+    "downloads": 0,
+    "likes": 3,
+    "updated": "2026-09-07"
+  },
+  {
+    "icon": "🏭",
+    "type": "skill",
+    "name": "Claude Code Skill Factory",
+    "desc": "Production-ready Claude Code skills factory + validation",
+    "plt": "0.8/0.7/0.4",
+    "file": "soul-gun-claudecode-factory.md",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "builder",
+      "validation",
+      "claude-code",
+      "grafted"
+    ],
+    "image": "",
+    "version": "1.0.0",
+    "size": "2 KB",
+    "details": "Production-ready Claude Code skills factory",
+    "contents": [
+      "Validation pipeline"
+    ],
+    "requirements": "npx claude-code-skill-factory",
+    "install": "npx claude-code-skill-factory",
+    "downloads": 0,
+    "likes": 3,
+    "updated": "2026-09-07"
+  },
+  {
+    "icon": "🏛️",
+    "type": "skill",
+    "name": "Plugin87 UX Skill",
+    "desc": "Senior design architect — 42 components, 138 systems, WCAG 2.2",
+    "plt": "0.8/0.8/0.3",
+    "file": "soul-gun-plugin87-ux-skill.md",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "design",
+      "architecture",
+      "a11y",
+      "grafted"
+    ],
+    "image": "",
+    "version": "1.0.0",
+    "size": "2 KB",
+    "details": "42 components, 138 systems, WCAG 2.2",
+    "contents": [
+      "Component library",
+      "a11y"
+    ],
+    "requirements": "npm install",
+    "install": "npx @plugin87/ux-skills",
+    "downloads": 0,
+    "likes": 3,
+    "updated": "2026-09-07"
+  },
+  {
+    "icon": "🎨",
+    "type": "skill",
+    "name": "UX-UI Agent Skills",
+    "desc": "Senior design architect skills bundle — agentic skills",
+    "plt": "0.8/0.8/0.3",
+    "file": "soul-gun-ux-ui-skills.md",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "design",
+      "agent-skills",
+      "a11y",
+      "grafted"
+    ],
+    "image": "",
+    "version": "1.0.0",
+    "size": "2 KB",
+    "details": "Design architect agent skills bundle",
+    "contents": [
+      "Runnable command skills"
+    ],
+    "requirements": "npm install",
+    "install": "npx @plugin87/ux-mcp-server",
+    "downloads": 0,
+    "likes": 3,
+    "updated": "2026-09-07"
+  },
+  {
+    "icon": "⚡",
+    "type": "skill",
+    "name": "Shadcn Extension",
+    "desc": "12 premium shadcn/ui components (Tron, Glass, Neural, Aurora)",
+    "plt": "0.7/0.7/0.4",
+    "file": "soul-gun-shadcn-extension.md",
+    "author": "profit-prime",
+    "license": "MIT",
+    "tags": [
+      "shadcn",
+      "extension",
+      "components",
+      "react",
+      "grafted"
+    ],
+    "image": "",
+    "version": "1.0.0",
+    "size": "2 KB",
+    "details": "12 premium shadcn/ui components",
+    "contents": [
+      "Tron",
+      "Glass",
+      "Neural",
+      "Aurora"
+    ],
+    "requirements": "npx shadcn-extension",
+    "install": "npx shadcn-extension",
+    "downloads": 0,
+    "likes": 3,
+    "updated": "2026-09-07"
   }
 ]
