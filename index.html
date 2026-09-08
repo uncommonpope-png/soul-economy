@@ -810,8 +810,6 @@ function render(data){
   }
 
   document.querySelectorAll('.card').forEach(card=>{
-    card.addEventListener('mousemove',e=>{const r=card.getBoundingClientRect();card.style.transform=`translateY(-8px) scale(1.01) rotateX(${((e.clientY-r.top)/r.height-0.5)*-6}deg) rotateY(${((e.clientX-r.left)/r.width-0.5)*6}deg)`});
-    card.addEventListener('mouseleave',()=>{card.style.transform=''});
     card.querySelectorAll('.btn-download').forEach(btn=>{
       btn.addEventListener('click',function(e){
         const r=this.getBoundingClientRect();
@@ -1545,6 +1543,7 @@ window.guideSendWithAdapter = async (q) => {
   // Click — full 360° pink spin (rAF-driven, never touches CSS animation)
   function spinOnce(card){
     if (spinning === card) return;
+    const ts = tiltStates.get(card); if (ts) { ts.spin = true; ts.tx = 0; ts.ty = 0; }
     const py = card._py || 0, px = card._px || 0;
     const start = performance.now(), dur = 950;
     card.classList.add('card-reactive', 'card-glowing');
@@ -1566,7 +1565,25 @@ window.guideSendWithAdapter = async (q) => {
       }
     })(start);
   }
-  // Tilt — cards react to cursor in 3D
+  // Weak-tilt tracking map: one eased rAF loop owns every card transform (zero shake)
+  const tiltStates = new Map();
+  function applyTilt(c, s){
+    const mag = Math.abs(s.cx) + Math.abs(s.cy);
+    if (mag < 0.05) { c.style.transform = ''; c.style.zIndex = ''; c.classList.remove('card-reactive'); return; }
+    c.classList.add('card-reactive');
+    c.style.zIndex = '20';
+    c.style.transform = 'perspective(1000px) rotateY(' + s.cx.toFixed(2) + 'deg) rotateX(' + s.cy.toFixed(2) + 'deg) translateY(-6px) scale(1.02)';
+  }
+  (function tiltLoop(){
+    requestAnimationFrame(tiltLoop);
+    tiltStates.forEach((s, c) => {
+      if (s.spin) { tiltStates.delete(c); return; }
+      s.cx += (s.tx - s.cx) * 0.10;
+      s.cy += (s.ty - s.cy) * 0.10;
+      if (Math.abs(s.tx) < 0.01 && Math.abs(s.ty) < 0.01 && Math.abs(s.cx) < 0.08 && Math.abs(s.cy) < 0.08) { tiltStates.delete(c); applyTilt(c, s); return; }
+      applyTilt(c, s);
+    });
+  })();
   grid.addEventListener('mousemove', (e) => {
     const card = cardFrom(e);
     if (!card) return;
@@ -1575,13 +1592,12 @@ window.guideSendWithAdapter = async (q) => {
     const py = (e.clientY - r.top) / r.height - 0.5;
     card._px = px; card._py = py;
     if (spinning === card) return;
-    card.classList.add('card-reactive');
-    card.style.transform = 'perspective(1000px) rotateY(' + (px * 16).toFixed(1) + 'deg) rotateX(' + (-py * 16).toFixed(1) + 'deg) translateY(-6px) scale(1.02)';
-    card.style.zIndex = '20';
+    let s = tiltStates.get(card);
+    if (!s) { s = { tx: 0, ty: 0, cx: 0, cy: 0, spin: false }; tiltStates.set(card, s); }
+    s.tx = px * 16; s.ty = -py * 16;
   });
   grid.addEventListener('mouseleave', () => {
-    const cards = grid.querySelectorAll('.card');
-    cards.forEach(c => { c.style.transform = ''; c.style.zIndex = ''; c.classList.remove('card-reactive', 'card-glowing'); });
+    tiltStates.forEach((s, c) => { s.tx = 0; s.ty = 0; });
   });
   grid.addEventListener('click', (e) => {
     const card = cardFrom(e);
