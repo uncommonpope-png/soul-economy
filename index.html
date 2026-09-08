@@ -313,6 +313,7 @@ input{font-family:inherit;outline:none;border:none;background:none}
       <button class="btn-signout" id="btnSignout">Sign Out</button>
     </div>
     <a href="https://buyasoul.online" target="_blank" class="btn-ghost" aria-label="Visit BUYaSOUL online store">BUYaSOUL.online</a>
+    <button id="ssDockToggle" class="btn-ghost" aria-label="Open social dock">🌐 Social <span id="ssDot" style="display:none;background:#FF6B9D;color:#fff;border-radius:20px;padding:0 6px;margin-left:4px;font-size:0.7rem"></span></button>
     <a href="https://uncommonpope-png.github.io/final-run/" target="_blank" class="btn-primary" aria-label="Play Dark City live">🌌 Dark City</a>
   </div>
 </nav>
@@ -1751,6 +1752,461 @@ spinOnce(card);
 </script>
 <script>
 console.log('✦ The Digital Library of Souls is alive.');
+</script>
+<script>
+// ─── FAMILY SOCIAL — GitHub × HuggingFace × Facebook × MySpace fusion layer ───
+(function(){
+'use strict';
+try{
+const CSS = `
+#ssDock{position:fixed;top:84px;right:14px;z-index:1000;width:330px;max-width:calc(100vw - 28px);max-height:calc(100vh - 108px);display:flex;flex-direction:column;background:rgba(10,10,16,0.92);backdrop-filter:blur(22px);border:1px solid rgba(139,92,246,0.25);border-radius:18px;box-shadow:0 24px 90px rgba(0,0,0,0.75),0 0 60px rgba(139,92,246,0.08);overflow:hidden;animation:ssIn .28s cubic-bezier(0.22,1,0.36,1)}
+@keyframes ssIn{from{opacity:0;transform:translateY(14px) scale(0.98)}to{opacity:1;transform:none}}
+#ssDock.hidden,#ssModal.hidden,#ssIdentity.hidden,#ssToast.hidden{display:none !important}
+.ss-hd{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:linear-gradient(135deg,rgba(139,92,246,0.16),rgba(0,212,255,0.08));border-bottom:1px solid rgba(255,255,255,0.06)}
+.ss-hd b{font-size:0.85rem;letter-spacing:0.04em;background:linear-gradient(90deg,#8B5CF6,#00D4FF);-webkit-background-clip:text;background-clip:text;color:transparent}
+.ss-hd button{background:transparent;border:none;color:var(--text-muted);font-size:1rem;cursor:pointer}
+.ss-tabs{display:flex;border-bottom:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02)}
+.ss-tabs button{flex:1;padding:9px 0;background:transparent;border:none;color:var(--text-muted);font-size:0.72rem;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;transition:var(--transition)}
+.ss-tabs button.on{color:#fff;border-bottom-color:#8B5CF6}
+.ss-view{flex:1;overflow-y:auto;min-height:120px;padding:8px}
+.ss-chip{display:flex;gap:6px;padding:6px 2px}
+.ss-chip button{flex:1;padding:5px 0;font-size:0.68rem;border-radius:20px;border:1px solid rgba(255,255,255,0.08);background:transparent;color:var(--text-muted);cursor:pointer}
+.ss-chip button.on{background:rgba(139,92,246,0.15);border-color:rgba(139,92,246,0.4);color:#fff}
+.ss-feed{display:flex;flex-direction:column;gap:6px}
+.ss-ev{display:flex;gap:8px;align-items:flex-start;padding:8px 10px;border-radius:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.04);animation:ssIn .25s ease}
+.ss-ev.mine{background:rgba(0,212,255,0.06);border-color:rgba(0,212,255,0.15)}
+.ss-ev .av{width:26px;height:26px;min-width:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.85rem;background:rgba(139,92,246,0.12);border:1px solid rgba(139,92,246,0.2)}
+.ss-ev .tx{flex:1;font-size:0.72rem;line-height:1.45;color:#d6d6e0;min-width:0}
+.ss-ev .tx b{cursor:pointer;color:#fff}
+.ss-ev .tx b:hover{color:#8B5CF6}
+.ss-ev .tx .vh{color:#9ca3af}
+.ss-ev .tm{font-size:0.6rem;color:#6b7280;margin-top:2px}
+.ss-row{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.04);font-size:0.75rem;cursor:pointer;transition:var(--transition)}
+.ss-row:hover{background:rgba(139,92,246,0.08);border-color:rgba(139,92,246,0.2)}
+.ss-row .grow{flex:1;color:#ddd;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ss-row .sc{margin-left:auto}
+.ss-bar{height:6px;border-radius:6px;background:rgba(139,92,246,0.9);box-shadow:0 0 10px rgba(139,92,246,0.6)}
+.ss-empty{text-align:center;color:#6b7280;font-size:0.75rem;padding:22px 8px}
+.ss-act{display:flex;gap:6px;margin-top:12px;padding-top:12px;border-top:1px dashed rgba(255,105,180,0.15);flex-wrap:wrap}
+.ss-act button{display:flex;align-items:center;gap:4px;padding:5px 10px;font-size:0.68rem;font-weight:600;border-radius:20px;border:1px solid rgba(255,255,255,0.09);background:rgba(255,255,255,0.03);color:#cbd5e1;cursor:pointer;transition:var(--transition);font-family:inherit}
+.ss-act button:hover{border-color:rgba(139,92,246,0.45);background:rgba(139,92,246,0.1)}
+.ss-act button.on-star{background:rgba(255,209,102,0.12);border-color:rgba(255,209,102,0.5);color:#FFD166}
+.ss-act button.on-follow{background:rgba(0,212,255,0.12);border-color:rgba(0,212,255,0.5);color:#00D4FF}
+.ss-act button.on-watch{background:rgba(16,185,129,0.12);border-color:rgba(16,185,129,0.5);color:#10B981}
+#ssModal{position:fixed;inset:0;z-index:1200;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);backdrop-filter:blur(6px);padding:16px}
+.ss-sheet{width:520px;max-width:100%;max-height:88vh;overflow-y:auto;background:rgba(12,12,18,0.97);border:1px solid rgba(139,92,246,0.25);border-radius:20px;box-shadow:0 30px 120px rgba(0,0,0,0.8);animation:ssIn .28s ease}
+.ss-banner{position:relative;padding:34px 22px;display:flex;align-items:flex-end;gap:14px;border-radius:20px 20px 0 0}
+.ss-banner::after{content:'';position:absolute;inset:0;background:radial-gradient(600px 200px at 20% 0%,rgba(255,255,255,0.14),transparent 60%);pointer-events:none}
+.ss-ava{width:72px;height:72px;min-width:72px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2.4rem;background:rgba(0,0,0,0.35);border:3px solid rgba(255,255,255,0.25);box-shadow:0 8px 30px rgba(0,0,0,0.5)}
+.ss-ht{color:#fff;text-shadow:0 2px 12px rgba(0,0,0,0.7)}
+.ss-ht h2{margin:0;font-size:1.25rem}
+.ss-ht .ty{font-size:0.68rem;text-transform:uppercase;letter-spacing:0.1em;opacity:0.85}
+.ss-close{position:absolute;top:10px;right:12px;z-index:2;background:rgba(0,0,0,0.35);border:1px solid rgba(255,255,255,0.15);color:#fff;width:30px;height:30px;border-radius:50%;cursor:pointer}
+.ss-body{padding:16px 22px 20px}
+.ss-stats{display:flex;gap:8px;margin:12px 0}
+.ss-stat{flex:1;text-align:center;border-radius:12px;padding:10px 4px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.05)}
+.ss-stat b{display:block;font-size:1.05rem;color:#fff}
+.ss-stat span{font-size:0.62rem;color:#9ca3af;text-transform:uppercase;letter-spacing:0.06em}
+.ss-sub{font-size:0.74rem;color:#b6b6c4;margin:14px 0 8px;padding-left:2px;display:flex;align-items:center;gap:8px}
+.ss-sub::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(255,255,255,0.08),transparent)}
+.ss-t8{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.ss-fr{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 2px;border-radius:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.05);cursor:pointer;transition:var(--transition)}
+.ss-fr:hover{background:rgba(0,212,255,0.08);border-color:rgba(0,212,255,0.3)}
+.ss-fr .e{font-size:1.4rem}
+.ss-fr .n{font-size:0.6rem;color:#9ca3af;width:100%;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ss-shouts{display:flex;flex-direction:column;gap:6px}
+.ss-sh{display:flex;gap:8px;padding:8px 10px;border-radius:10px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.04);font-size:0.72rem}
+.ss-sh .b{flex:1;color:#d6d6e0;min-width:0;word-break:break-word}
+.ss-sh .m{font-size:0.6rem;color:#6b7280;margin-top:2px}
+.ss-sh .v{display:flex;align-items:center;gap:2px;font-size:0.65rem;color:#9ca3af;cursor:pointer;user-select:none}
+.ss-sh .v.up{color:#10B981}
+.ss-sh .v.dn{color:#EF4444}
+.ss-shin{display:flex;gap:6px;margin-top:8px}
+.ss-shin input{flex:1;padding:9px 12px;border-radius:20px;border:1px solid rgba(139,92,246,0.25);background:rgba(255,255,255,0.04);color:#fff;font-size:0.75rem;font-family:inherit}
+.ss-shin button{padding:8px 14px;border-radius:20px;background:linear-gradient(135deg,#8B5CF6,#6D28D9);color:#fff;border:none;font-weight:600;font-size:0.72rem;cursor:pointer}
+#ssIdentity{position:fixed;inset:0;z-index:1300;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);backdrop-filter:blur(6px);padding:16px}
+.ss-idbox{width:440px;max-width:100%;background:rgba(12,12,18,0.98);border:1px solid rgba(0,212,255,0.25);border-radius:20px;padding:20px;box-shadow:0 30px 120px rgba(0,0,0,0.8)}
+.ss-idbox h3{margin:0 0 4px;font-size:1rem}
+.ss-idbox p{color:#8b8b98;font-size:0.72rem;margin:0 0 14px}
+.ss-field{margin-bottom:12px}
+.ss-field label{display:block;font-size:0.68rem;color:#9ca3af;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.06em}
+.ss-field input{width:100%;padding:9px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:#fff;font-size:0.85rem;font-family:inherit}
+.ss-emojis{display:flex;gap:6px;flex-wrap:wrap}
+.ss-emojis button{width:38px;height:38px;font-size:1.2rem;border-radius:10px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.03);cursor:pointer}
+.ss-emojis button.on{background:rgba(0,212,255,0.15);border-color:#00D4FF}
+.ss-theme{display:flex;gap:8px}
+.ss-theme button{flex:1;height:34px;border-radius:12px;cursor:pointer;border:2px solid transparent}
+.ss-theme button.on{border-color:#fff}
+#ssToast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:1500;background:rgba(20,20,30,0.96);backdrop-filter:blur(14px);border:1px solid rgba(139,92,246,0.35);color:#fff;font-size:0.8rem;padding:10px 18px;border-radius:30px;box-shadow:0 14px 60px rgba(0,0,0,0.6);animation:ssIn .3s ease;max-width:84vw;text-align:center}
+@media (max-width:640px){#ssDock{right:8px;top:120px;width:calc(100vw - 16px)}}
+`;
+
+// ── style + containers ──
+const stCss=document.createElement('style'); stCss.id='ssCss'; stCss.textContent=CSS; (document.head||document.documentElement).appendChild(stCss);
+document.body.insertAdjacentHTML('beforeend',
+`<div id="ssDock" class="hidden">
+  <div class="ss-hd"><b>🌐 FAMILY SOCIAL</b><button id="ssClose">✕</button></div>
+  <div class="ss-tabs">
+    <button class="on" data-p="pulse">⚡ Pulse</button>
+    <button data-p="hot">🔥 Trending</button>
+    <button data-p="watch">📦 Watchlist</button>
+    <button data-p="you">🧑 You</button>
+  </div>
+  <div class="ss-view" id="ssView"></div>
+</div>
+<div id="ssModal" class="hidden"><div class="ss-sheet" id="ssSheet"></div></div>
+<div id="ssIdentity" class="hidden"><div class="ss-idbox" id="ssIdBox"></div></div>
+<div id="ssToast" class="hidden"></div>`);
+
+const $=id=>document.getElementById(id);
+const dock=$('ssDock');
+
+// ── storage ──
+const LS={
+  get(k,f){try{const v=JSON.parse(localStorage.getItem(k)||'null');return v==null?f:v;}catch(e){return f;}},
+  set(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+};
+let prefs=LS.get('soulSocialPre',{user:{handle:'',emoji:'🫂',anthem:'☆',theme:1},seen:0,thanks:{}});
+let stars=LS.get('soulSocialStars',{});
+let follows=LS.get('soulSocialFollows',{});
+let watch=LS.get('soulSocialWatch',{});
+let events=LS.get('soulSocialEvents',[]);
+let shoutsAll=LS.get('soulSocialShouts',{});
+let shoutVotes=LS.get('soulSocialVotes',{});
+let SAVE=()=>{LS.set('soulSocialPre',prefs);LS.set('soulSocialStars',stars);LS.set('soulSocialFollows',follows);LS.set('soulSocialWatch',watch);LS.set('soulSocialEvents',events.slice(0,150));LS.set('soulSocialShouts',shoutsAll);LS.set('soulSocialVotes',shoutVotes);};
+
+// ── data ──
+let items=[];
+function keyN(n){return String(n||'').trim().toLowerCase();}
+function findItem(n){return items.find(i=>keyN(i.name)===keyN(n));}
+function hash(s){let x=2166136261;for(let i=0;i<s.length;i++){x^=s.charCodeAt(i);x=Math.imul(x,16777619);}return x>>>0;}
+function baseStars(n){return 6+(hash(n)%980);}
+function baseFollows(n){return 2+(hash(n)%430);}
+function baseLikes(n){return 3+(hash(n)%320);}
+const TYPE_COLOR={soul:'#8B5CF6',role:'#00D4FF',skill:'#22C55E',chamber:'#F59E0B',infrastructure:'#EF4444',combo:'#FF6B9D',world:'#38BDF8',book:'#F59E0B',agent:'#22C55E',pack:'#10B981'};
+const TYPE_EMOJI={soul:'🧠',role:'🎭',skill:'⚡',chamber:'💜',infrastructure:'⚙️',combo:'🔥',world:'🌍',book:'📖',agent:'🤖',pack:'📦'};
+const tCol=t=>TYPE_COLOR[t]||'#A78BFA';
+const tEmoji=t=>TYPE_EMOJI[t]||'✦';
+function has(s,m){return !!m[keyN(s)];}
+function hasStar(n){return has(n,stars);}function hasFollow(n){return has(n,follows);}function hasWatch(n){return has(n,watch);}
+function countStar(n){return baseStars(n)+(hasStar(n)?1:0);}
+function countFollow(n){return baseFollows(n)+(hasFollow(n)?1:0);}
+function countLike(n){
+  let r=0;
+  try{const m=JSON.parse(localStorage.getItem('soulLikes')||'{}');r+=(m[n]||0)+(localStorage.getItem('liked_'+n)==='1'?1:0);}catch(e){}
+  const it=findItem(n);return baseLikes(n)+(it&&it.likes?it.likes:0)+r;
+}
+function HAS_LIKE(n){try{return localStorage.getItem('liked_'+keyN(n))==='1'||localStorage.getItem('liked_'+n)==='1';}catch(e){return false;}}
+
+// ── ghost actors (the family) ──
+let ghosts=[];
+function buildGhosts(){
+  const good=['soul','role','chamber','infrastructure','combo','world','book','agent'];
+  ghosts=items.filter(i=>good.includes(i.type)).slice(0,64).map(i=>({h:i.name,e:i.icon||tEmoji(i.type),ty:i.type}));
+}
+const VERBS=[['starred','⭐'],['followed','🤝'],['liked','♥'],['downloaded','⬇'],['watched','📦'],['shouted on','💬']];
+function rnd(n){return Math.floor(Math.random()*n);}
+function pickGhost(){return ghosts[rnd(ghosts.length)]||{h:'profit-prime',e:'👑',ty:'soul'};}
+function pickTarget(){return items[rnd(items.length)]||{name:'the-library',icon:'✦',type:'soul'};}
+
+// ── feed ──
+let feed=[];
+function pushFeed(e){feed.unshift(e);if(feed.length>90)feed.length=90;upDot();if(!dock.classList.contains('hidden')&&view==='pulse')renderPulse();}
+function seedFeed(){
+  const now=Date.now();
+  for(let i=0;i<12;i++){
+    const a=pickGhost(),t=pickTarget(),v=VERBS[rnd(VERBS.length)];
+    feed.push({t:now-rnd(9*3600*1000)-i*150000,a:a.h,e:a.e,v:v[0],iv:v[1],tgt:t.name});
+  }
+  feed.sort((a,b)=>b.t-a.t);upDot();
+}
+function ghostTick(){const a=pickGhost(),t=pickTarget(),v=VERBS[rnd(VERBS.length)];pushFeed({t:Date.now(),a:a.h,e:a.e,v:v[0],iv:v[1],tgt:t.name});}
+function mineEvent(v,tgt,iv){pushFeed({t:Date.now(),a:'you',e:(prefs.user.emoji||'🫂'),v:v,iv:iv,tgt:tgt,mine:1});}
+function timeAgo(t){
+  const d=Date.now()-t;if(d<60000)return 'now';if(d<3600000)return Math.floor(d/60000)+'m';
+  if(d<86400000)return Math.floor(d/3600000)+'h';return Math.floor(d/86400000)+'d';
+}
+function unreadCount(){return feed.filter(e=>e.t>prefs.seen).length;}
+function upDot(){
+  const n=unreadCount();const d=$('ssDot');
+  if(d&&n>0){d.textContent=n>9?'9+':n;d.style.display='inline-block';}else if(d)d.style.display='none';
+}
+
+// ── toast ──
+let toastT=null;
+function toast(msg){
+  const t=$('ssToast');t.textContent=msg;t.classList.remove('hidden');
+  clearTimeout(toastT);toastT=setTimeout(()=>t.classList.add('hidden'),2600);
+}
+
+// ── actions on cards ──
+function toggleMap(m,n){const k=keyN(n);m[k]=m[k]?undefined:1;if(!m[k])delete m[k];}
+function doAction(t,n,b){
+  const k=keyN(n),it=findItem(n);const nm=it?it.name:n;
+  if(t==='star'){toggleMap(stars,k);mineEvent('starred',nm,'⭐');toast((hasStar(k)?'⭐ Starred ':'Removed star from ')+nm);}
+  else if(t==='follow'){toggleMap(follows,k);mineEvent('followed',nm,'🤝');toast((hasFollow(k)?'🤝 Following ':'Unfollowed ')+nm);}
+  else if(t==='watch'){toggleMap(watch,k);mineEvent('watched',nm,'📦');toast((hasWatch(k)?'📦 Added to Watchlist':'Removed from Watchlist')+' — '+nm);refreshWatch();}
+  else if(t==='share')share(nm);
+  else if(t==='open')openProfile(k);
+  SAVE();paintActions();
+}
+function share(nm){
+  const url=location.origin+location.pathname+'#soul-'+encodeURIComponent(String(nm).toLowerCase().replace(/[^a-z0-9]+/g,'-'));
+  const done=()=>toast('⇪ Link copied — share the '+(nm||'soul'));
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(url).then(done,()=>copyOld(url,done));}
+  else copyOld(url,done);
+}
+function copyOld(s,ok){try{const ta=document.createElement('textarea');ta.value=s;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();ok();}catch(e){}}
+function paintActions(){
+  document.querySelectorAll('.ss-act').forEach(bar=>{
+    const k=bar.dataset.key;k&&bar.querySelectorAll('button[data-a]').forEach(b=>{
+      const a=b.dataset.a;
+      if(a==='star'){const on=hasStar(k);b.classList.toggle('on-star',on);b.innerHTML=(on?'★ ':'☆ ')+countStar(k);}
+      if(a==='follow'){const on=hasFollow(k);b.classList.toggle('on-follow',on);b.innerHTML=(on?'🤝 ':'＋ ')+countFollow(k);}
+      if(a==='watch'){const on=hasWatch(k);b.classList.toggle('on-watch',on);b.textContent=on?'✓ Watched':'📦 Watch';}
+    });
+  });
+}
+function attach(card){
+  if(card.querySelector('.ss-act'))return;
+  const k=(card.dataset.id||'').trim();if(!k)return;
+  const bar=document.createElement('div');bar.className='ss-act';bar.dataset.key=k;
+  bar.innerHTML=`<button data-a="star" title="Star it (GitHub)">☆ ${countStar(k)}</button>
+    <button data-a="follow" title="Follow (Facebook)">＋ ${countFollow(k)}</button>
+    <button data-a="watch" title="Watchlist (HuggingFace)">📦 Watch</button>
+    <button data-a="share" title="Share the link">⇪</button>
+    <button data-a="open" title="Open soul profile (MySpace)">👤</button>`;
+  bar.addEventListener('click',ev=>{
+    const b=ev.target.closest('button[data-a]');if(!b)return;
+    ev.stopPropagation();ev.preventDefault();doAction(b.dataset.a,k);
+  });
+  card.appendChild(bar);
+}
+function initObserver(){
+  const grid=document.getElementById('resourceGrid');if(!grid)return;
+  const mo=new MutationObserver(()=>{
+    grid.querySelectorAll('.card:not(.ss-done)').forEach(c=>{c.classList.add('ss-done');attach(c);});
+  });
+  mo.observe(grid,{childList:true,subtree:true});
+}
+
+// ── dock views ──
+let view='pulse';
+function renderPulse(){
+  const mode=prefs.feedMode||'all';
+  let list=feed;
+  if(mode==='mine')list=feed.filter(e=>e.mine);
+  else if(mode==='following')list=feed.filter(e=>e.mine||(e.tgt&&hasFollow(e.tgt)));
+  else if(mode==='circle'){const set=new Set(circleOf().map(k=>keyN(k)));list=feed.filter(e=>e.mine||(e.tgt&&set.has(keyN(e.tgt)))||e.a==='you');}
+  const root=$('ssView');
+  root.innerHTML=`<div class="ss-chip">
+    ${[['all','All'],['following','Following'],['circle','My Circle'],['mine','Mine']].map(m=>`<button class="${mode===m[0]?'on':''}" data-m="${m[0]}">${m[1]}</button>`).join('')}
+  </div><div class="ss-feed">${list.length?list.slice(0,40).map(e=>`
+    <div class="ss-ev${e.mine?' mine':''}">
+      <div class="av">${e.e}</div>
+      <div class="tx"><b data-op="p-${keyN(e.tgt)}">${e.a}</b> <span class="vh">${e.iv} ${e.v}</span>${e.tgt?` <b data-op="p-${keyN(e.tgt)}">${e.tgt}</b>`:''}
+        <div class="tm">${timeAgo(e.t)}${e.mine?' · you':''}</div></div>
+    </div>`).join(''):'<div class="ss-empty">Nothing here yet. Star, follow or watch a soul.</div>'}</div>`;
+  root.querySelectorAll('.ss-chip button').forEach(b=>b.addEventListener('click',()=>{prefs.feedMode=b.dataset.m;SAVE();renderPulse();}));
+  root.querySelectorAll('b[data-op]').forEach(b=>b.addEventListener('click',()=>{const n=b.dataset.op.slice(2);if(n)openProfile(n);}));
+}
+function scoreIt(it,metric){
+  const k=keyN(it.name);
+  if(metric==='stars')return countStar(k);
+  if(metric==='follow')return countFollow(k);
+  if(metric==='downloads')return (it.downloads||0)+rnd(60);
+  if(metric==='likes')return countLike(k);
+  if(metric==='hot')return countStar(k)*3+countFollow(k)*2+countLike(k);
+  return countStar(k);
+}
+function renderHot(){
+  const metric=prefs.hotMetric||'hot';
+  const top=items.slice().sort((a,b)=>scoreIt(b,metric)-scoreIt(a,metric)).slice(0,10);
+  const mx=Math.max(1,scoreIt(top[0]||{},metric));
+  const mets=[['hot','🔥 Hot'],['stars','⭐ Stars'],['follow','🤝 Followers'],['downloads','⬇ Downloads']];
+  const root=$('ssView');
+  root.innerHTML=`<div class="ss-chip">${mets.map(m=>`<button class="${metric===m[0]?'on':''}" data-h="${m[0]}">${m[1]}</button>`).join('')}</div>`+
+    (top.length?top.map(it=>{const sc=scoreIt(it,metric);const w=Math.max(4,Math.round(sc/mx*100));return `
+      <div class="ss-row" data-p="${keyN(it.name)}"><span>${it.icon||tEmoji(it.type)}</span><span class="grow">${it.name}</span><div style="width:34px;height:6px;background:rgba(255,255,255,0.08);border-radius:6px;overflow:hidden"><div class="ss-bar" style="width:${w}%"></div></div><span class="sc" style="color:${tCol(it.type)};font-weight:700">${sc}</span></div>`}).join('')
+      :'<div class="ss-empty">Loading the family…</div>');
+  root.querySelectorAll('.ss-chip button').forEach(b=>b.addEventListener('click',()=>{prefs.hotMetric=b.dataset.h;SAVE();renderHot();}));
+  root.querySelectorAll('.ss-row').forEach(r=>r.addEventListener('click',()=>openProfile(r.dataset.p)));
+}
+function refreshWatch(){if(!dock.classList.contains('hidden')&&view==='watch')renderWatch();}
+function renderWatch(){
+  const root=$('ssView');
+  const ws=Object.keys(watch);
+  root.innerHTML=`<div class="ss-sub" style="margin-top:4px">📦 Your Watchlist (${ws.length})</div>`+
+    (ws.length?ws.map(k=>{const it=findItem(k);const nm=it?it.name:k;return `
+      <div class="ss-row" data-w="${k}"><span>${it?it.icon:'📦'}</span><span class="grow">${nm}</span><button data-rm="1" style="background:transparent;border:none;color:#EF4444;cursor:pointer;font-size:1rem">✕</button></div>`}).join('')
+    :'<div class="ss-empty">Your watchlist is empty. A 📦 Watch button appears on every soul card.</div>');
+  root.querySelectorAll('.ss-row').forEach(r=>r.addEventListener('click',ev=>{
+    if(ev.target.closest('[data-rm]')){const k=r.dataset.w;delete watch[keyN(k)];SAVE();toast('Removed from Watchlist');renderWatch();return;}
+    openProfile(r.dataset.w);
+  }));
+}
+function circleOf(){
+  const ks=[];
+  const sorted=items.slice().sort((a,b)=>countFollow(keyN(b.name))-countFollow(keyN(a.name)));
+  for(let i=0;i<8&&i<sorted.length;i++)ks.push(keyN(sorted[i].name));
+  return ks;
+}
+function renderYou(){
+  const u=prefs.user;
+  const themes=['linear-gradient(135deg,#8B5CF6,#6D28D9)','linear-gradient(135deg,#0EA5E9,#8B5CF6)','linear-gradient(135deg,#F59E0B,#EF4444)','linear-gradient(135deg,#10B981,#0EA5E9)','linear-gradient(135deg,#FF6B9D,#8B5CF6)'];
+  const root=$('ssView');
+  root.innerHTML=`
+    <div class="ss-row" style="cursor:default"><span class="av" style="width:34px;height:34px;min-width:34px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;background:${themes[u.theme||0]}">${u.emoji||'🫂'}</span>
+      <span class="grow"><b style="color:#fff">${u.handle||'You (not set up yet)'}</b><div style="font-size:0.62rem;color:#6b7280">${u.anthem?('Anthem: '+u.anthem):'tap Edit identity ▶'}</div></span>
+      <button id="ssEditMe" style="padding:6px 12px;border-radius:20px;background:rgba(0,212,255,0.12);border:1px solid rgba(0,212,255,0.4);color:#00D4FF;font-size:0.7rem;font-weight:600;cursor:pointer">Edit</button></div>
+    <div style="display:flex;gap:8px;margin:10px 0 6px">
+      ${[['⭐ '+Object.keys(stars).length,'stars you\'ve cast'],['🤝 '+Object.keys(follows).length,'souls you follow'],['📦 '+Object.keys(watch).length,'in your watchlist'],['💬 '+shoutCount(),'shouts left']].map(s=>`<div class="ss-stat" style="margin:0;padding:8px 2px"><b>${s[0]}</b><span>${s[1]}</span></div>`).join('')}
+    </div>
+    <div style="font-size:0.7rem;color:#8b8b98;line-height:1.6;margin-top:6px">💡 Every ❤ like, ⭐ star, 🤝 follow, 📦 watch and 💬 shout is saved <b>in your browser</b>. The Pulse feed mixes your moves with the family's. Trending is computed live from stars, followers and downloads.<br><br>🌐 Share any soul's ⇪ link to bring the family here.</div>`;
+  root.querySelector('#ssEditMe').addEventListener('click',openIdentity);
+}
+function shoutCount(){let n=0;for(const k in shoutsAll)n+=shoutsAll[k].length;return n;}
+
+// ── profile modal (MySpace) ──
+let profKey='';
+function openProfile(k){
+  k=keyN(k);profKey=k;
+  const it=findItem(k)||{name:k,icon:'✦',type:'soul',desc:'',plt:'0.5/0.5/0.5',author:'profit-prime'};
+  const themes=['linear-gradient(135deg,#8B5CF6,#6D28D9)','linear-gradient(135deg,#0EA5E9,#8B5CF6)','linear-gradient(135deg,#F59E0B,#EF4444)','linear-gradient(135deg,#10B981,#0EA5E9)','linear-gradient(135deg,#FF6B9D,#8B5CF6)','linear-gradient(135deg,#334155,#0F172A)'];
+  const th=themes[(hash(k)%themes.length)];
+  const t8=topFriends(it);
+  const sh=(shoutsAll[k]||[]).slice();
+  const sheet=$('ssSheet');
+  sheet.innerHTML=`
+  <div class="ss-banner" style="background:${th}">
+    <button class="ss-close" id="ssProfClose">✕</button>
+    <div class="ss-ava">${it.icon||'✦'}</div>
+    <div class="ss-ht"><h2>${it.name}</h2><div class="ty">${it.type} · by ${it.author||'profit-prime'}</div></div>
+  </div>
+  <div class="ss-body">
+    <div class="ss-stats">
+      <div class="ss-stat"><b>${countStar(k)}</b><span>stars</span></div>
+      <div class="ss-stat"><b>${countFollow(k)}</b><span>followers</span></div>
+      <div class="ss-stat"><b>${countLike(k)}</b><span>likes</span></div>
+      <div class="ss-stat"><b>${it.downloads||(2+hash(k+'d')%400)}</b><span>downloads</span></div>
+    </div>
+    <div class="ss-act" data-key="${k}">
+      <button data-a="star">☆ ${countStar(k)}</button>
+      <button data-a="follow">＋ ${countFollow(k)}</button>
+      <button data-a="watch">📦 Watch</button>
+      <button data-a="share" data-sh="1">⇪ Share</button>
+    </div>
+    ${it.desc?`<div style="margin-top:10px;font-size:0.78rem;color:#b6b6c4;line-height:1.6">${it.desc}</div>`:''}
+    ${it.plt?`<div class="card-plt" style="margin-top:8px"><span class="plt-p">P ${it.plt.split('/')[0]}</span><span class="plt-l">L ${it.plt.split('/')[1]}</span><span class="plt-t">T ${it.plt.split('/')[2]}</span></div>`:''}
+    <div class="ss-sub">💎 Top 8 Friends</div>
+    <div class="ss-t8">${t8.length?t8.map(f=>`<div class="ss-fr" data-f="${keyN(f.name)}"><span class="e">${f.icon||tEmoji(f.type)}</span><span class="n">${f.name}</span></div>`).join(''):'<div class="ss-empty" style="grid-column:span 4">No friends yet.</div>'}</div>
+    <div class="ss-sub">💬 Shoutbox (${sh.length})</div>
+    <div class="ss-shouts">${sh.slice(0,30).map((s,i)=>`
+      <div class="ss-sh"><div class="av" style="width:24px;height:24px;min-width:24px;font-size:0.8rem">${s.e||'🫂'}</div>
+        <div class="b"><b style="color:#fff">${s.u||'Anonymous'}</b> ${s.b}<div class="m">${timeAgo(s.t)}</div></div>
+        <div class="ss-votes"><span class="v${(shoutVotes[k+'@'+s.id]===1)?' up':''}" data-v="1" data-id="${s.id}">▲</span> <b>${s.v||0}</b> <span class="v${(shoutVotes[k+'@'+s.id]===-1)?' dn':''}" data-v="-1" data-id="${s.id}">▼</span></div>
+      </div>`).join('')||'<div class="ss-empty">No shouts yet. Be the first.</div>'}</div>
+    <div class="ss-shin"><input id="ssShoutIn" maxlength="200" placeholder="Leave a shout on ${it.name}…"><button id="ssShoutBtn">Shout</button></div>
+  </div>`;
+  $('ssModal').classList.remove('hidden');
+  sheet.querySelector('#ssProfClose').addEventListener('click',closeModal);
+  sheet.querySelectorAll('.ss-fr').forEach(f=>f.addEventListener('click',()=>openProfile(f.dataset.f)));
+  sheet.querySelector('.ss-act').addEventListener('click',ev=>{
+    const b=ev.target.closest('button[data-a]');if(!b)return;ev.preventDefault();
+    if(b.dataset.sh)share(it.name);else doAction(b.dataset.a,k);
+  });
+  sheet.querySelector('#ssShoutBtn').addEventListener('click',()=>{
+    const inp=sheet.querySelector('#ssShoutIn');const v=inp.value.trim();if(!v)return;
+    const list=shoutsAll[k]||(shoutsAll[k]=[]);
+    list.unshift({id:Date.now()+''+rnd(9999),u:prefs.user.handle||'You',e:prefs.user.emoji||'🫂',t:Date.now(),b:v.slice(0,200),v:0});
+    SAVE();mineEvent('shouted on',it.name,'💬');toast('💬 Shouted on '+it.name);openProfile(k);
+  });
+  sheet.querySelectorAll('.ss-votes .v').forEach(v=>v.addEventListener('click',()=>{
+    const sid=v.dataset.id,val=parseInt(v.dataset.v);const id=k+'@'+sid;
+    const s=(shoutsAll[k]||[]).find(x=>String(x.id)===String(sid));if(!s)return;
+    if(shoutVotes[id]===val){delete shoutVotes[id];s.v=(s.v||0)-val;}
+    else{if(shoutVotes[id])s.v=(s.v||0)-shoutVotes[id];shoutVotes[id]=val;s.v=(s.v||0)+val;}
+    SAVE();openProfile(k);
+  }));
+}
+function topFriends(it){
+  const same=items.filter(i=>i.type===it.type&&keyN(i.name)!==keyN(it.name)).slice(0,8);
+  if(same.length>=8)return same;
+  const rest=items.filter(i=>i.type!==it.type&&keyN(i.name)!==keyN(it.name)).sort((a,b)=>countStar(keyN(b.name))-countStar(keyN(a.name))).slice(0,8-same.length);
+  const seen=new Set(same.map(i=>keyN(i.name)));
+  return same.concat(rest.filter(i=>!seen.has(keyN(i.name))));
+}
+function closeModal(){$('ssModal').classList.add('hidden');}
+
+// ── identity ──
+function openIdentity(){
+  const u=prefs.user;
+  const emojis=['🫂','🧠','👑','🤖','💜','⚡','🌍','📖','🔥','🎭','✨','🔮'];
+  const themes=['linear-gradient(135deg,#8B5CF6,#6D28D9)','linear-gradient(135deg,#0EA5E9,#8B5CF6)','linear-gradient(135deg,#F59E0B,#EF4444)','linear-gradient(135deg,#10B981,#0EA5E9)','linear-gradient(135deg,#FF6B9D,#8B5CF6)'];
+  const box=$('ssIdBox');
+  box.innerHTML=`<h3>✧ Your Social Identity</h3><p>Shown on your feed moves, shouts and friends. Saved only in this browser.</p>
+    <div class="ss-field"><label>Handle</label><input id="ssHandle" maxlength="24" placeholder="e.g. the-architect" value="${(u.handle||'').replace(/"/g,'&quot;')}"></div>
+    <div class="ss-field"><label>Avatar</label><div class="ss-emojis">${emojis.map(e=>`<button data-e="${e}" class="${(u.emoji||'🫂')===e?'on':''}">${e}</button>`).join('')}</div></div>
+    <div class="ss-field"><label>Anthem</label><input id="ssAnthem" maxlength="40" placeholder="🎵 your anthem / motto" value="${(u.anthem||'').replace(/"/g,'&quot;')}"></div>
+    <div class="ss-field"><label>Banner</label><div class="ss-theme">${themes.map((th,i)=>`<button class="${(u.theme||0)===i?'on':''}" data-th="${i}" style="background:${th}"></button>`).join('')}</div></div>
+    <div style="display:flex;gap:8px;margin-top:16px"><button id="ssIdSave" style="flex:1;padding:10px;border-radius:30px;background:linear-gradient(135deg,#8B5CF6,#00D4FF);color:#fff;border:none;font-weight:700;cursor:pointer">Save Identity</button><button id="ssIdCancel" style="padding:10px 16px;border-radius:30px;background:transparent;color:#888;border:1px solid rgba(255,255,255,0.1);cursor:pointer">Cancel</button></div>`;
+  $('ssIdentity').classList.remove('hidden');
+  let picked=u.emoji||'🫂',theme=u.theme||0;
+  box.querySelectorAll('.ss-emojis button').forEach(b=>b.addEventListener('click',()=>{picked=b.dataset.e;box.querySelectorAll('.ss-emojis button').forEach(x=>x.classList.remove('on'));b.classList.add('on');}));
+  box.querySelectorAll('.ss-theme button').forEach(b=>b.addEventListener('click',()=>{theme=+b.dataset.th;box.querySelectorAll('.ss-theme button').forEach(x=>x.classList.remove('on'));b.classList.add('on');}));
+  box.querySelector('#ssIdSave').addEventListener('click',()=>{
+    const h=box.querySelector('#ssHandle').value.trim().replace(/[<>]/g,'')||'you';
+    const a=box.querySelector('#ssAnthem').value.trim();
+    prefs.user={handle:h,emoji:picked,anthem:a,theme};SAVE();
+    $('ssIdentity').classList.add('hidden');toast('✧ Identity saved — hello, '+h);if(!dock.classList.contains('hidden')&&view==='you')renderYou();
+  });
+  box.querySelector('#ssIdCancel').addEventListener('click',()=>$('ssIdentity').classList.add('hidden'));
+}
+
+// ── wiring ──
+function switchView(v){
+  view=v;
+  document.querySelectorAll('.ss-tabs button').forEach(b=>b.classList.toggle('on',b.dataset.p===v));
+  if(v==='pulse')renderPulse();else if(v==='hot')renderHot();else if(v==='watch')renderWatch();else renderYou();
+}
+function setDock(open){
+  dock.classList.toggle('hidden',!open);
+  if(open){prefs.seen=Date.now();SAVE();upDot();switchView(view);}
+}
+$('ssDockToggle').addEventListener('click',()=>{setDock(dock.classList.contains('hidden'));});
+$('ssClose').addEventListener('click',()=>setDock(false));
+document.querySelectorAll('.ss-tabs button').forEach(b=>b.addEventListener('click',()=>switchView(b.dataset.p)));
+$('ssModal').addEventListener('click',ev=>{if(ev.target===$('ssModal'))closeModal();});
+$('ssIdentity').addEventListener('click',ev=>{if(ev.target===$('ssIdentity'))$('ssIdentity').classList.add('hidden');});
+document.addEventListener('keydown',ev=>{if(ev.key==='Escape'){$('ssModal').classList.add('hidden');$('ssIdentity').classList.add('hidden');}});
+
+// hash-link deep links: #soul-<name>
+try{
+  const hl=decodeURIComponent(location.hash||'');const m=hl.match(/^#soul-(.+)$/i);
+  if(m){setDock(false);openProfile(m[1]);}
+}catch(e){}
+
+// ── boot ──
+function boot(){
+  buildGhosts();
+  seedFeed();
+  initObserver();
+  setInterval(ghostTick,17000);
+  renderPulse();
+  // refresh card action numbers when panel closes
+  const iv=setInterval(()=>{if(document.querySelectorAll('.ss-act').length)paintActions();},3000);
+  window.__familySocial={items,feed,ghosts,openProfile,stars,follows,watch,views:(v)=>switchView(v),actions:()=>({stars,count:Object.keys(stars).length})};
+}
+async function load(){
+  try{const r=await fetch('data/catalog.json',{cache:'reload'});if(r.ok){const j=await r.json();if(Array.isArray(j))items=j;}}catch(e){}
+  if(!items.length){if(window.__soulGraph&&window.__soulGraph.items)items=window.__soulGraph.items||[];}
+  // fallback: global items if present
+  try{if(!items.length&&window.items&&Array.isArray(window.items)&&window.items.length)items=window.items;}catch(e){}
+  boot();
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',load);else load();
+}catch(e){console.warn('Family social layer skipped:',e);}
+})();
 </script>
 </body>
 </html>
