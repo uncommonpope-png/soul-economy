@@ -431,13 +431,9 @@ input{font-family:inherit;outline:none;border:none;background:none}
 <section id="bestPanel" style="display:none">
   <div style="margin-bottom:14px">
     <h3 style="font-size:1.15rem;margin:0 0 4px">🥇 The Best Models</h3>
-    <p style="color:var(--text-muted);font-size:0.82rem;margin:0">Your <b style="color:#fff">real library cards</b> clad on a <b style="color:#00D4FF">giant sphere</b>, a <b style="color:#B866FF">cube</b> and a <b style="color:#FFD166">pyramid</b>. <b style="color:#FFD166">Drag</b> to turn the garden · <b style="color:#FFD166">hover</b> a card to breathe. The role list below is the top-PLT soulgun family.</p>
+    <p style="color:var(--text-muted);font-size:0.82rem;margin:0">Top-PLT soulgun family — highest Profit+Love−Tax analyzers. Click a row to highlight.</p>
   </div>
-  <div id="bestOrbStage" style="position:relative;height:840px;border-radius:20px;border:1px solid rgba(255,209,102,0.22);background:radial-gradient(circle at 50% 42%, rgba(139,92,246,0.16), rgba(8,8,12,0.92) 62%);overflow:hidden;perspective:1800px;user-select:none;-webkit-user-select:none">
-    <div id="scene" style="position:absolute;inset:0;transform-style:preserve-3d;z-index:2"></div>
-    <div id="bestOrbFallback" style="position:absolute;inset:0;display:none;align-items:center;justify-content:center;color:#B8B8B8;font-size:0.85rem;padding:20px;text-align:center;font-family:ui-monospace,Consolas,monospace"></div>
-    <div style="position:absolute;left:14px;bottom:12px;z-index:4;font-size:0.68rem;color:rgba(255,255,255,0.45);font-family:ui-monospace,Consolas,monospace;letter-spacing:0.04em">◈ DRAG = TURN THE GARDEN · HOVER = BREATHE · REAL CARDS CLAD ON A SPHERE, CUBE &amp; PYRAMID</div>
-  </div>
+
   <div id="bestRoleList" style="margin-top:14px;display:flex;flex-direction:column;gap:8px"></div>
 </section>
 
@@ -2934,9 +2930,7 @@ else wire();
 })();
 </script>
 <script>
-/* SIP-16 — 🥇 Best Models: the REAL library cards clad as a sculpture garden —
-   giant sphere (cards bent onto its surface) + cube + pyramid. Self-contained
-   NEW TAB. Does NOT touch the catalog, knowledge graph, or any existing tab. */
+/* SIP-16 — 🥇 Best Models: top-PLT role list. Garden removed per user request. */
 (function(){
 'use strict';
 const BEST=[
@@ -2948,8 +2942,7 @@ const BEST=[
   {rank:6,name:'soul-gun-maker',role:'Soul Forge Engineer',plt:'1.30',file:'soulguns/soul-gun-maker-analyzer.js'},
   {rank:7,name:'threejs-orb-pulse-cards',role:'Orb Pulse Card Artisan',plt:'1.10',file:'soulguns/threejs-orb-pulse-cards-analyzer.js'}
 ];
-var SC=1;
-var S={active:false,inited:false,starting:false,spin:0,vel:0,drag:false,idle:true,lastX:0,lastY:0,tilt:-14,mx:0.5,refs:{},cards:0,raf:0};
+var S={sel:-1};
 function el(id){ return document.getElementById(id); }
 function clamp(v,a,b){ return Math.max(a,Math.min(b,v)); }
 function renderBestRows(){
@@ -2983,151 +2976,7 @@ function pltScore(card){
     return f(card.querySelector('.plt-p'))+f(card.querySelector('.plt-l'))-f(card.querySelector('.plt-t'));
   }catch(e){ return 0; }
 }
-function ctx(t){ var d=document.createElement('div'); d.style.cssText=t; return d; }
-function cloneCard(src,w){
-  var c=src.cloneNode(true);
-  c.style.cssText='width:'+w+'px;margin:0;animation:none;';
-  return c;
-}
-function measureH(card,w){
-  var tmp=ctx('position:absolute;left:-99999px;top:0;visibility:hidden;pointer-events:none;');
-  var c=cloneCard(card,w); tmp.appendChild(c);
-  document.body.appendChild(tmp);
-  var h=c.offsetHeight||230;
-  document.body.removeChild(tmp);
-  return h;
-}
-function addSphereCards(list){
-  var w=ctx('position:absolute;inset:0;transform-style:preserve-3d;z-index:2');
-  w.id='sphereWrap';
-  var core=ctx('position:absolute;left:50%;top:50%;border-radius:50%;pointer-events:none;z-index:1;opacity:0.94;background:radial-gradient(circle at 38% 32%, #D9B3FF, #8B5CF6 36%, #00D4FF 70%, rgba(0,212,255,0) 100%);box-shadow:0 0 90px 30px rgba(139,92,246,0.55), 0 0 210px 70px rgba(0,212,255,0.30)');
-  core.id='sphereCore';
-  var R=380*SC, cw=228*SC;
-  core.style.width=(R*1.72)+'px'; core.style.height=(R*1.72)+'px';
-  core.style.marginLeft=(-R*0.86)+'px'; core.style.marginTop=(-R*0.86)+'px';
-  w.appendChild(core);
-  var N=list.length, GA=Math.PI*(3-Math.sqrt(5));
-  var rows=3, cols=8;
-  for(var i=0;i<N;i++){
-    var y=1-(i/(N-1))*2;
-    var rad=Math.sqrt(Math.max(0,1-y*y));
-    var ph=Math.asin(y), th=GA*i;
-    var card=list[i], ch=measureH(card,cw);
-    var tw=cw/cols, thh=ch/rows;
-    for(var r2=0;r2<rows;r2++) for(var c2=0;c2<cols;c2++){
-      var lx=((c2+0.5)/cols-0.5)*cw, ly=((r2+0.5)/rows-0.5)*ch;
-      var lat=ph+ly/R;
-      var lon=th+Math.asin(clamp(lx/(R*Math.max(0.35,Math.cos(lat))),-1,1));
-      var t=ctx('position:absolute;left:50%;top:50%;width:'+tw+'px;height:'+thh+'px;overflow:hidden;backface-visibility:hidden;transform-style:preserve-3d;will-change:transform');
-      var cc=cloneCard(card,cw);
-      cc.style.position='absolute'; cc.style.left=(-c2*tw)+'px'; cc.style.top=(-r2*thh)+'px';
-      t.appendChild(cc);
-      t.style.transform='translate(-50%,-50%) rotateY('+(lon*180/Math.PI)+'deg) rotateX('+(lat*180/Math.PI)+'deg) translateZ('+R+'px)';
-      w.appendChild(t);
-    }
-  }
-  S.refs.sphereWrap=w;
-  var sc=el('scene'); if(sc) sc.appendChild(w);
-}
-function addCube(list){
-  var wrap=ctx('position:absolute;transform-style:preserve-3d;transform:translate3d('+Math.round(680*SC)+'px,'+Math.round(-140*SC)+'px,'+Math.round(-280*SC)+'px)');
-  wrap.id='cubeWrap';
-  var rot=ctx('transform-style:preserve-3d'); rot.id='cubeRot';
-  wrap.appendChild(rot);
-  var E=560*SC;
-  var cw=E*0.82;
-  var faces=[['rotateY(0deg)'],['rotateY(180deg)'],['rotateY(90deg)'],['rotateY(-90deg)'],['rotateX(90deg)'],['rotateX(-90deg)']];
-  for(var f=0;f<6;f++){
-    var face=ctx('position:absolute;left:50%;top:50%;display:flex;align-items:center;justify-content:center;backface-visibility:hidden;transform:translate(-50%,-50%) '+faces[f][0]+' translateZ('+(E/2)+'px)');
-    face.style.width=E+'px'; face.style.height=E+'px';
-    var card=cloneCard(list[f],cw);
-    face.appendChild(card);
-    card.addEventListener('mouseenter',function(){ this.style.transform='scale(1.04)'; });
-    card.addEventListener('mouseleave',function(){ this.style.transform=''; });
-    rot.appendChild(face);
-  }
-  S.refs.cubeRot=rot;
-  var sc=el('scene'); if(sc) sc.appendChild(wrap);
-}
-function addPyramid(list){
-  var wrap=ctx('position:absolute;transform-style:preserve-3d;transform:translate3d('+Math.round(-640*SC)+'px,'+Math.round(30*SC)+'px,'+Math.round(180*SC)+'px)');
-  wrap.id='pyrWrap';
-  var rot=ctx('transform-style:preserve-3d'); rot.id='pyrRot';
-  wrap.appendChild(rot);
-  var b=360*SC, hh=560*SC, L=Math.sqrt(b*b+hh*hh);
-  var d=(2*b*hh)/(3*L);
-  var theta=-Math.asin(b/L)*(180/Math.PI);
-  var cw=210*SC;
-  for(var f=0;f<4;f++){
-    var face=ctx('position:absolute;left:50%;top:50%;display:flex;align-items:center;justify-content:center;backface-visibility:hidden;transform:translate(-50%,-50%) rotateY('+(f*90)+'deg) rotateX('+theta+'deg) translateZ('+d+'px)');
-    face.style.width=(b*1.2)+'px';
-    var card=cloneCard(list[f],cw);
-    face.appendChild(card);
-    card.addEventListener('mouseenter',function(){ this.style.transform='scale(1.06)'; });
-    card.addEventListener('mouseleave',function(){ this.style.transform=''; });
-    rot.appendChild(face);
-  }
-  S.refs.pyrRot=rot;
-  var sc=el('scene'); if(sc) sc.appendChild(wrap);
-}
-function buildGarden(){
-  var stage=el('bestOrbStage'), scene=el('scene');
-  if(!stage||!scene) return;
-  SC=clamp((stage.clientWidth||1100)/1180,0.55,1.15);
-  var list=Array.prototype.slice.call(document.querySelectorAll('#resourceGrid .card'));
-  if(!list.length) return;
-  list.sort(function(a,b){ return pltScore(b)-pltScore(a); });
-  S.cards=list.length;
-  scene.innerHTML='';
-  var sph=list.slice(0,15), cub=list.slice(15,21), pyr=list.slice(21,25);
-  addSphereCards(sph);
-  addCube(cub);
-  addPyramid(pyr);
-  S.refs.scene=scene;
-  stage.style.cursor='grab';
-  stage.addEventListener('pointerdown',function(e){ S.drag=true; S.lastX=e.clientX; S.lastY=e.clientY; stage.style.cursor='grabbing'; });
-  stage.addEventListener('pointermove',function(e){
-    var r=stage.getBoundingClientRect();
-    S.mx=clamp((e.clientX-r.left)/(r.width||1),0,1);
-    if(!S.drag) return;
-    var dx=e.clientX-S.lastX, dy=e.clientY-S.lastY;
-    S.lastX=e.clientX; S.lastY=e.clientY;
-    S.spin=(S.spin+dx*0.3)%360;
-    S.tilt=clamp(S.tilt+dy*0.16,-72,42);
-    S.vel=dx*0.3;
-    S.idle=false;
-  });
-  stage.addEventListener('pointerup',function(){ S.drag=false; stage.style.cursor='grab'; });
-  stage.addEventListener('pointercancel',function(){ S.drag=false; });
-  stage.addEventListener('pointerleave',function(){ S.mx=0.5; });
-}
-function initBestOrb(){
-  if(S.inited) return;
-  renderBestRows();
-  if(S.starting) return;
-  S.starting=true;
-  buildGarden();
-  S.starting=false;
-  if(!S.refs.scene){ setTimeout(initBestOrb,350); return; }
-  S.inited=true;
-  S.raf=requestAnimationFrame(frame);
-}
-function frame(){
-  var p=el('bestPanel');
-  if(p&&p.style.display==='none'){ S.raf=requestAnimationFrame(frame); return; }
-  if(S.drag){ S.spin=(S.spin+S.vel)%360; }
-  else if(!S.idle){ S.spin=(S.spin+S.vel)%360; S.vel*=0.96; if(Math.abs(S.vel)<0.02){ S.idle=true; S.vel=0; } }
-  else { S.spin=(S.spin+0.05)%360; }
-  var t=performance.now()/1000;
-  var ry=Math.round((S.spin+(S.mx-0.5)*14)*10)/10;
-  if(S.refs.scene) S.refs.scene.style.transform='rotateX('+Math.round(S.tilt*10)/10+'deg) rotateY('+ry+'deg)';
-  if(S.refs.sphereWrap) S.refs.sphereWrap.style.transform='rotateY('+Math.round(t*7*10)%3600/10+'deg)';
-  if(S.refs.cubeRot) S.refs.cubeRot.style.transform='rotateY('+Math.round(t*10*10)%3600/10+'deg) rotateX('+Math.round(Math.sin(t*0.9)*9*10)/10+'deg)';
-  if(S.refs.pyrRot) S.refs.pyrRot.style.transform='rotateY('+Math.round(t*13*10)%3600/10+'deg)';
-  var core=el('sphereCore');
-  if(core){ var sc=1+Math.sin(t*1.6)*0.06; core.style.transform='scale('+sc+')'; }
-  S.raf=requestAnimationFrame(frame);
-}
+function initBestOrb(){ renderBestRows(); }
 window.initBestOrb=initBestOrb;
 })();
 </script>
