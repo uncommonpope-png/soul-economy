@@ -430,11 +430,11 @@ input{font-family:inherit;outline:none;border:none;background:none}
 
 <section id="bestPanel" style="display:none">
   <div style="margin-bottom:14px">
-    <h3 style="font-size:1.15rem;margin:0 0 4px">🥇 The Best Models</h3>
-    <p style="color:var(--text-muted);font-size:0.82rem;margin:0">Top-PLT soulgun family — highest Profit+Love−Tax analyzers. Click a row to highlight.</p>
+    <h3 style="font-size:1.15rem;margin:0 0 4px">🌌 Model Universe [3D]</h3>
+    <p style="color:var(--text-muted);font-size:0.82rem;margin:0 0 12px">All 282 catalog souls as a navigable constellation. Node size = PLT true value · color = category. Click a node to open its real card. Three.js loads on demand — zero cost until you enter.</p>
+    <button id="btn-ignite-universe" onclick="window.SoulverseLens&&SoulverseLens.open()" style="padding:12px 28px;border-radius:30px;background:linear-gradient(135deg,#0a0a0f,#1a0b2e);border:1px solid rgba(0,212,255,.5);color:#00D4FF;font-weight:800;font-size:0.85rem;letter-spacing:.08em;cursor:pointer;box-shadow:0 0 30px rgba(0,212,255,.25),inset 0 0 20px rgba(139,92,246,.15)">🌌 ENTER MODEL UNIVERSE [3D]</button>
+    <span style="margin-left:10px;font-size:0.7rem;color:var(--text-muted)">ESC closes · GPU freed on exit</span>
   </div>
-
-  <div id="bestRoleList" style="margin-top:14px;display:flex;flex-direction:column;gap:8px"></div>
 </section>
 
 <div class="plt-filters" id="pltFilters">
@@ -3428,56 +3428,20 @@ if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded
 else wire();
 })();
 </script>
-<script>
-/* SIP-16 — 🥇 Best Models: top-PLT role list. Garden removed per user request. */
-(function(){
-'use strict';
-const BEST=[
-  {rank:1,name:'postcss-postcss',role:'CSS Transformation Custodian',plt:'1.30',file:'soulguns/postcss-postcss-analyzer.js'},
-  {rank:2,name:'expressjs-express',role:'HTTP Router Guardian',plt:'1.30',file:'soulguns/expressjs-express-analyzer.js'},
-  {rank:3,name:'commonmark-commonmark',role:'Markdown Grammar Warden',plt:'1.30',file:'soulguns/commonmark-commonmark-js-analyzer.js'},
-  {rank:4,name:'lodash-lodash',role:'Utility Belt Architect',plt:'1.30',file:'soulguns/lodash-lodash-analyzer.js'},
-  {rank:5,name:'junegunn-fzf',role:'Fuzzy Match Lattice',plt:'1.30',file:'soulguns/junegunn-fzf-analyzer.js'},
-  {rank:6,name:'soul-gun-maker',role:'Soul Forge Engineer',plt:'1.30',file:'soulguns/soul-gun-maker-analyzer.js'},
-  {rank:7,name:'threejs-orb-pulse-cards',role:'Orb Pulse Card Artisan',plt:'1.10',file:'soulguns/threejs-orb-pulse-cards-analyzer.js'}
-];
-var S={sel:-1};
-function el(id){ return document.getElementById(id); }
-function clamp(v,a,b){ return Math.max(a,Math.min(b,v)); }
-function renderBestRows(){
-  var box=el('bestRoleList'); if(!box) return;
-  box.innerHTML=BEST.map(function(m){
-    return '<div data-best="'+m.name+'" style="display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:14px;background:rgba(139,92,246,0.06);border:1px solid rgba(255,209,102,0.16);cursor:pointer;font-size:0.8rem;transition:all .25s">'+
-      '<span style="font-family:ui-monospace,monospace;color:#FFD166;font-size:0.7rem;min-width:22px">#'+m.rank+'</span>'+
-      '<span style="flex:0 0 190px;color:#fff;font-family:ui-monospace,monospace;font-size:0.76rem">'+m.name+'</span>'+
-      '<span style="flex:1;color:#B8B8B8">'+m.role+'</span>'+
-      '<span style="padding:3px 10px;border-radius:100px;background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.3);color:#00D4FF;font-family:ui-monospace,monospace;font-size:0.68rem">PLT '+m.plt+'</span>'+
-      '<span style="color:var(--text-muted);font-size:0.66rem;font-family:ui-monospace,monospace;max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+m.file+'</span>'+
-    '</div>';
-  }).join('');
-  box.querySelectorAll('[data-best]').forEach(function(row){
-    row.addEventListener('click',function(){ selectBest(row.dataset.best); });
-  });
-}
-function selectBest(name){
-  var i=BEST.findIndex(function(m){ return m.name===name; });
-  if(i<0) return;
-  S.sel=i;
-  var rows=el('bestRoleList'); if(rows) rows.querySelectorAll('[data-best]').forEach(function(r){
-    var on=r.dataset.best===name;
-    r.style.borderColor=on?'rgba(255,209,102,0.65)':'rgba(255,209,102,0.16)';
-    r.style.background=on?'rgba(255,209,102,0.1)':'rgba(139,92,246,0.06)';
-  });
-}
-function pltScore(card){
-  try{
-    var f=function(s){ return s?parseFloat(s.textContent.replace(/[^0-9.]/g,''))||0:0; };
-    return f(card.querySelector('.plt-p'))+f(card.querySelector('.plt-l'))-f(card.querySelector('.plt-t'));
-  }catch(e){ return 0; }
-}
-function initBestOrb(){ renderBestRows(); }
-window.initBestOrb=initBestOrb;
-})();
-</script>
+<script defer src="js/soulverse-lens.js"></script>
+<div id="soulverse-overlay" style="display:none;position:fixed;inset:0;z-index:5000;background:radial-gradient(circle at 50% 40%,rgba(20,10,40,.96),rgba(5,5,10,.98));overflow:hidden">
+  <div style="position:absolute;top:0;left:0;right:0;display:flex;align-items:center;gap:12px;padding:14px 18px;z-index:5;pointer-events:none">
+    <span style="font-weight:800;letter-spacing:.1em;color:#fff">🌌 MODEL UNIVERSE</span>
+    <span id="soulverse-count" style="font-size:0.7rem;color:#8b8b98;font-family:ui-monospace,monospace"></span>
+    <span style="flex:1"></span>
+    <button id="soulverse-close" style="pointer-events:auto;padding:8px 18px;border-radius:20px;background:rgba(255,255,255,.06);border:1px solid rgba(255,209,102,.4);color:#FFD166;font-weight:700;font-size:0.75rem;cursor:pointer">✕ Close Universe</button>
+  </div>
+  <div id="soulverse-legend" style="position:absolute;top:64px;right:14px;z-index:5;display:flex;flex-direction:column;gap:6px;max-height:60vh;overflow-y:auto"></div>
+  <div id="soulverse-canvas-container" style="position:absolute;inset:0"></div>
+  <div id="soulverse-tip" style="display:none;position:absolute;z-index:6;pointer-events:none;background:rgba(8,8,12,.92);border:1px solid rgba(0,212,255,.4);border-radius:10px;padding:6px 10px;font-size:0.72rem;color:#fff"></div>
+  <div id="soulverse-hud" style="display:none;position:absolute;left:16px;bottom:16px;z-index:5;width:280px;background:rgba(8,8,12,.92);border:1px solid rgba(255,209,102,.4);border-radius:16px;padding:16px;box-shadow:0 20px 60px rgba(0,0,0,.7)"></div>
+  <div style="position:absolute;bottom:14px;left:50%;transform:translateX(-50%);z-index:4;font-size:0.65rem;color:rgba(255,255,255,.45);font-family:ui-monospace,monospace;letter-spacing:.06em;pointer-events:none">drag rotate · scroll zoom · click a node · ESC close</div>
+  <div id="soulverse-toast" style="display:none;position:absolute;top:64px;left:50%;transform:translateX(-50%);z-index:7;background:#0c0c12;color:#fff;border:1px solid rgba(0,212,255,.45);border-radius:30px;padding:10px 20px;font-size:0.8rem"></div>
+</div>
 </body>
 </html>
