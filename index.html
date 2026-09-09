@@ -335,6 +335,15 @@ input{font-family:inherit;outline:none;border:none;background:none}
   </div>
 </section>
 
+<!-- SIP-12: First-Time Architect onboard strip -->
+<div id="guideStrip" style="display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin:26px auto 4px;max-width:1280px;padding:12px 18px;border:1px solid rgba(255,209,102,0.28);border-left:3px solid #00D4FF;border-radius:14px;background:rgba(10,10,15,0.75);font-family:ui-monospace,Consolas,monospace;font-size:0.72rem;color:#B8B8B8">
+  <span style="color:#FFD166;letter-spacing:0.14em">FIRST-TIME ARCHITECT</span>
+  <span class="gs-step" data-step="1" style="cursor:pointer;padding:6px 12px;border:1px solid rgba(0,212,255,0.4);border-radius:30px;color:#9be8ff">1 ▸ PICK YOUR SQUAD <span style="opacity:.7">(◇ Squad)</span></span>
+  <span style="opacity:.45">──►</span>
+  <span class="gs-step" data-step="2" style="cursor:pointer;padding:6px 12px;border:1px solid rgba(255,209,102,0.4);border-radius:30px;color:#FFD166">2 ▸ SUMMON &amp; TEST</span>
+  <span style="opacity:.45">──►</span>
+  <span class="gs-step" data-step="3" style="cursor:pointer;padding:6px 12px;border:1px solid rgba(52,211,153,0.4);border-radius:30px;color:#34d399">3 ▸ EXPORT <span style="opacity:.7">(:3000)</span></span>
+</div>
 <!-- SIP-8: Living Sanctuaries shelf (hidden until manifest loads) -->
 <section id="livingSanctuaries" style="display:none">
   <h2>✦ Living Sanctuaries</h2>
@@ -2717,6 +2726,60 @@ if(p){
   mo.observe(p,{attributes:true});
 }
 linkSummon();
+})();
+</script>
+<script>
+// ─── SIP-12 — FIRST-TIME ARCHITECT GUIDE STRIP ───
+(function(){
+'use strict';
+function $(id){ return document.getElementById(id); }
+function goCatalog(){ try{ var c=$('catalog'); if(c) c.scrollIntoView({behavior:'smooth',block:'start'}); }catch(e){} }
+function goProfile(){ try{ window.location.href='profile.html'; }catch(e){} }
+function wbModal(){
+  var ov=document.createElement('div');
+  ov.id='wbModal';
+  ov.style.cssText='position:fixed;inset:0;z-index:2400;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.72);backdrop-filter:blur(6px);padding:16px';
+  var box=document.createElement('div');
+  box.style.cssText='width:560px;max-width:100%;background:#0c0c12;border:1px solid rgba(0,212,255,0.35);border-radius:20px;padding:22px;box-shadow:0 30px 120px rgba(0,0,0,0.85);font-family:ui-monospace,Consolas,monospace';
+  box.innerHTML='<h3 style="margin:0 0 8px;font-size:1rem;color:#fff">⚡ Local Workbench · Multi-Agent Runtime</h3>'+
+    '<div id="wbStatus" style="font-size:0.78rem;color:#B8B8B8;padding:10px 0">◌ probing localhost:3000…</div>'+
+    '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">'+
+      '<button id="wbOpen" style="flex:1;min-width:150px;background:linear-gradient(135deg,#6D28D9,#00D4FF);border:none;color:#fff;padding:10px 16px;border-radius:30px;cursor:pointer;font-family:inherit;font-weight:700;font-size:0.8rem">Open Workbench (:3000)</button>'+
+      '<button id="wbExport" style="padding:10px 16px;border-radius:30px;cursor:pointer;font-family:inherit;font-size:0.8rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.2);color:#e6e6e6">⬇ Export Squad</button>'+
+      '<button id="wbClose" style="padding:10px 16px;border-radius:30px;cursor:pointer;font-family:inherit;font-size:0.8rem;background:transparent;border:1px solid rgba(255,255,255,0.15);color:#9a9a9a">Close</button>'+
+    '</div>';
+  ov.appendChild(box);
+  document.body.appendChild(ov);
+  var st=$('wbStatus');
+  var ctl=(typeof AbortController!=='undefined')?new AbortController():null;
+  var to=setTimeout(function(){ if(ctl) ctl.abort(); finish(false); },1400);
+  function finish(up){
+    clearTimeout(to);
+    if(!st) return;
+    if(up){ st.innerHTML='🟢 <b style="color:#34d399">localhost:3000 LIVE</b> — Omniroute blood flow adopted. Launch the dock and summon your squad for live inference.'; }
+    else { st.innerHTML='⚪ <b style="color:#FFD166">:3000 offline</b> — start the family via <code style="background:#000;padding:2px 6px;border-radius:6px">launch-family.cjs</code> (scans :20128, adopts Omniroute, never kills the blood flow) then relaunch the Workbench.'; }
+  }
+  try{
+    fetch('http://localhost:3000/',{mode:'no-cors',cache:'no-store',signal:ctl?ctl.signal:undefined})
+      .then(function(){ finish(true); },function(){ finish(false); });
+  }catch(e){ finish(false); }
+  box.addEventListener('click',function(e){
+    var t=e.target&&e.target.id;
+    if(t==='wbOpen'){ window.open('http://localhost:3000','_blank'); }
+    else if(t==='wbExport'){ window.location.href='profile.html'; }
+    else if(t==='wbClose'){ document.body.removeChild(ov); }
+  });
+  ov.addEventListener('click',function(e){ if(e.target===ov) document.body.removeChild(ov); });
+}
+function wire(){
+  var strip=$('guideStrip'); if(!strip) return;
+  var steps=strip.querySelectorAll('[data-step]');
+  if(steps[0]) steps[0].addEventListener('click',goCatalog);
+  if(steps[1]) steps[1].addEventListener('click',goProfile);
+  if(steps[2]) steps[2].addEventListener('click',wbModal);
+}
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',wire); }
+else wire();
 })();
 </script>
 </body>

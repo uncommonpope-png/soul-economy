@@ -1,0 +1,49 @@
+name: Sync Soul Registry
+
+on:
+  push:
+    paths:
+      - 'profiles/*.json'
+      - '!profiles/index.json'
+  workflow_dispatch:
+
+jobs:
+  rebuild-index:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Rebuild Registry Index
+        run: |
+          node -e '
+            const fs = require("fs");
+            const path = require("path");
+            const dir = "./profiles";
+            const files = fs.readdirSync(dir).filter(f => f.endsWith(".json") && f !== "index.json");
+            const entries = [];
+            for (const file of files) {
+              try {
+                const data = JSON.parse(fs.readFileSync(path.join(dir, file), "utf8"));
+                entries.push({
+                  handle: data.handle || file.replace(".json", ""),
+                  name: data.name || data.handle || "Sovereign Architect",
+                  mood: data.mood || "✦ Compiling Sovereignty",
+                  squad_count: Array.isArray(data.top8) ? data.top8.length : (data.squad_count || 0),
+                  verified: true
+                });
+              } catch (e) {
+                console.error("Skipping invalid profile:", file, e.message);
+              }
+            }
+            fs.writeFileSync(path.join(dir, "index.json"), JSON.stringify(entries, null, 2));
+          '
+
+      - name: Commit and Push Index
+        run: |
+          git config --global user.name "Soul-Registry-Bot"
+          git config --global user.email "bot@buyasoul.online"
+          git add profiles/index.json
+          git diff --quiet && git diff --staged --quiet || (git commit -m "chore(registry): update profiles/index.json [skip ci]" && git push)

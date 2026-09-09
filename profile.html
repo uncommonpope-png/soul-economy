@@ -68,7 +68,10 @@ button{cursor:pointer;font-family:inherit}
   <div id="upcEditor" class="hidden"><div class="ed"></div></div>
   <!-- ── end SIP-4 canvas ── -->
 
-  <div class="card" id="profileCard">
+  <details class="legacy-auth-fold" style="margin-top:28px;position:relative;z-index:10">
+    <summary style="cursor:pointer;font-size:0.75rem;color:var(--text-muted);letter-spacing:0.04em;padding:10px 14px;border:1px solid rgba(255,255,255,0.08);border-radius:12px;background:rgba(255,255,255,0.025)">⚙ Advanced / Local Identity Override (No OAuth)</summary>
+    <div style="padding:16px 4px 0">
+      <div class="card" id="profileCard">
     <div class="row">
       <img id="avatar" class="avatar" src="" alt="avatar" style="display:none">
       <div>
@@ -109,7 +112,9 @@ button{cursor:pointer;font-family:inherit}
     <button class="publish" onclick="publishSoul()">Publish → Generate PR JSON</button>
     <pre id="publishOut" style="display:none;margin-top:12px;background:#000;padding:12px;border-radius:10px;font-size:0.75rem;overflow:auto;max-height:300px;border:1px solid rgba(139,92,246,0.2)"></pre>
     <div id="publishHelp" style="display:none;margin-top:10px;font-size:0.8rem;color:var(--text-gray)"></div>
-  </div>
+    </div>
+    </div>
+  </details>
 </div>
 
 <script>
