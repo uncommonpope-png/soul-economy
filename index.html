@@ -289,6 +289,7 @@ input{font-family:inherit;outline:none;border:none;background:none}
   .card{padding:18px;backdrop-filter:blur(10px)}
 }
 </style>
+<script defer src="js/auth-client.js"></script>
 </head>
 <body>
 <canvas id="bg-canvas"></canvas>
@@ -2606,10 +2607,34 @@ function initObs(){
 }
 function squadCount(){ try{ return (getSquad()||[]).length; }catch(e){ return 0; } }
 function identity(){
+  try{
+    var a=window.SoulAuth&&window.SoulAuth.getUser();
+    if(a&&a.handle) return String(a.handle);
+  }catch(e){}
   var v='';
   try{ var p=JSON.parse(localStorage.getItem('soulProfileV1')||'null'); if(p&&p.handle) v=String(p.handle); }catch(e){}
   if(!v){ try{ v=localStorage.getItem('soulUser')||''; }catch(e){} }
   return (v==='guest')?'':v;
+}
+function authNav(){
+  if(!(window.SoulAuth&&window.SoulAuth.enabled())) return;
+  var el=document.getElementById('userEmail'); if(!el) return;
+  var a=window.SoulAuth.getUser();
+  var si=document.getElementById('btnSignin');
+  var so=document.getElementById('btnSignout');
+  if(a&&a.handle){
+    el.textContent='✦ @'+a.handle+(squadCount()>0?(' ['+squadCount()+'/8]'):'');
+    el.style.fontWeight='600';
+    el.onclick=null;
+    if(si) si.style.display='none';
+    if(so){ so.style.display=''; so.onclick=function(){ try{ window.SoulAuth.logout(); }catch(e){} }; }
+  } else {
+    el.textContent='✦ Sign in';
+    el.style.fontWeight='600';
+    el.onclick=function(){ window.SoulAuth.login(); };
+    if(si) si.style.display='none';
+    if(so) so.style.display='none';
+  }
 }
 function renderNavBadge(){
   var el=document.getElementById('userEmail'); if(!el) return;
@@ -2623,8 +2648,9 @@ function renderNavBadge(){
   if(window.__familySocial){
     FS=window.__familySocial;
     renderNavBadge();
+    authNav();
     initObs();
-    window.addEventListener('squad-updated',renderNavBadge);
+    window.addEventListener('squad-updated',function(){ renderNavBadge(); authNav(); });
   }
   else setTimeout(waiter,120);
 })();

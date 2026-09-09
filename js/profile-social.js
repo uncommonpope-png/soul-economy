@@ -104,6 +104,15 @@ function getRegHandle(){
   }catch(e){}
   return '';
 }
+function applyAuthIdentity(){
+  if(VISITOR) return;
+  var a=null;
+  try{ if(window.SoulAuth) a=window.SoulAuth.getUser(); }catch(e){}
+  if(!a||!a.handle) return;
+  state.handle=String(a.handle).replace(/^@/,'');
+  if(!state.bio&&a.bio) state.bio=String(a.bio).slice(0,220);
+  saveState();
+}
 function hasSoulParam(){
   try{
     var sp=new URLSearchParams(location.search.split('#')[0]);
@@ -309,8 +318,10 @@ function renderIdentity(){
   var box=$('upcIdentity'); if(!box) return;
   var handle=state.handle||'guest';
   var av;
-  if(handle && handle!=='guest' && handle.indexOf('@')===0){ av='<img src="https://github.com/'+esc(handle.slice(1))+'.png" alt="avatar"'+(state.handle?'':'')+'>'; }
+  if(handle && handle!=='guest'){ av='<img src="https://github.com/'+esc(handle)+'.png" alt="avatar" onerror="this.style.display=\'none\'">'; }
   else { av='<div style="font-size:2.6rem">'+(state.handle?'🫂':'👤')+'</div>'; }
+  var auth=null;
+  try{ if(window.SoulAuth) auth=window.SoulAuth.getUser(); }catch(e){}
   box.innerHTML='<div class="upc-id">'+
     '<div class="upc-ava">'+av+'</div>'+
     '<div class="u-txt">'+
@@ -318,8 +329,11 @@ function renderIdentity(){
       (state.mood?'<div class="upc-mood">🫥 '+esc(state.mood)+'</div>':'')+
       (state.bio?'<div class="upc-bio">'+esc(state.bio)+'</div>':'<div class="upc-bio" style="opacity:.6">No bio yet — hit ✎ Edit Profile.</div>')+
       (state.audio?'<div class="upc-audio"><audio controls loop autoplay src="'+esc(state.audio)+'"></audio></div>':'')+
+      (auth?'<button id="upcSignOut" class="sum-chip" style="margin-top:8px">⏻ Sign Out ('+esc(auth.handle)+')</button>':'')+
     '</div>'+
   '</div>';
+  var so=box.querySelector('#upcSignOut');
+  if(so) so.addEventListener('click',function(){ try{ window.SoulAuth.logout(); }catch(e){} });
 }
 function renderTop8(){
   var box=$('upcTop8'); if(!box) return;
@@ -589,8 +603,11 @@ function openEditor(){
   var ed=$('upcEditor'); if(!ed) return;
   ed.classList.remove('hidden');
   var body=ed.querySelector('.ed');
+  var authHandle='';
+  try{ var _a=window.SoulAuth&&window.SoulAuth.getUser(); if(_a&&_a.handle) authHandle=String(_a.handle).replace(/^@/,''); }catch(e){}
   body.innerHTML='<h3>✎ Edit your profile</h3><p>All fields local-first, saved in this browser. Nothing leaves your machine until you hit Export.</p>'+
-    '<label>Handle (@username) <input id="editHandle" maxlength="24" value="'+esc(state.handle)+'"></label>'+
+    '<label>Handle (@username) <input id="editHandle" maxlength="24" value="'+esc(state.handle)+'"'+(authHandle?' disabled':'')+'></label>'+
+    (authHandle?'<div style="font-size:0.7rem;color:#00D4FF;margin-top:-2px">🔐 Verified GitHub identity — handle is locked to @'+esc(authHandle)+'.</div>':'')+
     '<label>Bio <textarea id="editBio" rows="3" maxlength="220">'+esc(state.bio)+'</textarea></label>'+
     '<label>Mood / status quote <input id="editMood" maxlength="60" value="'+esc(state.mood)+'"></label>'+
     '<label>Audio theme URL (host your own file; plays only inside your canvas) <input id="editAudio" placeholder="https://yoursite.com/theme.mp3" value="'+esc(state.audio)+'"></label>'+
@@ -598,7 +615,9 @@ function openEditor(){
     '<label style="display:flex;align-items:center;gap:8px;margin-top:14px"><input type="checkbox" id="editPublic" style="width:auto" '+(state.public?'checked':'')+'/> Enable public share (guestbook export / giscus hook)</label>'+
     '<div class="edBtns"><button class="save" id="editSave">Save Profile</button><button class="cancel" id="editCancel">Cancel</button></div>';
   ed.querySelector('#editSave').addEventListener('click',function(){
-    state.handle=body.querySelector('#editHandle').value.trim().replace(/^@/,'');
+    var ah='';
+    try{ var _u=window.SoulAuth&&window.SoulAuth.getUser(); if(_u&&_u.handle) ah=String(_u.handle).replace(/^@/,''); }catch(e){}
+    state.handle=ah||body.querySelector('#editHandle').value.trim().replace(/^@/,'');
     state.bio=body.querySelector('#editBio').value.trim();
     state.mood=body.querySelector('#editMood').value.trim();
     state.audio=body.querySelector('#editAudio').value.trim();
@@ -693,6 +712,7 @@ function boot(){
   }
   if(resolveRegistry()){ return; }
   loadState();
+  applyAuthIdentity();
   if(hasSoulParam()) saveState();
   finishBoot();
 }
@@ -701,6 +721,7 @@ function finishBoot(){ applyTheme(); render(); wireVisitor(); checkRegistryStatu
 /* wire the canvas shell */
 window.addEventListener('DOMContentLoaded',function(){
   if(!document.getElementById('user-profile-canvas')) return;
+  window.addEventListener('soul-auth',function(){ if(VISITOR) return; applyAuthIdentity(); applyTheme(); render(); checkRegistryStatus(); });
   var editBtn=$('upcEdit'); if(editBtn) editBtn.addEventListener('click',openEditor);
   var pickBtn=$('upcPick'); if(pickBtn) pickBtn.addEventListener('click',openPicker);
   var expBtn=$('upcExport'); if(expBtn) expBtn.addEventListener('click',exportJson);

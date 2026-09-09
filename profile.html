@@ -28,13 +28,14 @@ button{cursor:pointer;font-family:inherit}
 .badge{font-size:0.65rem;padding:3px 10px;border-radius:100px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08)}
 </style>
 <link rel="stylesheet" href="css/profile-themes.css" />
+<script defer src="js/auth-client.js"></script>
 <script defer src="js/profile-social.js"></script>
 </head>
 <body>
 <nav class="navbar">
   <a class="logo" href="index.html">✦ Soul Economy</a>
   <ul class="nav-links"><li><a href="index.html">Library</a></li><li><a href="profile.html" style="color:#fff">Profile</a></li><li><a href="https://buyasoul.online" target="_blank">BUYaSOUL</a></li></ul>
-  <div><a href="index.html#catalog" class="btn-ghost">← Library</a></div>
+  <div style="display:flex;gap:10px;align-items:center"><span id="authHandle" data-auth-nav></span><a href="index.html#catalog" class="btn-ghost">← Library</a></div>
 </nav>
 
 <div class="wrap">
