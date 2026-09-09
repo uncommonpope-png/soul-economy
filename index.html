@@ -350,6 +350,7 @@ input{font-family:inherit;outline:none;border:none;background:none}
   <div class="type" id="soul-info-type"></div>
   <div class="desc" id="soul-info-desc"></div>
   <div class="plt" id="soul-info-plt"></div>
+  <a id="soul-info-summon" href="#" style="display:inline-block;margin:10px 0;font-size:0.8rem;color:#00D4FF;font-weight:600" title="Open your profile and summon this soul as Active Guide">⚡ Summon this Soul on Profile</a>
   <button class="awaken" id="soul-info-btn">⬇ Awaken</button>
 </div>
 
@@ -2670,6 +2671,26 @@ try{
     .then(function(j){ mount(Array.isArray(j)?j:[]); })
     .catch(function(){ var s=document.getElementById('livingSanctuaries'); if(s) s.style.display='none'; });
 }catch(e){}
+})();
+</script>
+<script>
+// ─── SIP-9 — SUMMON LINK (soul-info panel → profile active guide) ───
+(function(){
+'use strict';
+function linkSummon(){
+  var t=document.getElementById('soul-info-title'); if(!t) return;
+  var a=document.getElementById('soul-info-summon'); if(!a) return;
+  var nm=(t.textContent||'').trim();
+  if(nm) a.href='profile.html?soul='+encodeURIComponent(nm);
+}
+var p=document.getElementById('soul-info-panel');
+if(p){
+  var mo=new MutationObserver(function(ms){
+    ms.forEach(function(m){ if(m.attributeName==='class') linkSummon(); });
+  });
+  mo.observe(p,{attributes:true});
+}
+linkSummon();
 })();
 </script>
 </body>

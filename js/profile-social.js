@@ -104,6 +104,20 @@ function getRegHandle(){
   }catch(e){}
   return '';
 }
+function hasSoulParam(){
+  try{
+    var sp=new URLSearchParams(location.search.split('#')[0]);
+    var nm=(sp.get('soul')||'').trim();
+    if(!nm) return false;
+    if(!state.top8.some(function(n){return keyN(n)===keyN(nm);})){
+      if(state.top8.length>=8){ reportToast('Squad full (8/8) — '+nm+' was not added.'); state.guide=state.top8[0]||''; return true; }
+      state.top8.push(nm);
+    }
+    state.guide=nm;
+    reportToast('⚡ Summoned '+nm+' as your Active Guide');
+    return true;
+  }catch(e){ return false; }
+}
 function resolveRegistry(){
   var handle=getRegHandle();
   if(!handle) return false;
@@ -430,7 +444,45 @@ function updateAdoptLabels(){
   });
 }
 
-/* ---- squad summoner / active guide chat (SIP-8) ---- */
+/* ---- squad summoner / two-gear chat bridge (SIP-8 + SIP-9) ---- */
+var GEAR=1;
+function loadSoulChats(){ try{ var o=JSON.parse(localStorage.getItem('soulChats')||'{}'); return (o&&typeof o==='object')?o:{}; }catch(e){ return {}; } }
+function logToSoulChats(name,text,user){
+  try{
+    var chats=loadSoulChats();
+    if(!chats[name]) chats[name]=[];
+    chats[name].push({user:user||'guest',text:String(text).slice(0,500),ts:Date.now()});
+    if(chats[name].length>100) chats[name]=chats[name].slice(-100);
+    localStorage.setItem('soulChats',JSON.stringify(chats));
+  }catch(e){}
+}
+function whoami(){
+  var u='guest';
+  try{ if(localStorage.getItem('soulUser')) u=localStorage.getItem('soulUser'); }catch(e){}
+  try{ var p=JSON.parse(localStorage.getItem(LS_KEY)||'null'); if(p&&p.handle) u=p.handle; }catch(e){}
+  return u;
+}
+function pingWorkbench(){
+  var ctl=(typeof AbortController!=='undefined')?new AbortController():null;
+  var to=setTimeout(done,1400);
+  function done(ok){
+    clearTimeout(to);
+    var now=(ok===true)?2:1;
+    if(now!==GEAR){ GEAR=now; applyGear(); }
+  }
+  try{
+    fetch('http://localhost:3000/',{mode:'no-cors',cache:'no-store',signal:ctl?ctl.signal:undefined})
+      .then(function(){ done(true); },function(){ done(false); });
+  }catch(e){ done(false); }
+}
+function applyGear(){
+  var btn=$('sumSend'); if(btn) btn.textContent=(GEAR===2?'⚡ Transmit to Local Soul (:3000)':'Send');
+  var inp=$('sumText'); if(inp) inp.placeholder=(GEAR===2?'Ask your Active Guide for a thought stream…':'💬 Chatting in Soul Community Stream · Launch Local Inference Engine for full cognition');
+  var chip=$('sumGearChip'); if(!chip) return;
+  chip.innerHTML=(GEAR===2
+    ?'<span class="upc-tchip" style="color:#2DD4BF;border-color:rgba(45,212,191,0.4)">🟢 Local Neural Engine LIVE (:3000)</span>'
+    :'<span class="upc-tchip">⚪ Social Community Stream · Workbench Offline</span>');
+}
 function renderSummoner(){
   var box=$('upcSummoner'); if(!box) return;
   var list=state.top8||[];
@@ -442,7 +494,7 @@ function renderSummoner(){
   var it=guide?findItem(guide):null;
   var ctx=it?(it.desc||it.details||''):'';
   box.innerHTML='<h3>⚡ Summon Squad Member</h3>'+
-    '<div class="upc-sub">Pick an equipped soul to set it as your Active Guide for quick-chat and local inference. If the shelf is empty, drop by “◇ Equip Souls”.</div>'+
+    '<div class="upc-sub">Pick an equipped soul to set it as your Active Guide for community chat &amp; local inference. The dock auto-detects your Local Workbench.</div>'+
     '<div class="sum-chips">'+(chips||'<div class="upc-empty">No squad yet — equip souls above to summon them here.</div>')+'</div>'+
     '<div class="sum-guide">'+
       (guide
@@ -451,9 +503,12 @@ function renderSummoner(){
          '<div class="sum-ctx">'+esc(ctx.slice(0,220)||(guide+' has been summoned as your Active Guide.'))+'</div></span>'
         :'<span class="upc-empty">No Active Guide selected — summon one above.</span>')+
     '</div>'+
+    '<div class="sum-gear" id="sumGearChip">'+(GEAR===2
+        ?'<span class="upc-tchip" style="color:#2DD4BF;border-color:rgba(45,212,191,0.4)">🟢 Local Neural Engine LIVE (:3000)</span>'
+        :'<span class="upc-tchip">⚪ Social Community Stream · Workbench Offline</span>')+'</div>'+
     '<div class="sum-chat">'+
-      '<div id="sumLog" class="sum-log"><div class="sum-msg">'+(guide?esc(guide)+' is charging as your guide. Offline quick-chat — no weights loaded.':'Select a soul to begin.')+'</div></div>'+
-      '<div class="sum-input"><input id="sumText" maxlength="300" placeholder="Ask your guide something…"><button id="sumSend">Send</button></div>'+
+      '<div id="sumLog" class="sum-log"><div class="sum-msg">'+(guide?esc(guide)+' is charging as your guide.':'Select a soul to begin.')+'</div></div>'+
+      '<div class="sum-input"><input id="sumText" maxlength="300" placeholder="Ask your guide something…"><button id="sumSend">'+(GEAR===2?'⚡ Transmit to Local Soul (:3000)':'Send')+'</button></div>'+
       '<button id="sumWork" class="upc-btn cyan">Launch in Local Workbench (:3000)</button>'+
     '</div>';
   if(list.length){
@@ -467,19 +522,66 @@ function renderSummoner(){
   if(txt) txt.addEventListener('keydown',function(ev){ if(ev.key==='Enter'){ ev.preventDefault(); sumSay(); } });
   var wk=$('sumWork');
   if(wk) wk.addEventListener('click',function(){
-    window.open('http://localhost:3000'+(state.guide?('?guide='+encodeURIComponent(state.guide)):''),'_blank');
+    var q='http://localhost:3000'+(state.guide?('?guide='+encodeURIComponent(state.guide)+'&prompt='):'');
+    window.open(q,'_blank');
     reportToast('◇ Opened Local Workbench — guide pre-selected from your squad');
   });
+  applyGear();
 }
 function sumSay(){
   var txt=$('sumText'); if(!txt) return;
   var t=txt.value.trim(); if(!t) return;
   var log=$('sumLog'); if(!log) return;
   var g=state.guide||'Guide';
-  log.innerHTML+='<div class="sum-msg you">'+esc(t)+'</div>'+
-    '<div class="sum-msg"><b>'+esc(g)+'</b>: ◌ No weights loaded in this offline quick-chat. Open the Local Workbench (:3000) for full inference with '+esc(g)+' as your Active Guide.</div>';
+  logToSoulChats(g,t,whoami());
+  if(GEAR===2){
+    var u='http://localhost:3000?guide='+encodeURIComponent(g)+'&prompt='+encodeURIComponent(t);
+    log.innerHTML+='<div class="sum-msg you">'+esc(t)+'</div>'+
+      '<div class="sum-msg"><b>'+esc(g)+'</b>: ⚡ Transmitted to the local soul engine <code>:3000</code> with your query.</div>'+
+      '<a class="sum-act" href="'+u+'" target="_blank">Open thought stream →</a>';
+    window.open(u,'_blank');
+    reportToast('◇ Transmitted to Local Soul (:3000) — opening with prompt');
+  } else {
+    log.innerHTML+='<div class="sum-msg you">'+esc(t)+'</div>'+
+      '<div class="sum-msg"><b>'+esc(g)+'</b>: Soul manifested in social witness mode. No local weights loaded on this browser edge. To run autonomous thought streams, launch the BUYASOUL Workbench or join the community discussion.</div>'+
+      '<div class="sum-acts"><a class="sum-act" href="#" id="sumHist">[View Discussion History]</a> <a class="sum-act" href="http://localhost:3000" target="_blank">[Launch Workbench]</a></div>';
+    var ha=log.querySelector('#sumHist');
+    if(ha) ha.addEventListener('click',function(ev){ ev.preventDefault(); showSoulHistory(g); });
+  }
   txt.value='';
   log.scrollTop=log.scrollHeight;
+}
+function showSoulHistory(name){
+  var ms=loadSoulChats()[name]||[];
+  var ov=document.createElement('div'); ov.id='upcHist';
+  ov.style.cssText='position:fixed;inset:0;z-index:2200;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.68);backdrop-filter:blur(6px);padding:16px';
+  var box=document.createElement('div');
+  box.style.cssText='width:560px;max-width:100%;max-height:80vh;overflow-y:auto;background:#0c0c12;border:1px solid rgba(139,92,246,0.3);border-radius:20px;padding:20px;box-shadow:0 30px 120px rgba(0,0,0,0.8)';
+  box.innerHTML='<h3 style="margin:0 0 12px;font-size:1rem">💬 '+esc(name)+' — Community Discussion History</h3>'+
+    (ms.length
+      ?ms.slice(-40).reverse().map(function(m){
+        return '<div class="hist-row"><b>@'+esc(m.user||'anonymous')+'</b> · '+new Date(m.ts).toLocaleString()+'<div>'+esc(m.text)+'</div></div>';
+      }).join('')
+      :'<div style="color:#6b7280;font-size:0.8rem">No messages yet for '+esc(name)+'. This thread syncs with the Library chat under the same soul.</div>')+
+    '<div style="text-align:right;margin-top:12px"><button id="upcHistClose" class="upc-btn">Close</button></div>';
+  ov.appendChild(box); document.body.appendChild(ov);
+  box.querySelector('#upcHistClose').addEventListener('click',function(){ document.body.removeChild(ov); });
+  ov.addEventListener('click',function(ev){ if(ev.target===ov) document.body.removeChild(ov); });
+}
+function slugId(n){ return String(n||'').toLowerCase().trim().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,''); }
+var SOUL_ROLES={profit:'mind',gsk:'soul',seshat:'memory',scribe:'witness',architect:'mind',strategist:'mind','soul commander':'soul','oracle v2':'memory'};
+function exportSquadRuntime(){
+  var cfg={
+    squad_name:'Active Squad (@'+(state.handle||'guest')+')',
+    slots:8,
+    equipped_souls:(state.top8||[]).map(function(nm){ return {id:slugId(nm),role:SOUL_ROLES[keyN(nm)]||'mind'}; }),
+    auto_start_ports:[3000,20128,3001]
+  };
+  var blob=new Blob([JSON.stringify(cfg,null,2)],{type:'application/json'});
+  var a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='squad_runtime.json';
+  document.body.appendChild(a); a.click();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); },400);
+  reportToast('⬇ squad_runtime.json exported ('+cfg.equipped_souls.length+'/8)');
 }
 
 /* ---- editor modal ---- */
@@ -591,9 +693,10 @@ function boot(){
   }
   if(resolveRegistry()){ return; }
   loadState();
+  if(hasSoulParam()) saveState();
   finishBoot();
 }
-function finishBoot(){ applyTheme(); render(); wireVisitor(); checkRegistryStatus(); }
+function finishBoot(){ applyTheme(); render(); wireVisitor(); checkRegistryStatus(); if(document.getElementById('upcSummoner')) pingWorkbench(); }
 
 /* wire the canvas shell */
 window.addEventListener('DOMContentLoaded',function(){
@@ -603,6 +706,7 @@ window.addEventListener('DOMContentLoaded',function(){
   var expBtn=$('upcExport'); if(expBtn) expBtn.addEventListener('click',exportJson);
   var shrBtn=$('upcShare'); if(shrBtn) shrBtn.addEventListener('click',shareProfile);
   var regBtn=$('upcReg'); if(regBtn) regBtn.addEventListener('click',publishRegistry);
+  var sqBtn=$('upcSquadExport'); if(sqBtn) sqBtn.addEventListener('click',exportSquadRuntime);
   var impBtn=$('upcImport'); if(impBtn) impBtn.addEventListener('click',function(){ $('upcImportFile').click(); });
   var impFile=$('upcImportFile'); if(impFile) impFile.addEventListener('change',function(ev){ var f=ev.target.files&&ev.target.files[0]; if(f) importJson(f); ev.target.value=''; });
   fetch('data/catalog.json',{cache:'no-store'}).then(function(r){ return r.json(); }).then(function(j){
