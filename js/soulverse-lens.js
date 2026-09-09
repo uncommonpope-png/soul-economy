@@ -31,6 +31,7 @@ var Lens={
   active:false, opening:false, THREE:null,
   renderer:null, scene:null, camera:null, group:null,
   raf:0, nodes:[], disposables:[], shaders:[], sprites:[], beams:[],
+  arcMesh:null, arcMat:null, zapPool:[],
   bgScene:null, bgCamera:null, bgMat:null, lastT:0, _tmpV:null,
   mNX:0, mNY:0, mVel:0,
   vis:{}, hover:null, sel:null,
@@ -130,6 +131,14 @@ Lens.build=function(THREE,catalog){
   Lens.buildLegend(counts);
   var cc=$('soulverse-count');
   if(cc) cc.textContent=N+' NODES · '+Object.keys(counts).length+' TYPES';
+  var ov0=$('soulverse-overlay'), cardsBox=$('soulverse-cards');
+  if(ov0&&cardsBox&&!$('soulverse-zaps')){
+    var svgEl=document.createElementNS('http://www.w3.org/2000/svg','svg');
+    svgEl.id='soulverse-zaps';
+    svgEl.setAttribute('style','position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2');
+    ov0.insertBefore(svgEl,cardsBox);
+  }
+  Lens.buildArcs();
 
   // events (all removed on close)
   var B=Lens.bound;
@@ -197,6 +206,7 @@ Lens.build=function(THREE,catalog){
     var t=now/1000;
     // breathing node uniforms stay synced to wall-clock delta
     for(var i=0;i<Lens.shaders.length;i++){ Lens.shaders[i].uniforms.uTime.value+=dt; }
+    if(Lens.arcMat) Lens.arcMat.uniforms.uTime.value=t;
     for(var j=0;j<Lens.beams.length;j++){
       var bm=Lens.beams[j];
       bm.mat.opacity=0.32+0.18*Math.sin(t*3+bm.phase);
@@ -413,6 +423,7 @@ Lens.syncCards=function(){
     if(!taken[id]&&!overlaps(cc.x,cc.y)){ accepted.push(cc); taken[id]=1; }
   }
   Lens.prevAccept=accepted.map(function(c){ return c.n.userData.idx; });
+  Lens.updateZaps(accepted);
   for(var k=0;k<Lens.cardPool.length;k++){
     var el=Lens.cardPool[k];
     if(k>=accepted.length){ el.style.display='none'; el._key=-1; continue; }
@@ -481,6 +492,119 @@ Lens.updateKinematics=function(t,dt){
     if(u.beam) u.beam.position.copy(node.position);
   }
 };
+// SYNAPSE WEB: nearest-neighbor arcs with a traveling fire pulse (one draw call).
+// Rebuilt whenever type visibility changes so arcs never dangle off hidden nodes.
+Lens.buildArcs=function(){
+  if(!Lens.THREE||!Lens.group) return;
+  if(Lens.arcMesh){
+    try{ Lens.group.remove(Lens.arcMesh); }catch(e){}
+    try{ if(Lens.arcMesh.geometry) Lens.arcMesh.geometry.dispose(); }catch(e){}
+    try{ if(Lens.arcMesh.material) Lens.arcMesh.material.dispose(); }catch(e){}
+    Lens.arcMesh=null; Lens.arcMat=null;
+  }
+  var nodes=Lens.nodes.filter(function(n){ return n.visible; });
+  if(nodes.length<2) return;
+  var seen={}, pairs=[], i, j;
+  for(i=0;i<nodes.length;i++){
+    var bi=-1, bd=1e18;
+    for(j=0;j<nodes.length;j++){
+      if(i===j) continue;
+      var dd=nodes[i].position.distanceToSquared(nodes[j].position);
+      if(dd<bd){ bd=dd; bi=j; }
+    }
+    if(bi>=0){
+      var key=Math.min(i,bi)+':'+Math.max(i,bi);
+      if(!seen[key]){ seen[key]=1; pairs.push([nodes[i],nodes[bi]]); }
+    }
+  }
+  while(pairs.length>220){ pairs=pairs.filter(function(_,ix){ return ix%2===0; }); }
+  var SEG=10, pos=[], ts=[], phs=[];
+  var va=new Lens.THREE.Vector3(), vb=new Lens.THREE.Vector3(), vm=new Lens.THREE.Vector3();
+  var p0=new Lens.THREE.Vector3(), p1=new Lens.THREE.Vector3();
+  function bez(a,b,m,t,out){
+    var u=1-t;
+    out.set(u*u*a.x+2*u*t*m.x+t*t*b.x, u*u*a.y+2*u*t*m.y+t*t*b.y, u*u*a.z+2*u*t*m.z+t*t*b.z);
+    return out;
+  }
+  pairs.forEach(function(p){
+    va.copy(p[0].position); vb.copy(p[1].position);
+    vm.copy(va).add(vb).multiplyScalar(0.5);
+    var len=va.distanceTo(vb);
+    vm.add(vm.clone().normalize().multiplyScalar(len*0.18));
+    var phase=Math.random();
+    for(var s=0;s<SEG;s++){
+      bez(va,vb,vm,s/SEG,p0); bez(va,vb,vm,(s+1)/SEG,p1);
+      pos.push(p0.x,p0.y,p0.z,p1.x,p1.y,p1.z);
+      ts.push(s/SEG,(s+1)/SEG); phs.push(phase,phase);
+    }
+  });
+  var g=new Lens.THREE.BufferGeometry();
+  g.setAttribute('position',new Lens.THREE.Float32BufferAttribute(pos,3));
+  g.setAttribute('aT',new Lens.THREE.Float32BufferAttribute(ts,1));
+  g.setAttribute('aPhase',new Lens.THREE.Float32BufferAttribute(phs,1));
+  var m=new Lens.THREE.ShaderMaterial({
+    uniforms:{uTime:{value:0}},
+    vertexShader:['attribute float aT; attribute float aPhase; varying float vT; varying float vPh;',
+      'void main(){ vT=aT; vPh=aPhase; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }'].join('\n'),
+    fragmentShader:['uniform float uTime; varying float vT; varying float vPh;',
+      'void main(){ float head=fract(uTime*0.7+vPh); float d=abs(vT-head); d=min(d,1.0-d);',
+      ' float bolt=exp(-d*20.0);',
+      ' vec3 col=mix(vec3(0.0,0.75,1.0),vec3(1.0,1.0,1.0),bolt);',
+      ' gl_FragColor=vec4(col,0.08+bolt*0.9); }'].join('\n'),
+    transparent:true, blending:Lens.THREE.AdditiveBlending, depthWrite:false
+  });
+  var lines=new Lens.THREE.LineSegments(g,m);
+  lines.frustumCulled=false;
+  Lens.group.add(lines);
+  Lens.arcMesh=lines; Lens.arcMat=m;
+  Lens.disposables.push(g,m);
+};
+// SCREEN LIGHTNING: jagged live arcs crackling between floating cards.
+function zapPoints(x1,y1,x2,y2){
+  var dx=x2-x1, dy=y2-y1, len=Math.sqrt(dx*dx+dy*dy)||1;
+  var nx=-dy/len, ny=dx/len, pts=[x1+','+y1];
+  for(var s=1;s<5;s++){
+    var f=s/5, off=(Math.random()-0.5)*22;
+    pts.push((x1+dx*f+nx*off).toFixed(1)+','+(y1+dy*f+ny*off).toFixed(1));
+  }
+  pts.push(x2+','+y2);
+  return pts.join(' ');
+}
+Lens.updateZaps=function(pts){
+  var svg=$('soulverse-zaps');
+  if(!svg||!Lens.active) return;
+  var NS='http://www.w3.org/2000/svg';
+  while(Lens.zapPool.length<12){
+    var glow=document.createElementNS(NS,'polyline');
+    glow.setAttribute('style','fill:none;stroke:#00D4FF;stroke-width:5;opacity:.25');
+    var core=document.createElementNS(NS,'polyline');
+    core.setAttribute('style','fill:none;stroke:#ffffff;stroke-width:1.6;opacity:.9');
+    svg.appendChild(glow); svg.appendChild(core);
+    Lens.zapPool.push({glow:glow,core:core,next:0,pts:'',op:1});
+  }
+  var now=performance.now(), used=0, i, j;
+  for(i=0;i<pts.length&&used<12;i++){
+    var best=-1, bd=1e9;
+    for(j=0;j<pts.length;j++){
+      if(j===i) continue;
+      var dx=pts[j].x-pts[i].x, dy=pts[j].y-pts[i].y, dd=dx*dx+dy*dy;
+      if(dd<bd){ bd=dd; best=j; }
+    }
+    if(best<0||bd>380*380) continue;
+    var z=Lens.zapPool[used++];
+    if(now>z.next){
+      z.pts=zapPoints(pts[i].x,pts[i].y,pts[best].x,pts[best].y);
+      z.op=(0.35+Math.random()*0.65).toFixed(2);
+      z.next=now+90+Math.random()*140;
+    }
+    if(!z.pts) continue;
+    z.core.setAttribute('points',z.pts); z.core.style.opacity=z.op;
+    z.glow.setAttribute('points',z.pts); z.glow.style.opacity=(z.op*0.3).toFixed(2);
+  }
+  for(var k=used;k<Lens.zapPool.length;k++){
+    Lens.zapPool[k].core.style.opacity='0'; Lens.zapPool[k].glow.style.opacity='0';
+  }
+};
 Lens.buildLegend=function(counts){
   var lg=$('soulverse-legend'); if(!lg) return;
   var types=Object.keys(counts).sort(function(a,b){ return counts[b]-counts[a]; });
@@ -495,6 +619,7 @@ Lens.buildLegend=function(counts){
       btn.style.opacity=Lens.vis[t]?'1':'0.35';
       Lens.nodes.forEach(function(n){ if(n.userData.type===t) n.visible=Lens.vis[t]; });
       if(Lens.hover&&!Lens.hover.visible) Lens.setHover(null,0,0);
+      Lens.buildArcs();
     });
   });
   var cc2=$('soulverse-count');
@@ -502,6 +627,7 @@ Lens.buildLegend=function(counts){
     Lens.nodes.forEach(function(n){ n.visible=true; });
     Object.keys(Lens.vis).forEach(function(t){ Lens.vis[t]=true; });
     lg.querySelectorAll('[data-lt]').forEach(function(b){ b.style.opacity='1'; });
+    Lens.buildArcs();
   }; }
 };
 
@@ -557,6 +683,8 @@ Lens.close=function(){
   if(container) container.innerHTML='';
   var sc2=$('soulverse-cards');
   if(sc2){ for(var ci=0;ci<sc2.children.length;ci++){ sc2.children[ci].style.display='none'; sc2.children[ci]._key=-1; } }
+  var zp=$('soulverse-zaps');
+  if(zp&&zp.parentNode) zp.parentNode.removeChild(zp);
   var overlay=$('soulverse-overlay');
   if(overlay) overlay.style.display='none';
   var hud=$('soulverse-hud'); if(hud){ hud.style.display='none'; hud.innerHTML=''; }
@@ -566,6 +694,7 @@ Lens.close=function(){
   Lens.renderer=null; Lens.scene=null; Lens.camera=null; Lens.group=null;
   Lens.bgScene=null; Lens.bgCamera=null; Lens.bgMat=null;
   Lens.nodes=[]; Lens.shaders=[]; Lens.sprites=[]; Lens.beams=[];
+  Lens.arcMesh=null; Lens.arcMat=null; Lens.zapPool=[];
   Lens.hover=null; Lens.sel=null; Lens.vx=0; Lens.vy=0;
   Lens.focusNode=null; Lens.prevAccept=[];
   Lens.bound={};
@@ -583,5 +712,5 @@ window.SoulverseLens=Lens;
 window.initBestOrb=function(){
   try{ if(window.SoulverseLens&&!SoulverseLens.active&&!SoulverseLens.opening){ console.info('[soulverse] tab entry — igniting'); SoulverseLens.open(); } }catch(e){}
 };
-console.info('[soulverse] lens v5 loaded (sticky decluttered cards + focus flight + search + HUD nav)');
+console.info('[soulverse] lens v6 loaded (synapse arcs + card lightning + all v5 systems)');
 })();
