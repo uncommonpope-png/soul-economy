@@ -2589,7 +2589,7 @@ function addSquad(name){
   try{ window.dispatchEvent(new CustomEvent('squad-updated')); }catch(e){}
 }
 function attach(card){
-  var bar=card.querySelector('.ss-act'); if(!bar||bar.querySelector('[data-squad]')||bar.querySelector('[data-modelfile]'))return;
+  var bar=card.querySelector('.ss-act'); if(!bar||bar.dataset.hardened)return;
   var k=(card.dataset.id||'').trim(); if(!k)return;
   var b=document.createElement('button');
   b.type='button'; b.dataset.squad='1'; b.textContent='◇ Squad';
@@ -2606,11 +2606,28 @@ function attach(card){
   m.type='button'; m.dataset.modelfile='1'; m.textContent='[>_ Modelfile]';
   m.title='Copy a ready-to-run Ollama Modelfile for this soul';
   m.style.cssText='border-color:rgba(255,209,102,0.25);color:#ffd166';
-  m.addEventListener('click',function(ev){
-    ev.stopPropagation(); ev.preventDefault();
-    copyModelfile(modelfileFor(k));
-  });
+  m.addEventListener('click',function(ev){ openModelfileMenu(ev,k); });
   bar.appendChild(m);
+  try{
+    var it=FS&&FS.findItem?FS.findItem(k):null;
+    if(webgpuCompat(it)){
+      var wg=document.createElement('span');
+      wg.dataset.webgpu='1'; wg.textContent='⚡ In-Browser Ready (WebGPU)';
+      wg.title='Stream this model entirely in-browser (transformers.js + WebGPU) — no local daemon required';
+      wg.style.cssText='display:inline-block;font-size:0.66rem;padding:5px 10px;border-radius:30px;border:1px solid rgba(0,243,255,0.35);color:#aef8ff;background:rgba(0,243,255,0.07);cursor:pointer';
+      wg.addEventListener('click',function(ev){ ev.stopPropagation(); ev.preventDefault(); launchWebgpu(k); });
+      bar.appendChild(wg);
+    }
+  }catch(e){}
+  bar.dataset.hardened='1';
+}
+function webgpuCompat(it){
+  if(!it) return false;
+  var hay=String(it.name||'').toLowerCase()+' '+String(it.desc||'').toLowerCase();
+  return /0\.5b|0\.8b|qwen2\.[0-9]:0\.5|micro|tiny|1b\b/.test(hay);
+}
+function slugify(k){
+  return String(k||'').trim().toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,40);
 }
 function modelfileFor(k){
   var nm=k,desc='';
@@ -2618,25 +2635,76 @@ function modelfileFor(k){
   var d=desc.replace(/"""/g,"'''").replace(new RegExp(String.fromCharCode(96),"g"),"'").trim().slice(0,400);
   return 'FROM qwen2.5:0.5b\n# BUYaSOUL Entity: '+nm+'\n# PLT True Value: Sovereign\nSYSTEM """'+d+'"""\nPARAMETER temperature 0.7\n';
 }
-function copyModelfile(t){
-  var done=function(){ toast('✦ Modelfile copied to clipboard'); };
-  function fb(){
+function copyPayload(t,okMsg){
+  function fail(){ toast('⚠ Clipboard blocked — copy manually'); }
+  function done(){ toast(okMsg); }
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(t).then(done,fail);
+  } else {
     var ta=document.createElement('textarea');
-    ta.value=t; ta.style.cssText='position:fixed;opacity:0';
+    ta.value=t; ta.style.cssText='position:fixed;opacity:0;left:-4000px';
     document.body.appendChild(ta); ta.select();
     var ok=false; try{ ok=document.execCommand('copy'); }catch(e){}
     document.body.removeChild(ta);
-    toast(ok?'✦ Modelfile copied to clipboard':'⚠ Clipboard blocked — copy manually');
+    if(ok) done(); else fail();
   }
-  if(navigator.clipboard&&navigator.clipboard.writeText){
-    navigator.clipboard.writeText(t).then(done,fb);
-  } else fb();
+}
+var MENU=null;
+function closeMenu(){
+  if(MENU&&MENU.parentNode) MENU.parentNode.removeChild(MENU);
+  MENU=null;
+  document.removeEventListener('click',menuOutside);
+}
+function menuOutside(ev){ if(MENU&&!MENU.contains(ev.target)) closeMenu(); }
+function openModelfileMenu(ev,k){
+  ev.stopPropagation(); ev.preventDefault();
+  closeMenu();
+  var slug=slugify(k);
+  var items=[
+    ['📄 Copy Ollama Modelfile',modelfileFor(k),'✦ Modelfile copied to clipboard'],
+    ['⚙ Copy Ollama CLI Run','ollama run hf.co/uncommonpope-png/'+slug,'✦ Ollama run command copied'],
+    ['🌐 Copy cURL (localhost:11434)','curl http://localhost:11434/api/generate -d '+JSON.stringify({model:slug,prompt:'hello'}),'✦ cURL request copied']
+  ];
+  var rc=ev.target.getBoundingClientRect();
+  var m=document.createElement('div');
+  m.style.cssText='position:fixed;z-index:3000;background:#0c0c12;border:1px solid rgba(255,209,102,0.4);border-radius:12px;padding:6px;min-width:220px;font-family:ui-monospace,Consolas,monospace;font-size:0.74rem;box-shadow:0 20px 60px rgba(0,0,0,0.8)';
+  m.style.left=Math.max(8,Math.min(innerWidth-250,rc.left))+'px';
+  m.style.top=Math.min(innerHeight-170,rc.bottom+8)+'px';
+  items.forEach(function(it){
+    var bb=document.createElement('button');
+    bb.type='button'; bb.textContent=it[0];
+    bb.style.cssText='display:block;width:100%;text-align:left;padding:8px 12px;border:none;background:transparent;color:#e6e6e6;cursor:pointer;border-radius:8px;font-family:inherit;font-size:0.74rem';
+    bb.addEventListener('mouseenter',function(){ bb.style.background='rgba(255,209,102,0.1)'; });
+    bb.addEventListener('mouseleave',function(){ bb.style.background='transparent'; });
+    bb.addEventListener('click',function(e2){ e2.stopPropagation(); e2.preventDefault(); copyPayload(it[1],it[2]); closeMenu(); });
+    m.appendChild(bb);
+  });
+  document.body.appendChild(m);
+  MENU=m;
+  document.addEventListener('click',menuOutside);
+  setTimeout(function(){
+    document.addEventListener('keydown',function esc(e){ if(e.key==='Escape'){ closeMenu(); document.removeEventListener('keydown',esc); } });
+  },0);
+}
+function launchWebgpu(k){
+  toast('◌ probing WebGPU…');
+  try{
+    import('./js/webgpu-bridge.js').then(function(mod){
+      var b=mod.WebGPUBridge||mod.default;
+      if(!b) throw new Error('bridge missing');
+      return b.status().then(function(st){ return b&&st; });
+    }).then(function(st){
+      if(!st||!st.bridge) return toast('⚪ WebGPU off — in-browser preview needs Chromium/Edge with GPU access');
+      if(st.adapter) toast('⚡ WebGPU ready — '+(st.vendor||'GPU')+' adapter. Streaming this model in-browser is coming online.');
+      else toast('⚪ WebGPU off — '+(st.reason||'no adapter')+'. Try a Chromium/Edge GPU session.');
+    }).catch(function(){ toast('⚠ WebGPU probe failed'); });
+  }catch(e){ toast('⚠ WebGPU probe failed'); }
 }
 function initObs(){
   var grid=document.getElementById('resourceGrid'); if(!grid) return;
   function scan(){
     grid.querySelectorAll('.card').forEach(function(c){
-      if(c.querySelector('.ss-act')&&!c.querySelector('[data-squad]')) attach(c);
+      if(c.querySelector('.ss-act')&&!c.dataset.hardened) attach(c);
     });
   }
   var mo=new MutationObserver(scan);
