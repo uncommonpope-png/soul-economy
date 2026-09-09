@@ -5,7 +5,7 @@
 'use strict';
 var LS_KEY='soulProfileV1';
 var PREF='#user-profile-canvas';
-var DEFAULTS={handle:'',bio:'',mood:'',audio:'',themeCSS:'',top8:[],guests:[],public:false,guide:''};
+var DEFAULTS={handle:'',displayName:'',bio:'',mood:'',audio:'',themeCSS:'',location:'',website:'',joined:0,mySoul:'',top8:[],guests:[],portfolio:[],followers:[],following:[],activity:[],public:false,guide:''};
 var state, items=[];
 var VISITOR=false;
 var REGISTRY=false;
@@ -20,6 +20,11 @@ function loadState(){
   }
   if(!Array.isArray(state.top8)) state.top8=[];
   if(!Array.isArray(state.guests)) state.guests=[];
+  if(!Array.isArray(state.portfolio)) state.portfolio=[];
+  if(!Array.isArray(state.followers)) state.followers=[];
+  if(!Array.isArray(state.following)) state.following=[];
+  if(!Array.isArray(state.activity)) state.activity=[];
+  if(!state.joined&&state.handle){ state.joined=Date.now(); try{ localStorage.setItem(LS_KEY,JSON.stringify(state)); }catch(e){} }
 }
 function saveState(){ if(VISITOR) return; try{ localStorage.setItem(LS_KEY,JSON.stringify(state)); }catch(e){} }
 
@@ -54,16 +59,34 @@ function decompressPayload(b64){
   var pipe=new Blob([u8FromB64(b64)]).stream().pipeThrough(ds);
   return new Response(pipe).arrayBuffer().then(function(buf){ return new TextDecoder().decode(new Uint8Array(buf)); });
 }
+function cleanStrArr(a,n){
+  if(!Array.isArray(a)) return [];
+  return a.filter(function(x){ return typeof x==='string'; }).slice(0,n||1000);
+}
+function cleanPortfolio(a){
+  if(!Array.isArray(a)) return [];
+  return a.filter(function(pf){ return pf&&typeof pf==='object'; }).map(function(pf){
+    return {kind:(PF_KINDS.indexOf(pf.kind)>=0?pf.kind:'Soul'),title:String(pf.title||'').slice(0,80),link:String(pf.link||'').slice(0,200)};
+  }).filter(function(pf){ return pf.title; }).slice(0,40);
+}
 function buildPayload(){
-  return {schema:'user_profile.json/1.0',profile:{handle:state.handle,bio:state.bio,mood:state.mood,audio:state.audio,themeCSS:state.themeCSS,public:state.public},
-    equippedSouls:state.top8.slice(),guestbook:state.guests.slice(0,20)};
+  return {schema:'user_profile.json/1.0',profile:{handle:state.handle,displayName:state.displayName||'',bio:state.bio,mood:state.mood,audio:state.audio,themeCSS:state.themeCSS,location:state.location||'',website:state.website||'',joined:state.joined||0,mySoul:state.mySoul||'',public:state.public},
+    equippedSouls:state.top8.slice(),guestbook:state.guests.slice(0,20),portfolio:cleanPortfolio(state.portfolio),followers:cleanStrArr(state.followers),following:cleanStrArr(state.following)};
 }
 function applyPayload(p){
   var pr=(p.profile)||p;
-  state={handle:String(pr.handle||'guest').replace(/^@/,''),bio:String(pr.bio||''),mood:String(pr.mood||''),
-    audio:String(pr.audio||''),themeCSS:String(pr.themeCSS||''),public:!!pr.public,
+  state={handle:String(pr.handle||'guest').replace(/^@/,''),
+    displayName:String(pr.displayName||'').slice(0,40),
+    bio:String(pr.bio||''),mood:String(pr.mood||''),
+    audio:String(pr.audio||''),themeCSS:String(pr.themeCSS||''),
+    location:String(pr.location||'').slice(0,60),website:String(pr.website||'').slice(0,200),
+    joined:(+pr.joined)||0,mySoul:String(pr.mySoul||'').slice(0,80),
+    public:!!pr.public,
     top8:(p.equippedSouls&&Array.isArray(p.equippedSouls)?p.equippedSouls:[]).slice(0,8),
-    guests:(p.guestbook&&Array.isArray(p.guestbook)?p.guestbook:[]).slice()};
+    guests:(p.guestbook&&Array.isArray(p.guestbook)?p.guestbook:[]).slice(),
+    portfolio:cleanPortfolio(p.portfolio),
+    followers:cleanStrArr(p.followers),following:cleanStrArr(p.following),
+    activity:[],guide:''};
   VISITOR=true;
 }
 function readShareHash(cb){
@@ -153,10 +176,13 @@ function setOg(name,val){
 }
 function updateOgMeta(handle,p){
   try{
-    var count=(p&&Array.isArray(p.top8))?p.top8.length:0;
-    var mood=(p&&p.mood)?String(p.mood):'✦ Compiling Sovereignty';
-    var title='@'+handle+' — Soul Economy Sanctuary';
-    var desc='◇ Squad '+count+'/8 · '+mood+' · '+((p&&p.bio)?String(p.bio).slice(0,160):'A living digital soul in the BUYaSOUL registry.');
+    var eq=(p&&(Array.isArray(p.equippedSouls)?p.equippedSouls:(Array.isArray(p.top8)?p.top8:[])))||[];
+    var count=eq.length;
+    var pr=(p&&(p.profile||p))||{};
+    var who=(pr.displayName?String(pr.displayName).slice(0,40)+' (@'+handle+')':'@'+handle);
+    var mood=(pr.mood)?String(pr.mood):'✦ Compiling Sovereignty';
+    var title=who+' — Soul Economy Sanctuary';
+    var desc='◇ Squad '+count+'/8 · '+mood+(pr.mySoul?(' · MY SOUL: '+String(pr.mySoul).slice(0,60)):'')+' · '+((pr.bio)?String(pr.bio).slice(0,140):'A living digital soul in the BUYaSOUL registry.');
     var img='https://soul-api.buyasoul.workers.dev/og/profile?user='+encodeURIComponent(handle);
     setOg('title',title); setOg('description',desc); setOg('image',img);
     var u=document.querySelector('meta[property="og:url"]'); if(u) u.setAttribute('content',location.origin+location.pathname+'#@'+encodeURIComponent(handle));
@@ -345,9 +371,35 @@ function applyTheme(){
 function render(){
   renderIdentity();
   renderTop8();
+  renderPortfolio();
+  renderActivity();
   renderTheme();
   renderGuests();
   renderSummoner();
+}
+function prettyUrl(u){
+  return String(u||'').replace(/^https?:\/\//i,'').replace(/\/$/,'').slice(0,60);
+}
+function pltIdentity(){
+  var n=0,p=0,l=0,t=0;
+  (state.top8||[]).forEach(function(nm){
+    var it=findItem(nm); if(!it||!it.plt) return;
+    var m=String(it.plt).split('/');
+    if(m.length<3) return;
+    p+=parseFloat(m[0])||0; l+=parseFloat(m[1])||0; t+=parseFloat(m[2])||0; n++;
+  });
+  if(!n) return null;
+  var f=function(v){ return (Math.round((v/n)*100)/100).toFixed(2); };
+  return {p:f(p),l:f(l),t:f(t)};
+}
+function logAct(text){
+  if(VISITOR) return;
+  try{
+    if(!Array.isArray(state.activity)) state.activity=[];
+    state.activity.unshift({t:Date.now(),text:String(text).slice(0,140)});
+    state.activity=state.activity.slice(0,30);
+    saveState();
+  }catch(e){}
 }
 function renderIdentity(){
   var box=$('upcIdentity'); if(!box) return;
@@ -357,18 +409,68 @@ function renderIdentity(){
   else { av='<div style="font-size:2.6rem">'+(state.handle?'🫂':'👤')+'</div>'; }
   var auth=null;
   try{ if(window.SoulAuth) auth=window.SoulAuth.getUser(); }catch(e){}
+  var dname=state.displayName||'';
+  var meta=[];
+  if(state.location) meta.push('📍 '+esc(state.location));
+  if(state.website&&/^https?:\/\//i.test(state.website)) meta.push('<a href="'+esc(state.website)+'" target="_blank" rel="noopener" style="color:#00D4FF">🔗 '+esc(prettyUrl(state.website))+'</a>');
+  if(state.joined) meta.push('✦ joined '+esc(new Date(state.joined).toLocaleDateString()));
+  var fol=(state.followers&&state.followers.length)||0, fing=(state.following&&state.following.length)||0;
+  var plt=pltIdentity();
   box.innerHTML='<div class="upc-id">'+
     '<div class="upc-ava">'+av+'</div>'+
     '<div class="u-txt">'+
+      (dname?'<div style="font-size:1.25rem;font-weight:800;color:#fff">'+esc(dname)+'</div>':'')+
       '<div class="upc-handle">'+(state.handle?('<em>@</em>'+esc(state.handle)):'<em>@</em>guest')+'</div>'+
+      (state.mySoul?'<div style="margin-top:6px;font-size:0.85rem;color:#FFD166">✦ MY SOUL: <a href="index.html#soul-'+encodeURIComponent(keyN(state.mySoul))+'" style="color:#FFD166;font-weight:700">'+esc(state.mySoul)+'</a></div>':'')+
       (state.mood?'<div class="upc-mood">🫥 '+esc(state.mood)+'</div>':'')+
       (state.bio?'<div class="upc-bio">'+esc(state.bio)+'</div>':'<div class="upc-bio" style="opacity:.6">No bio yet — hit ✎ Edit Profile.</div>')+
+      (meta.length?'<div style="margin-top:6px;font-size:0.75rem;color:#8b8b98">'+meta.join(' · ')+'</div>':'')+
+      (plt?'<div style="margin-top:8px;display:flex;gap:6px;align-items:center;flex-wrap:wrap;font-size:0.7rem;font-weight:700"><span style="padding:2px 10px;border-radius:8px;background:rgba(139,92,246,0.12);color:#8B5CF6">P '+plt.p+'</span><span style="padding:2px 10px;border-radius:8px;background:rgba(0,212,255,0.12);color:#00D4FF">L '+plt.l+'</span><span style="padding:2px 10px;border-radius:8px;background:rgba(255,209,102,0.12);color:#FFD166">T '+plt.t+'</span><span style="color:#8b8b98;font-weight:400">PLT identity · squad average</span></div>':'')+
+      '<div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">'+
+        '<span class="upc-tchip">◇ squad '+((state.top8&&state.top8.length)||0)+'/8</span>'+
+        '<span class="upc-tchip">🗂 portfolio '+((state.portfolio&&state.portfolio.length)||0)+'</span>'+
+        '<span class="upc-tchip">👥 '+fol+' followers · '+fing+' following</span>'+
+      '</div>'+
       (state.audio?'<div class="upc-audio"><audio controls loop autoplay src="'+esc(state.audio)+'"></audio></div>':'')+
       (auth?'<button id="upcSignOut" class="sum-chip" style="margin-top:8px">⏻ Sign Out ('+esc(auth.handle)+')</button>':'')+
     '</div>'+
   '</div>';
   var so=box.querySelector('#upcSignOut');
   if(so) so.addEventListener('click',function(){ try{ window.SoulAuth.logout(); }catch(e){} });
+}
+var PF_KINDS=['Soul','Project','Agent','World','Book','Art','Music','Post'];
+var PF_ICON={Soul:'🧠',Project:'📦',Agent:'🤖',World:'🌍',Book:'📖',Art:'🎨',Music:'🎵',Post:'💬'};
+function renderPortfolio(){
+  var box=$('upcPortfolio'); if(!box) return;
+  var list=(state.portfolio&&Array.isArray(state.portfolio))?state.portfolio:[];
+  var rows=list.map(function(pf,i){
+    var kind=(PF_KINDS.indexOf(pf.kind)>=0?pf.kind:'Soul');
+    var link=(pf.link&&/^https?:\/\//i.test(pf.link))?' <a href="'+esc(pf.link)+'" target="_blank" rel="noopener" style="color:#00D4FF;font-size:0.72rem">↗ open</a>':'';
+    var del=VISITOR?'':'<button class="gdel" data-pf="'+i+'" title="remove">🗑</button>';
+    return '<div class="upc-guest"><div class="gav">'+PF_ICON[kind]+'</div>'+
+      '<div class="gt"><b>'+esc(pf.title||'untitled')+'</b> <span style="font-size:0.65rem;color:#8b8b98;text-transform:uppercase">'+esc(kind)+'</span>'+link+'</div>'+del+'</div>';
+  }).join('');
+  box.innerHTML='<h3>🗂 Portfolio</h3>'+
+    '<div class="upc-sub">Souls, Projects, Agents, Worlds, Books, Art, Music, Posts — curated by this soul. Manage in ✎ Edit Profile.</div>'+
+    '<div class="upc-guests">'+(rows||'<div class="upc-empty">Empty shelf — add a showcase piece in ✎ Edit Profile.</div>')+'</div>';
+  if(!VISITOR) box.querySelectorAll('[data-pf]').forEach(function(b){
+    b.addEventListener('click',function(){
+      var i=+b.getAttribute('data-pf');
+      state.portfolio=state.portfolio.filter(function(_,x){return x!==i;});
+      saveState(); logAct('Removed a portfolio piece'); renderPortfolio(); renderIdentity();
+    });
+  });
+}
+function renderActivity(){
+  var box=$('upcActivity'); if(!box) return;
+  var list=(state.activity&&Array.isArray(state.activity))?state.activity:[];
+  box.innerHTML='<h3>⚡ Activity</h3>'+
+    '<div class="upc-sub">Latest moves in this sanctuary.</div>'+
+    '<div class="upc-guests">'+
+    (list.length?list.slice(0,10).map(function(a){
+      return '<div class="upc-guest"><div class="gav">✦</div><div class="gt">'+esc(a.text)+'<div class="gm">'+timeAgo(a.t)+'</div></div></div>';
+    }).join(''):'<div class="upc-empty">Quiet… for now.</div>')+
+    '</div>';
 }
 function renderTop8(){
   var box=$('upcTop8'); if(!box) return;
@@ -699,25 +801,62 @@ function openEditor(){
   var body=ed.querySelector('.ed');
   var authHandle='';
   try{ var _a=window.SoulAuth&&window.SoulAuth.getUser(); if(_a&&_a.handle) authHandle=String(_a.handle).replace(/^@/,''); }catch(e){}
+  var draftPF=cleanPortfolio(state.portfolio);
   body.innerHTML='<h3>✎ Edit your profile</h3><p>All fields local-first, saved in this browser. Nothing leaves your machine until you hit Export.</p>'+
     '<label>Handle (@username) <input id="editHandle" maxlength="24" value="'+esc(state.handle)+'"'+(authHandle?' disabled':'')+'></label>'+
     (authHandle?'<div style="font-size:0.7rem;color:#00D4FF;margin-top:-2px">🔐 Verified GitHub identity — handle is locked to @'+esc(authHandle)+'.</div>':'')+
+    '<label>Display name <input id="editDName" maxlength="40" placeholder="e.g. Craig Jones" value="'+esc(state.displayName||'')+'"></label>'+
     '<label>Bio <textarea id="editBio" rows="3" maxlength="220">'+esc(state.bio)+'</textarea></label>'+
     '<label>Mood / status quote <input id="editMood" maxlength="60" value="'+esc(state.mood)+'"></label>'+
+    '<label>Location (optional) <input id="editLoc" maxlength="60" placeholder="e.g. Dark City" value="'+esc(state.location||'')+'"></label>'+
+    '<label>Website (optional) <input id="editWeb" maxlength="200" placeholder="https://yoursite.com" value="'+esc(state.website||'')+'"></label>'+
+    '<label>MY SOUL — your public Soul identity (a Library soul name) <input id="editMySoul" maxlength="80" placeholder="e.g. Architect" value="'+esc(state.mySoul||'')+'"></label>'+
     '<label>Audio theme URL (host your own file; plays only inside your canvas) <input id="editAudio" placeholder="https://yoursite.com/theme.mp3" value="'+esc(state.audio)+'"></label>'+
+    '<div style="margin-top:14px"><b style="font-size:0.8rem;color:#B8B8B8">🗂 Portfolio — Souls, Projects, Agents, Worlds, Books, Art, Music, Posts</b>'+
+    '<div id="editPFList" style="margin-top:6px"></div>'+
+    '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px"><select id="editPFKind" style="flex:0 0 110px;margin-top:6px">'+PF_KINDS.map(function(k){ return '<option value="'+k+'">'+k+'</option>'; }).join('')+'</select>'+
+    '<input id="editPFTitle" maxlength="80" placeholder="Title" style="flex:2;min-width:140px"><input id="editPFLink" maxlength="200" placeholder="https://… (optional)" style="flex:2;min-width:140px"></div>'+
+    '<button id="editPFAdd" class="upc-btn cyan" style="margin-top:8px">+ Add piece</button></div>'+
     '<label>Custom CSS (safe preview — auto-scoped to #user-profile-canvas, so <code>body{}</code> won\u2019t leak to the site)\n<textarea id="editCss" rows="8" spellcheck="false">'+esc(state.themeCSS)+'</textarea></label>'+
     '<label style="display:flex;align-items:center;gap:8px;margin-top:14px"><input type="checkbox" id="editPublic" style="width:auto" '+(state.public?'checked':'')+'/> Enable public share (guestbook export / giscus hook)</label>'+
     '<div class="edBtns"><button class="save" id="editSave">Save Profile</button><button class="cancel" id="editCancel">Cancel</button></div>';
+  var pfList=body.querySelector('#editPFList');
+  var drawPF=function(){
+    pfList.innerHTML=draftPF.length?draftPF.map(function(pf,i){
+      return '<div style="display:flex;gap:8px;align-items:center;font-size:0.75rem;color:#ddd;padding:6px 8px;border:1px solid rgba(255,255,255,0.07);border-radius:8px;margin-bottom:4px"><span>'+PF_ICON[pf.kind]+'</span><b style="flex:1">'+esc(pf.title)+'</b><span style="color:#8b8b98">'+esc(pf.kind)+'</span><button data-pfdel="'+i+'" style="background:none;border:none;color:#8b8b98;cursor:pointer;font-size:0.8rem">✕</button></div>';
+    }).join(''):'<div style="font-size:0.72rem;color:#8b8b98">No pieces yet.</div>';
+    pfList.querySelectorAll('[data-pfdel]').forEach(function(b){
+      b.addEventListener('click',function(){ draftPF=draftPF.filter(function(_,x){return x!==+b.getAttribute('data-pfdel');}); drawPF(); });
+    });
+  };
+  drawPF();
+  body.querySelector('#editPFAdd').addEventListener('click',function(){
+    var title=body.querySelector('#editPFTitle').value.trim().slice(0,80);
+    if(!title){ reportToast('Give the piece a title first'); return; }
+    var link=body.querySelector('#editPFLink').value.trim().slice(0,200);
+    if(link&&!/^https?:\/\//i.test(link)) link='https://'+link;
+    if(draftPF.length>=40){ reportToast('Portfolio full (40 max)'); return; }
+    draftPF.push({kind:body.querySelector('#editPFKind').value,title:title,link:link});
+    body.querySelector('#editPFTitle').value=''; body.querySelector('#editPFLink').value='';
+    drawPF();
+  });
   ed.querySelector('#editSave').addEventListener('click',function(){
     var ah='';
     try{ var _u=window.SoulAuth&&window.SoulAuth.getUser(); if(_u&&_u.handle) ah=String(_u.handle).replace(/^@/,''); }catch(e){}
     state.handle=ah||body.querySelector('#editHandle').value.trim().replace(/^@/,'');
+    state.displayName=body.querySelector('#editDName').value.trim().slice(0,40);
     state.bio=body.querySelector('#editBio').value.trim();
     state.mood=body.querySelector('#editMood').value.trim();
+    state.location=body.querySelector('#editLoc').value.trim().slice(0,60);
+    var web=body.querySelector('#editWeb').value.trim().slice(0,200);
+    state.website=(web&&!/^https?:\/\//i.test(web))?('https://'+web):web;
+    state.mySoul=body.querySelector('#editMySoul').value.trim().slice(0,80);
     state.audio=body.querySelector('#editAudio').value.trim();
     state.themeCSS=body.querySelector('#editCss').value;
     state.public=body.querySelector('#editPublic').checked;
-    saveState(); applyTheme(); render(); checkRegistryStatus(); ed.classList.add('hidden');
+    state.portfolio=cleanPortfolio(draftPF);
+    if(!state.joined) state.joined=Date.now();
+    saveState(); logAct('Updated profile'); applyTheme(); render(); checkRegistryStatus(); ed.classList.add('hidden');
   });
   ed.querySelector('#editCancel').addEventListener('click',function(){ ed.classList.add('hidden'); });
   ed.addEventListener('click',function(ev){ if(ev.target===ed) ed.classList.add('hidden'); });
@@ -750,10 +889,10 @@ function openPicker(){
     r.addEventListener('click',function(){
       var nm=r.getAttribute('data-name');
       var key=keyN(nm);
-      if(used[key]){ state.top8=state.top8.filter(function(n){return keyN(n)!==key;}); }
+      if(used[key]){ state.top8=state.top8.filter(function(n){return keyN(n)!==key;}); logAct('Unequipped '+nm); }
       else{
         if(state.top8.length>=8){ alert('Shelf is full — Top 8 max for this shelf.'); return; }
-        state.top8.push(nm);
+        state.top8.push(nm); logAct('Equipped '+nm);
       }
       used[key]=!used[key];
       saveState(); refreshRows(box); renderTheme(); renderTop8();
@@ -765,7 +904,7 @@ function openPicker(){
 
 /* ---- export / import user_profile.json ---- */
 function exportJson(){
-  var payload={schema:'user_profile.json/1.0',profile:{handle:state.handle,bio:state.bio,mood:state.mood,audio:state.audio,themeCSS:state.themeCSS,public:state.public},equippedSouls:state.top8.slice(),guestbook:state.guests.slice()};
+  var payload={schema:'user_profile.json/1.0',profile:{handle:state.handle,displayName:state.displayName||'',bio:state.bio,mood:state.mood,audio:state.audio,themeCSS:state.themeCSS,location:state.location||'',website:state.website||'',joined:state.joined||0,mySoul:state.mySoul||'',public:state.public},equippedSouls:state.top8.slice(),guestbook:state.guests.slice(),portfolio:cleanPortfolio(state.portfolio),followers:cleanStrArr(state.followers),following:cleanStrArr(state.following)};
   var blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
   var a=document.createElement('a');
   a.href=URL.createObjectURL(blob);
@@ -787,6 +926,14 @@ function importJson(file){
       state.audio=p.audio!=null?String(p.audio):state.audio;
       state.themeCSS=p.themeCSS!=null?String(p.themeCSS):state.themeCSS;
       state.public=!!p.public;
+      if(p.displayName!=null) state.displayName=String(p.displayName).slice(0,40);
+      if(p.location!=null) state.location=String(p.location).slice(0,60);
+      if(p.website!=null) state.website=String(p.website).slice(0,200);
+      if(p.joined!=null) state.joined=(+p.joined)||state.joined||0;
+      if(p.mySoul!=null) state.mySoul=String(p.mySoul).slice(0,80);
+      if(j.portfolio) state.portfolio=cleanPortfolio(j.portfolio);
+      if(j.followers) state.followers=cleanStrArr(j.followers);
+      if(j.following) state.following=cleanStrArr(j.following);
       if(!Array.isArray(state.top8)) state.top8=[];
       if(!Array.isArray(state.guests)) state.guests=[];
       state.top8=state.top8.slice(0,8);
