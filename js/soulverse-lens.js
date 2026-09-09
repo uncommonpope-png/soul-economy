@@ -40,6 +40,7 @@ var Lens={
 
 Lens.open=function(){
   if(Lens.active||Lens.opening) return;
+  console.info('[soulverse] open requested');
   Lens.opening=true;
   var btn=$('btn-ignite-universe');
   if(btn){ btn.disabled=true; btn.textContent='◌ LOADING UNIVERSE…'; }
@@ -47,10 +48,12 @@ Lens.open=function(){
   var fail=function(m){ toast(m||'Universe failed to ignite (network or WebGL). Library untouched.'); done(); };
   var boot=function(catalog){
     if(!catalog.length){ fail('Catalog empty — open the Library first.'); return; }
-    import('https://esm.sh/three@0.160.0').then(function(THREE){
-      try{ Lens.build(THREE,catalog); done(); }
-      catch(e){ fail('WebGL unavailable in this browser.'); }
-    }).catch(function(){ fail('Could not fetch Three.js CDN — check connection.'); });
+    console.info('[soulverse] catalog ready:',catalog.length,'nodes');
+    loadThree(0).then(function(THREE){
+      console.info('[soulverse] three.js loaded');
+      try{ Lens.build(THREE,catalog); console.info('[soulverse] universe live'); done(); }
+      catch(e){ console.warn('[soulverse] build failed:',e); fail('WebGL unavailable in this browser.'); }
+    }).catch(function(e){ console.warn('[soulverse] CDN failed:',e); fail('Could not fetch Three.js CDN — check connection.'); });
   };
   var cat=catalogSync();
   if(cat.length){ boot(cat); return; }
@@ -510,7 +513,17 @@ Lens.close=function(){
   Lens.bound={};
 };
 
+function loadThree(i){
+  var CDNS=['https://esm.sh/three@0.160.0','https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js'];
+  return import(CDNS[i]).catch(function(e){
+    if(i+1<CDNS.length) return loadThree(i+1);
+    throw e;
+  });
+}
 window.SoulverseLens=Lens;
-// Best tab branch calls initBestOrb() — panel is static, nothing to pre-init.
-window.initBestOrb=function(){};
+// Best tab IS the universe: entering the tab ignites it (button re-enters after close).
+window.initBestOrb=function(){
+  try{ if(window.SoulverseLens&&!SoulverseLens.active&&!SoulverseLens.opening){ console.info('[soulverse] tab entry — igniting'); SoulverseLens.open(); } }catch(e){}
+};
+console.info('[soulverse] lens v3 loaded (matrix + breath + billboards + kinematics)');
 })();
