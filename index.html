@@ -390,6 +390,7 @@ input{font-family:inherit;outline:none;border:none;background:none}
   <button class="category-tab" data-cat="workbench" style="background:linear-gradient(135deg,rgba(139,92,246,0.12),rgba(0,212,255,0.08));border-color:rgba(139,92,246,0.25)">⚡ Workbench</button>
   <button class="category-tab" data-cat="chat" style="background:rgba(0,212,255,0.08);border-color:rgba(0,212,255,0.15);color:#00D4FF">💬 Chat</button>
   <button class="category-tab" data-cat="discussions" style="background:rgba(255,209,102,0.08);border-color:rgba(255,209,102,0.15);color:var(--gold)">💭 Discussions</button>
+  <button class="category-tab" data-cat="best" style="background:linear-gradient(135deg,rgba(255,209,102,0.16),rgba(139,92,246,0.12));border-color:rgba(255,209,102,0.4);color:#FFD166">🥇 Best Models</button>
 </div>
 
 <div id="workbenchPanel" style="display:none">
@@ -426,6 +427,19 @@ input{font-family:inherit;outline:none;border:none;background:none}
        https://giscus.app, then paste your repoId/categoryId below so soul cards get live threads. -->
   <script>window.GISCUS={repo:'uncommonpope-png/soul-economy',category:'General',repoId:'',categoryId:''};</script>
 </div>
+
+<section id="bestPanel" style="display:none">
+  <div style="margin-bottom:14px">
+    <h3 style="font-size:1.15rem;margin:0 0 4px">🥇 The Best Models</h3>
+    <p style="color:var(--text-muted);font-size:0.82rem;margin:0">Seven analyzer souls at top PLT in the soulgun family. <b style="color:#FFD166">Hover</b> the orb to breathe · move your cursor left/right to pull the ring in/out · <b style="color:#FFD166">click a card</b> for its role.</p>
+  </div>
+  <div id="bestOrbStage" style="position:relative;height:520px;border-radius:20px;border:1px solid rgba(255,209,102,0.22);background:radial-gradient(circle at 50% 42%, rgba(139,92,246,0.16), rgba(8,8,12,0.92) 62%);overflow:hidden">
+    <canvas id="bestOrbCanvas" style="width:100%;height:100%;display:block"></canvas>
+    <div id="bestOrbFallback" style="position:absolute;inset:0;display:none;align-items:center;justify-content:center;color:#B8B8B8;font-size:0.85rem;padding:20px;text-align:center;font-family:ui-monospace,Consolas,monospace"></div>
+    <div style="position:absolute;left:14px;bottom:12px;font-size:0.68rem;color:rgba(255,255,255,0.45);font-family:ui-monospace,Consolas,monospace;letter-spacing:0.04em">◈ HOVER = ORBIT · X = RING DEPTH · CLICK = ROLE</div>
+  </div>
+  <div id="bestRoleList" style="margin-top:14px;display:flex;flex-direction:column;gap:8px"></div>
+</section>
 
 <div class="plt-filters" id="pltFilters">
   <div class="plt-filter"><label class="p-val">P</label><input type="range" min="0" max="10" value="0" class="p-thumb" id="pltP"><span class="value p-val" id="pltPVal">0</span></div>
@@ -912,12 +926,13 @@ async function checkWorkbench(){
   return 'none';
 }
 function filterAndRender(){
-  // Workbench / Chat / Discussions tabs — show panel, hide grid
-  const wbPanel=document.getElementById('workbenchPanel'), chatPanel=document.getElementById('chatPanel'), discPanel=document.getElementById('discussionsPanel'), gridSec=document.getElementById('catalog');
-  if(active==='workbench'){ if(wbPanel) wbPanel.style.display='block'; if(chatPanel) chatPanel.style.display='none'; if(discPanel) discPanel.style.display='none'; if(gridSec) gridSec.style.display='none'; document.querySelector('.plt-filters').style.display='none'; checkWorkbench(); return; }
-  if(active==='chat'){ if(chatPanel) chatPanel.style.display='block'; if(wbPanel) wbPanel.style.display='none'; if(discPanel) discPanel.style.display='none'; if(gridSec) gridSec.style.display='none'; document.querySelector('.plt-filters').style.display='none'; initChat(); return; }
-  if(active==='discussions'){ if(discPanel) discPanel.style.display='block'; if(wbPanel) wbPanel.style.display='none'; if(chatPanel) chatPanel.style.display='none'; if(gridSec) gridSec.style.display='none'; document.querySelector('.plt-filters').style.display='none'; initDiscussions(); return; }
-  else { if(wbPanel) wbPanel.style.display='none'; if(chatPanel) chatPanel.style.display='none'; if(discPanel) discPanel.style.display='none'; if(gridSec) gridSec.style.display='block'; document.querySelector('.plt-filters').style.display='flex'; }
+  // Workbench / Chat / Discussions / Best tabs — show panel, hide grid
+  const wbPanel=document.getElementById('workbenchPanel'), chatPanel=document.getElementById('chatPanel'), discPanel=document.getElementById('discussionsPanel'), bestPanel=document.getElementById('bestPanel'), gridSec=document.getElementById('catalog');
+  if(active==='workbench'){ if(wbPanel) wbPanel.style.display='block'; if(chatPanel) chatPanel.style.display='none'; if(discPanel) discPanel.style.display='none'; if(bestPanel) bestPanel.style.display='none'; if(gridSec) gridSec.style.display='none'; document.querySelector('.plt-filters').style.display='none'; checkWorkbench(); return; }
+  if(active==='chat'){ if(chatPanel) chatPanel.style.display='block'; if(wbPanel) wbPanel.style.display='none'; if(discPanel) discPanel.style.display='none'; if(bestPanel) bestPanel.style.display='none'; if(gridSec) gridSec.style.display='none'; document.querySelector('.plt-filters').style.display='none'; initChat(); return; }
+  if(active==='discussions'){ if(discPanel) discPanel.style.display='block'; if(wbPanel) wbPanel.style.display='none'; if(chatPanel) chatPanel.style.display='none'; if(bestPanel) bestPanel.style.display='none'; if(gridSec) gridSec.style.display='none'; document.querySelector('.plt-filters').style.display='none'; initDiscussions(); return; }
+  if(active==='best'){ if(bestPanel) bestPanel.style.display='block'; if(wbPanel) wbPanel.style.display='none'; if(chatPanel) chatPanel.style.display='none'; if(discPanel) discPanel.style.display='none'; if(gridSec) gridSec.style.display='none'; document.querySelector('.plt-filters').style.display='none'; initBestOrb(); return; }
+  else { if(wbPanel) wbPanel.style.display='none'; if(chatPanel) chatPanel.style.display='none'; if(discPanel) discPanel.style.display='none'; if(bestPanel) bestPanel.style.display='none'; if(gridSec) gridSec.style.display='block'; document.querySelector('.plt-filters').style.display='flex'; }
   let d;
   if(active==='trending'){ d=[...items].sort((a,b)=> ((b.downloads||0)+(b.likes||0)*5+(b.featured?50:0)) - ((a.downloads||0)+(a.likes||0)*5+(a.featured?50:0))); d=d.slice(0,24); }
   else d = active === 'all' ? [...items] : items.filter(i => i.type === active);
@@ -2916,6 +2931,225 @@ function wire(){
 }
 if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',wire); }
 else wire();
+})();
+</script>
+<script>
+/* SIP-16 — 🥇 Best Models: 3JS orb pulse cards. Self-contained NEW TAB.
+   Does NOT touch the catalog, knowledge graph, or any existing tab. */
+(function(){
+'use strict';
+const BEST=[
+  {rank:1,name:'postcss-postcss',role:'CSS Transformation Custodian',plt:'1.30',file:'soulguns/postcss-postcss-analyzer.js'},
+  {rank:2,name:'expressjs-express',role:'HTTP Router Guardian',plt:'1.30',file:'soulguns/expressjs-express-analyzer.js'},
+  {rank:3,name:'commonmark-commonmark',role:'Markdown Grammar Warden',plt:'1.30',file:'soulguns/commonmark-commonmark-js-analyzer.js'},
+  {rank:4,name:'lodash-lodash',role:'Utility Belt Architect',plt:'1.30',file:'soulguns/lodash-lodash-analyzer.js'},
+  {rank:5,name:'junegunn-fzf',role:'Fuzzy Match Lattice',plt:'1.30',file:'soulguns/junegunn-fzf-analyzer.js'},
+  {rank:6,name:'soul-gun-maker',role:'Soul Forge Engineer',plt:'1.30',file:'soulguns/soul-gun-maker-analyzer.js'},
+  {rank:7,name:'threejs-orb-pulse-cards',role:'Orb Pulse Card Artisan',plt:'1.10',file:'soulguns/threejs-orb-pulse-cards-analyzer.js'}
+];
+var THREE=null;
+var S={inited:false,active:false,cards:[],clock:0,renderer:null,scene:null,camera:null,composer:null,
+       pointer:{x:0,y:0},hover:-1,sel:-1,radius:0,stage:null,canvas:null,raf:0};
+function el(id){ return document.getElementById(id); }
+function clamp(v,a,b){ return Math.max(a,Math.min(b,v)); }
+function cardTexture(m){
+  var c=document.createElement('canvas'); c.width=512; c.height=256;
+  var ctx=c.getContext('2d');
+  ctx.clearRect(0,0,512,256);
+  var r=26;
+  var g=ctx.createLinearGradient(0,0,512,0);
+  g.addColorStop(0,'#FFD166'); g.addColorStop(0.5,'#B866FF'); g.addColorStop(1,'#00D4FF');
+  ctx.save();
+  roundRect(ctx,6,6,500,244,r);
+  ctx.strokeStyle=g; ctx.lineWidth=10; ctx.stroke();
+  roundRect(ctx,14,14,484,228,r-8);
+  ctx.fillStyle='rgba(12,12,20,0.96)'; ctx.fill();
+  ctx.restore();
+  ctx.textAlign='center';
+  ctx.fillStyle='#FFD166'; ctx.font='bold 44px Inter, ui-monospace, monospace';
+  ctx.fillText(m.name.length>22?m.name.slice(0,21)+'…':m.name,256,110);
+  ctx.fillStyle='#B8B8B8'; ctx.font='26px ui-monospace, monospace';
+  ctx.fillText(m.role,256,158);
+  ctx.fillStyle='#00D4FF'; ctx.font='bold 30px ui-monospace, monospace';
+  ctx.fillText('PLT '+m.plt,256,206);
+  var t=new THREE.CanvasTexture(c); t.minFilter=THREE.LinearFilter;
+  return t;
+}
+function roundRect(ctx,x,y,w,h,r){
+  ctx.beginPath();
+  ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath();
+}
+function renderBestRows(){
+  var box=el('bestRoleList'); if(!box) return;
+  box.innerHTML=BEST.map(function(m){
+    return '<div data-best="'+m.name+'" style="display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:14px;background:rgba(139,92,246,0.06);border:1px solid rgba(255,209,102,0.16);cursor:pointer;font-size:0.8rem;transition:all .25s">'+
+      '<span style="font-family:ui-monospace,monospace;color:#FFD166;font-size:0.7rem;min-width:22px">#'+m.rank+'</span>'+
+      '<span style="flex:0 0 190px;color:#fff;font-family:ui-monospace,monospace;font-size:0.76rem">'+m.name+'</span>'+
+      '<span style="flex:1;color:#B8B8B8">'+m.role+'</span>'+
+      '<span style="padding:3px 10px;border-radius:100px;background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.3);color:#00D4FF;font-family:ui-monospace,monospace;font-size:0.68rem">PLT '+m.plt+'</span>'+
+      '<span style="color:var(--text-muted);font-size:0.66rem;font-family:ui-monospace,monospace;max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+m.file+'</span>'+
+    '</div>';
+  }).join('');
+  box.querySelectorAll('[data-best]').forEach(function(row){
+    row.addEventListener('click',function(){ selectBest(row.dataset.best); });
+  });
+}
+function selectBest(name){
+  var i=BEST.findIndex(function(m){ return m.name===name; });
+  if(i<0) return;
+  S.sel=i;
+  var rows=el('bestRoleList'); if(rows) rows.querySelectorAll('[data-best]').forEach(function(r){
+    var on=r.dataset.best===name;
+    r.style.borderColor=on?'rgba(255,209,102,0.65)':'rgba(255,209,102,0.16)';
+    r.style.background=on?'rgba(255,209,102,0.1)':'rgba(139,92,246,0.06)';
+  });
+}
+function initBestOrb(){
+  var stage=el('bestOrbStage'); if(!stage) return;
+  S.stage=stage; S.canvas=el('bestOrbCanvas');
+  if(!S.active){ S.active=true; renderBestRows(); }
+  if(S.inited){ resizeBest(); return; }
+  if(S.starting) return;
+  S.starting=true;
+  if(!(window.WebGLRenderingContext)){
+    S.starting=false;
+    var fb=el('bestOrbFallback');
+    if(fb){ fb.style.display='flex'; fb.textContent='WebGL unavailable - the orb needs a WebGL browser. Use the role list below.'; }
+    return;
+  }
+  buildBest();
+}
+function pick(px,py){
+  if(!S.canvas||!S.camera) return -1;
+  var r=S.canvas.getBoundingClientRect(); if(!r.width||!r.height) return -1;
+  var nx=((px-r.left)/r.width)*2-1;
+  var ny=-(((py-r.top)/r.height)*2-1);
+  var ray=new THREE.Raycaster();
+  ray.setFromCamera(new THREE.Vector2(nx,ny),S.camera);
+  var hits=ray.intersectObjects(S.cards,false);
+  return hits.length?hits[0].object.userData.idx:-1;
+}
+function updateHover(){
+  if(!S.canvas||!S.cards.length) return;
+  var prev=S.hover;
+  S.hover=pick(S.pmX||0,S.pmY||0);
+  if(prev!==S.hover&&S.canvas) S.canvas.style.cursor=(S.hover>=0)?'pointer':'default';
+}
+function resizeBest(){
+  if(!S.stage||!S.renderer||!S.canvas) return;
+  var w=S.stage.clientWidth||600, h=520;
+  var dpr=Math.min(window.devicePixelRatio||1,2);
+  S.canvas.width=Math.max(1,Math.floor(w*dpr));
+  S.canvas.height=Math.max(1,Math.floor(h*dpr));
+  S.renderer.setPixelRatio(dpr);
+  S.renderer.setSize(w,h,false);
+  S.camera.aspect=w/h; S.camera.updateProjectionMatrix();
+  if(S.composer&&S.bloom){ S.composer.setSize(w,h); S.bloom.setSize(w,h); }
+}
+async function buildBest(){
+  try{
+    var T=await import('three'); THREE=T;
+    var PP=await Promise.all([
+      import('three/addons/postprocessing/EffectComposer.js'),
+      import('three/addons/postprocessing/RenderPass.js'),
+      import('three/addons/postprocessing/UnrealBloomPass.js')
+    ]);
+    var EC=PP[0].EffectComposer, RP=PP[1].RenderPass, BP=PP[2].UnrealBloomPass;
+    S.renderer=new THREE.WebGLRenderer({canvas:S.canvas,antialias:true,alpha:true});
+    S.renderer.setClearColor(0x08080c,0);
+    S.scene=new THREE.Scene();
+    S.camera=new THREE.PerspectiveCamera(55,1,0.1,120);
+    S.camera.position.set(0,0.55,13);
+    S.orb=new THREE.Mesh(
+      new THREE.SphereGeometry(1.5,64,64),
+      new THREE.MeshStandardMaterial({color:0x0a0a14,emissive:0x8B5CF6,emissiveIntensity:0.55,roughness:0.25,metalness:0.8})
+    );
+    S.scene.add(S.orb);
+    var shell=new THREE.Mesh(
+      new THREE.SphereGeometry(2.05,32,32),
+      new THREE.MeshBasicMaterial({color:0x00D4FF,transparent:true,opacity:0.05,side:THREE.BackSide})
+    );
+    S.scene.add(shell);
+    var pts=new Float32Array(600*3);
+    for(var i=0;i<600;i++){ pts[i*3]=(Math.random()-0.5)*26; pts[i*3+1]=(Math.random()-0.5)*16; pts[i*3+2]=(Math.random()-0.5)*26-2; }
+    var pg=new THREE.BufferGeometry();
+    pg.setAttribute('position',new THREE.Float32BufferAttribute(pts,3));
+    S.scene.add(new THREE.Points(pg,new THREE.PointsMaterial({color:0xFFD166,size:0.045,transparent:true,opacity:0.7})));
+    S.scene.add(new THREE.AmbientLight(0x33415a,0.7));
+    var l1=new THREE.PointLight(0x00D4FF,1.4,40); l1.position.set(5,3,6); S.scene.add(l1);
+    var l2=new THREE.PointLight(0xFFD166,1.1,40); l2.position.set(-5,-2,5); S.scene.add(l2);
+    var l3=new THREE.PointLight(0xB866FF,0.9,40); l3.position.set(0,-4,-4); S.scene.add(l3);
+    S.cards=[]; S.baseA=[];
+    BEST.forEach(function(m,idx){
+      var mesh=new THREE.Mesh(
+        new THREE.PlaneGeometry(3.2,1.6),
+        new THREE.MeshBasicMaterial({map:cardTexture(m),transparent:true,depthWrite:false,side:THREE.DoubleSide})
+      );
+      mesh.userData.idx=idx;
+      S.scene.add(mesh);
+      S.cards.push(mesh);
+      S.baseA.push(idx/BEST.length*Math.PI*2);
+    });
+    var w=S.stage.clientWidth||600, h=520;
+    S.composer=new EC(S.renderer);
+    S.composer.addPass(new RP(S.scene,S.camera));
+    S.bloom=new BP(new THREE.Vector2(w,h),0.6,0.75,0.32);
+    S.composer.addPass(S.bloom);
+    resizeBest();
+    S.canvas.addEventListener('pointermove',function(e){
+      var r=S.canvas.getBoundingClientRect();
+      S.pointer.x=clamp((e.clientX-r.left)/(r.width||1),0,1);
+      S.pointer.y=clamp((e.clientY-r.top)/(r.height||1),0,1);
+      S.pmX=e.clientX; S.pmY=e.clientY;
+    });
+    S.canvas.addEventListener('pointerdown',function(e){
+      var i=pick(e.clientX,e.clientY);
+      if(i>=0) selectBest(BEST[i].name);
+    });
+    S.canvas.addEventListener('pointerleave',function(){
+      S.hover=-1; S.pmX=0; S.pmY=0;
+      if(S.canvas) S.canvas.style.cursor='default';
+    });
+    window.addEventListener('resize',resizeBest);
+    S.inited=true;
+    S.starting=false;
+    S.raf=requestAnimationFrame(tick);
+  }catch(e){
+    S.starting=false; S.inited=false;
+    var fb=el('bestOrbFallback');
+    if(fb){ fb.style.display='flex'; fb.textContent='Orb failed to init ('+(e&&e.message?e.message:e)+') - use the role list below.'; }
+  }
+}
+function tick(){
+  if(!S.scene||!S.camera) return;
+  var t=performance.now()/1000;
+  if(S.orb){
+    S.orb.scale.setScalar(1+Math.sin(t*1.4)*0.05);
+    S.orb.material.emissiveIntensity=0.55+Math.sin(t*1.9)*0.22;
+  }
+  var nx=(S.pointer&&typeof S.pointer.x==='number')?clamp(S.pointer.x,0,1):0.5;
+  var R=3.6+(nx-0.5)*4.4;
+  for(var i=0;i<S.cards.length;i++){
+    var m=S.cards[i];
+    var a=S.baseA[i]+t*0.42*(1+i*0.04);
+    m.position.x=Math.cos(a)*R;
+    m.position.z=Math.sin(a)*R;
+    m.position.y=Math.sin(a*2)*0.35+Math.sin(t*0.6+i*1.3)*0.18;
+    m.lookAt(S.camera.position);
+    var pulse=1+Math.sin(t*2.2+i*0.9)*0.05;
+    if(S.hover===i) pulse=1.16;
+    if(S.sel===i) pulse=1.22;
+    m.scale.setScalar(pulse);
+  }
+  S.camera.position.x=Math.sin(t*0.22)*0.6;
+  S.camera.position.y=0.55+Math.sin(t*0.15)*0.15;
+  S.camera.lookAt(0,0,0);
+  updateHover();
+  if(S.composer){ S.composer.render(); } else if(S.renderer){ S.renderer.render(S.scene,S.camera); }
+  S.raf=requestAnimationFrame(tick);
+}
+window.initBestOrb=initBestOrb;
 })();
 </script>
 </body>
