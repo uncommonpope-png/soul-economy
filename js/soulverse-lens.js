@@ -35,7 +35,7 @@ var Lens={
   mNX:0, mNY:0, mVel:0,
   vis:{}, hover:null, sel:null,
   dist:80, vx:0, vy:0, dragOn:false, dragX:0, dragY:0, moved:0,
-  prevScroll:'', bound:{}
+  prevScroll:'', bound:{}, focusNode:null, prevAccept:[]
 };
 
 Lens.open=function(){
@@ -79,7 +79,7 @@ Lens.build=function(THREE,catalog){
   try{ renderer=new THREE.WebGLRenderer({antialias:true,alpha:true}); }
   catch(e){ overlay.style.display='none'; document.body.style.overflow=Lens.prevScroll; throw e; }
   renderer.setSize(window.innerWidth,window.innerHeight);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.75));
   container.appendChild(renderer.domElement);
   Lens.scene=scene; Lens.camera=camera; Lens.renderer=renderer;
   Lens.disposables.push(renderer);
@@ -144,7 +144,8 @@ Lens.build=function(THREE,catalog){
     if(Lens.dragOn||!Lens.active) return;
     Lens.setHover(Lens.castAt(ev.clientX,ev.clientY),ev.clientX,ev.clientY);
   };
-  B.down=function(ev){ Lens.dragOn=true; Lens.moved=0; Lens.dragX=ev.clientX; Lens.dragY=ev.clientY; };
+  B.down=function(ev){ Lens.dragOn=true; Lens.moved=0; Lens.dragX=ev.clientX; Lens.dragY=ev.clientY; Lens.focusNode=null; var tip=$('soulverse-tip'); if(tip) tip.style.display='none'; };
+  B.dbl=function(ev){ var node=Lens.castAt(ev.clientX,ev.clientY); if(node){ Lens.sel=node; Lens.showHud(node.userData); Lens.focusOn(node); } };
   B.up=function(ev){
     if(Lens.dragOn&&Lens.moved<6) Lens.pick(ev.clientX,ev.clientY);
     Lens.dragOn=false;
@@ -160,6 +161,7 @@ Lens.build=function(THREE,catalog){
   };
   B.wheel=function(ev){
     ev.preventDefault();
+    Lens.focusNode=null;
     Lens.dist=clamp(Lens.dist+(ev.deltaY>0?6:-6),30,160);
     if(Lens.camera) Lens.camera.position.z=Lens.dist;
   };
@@ -175,6 +177,9 @@ Lens.build=function(THREE,catalog){
   window.addEventListener('pointerup',B.up);
   window.addEventListener('pointermove',B.drag);
   el.addEventListener('wheel',B.wheel,{passive:false});
+  el.addEventListener('dblclick',B.dbl);
+  var sq=$('soulverse-search');
+  if(sq){ B.searchkey=function(ev){ if(ev.key==='Enter'){ ev.preventDefault(); Lens.search(sq.value); } }; sq.addEventListener('keydown',B.searchkey); }
   window.addEventListener('keydown',B.key);
   window.addEventListener('resize',B.resize);
 
@@ -186,6 +191,7 @@ Lens.build=function(THREE,catalog){
   (function tick(){
     if(!Lens.active) return;
     Lens.raf=requestAnimationFrame(tick);
+    if(document.hidden) return;
     var now=performance.now(), dt=Math.min(0.05,(now-Lens.lastT)/1000);
     Lens.lastT=now;
     var t=now/1000;
@@ -202,6 +208,24 @@ Lens.build=function(THREE,catalog){
         Lens.vx*=0.95; Lens.vy*=0.95;
       }
       Lens.group.updateMatrixWorld(true);
+    }
+    // focus flight: glide to the node and track it, release on drag/wheel
+    if(Lens.focusNode&&Lens.camera){
+      var fp=Lens._tmpF||(Lens._tmpF=new Lens.THREE.Vector3());
+      Lens.focusNode.getWorldPosition(fp);
+      if(!Lens.focusNode.visible){ Lens.focusNode=null; }
+      else{
+        var fdir=Lens._tmpD||(Lens._tmpD=new Lens.THREE.Vector3());
+        fdir.copy(Lens.camera.position).sub(fp);
+        var flen=fdir.length()||1; fdir.multiplyScalar(1/flen);
+        var want=Lens._tmpW||(Lens._tmpW=new Lens.THREE.Vector3());
+        want.copy(fp).add(fdir.multiplyScalar(20));
+        Lens.camera.position.lerp(want,0.06);
+        Lens.camera.lookAt(fp);
+        Lens._wasFocus=true;
+      }
+    }else if(Lens.camera&&Lens._wasFocus){
+      Lens.camera.lookAt(0,0,0); Lens._wasFocus=false;
     }
     // SIP-17 ADDENDUM: predatory kinematics before render (wind/water/slime/bloom)
     Lens.updateKinematics(t,dt);
@@ -241,10 +265,43 @@ Lens.showHud=function(u){
     '<div style="font-size:1rem;font-weight:800;color:#fff;margin:2px 0">'+esc(u.name)+'</div>'+
     '<div style="font-size:0.65rem;letter-spacing:.08em;color:'+col+'">'+esc(u.type).toUpperCase()+(u.plt?' · PLT '+esc(u.plt):'')+'</div>'+
     (u.desc?'<div style="font-size:0.75rem;color:#B8B8B8;margin-top:6px;line-height:1.5">'+esc(u.desc.slice(0,160))+'</div>':'')+
-    '<button id="soulverse-open" data-name="'+esc(u.name)+'" style="margin-top:10px;padding:8px 16px;border-radius:20px;background:linear-gradient(135deg,#FFD166,#8B5CF6);border:none;color:#000;font-weight:800;font-size:0.75rem;cursor:pointer">Open Real Card →</button>';
+    '<button id="soulverse-open" data-name="'+esc(u.name)+'" style="margin-top:10px;padding:8px 16px;border-radius:20px;background:linear-gradient(135deg,#FFD166,#8B5CF6);border:none;color:#000;font-weight:800;font-size:0.75rem;cursor:pointer">Open Real Card →</button>'+
+    '<div style="display:flex;gap:6px;margin-top:8px">'+
+    '<button id="soulverse-prev" style="flex:1;padding:6px 0;border-radius:12px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);color:#fff;font-size:0.7rem;cursor:pointer">◀</button>'+
+    '<button id="soulverse-focus" style="flex:2;padding:6px 0;border-radius:12px;background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.4);color:#00D4FF;font-size:0.7rem;font-weight:700;cursor:pointer">◎ Focus</button>'+
+    '<button id="soulverse-next" style="flex:1;padding:6px 0;border-radius:12px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);color:#fff;font-size:0.7rem;cursor:pointer">▶</button></div>';
   hud.style.display='block';
   var b=$('soulverse-open');
   if(b) b.onclick=function(){ Lens.openCard(b.getAttribute('data-name')); };
+  var pv2=$('soulverse-prev'), nx2=$('soulverse-next'), fc2=$('soulverse-focus');
+  if(pv2) pv2.onclick=function(){ Lens.step(-1); };
+  if(nx2) nx2.onclick=function(){ Lens.step(1); };
+  if(fc2) fc2.onclick=function(){ if(Lens.sel) Lens.focusOn(Lens.sel); };
+};
+Lens.step=function(dir){
+  if(!Lens.nodes.length) return;
+  var i=Lens.sel?Lens.sel.userData.idx:0;
+  for(var k=0;k<Lens.nodes.length;k++){
+    i=(i+dir+Lens.nodes.length)%Lens.nodes.length;
+    if(Lens.nodes[i].visible) break;
+  }
+  var node=Lens.nodes[i];
+  Lens.sel=node;
+  Lens.showHud(node.userData);
+  Lens.focusOn(node);
+};
+Lens.focusOn=function(node){ Lens.focusNode=node; };
+Lens.search=function(q){
+  q=String(q||'').trim().toLowerCase();
+  if(!q) return;
+  var hit=null;
+  for(var i=0;i<Lens.nodes.length;i++){
+    if(Lens.nodes[i].userData.name.toLowerCase().indexOf(q)>=0){ hit=Lens.nodes[i]; break; }
+  }
+  if(!hit){ toast('No soul matches that name'); return; }
+  Lens.sel=hit;
+  Lens.showHud(hit.userData);
+  Lens.focusOn(hit);
 };
 
 // SIP-17: breathing plasma material (pulse rate tied to PLT), fresnel aura
@@ -320,6 +377,9 @@ Lens.syncCards=function(){
     Lens.cardPool.push(d);
   }
   var tmp=Lens._tmpV||(Lens._tmpV=new Lens.THREE.Vector3());
+  var proj=new Lens.THREE.Vector3();
+  var w=window.innerWidth, h=window.innerHeight;
+  // project every visible in-range node once
   var cands=[];
   for(var i=0;i<Lens.nodes.length;i++){
     var n=Lens.nodes[i];
@@ -327,15 +387,36 @@ Lens.syncCards=function(){
     n.getWorldPosition(tmp);
     var dist=Lens.camera.position.distanceTo(tmp);
     if(dist>95) continue;
-    cands.push({n:n,d:dist,wx:tmp.x,wy:tmp.y,wz:tmp.z});
+    proj.set(tmp.x,tmp.y,tmp.z).project(Lens.camera);
+    if(proj.z>1) continue;
+    cands.push({n:n,d:dist,x:(proj.x*0.5+0.5)*w,y:(-proj.y*0.5+0.5)*h});
   }
   cands.sort(function(a,b){ return a.d-b.d; });
-  var w=window.innerWidth, h=window.innerHeight;
-  var pv=new Lens.THREE.Vector3();
+  var byIdx={};
+  cands.forEach(function(c){ byIdx[c.n.userData.idx]=c; });
+  // sticky pass: keep last frame's cards when still valid + uncluttered
+  var accepted=[], taken={};
+  var overlaps=function(x,y){
+    for(var q=0;q<accepted.length;q++){
+      if(Math.abs(accepted[q].x-x)<170&&Math.abs(accepted[q].y-y)<120) return true;
+    }
+    return false;
+  };
+  (Lens.prevAccept||[]).forEach(function(idx){
+    if(accepted.length>=Lens.MAXCARDS) return;
+    var c=byIdx[idx];
+    if(c&&!taken[idx]&&!overlaps(c.x,c.y)){ accepted.push(c); taken[idx]=1; }
+  });
+  // fill pass: nearest remaining that don't pile up
+  for(var f=0;f<cands.length&&accepted.length<Lens.MAXCARDS;f++){
+    var cc=cands[f], id=cc.n.userData.idx;
+    if(!taken[id]&&!overlaps(cc.x,cc.y)){ accepted.push(cc); taken[id]=1; }
+  }
+  Lens.prevAccept=accepted.map(function(c){ return c.n.userData.idx; });
   for(var k=0;k<Lens.cardPool.length;k++){
     var el=Lens.cardPool[k];
-    if(k>=cands.length){ el.style.display='none'; el._key=-1; continue; }
-    var rec=cands[k], node=rec.n, idx=node.userData.idx;
+    if(k>=accepted.length){ el.style.display='none'; el._key=-1; continue; }
+    var rec=accepted[k], node=rec.n, idx=node.userData.idx;
     if(el._key!==idx){
       var src=realCardEl(node.userData.name);
       if(!src){ el.style.display='none'; el._key=-1; continue; }
@@ -343,13 +424,10 @@ Lens.syncCards=function(){
       el.appendChild(cleanClone(src));
       el._key=idx;
     }
-    pv.set(rec.wx,rec.wy,rec.wz).project(Lens.camera);
-    if(pv.z>1){ el.style.display='none'; continue; }
-    var x=(pv.x*0.5+0.5)*w, y=(-pv.y*0.5+0.5)*h;
     var sc=clamp(1.1-rec.d/120,0.45,0.85);
     el.style.display='block';
     el.style.opacity=clamp(1.3-rec.d/70,0,1).toFixed(2);
-    el.style.transform='translate(-50%,-50%) translate('+Math.round(x)+'px,'+Math.round(y)+'px) scale('+sc.toFixed(2)+')';
+    el.style.transform='translate(-50%,-50%) translate('+Math.round(rec.x)+'px,'+Math.round(rec.y)+'px) scale('+sc.toFixed(2)+')';
   }
 };
 // unified raycast over visible nodes (clones pass clicks through to canvas)
@@ -419,6 +497,12 @@ Lens.buildLegend=function(counts){
       if(Lens.hover&&!Lens.hover.visible) Lens.setHover(null,0,0);
     });
   });
+  var cc2=$('soulverse-count');
+  if(cc2){ cc2.style.cursor='pointer'; cc2.title='Reset all types'; cc2.onclick=function(){
+    Lens.nodes.forEach(function(n){ n.visible=true; });
+    Object.keys(Lens.vis).forEach(function(t){ Lens.vis[t]=true; });
+    lg.querySelectorAll('[data-lt]').forEach(function(b){ b.style.opacity='1'; });
+  }; }
 };
 
 // Card Anchor Drop: close → All tab → scroll to the REAL card → gold flash
@@ -458,6 +542,8 @@ Lens.close=function(){
     window.removeEventListener('resize',Lens.bound.resize);
     var cb=$('soulverse-close');
     if(cb&&Lens.bound.closeclick) cb.removeEventListener('click',Lens.bound.closeclick);
+    var sq2=$('soulverse-search');
+    if(sq2&&Lens.bound.searchkey) sq2.removeEventListener('keydown',Lens.bound.searchkey);
   }catch(e){}
   try{
     if(Lens.renderer){
@@ -481,6 +567,7 @@ Lens.close=function(){
   Lens.bgScene=null; Lens.bgCamera=null; Lens.bgMat=null;
   Lens.nodes=[]; Lens.shaders=[]; Lens.sprites=[]; Lens.beams=[];
   Lens.hover=null; Lens.sel=null; Lens.vx=0; Lens.vy=0;
+  Lens.focusNode=null; Lens.prevAccept=[];
   Lens.bound={};
 };
 
@@ -496,5 +583,5 @@ window.SoulverseLens=Lens;
 window.initBestOrb=function(){
   try{ if(window.SoulverseLens&&!SoulverseLens.active&&!SoulverseLens.opening){ console.info('[soulverse] tab entry — igniting'); SoulverseLens.open(); } }catch(e){}
 };
-console.info('[soulverse] lens v4 loaded (breath + beams + real-card staples + kinematics)');
+console.info('[soulverse] lens v5 loaded (sticky decluttered cards + focus flight + search + HUD nav)');
 })();
