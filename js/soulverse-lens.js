@@ -30,7 +30,9 @@ function toast(msg){
 var Lens={
   active:false, opening:false, THREE:null,
   renderer:null, scene:null, camera:null, group:null,
-  raf:0, nodes:[], disposables:[],
+  raf:0, nodes:[], disposables:[], shaders:[], sprites:[], beams:[],
+  bgScene:null, bgCamera:null, bgMat:null, lastT:0, _tmpV:null,
+  mNX:0, mNY:0, mVel:0,
   vis:{}, hover:null, sel:null,
   dist:80, vx:0, vy:0, dragOn:false, dragX:0, dragY:0, moved:0,
   prevScroll:'', bound:{}
@@ -75,11 +77,42 @@ Lens.build=function(THREE,catalog){
   catch(e){ overlay.style.display='none'; document.body.style.overflow=Lens.prevScroll; throw e; }
   renderer.setSize(window.innerWidth,window.innerHeight);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
+  renderer.autoClear=false;
   container.appendChild(renderer.domElement);
   Lens.scene=scene; Lens.camera=camera; Lens.renderer=renderer;
   Lens.disposables.push(renderer);
 
-  // starfield backdrop
+  // SIP-17 PHASE 1: matrix code-rain background quad (own scene/camera, zero DOM cost)
+  var bgMat=new THREE.ShaderMaterial({
+    uniforms:{uTime:{value:0},uResolution:{value:new THREE.Vector2(window.innerWidth,window.innerHeight)}},
+    vertexShader:'varying vec2 vUv; void main(){ vUv=uv; gl_Position=vec4(position,1.0); }',
+    fragmentShader:[
+      'uniform float uTime; uniform vec2 uResolution; varying vec2 vUv;',
+      'float random(vec2 st){ return fract(sin(dot(st.xy,vec2(12.9898,78.233)))*43758.5453123); }',
+      'void main(){',
+      ' vec2 st=gl_FragCoord.xy/uResolution.xy;',
+      ' st.y*=uResolution.y/uResolution.x;',
+      ' float columns=60.0;',
+      ' vec2 ipos=floor(st*vec2(columns,columns));',
+      ' float speed=0.4+random(vec2(ipos.x,0.0))*0.7;',
+      ' float drop=fract(uTime*speed+random(vec2(ipos.x,1.0)));',
+      ' float trail=smoothstep(0.0,0.4,drop-fract(st.y*3.0));',
+      ' float glyph=step(0.5,random(ipos+floor(uTime*12.0)));',
+      ' vec3 greenCode=vec3(0.0,1.0,0.4)*trail*glyph;',
+      ' vec3 deepVoid=vec3(0.04,0.04,0.06);',
+      ' gl_FragColor=vec4(mix(deepVoid,greenCode,0.25),1.0);',
+      '}'
+    ].join('\n'),
+    depthWrite:false, depthTest:false
+  });
+  var bgGeo=new THREE.PlaneGeometry(2,2);
+  var bgQuad=new THREE.Mesh(bgGeo,bgMat);
+  bgQuad.frustumCulled=false;
+  var bgScene=new THREE.Scene(); bgScene.add(bgQuad);
+  Lens.bgScene=bgScene; Lens.bgCamera=new THREE.Camera(); Lens.bgMat=bgMat;
+  Lens.disposables.push(bgGeo,bgMat);
+
+  // starfield depth layer (cheap points under the matrix wash)
   var sg=new THREE.BufferGeometry(), sp=new Float32Array(900*3);
   for(var s=0;s<900;s++){ sp[s*3]=(Math.random()-0.5)*400; sp[s*3+1]=(Math.random()-0.5)*400; sp[s*3+2]=(Math.random()-0.5)*400; }
   sg.setAttribute('position',new THREE.BufferAttribute(sp,3));
@@ -88,49 +121,59 @@ Lens.build=function(THREE,catalog){
   scene.add(stars);
   Lens.disposables.push(sg,sm);
 
-  // nodes: Node X = Catalog Item X, fibonacci sphere, size = PLT true value
+  // SIP-17 PHASE 2: breathing plasma nodes (Node X = Catalog Item X)
   var group=new THREE.Group();
   scene.add(group);
   Lens.group=group;
   var geo=new THREE.SphereGeometry(0.8,16,16);
   Lens.disposables.push(geo);
-  var mats={};
-  Object.keys(PALETTE).forEach(function(t){
-    var m=new THREE.MeshBasicMaterial({color:PALETTE[t],transparent:true,opacity:0.92});
-    mats[t]=m; Lens.disposables.push(m);
-  });
   var N=catalog.length, R=45, GA=Math.PI*(3-Math.sqrt(5));
   var counts={};
-  Lens.vis={}; Lens.nodes=[];
+  Lens.vis={}; Lens.nodes=[]; Lens.shaders=[]; Lens.sprites=[]; Lens.beams=[];
   catalog.forEach(function(item,i){
     var t=String(item.type||'soul');
     counts[t]=(counts[t]||0)+1;
     if(!(t in Lens.vis)) Lens.vis[t]=true;
     var y=1-(i/(N-1))*2, ph=Math.asin(clamp(y,-1,1)), th=GA*i;
-    var pv=clamp(pltVal(item),0,2);
-    var mesh=new THREE.Mesh(geo,mats[t]||mats.soul);
+    var pv=clamp(pltVal(item),0,2), pn=pv/2;
+    var mesh=new THREE.Mesh(geo,Lens.breathingMat(PALETTE[t]||PALETTE.soul,pn));
     mesh.position.set(R*Math.cos(th)*Math.cos(ph),R*Math.sin(ph),R*Math.sin(th)*Math.cos(ph));
-    var base=0.55+(pv/2)*1.1;
+    var base=0.55+pn*1.1;
     mesh.scale.setScalar(base);
-    mesh.userData={name:item.name,type:t,plt:String(item.plt||''),desc:String(item.desc||item.details||''),icon:String(item.icon||'✦'),base:base};
+    mesh.userData={name:item.name,type:t,plt:String(item.plt||''),desc:String(item.desc||item.details||''),icon:String(item.icon||'✦'),base:base,pv:pv,item:item,billboard:null,
+      basePos:null,windPhase:Math.random()*6.2832,breathSpeed:0.8+Math.random()*0.4,visc:0,targetVisc:0,cur:{x:base,y:base,z:base},beam:null};
+    mesh.userData.basePos=mesh.position.clone();
     group.add(mesh);
     Lens.nodes.push(mesh);
+    // PLT energy beam for high true-value entities
+    if(pv>1.2){
+      var beam=Lens.pltBeam(PALETTE[t]||PALETTE.soul,3+pn*6);
+      beam.position.copy(mesh.position);
+      group.add(beam);
+      mesh.userData.beam=beam;
+      Lens.beams.push({mesh:beam,mat:beam.material,phase:Math.random()*6.28});
+    }
+  });
+  // SIP-17 PHASE 3: stapled mini-cards for top-64 PLT (rest on-demand on select)
+  Lens.nodes.slice().sort(function(a,b){ return b.userData.pv-a.userData.pv; }).slice(0,64).forEach(function(n){
+    Lens.ensureBillboard(n);
   });
   Lens.buildLegend(counts);
   var cc=$('soulverse-count');
   if(cc) cc.textContent=N+' NODES · '+Object.keys(counts).length+' TYPES';
 
   // events (all removed on close)
-  var B=Lens.bound, ray=new THREE.Raycaster(), ptr=new THREE.Vector2();
+  var B=Lens.bound;
   var el=renderer.domElement;
   B.move=function(ev){
     Lens.dragX=ev.clientX; Lens.dragY=ev.clientY;
-    if(Lens.dragOn) return;
-    ptr.x=(ev.clientX/window.innerWidth)*2-1;
-    ptr.y=-(ev.clientY/window.innerHeight)*2+1;
-    ray.setFromCamera(ptr,camera);
-    var hits=ray.intersectObjects(Lens.nodes.filter(function(n){ return n.visible; }),false);
-    Lens.setHover(hits.length?hits[0].object:null,ev.clientX,ev.clientY);
+    // ADDENDUM: hydrodynamic cursor tracker (NDC + instantaneous velocity)
+    var nx=(ev.clientX/window.innerWidth)*2-1, ny=-(ev.clientY/window.innerHeight)*2+1;
+    var dx=nx-Lens.mNX, dy=ny-Lens.mNY;
+    Lens.mVel=Math.sqrt(dx*dx+dy*dy);
+    Lens.mNX=nx; Lens.mNY=ny;
+    if(Lens.dragOn||!Lens.active) return;
+    Lens.setHover(Lens.castAt(ev.clientX,ev.clientY),ev.clientX,ev.clientY);
   };
   B.down=function(ev){ Lens.dragOn=true; Lens.moved=0; Lens.dragX=ev.clientX; Lens.dragY=ev.clientY; };
   B.up=function(ev){
@@ -157,6 +200,7 @@ Lens.build=function(THREE,catalog){
     Lens.camera.aspect=window.innerWidth/window.innerHeight;
     Lens.camera.updateProjectionMatrix();
     Lens.renderer.setSize(window.innerWidth,window.innerHeight);
+    if(Lens.bgMat) Lens.bgMat.uniforms.uResolution.value.set(window.innerWidth,window.innerHeight);
   };
   window.addEventListener('pointermove',B.move);
   el.addEventListener('pointerdown',B.down);
@@ -170,17 +214,51 @@ Lens.build=function(THREE,catalog){
   if(cb){ B.closeclick=function(){ Lens.close(); }; cb.addEventListener('click',B.closeclick); }
 
   Lens.active=true;
+  Lens.lastT=performance.now();
   (function tick(){
     if(!Lens.active) return;
     Lens.raf=requestAnimationFrame(tick);
+    var now=performance.now(), dt=Math.min(0.05,(now-Lens.lastT)/1000);
+    Lens.lastT=now;
+    var t=now/1000;
+    // SIP-17 PHASE 4: synced uniforms — matrix rain + all breathing nodes
+    if(Lens.bgMat) Lens.bgMat.uniforms.uTime.value=t;
+    for(var i=0;i<Lens.shaders.length;i++){ Lens.shaders[i].uniforms.uTime.value+=dt; }
+    for(var j=0;j<Lens.beams.length;j++){
+      var bm=Lens.beams[j];
+      bm.mat.opacity=0.32+0.18*Math.sin(t*3+bm.phase);
+    }
     if(Lens.group){
       if(!Lens.dragOn){
         Lens.group.rotation.y+=0.0012+Lens.vx;
         Lens.group.rotation.x=clamp(Lens.group.rotation.x+Lens.vy,-0.9,0.9);
         Lens.vx*=0.95; Lens.vy*=0.95;
       }
+      Lens.group.updateMatrixWorld(true);
     }
-    Lens.renderer.render(Lens.scene,Lens.camera);
+    // SIP-17 ADDENDUM: predatory kinematics before render (wind/water/slime/bloom)
+    Lens.updateKinematics(t,dt);
+    // SIP-17 PHASE 4: dynamic distance fade — billboards dissolve past focus range
+    if(Lens.camera){
+      var tmp=Lens._tmpV||(Lens._tmpV=new Lens.THREE.Vector3());
+      for(var k2=0;k2<Lens.sprites.length;k2++){
+        var rec=Lens.sprites[k2];
+        if(!rec.node.visible){ rec.sp.visible=false; continue; }
+        // stapled: billboard rides the node's drifted position
+        rec.sp.position.copy(rec.node.position); rec.sp.position.y+=4.2;
+        rec.node.getWorldPosition(tmp);
+        var dist=Lens.camera.position.distanceTo(tmp);
+        var op=clamp(1-(dist-30)/60,0,1);
+        if(rec.node===Lens.hover||rec.node===Lens.sel) op=Math.max(op,0.95);
+        rec.sp.material.opacity=op;
+        rec.sp.visible=op>0.02;
+      }
+    }
+    try{
+      Lens.renderer.clear();
+      if(Lens.bgScene) Lens.renderer.render(Lens.bgScene,Lens.bgCamera);
+      Lens.renderer.render(Lens.scene,Lens.camera);
+    }catch(e){}
   })();
 };
 
@@ -198,14 +276,12 @@ Lens.setHover=function(node,x,y){
 };
 
 Lens.pick=function(x,y){
-  if(!Lens.THREE) return;
-  var ptr=new Lens.THREE.Vector2((x/window.innerWidth)*2-1,-(y/window.innerHeight)*2+1);
-  var ray=new Lens.THREE.Raycaster();
-  ray.setFromCamera(ptr,Lens.camera);
-  var hits=ray.intersectObjects(Lens.nodes.filter(function(n){ return n.visible; }),false);
-  if(!hits.length) return;
-  Lens.sel=hits[0].object;
-  Lens.showHud(Lens.sel.userData);
+  if(!Lens.THREE||!Lens.active) return;
+  var node=Lens.castAt(x,y);
+  if(!node) return;
+  Lens.ensureBillboard(node);
+  Lens.sel=node;
+  Lens.showHud(node.userData);
 };
 
 Lens.showHud=function(u){
@@ -221,6 +297,140 @@ Lens.showHud=function(u){
   if(b) b.onclick=function(){ Lens.openCard(b.getAttribute('data-name')); };
 };
 
+// SIP-17: breathing plasma material (pulse rate tied to PLT), fresnel aura
+Lens.breathingMat=function(colorHex,pltNorm){
+  var m=new Lens.THREE.ShaderMaterial({
+    uniforms:{uTime:{value:Math.random()*10},uColor:{value:new Lens.THREE.Color(colorHex)},uPlt:{value:10+pltNorm*90}},
+    vertexShader:[
+      'uniform float uTime; uniform float uPlt;',
+      'varying vec3 vNormal;',
+      'void main(){',
+      ' vNormal=normalize(normalMatrix*normal);',
+      ' float pulseSpeed=1.5+(uPlt*0.02);',
+      ' float expansion=sin(uTime*pulseSpeed+position.x*2.0)*(0.08+uPlt*0.001);',
+      ' vec3 newPosition=position+normal*expansion;',
+      ' gl_Position=projectionMatrix*modelViewMatrix*vec4(newPosition,1.0);',
+      '}'
+    ].join('\n'),
+    fragmentShader:[
+      'uniform vec3 uColor; uniform float uTime; uniform float uPlt;',
+      'varying vec3 vNormal;',
+      'void main(){',
+      ' float rim=1.0-max(dot(vNormal,vec3(0.0,0.0,1.0)),0.0);',
+      ' float pulse=0.6+0.4*sin(uTime*2.0);',
+      ' vec3 glowColor=mix(uColor,vec3(1.0,0.85,0.2),clamp((uPlt-50.0)/50.0,0.0,1.0));',
+      ' vec3 finalColor=glowColor*(pow(rim,2.5)*2.0*pulse+0.3);',
+      ' gl_FragColor=vec4(finalColor,0.9);',
+      '}'
+    ].join('\n'),
+    transparent:true, blending:Lens.THREE.AdditiveBlending, depthWrite:false
+  });
+  Lens.shaders.push(m); Lens.disposables.push(m);
+  return m;
+};
+// SIP-17: vertical PLT energy beam for high true-value entities
+Lens.pltBeam=function(colorHex,h){
+  var g=new Lens.THREE.CylinderGeometry(0.05,0.3,h,8,1,true);
+  g.translate(0,h/2,0);
+  var m=new Lens.THREE.MeshBasicMaterial({color:colorHex,transparent:true,opacity:0.45,blending:Lens.THREE.AdditiveBlending,side:Lens.THREE.DoubleSide,depthWrite:false});
+  Lens.disposables.push(g,m);
+  return new Lens.THREE.Mesh(g,m);
+};
+// SIP-17 PHASE 3: HTML5 canvas mini-card → sprite stapled above a node
+function makeBillboard(THREE,item,colorCss){
+  var canvas=document.createElement('canvas');
+  canvas.width=512; canvas.height=256;
+  var ctx=canvas.getContext('2d');
+  ctx.fillStyle='rgba(10,10,15,0.88)'; ctx.fillRect(0,0,512,256);
+  ctx.strokeStyle='#ffd700'; ctx.lineWidth=6; ctx.strokeRect(10,10,492,236);
+  ctx.fillStyle=colorCss||'#00ffcc'; ctx.font='bold 24px monospace';
+  ctx.fillText('['+String(item.type||'SOUL').toUpperCase()+']',30,50);
+  ctx.fillStyle='#ffffff'; ctx.font='bold 34px monospace';
+  var name=String(item.name||'?');
+  if(name.length>20) name=name.substring(0,18)+'..';
+  ctx.fillText(name,30,100);
+  ctx.fillStyle='#a5b4fc'; ctx.font='20px monospace';
+  var desc=String(item.desc||item.details||'Autonomous sovereign entity');
+  if(desc.length>48) desc=desc.substring(0,48)+'...';
+  ctx.fillText(desc,30,145);
+  ctx.fillStyle='#1e1b4b'; ctx.fillRect(30,175,452,45);
+  ctx.strokeStyle='#00ffcc'; ctx.lineWidth=2; ctx.strokeRect(30,175,452,45);
+  ctx.fillStyle='#ffd700'; ctx.font='bold 22px monospace';
+  ctx.fillText('PLT SCORE: '+String(item.plt||'∞')+' TRUE VALUE',45,206);
+  var tex=new THREE.CanvasTexture(canvas);
+  tex.minFilter=THREE.LinearFilter;
+  var mat=new THREE.SpriteMaterial({map:tex,transparent:true,depthTest:false});
+  var sprite=new THREE.Sprite(mat);
+  sprite.scale.set(16,8,1);
+  return {sprite:sprite,tex:tex,mat:mat};
+}
+Lens.ensureBillboard=function(node){
+  if(!node||!Lens.group||node.userData.billboard) return node?node.userData.billboard:null;
+  var u=node.userData;
+  var b=makeBillboard(Lens.THREE,u.item,PALCSS[u.type]||'#00ffcc');
+  b.sprite.position.copy(node.position);
+  b.sprite.position.y+=4.2;
+  b.sprite.userData.node=node;
+  u.billboard=b.sprite;
+  Lens.group.add(b.sprite);
+  Lens.sprites.push({sp:b.sprite,node:node});
+  Lens.disposables.push(b.tex,b.mat);
+  return b.sprite;
+};
+// unified raycast: nodes first, then visible billboards (both open the real card)
+Lens.castAt=function(x,y){
+  if(!Lens.THREE||!Lens.camera) return null;
+  var ptr=new Lens.THREE.Vector2((x/window.innerWidth)*2-1,-(y/window.innerHeight)*2+1);
+  var ray=new Lens.THREE.Raycaster();
+  ray.setFromCamera(ptr,Lens.camera);
+  var hits=ray.intersectObjects(Lens.nodes.filter(function(n){ return n.visible; }),false);
+  if(hits.length) return hits[0].object;
+  var sps=Lens.sprites.filter(function(s){ return s.sp.visible&&s.sp.material.opacity>0.1; }).map(function(s){ return s.sp; });
+  var hits2=ray.intersectObjects(sps,false);
+  if(hits2.length&&hits2[0].object.userData.node) return hits2[0].object.userData.node;
+  return null;
+};
+// SIP-17 ADDENDUM: bio-fluid predatory kinematics (wind / water / slime / bloom)
+// Layers A–C run here; Layer D (billboard fade) lives in the existing fade pass.
+Lens.updateKinematics=function(t,dt){
+  var stir=1+Math.min(Lens.mVel*8,0.6);
+  for(var i=0;i<Lens.nodes.length;i++){
+    var node=Lens.nodes[i], u=node.userData;
+    var isT=(node===Lens.hover||node===Lens.sel);
+    // LAYER A: wind — dual-sine lung (inhale/hold/exhale), phase-offset per node
+    var lung=Math.sin(t*u.breathSpeed+u.windPhase)*Math.cos(t*0.5*u.breathSpeed+u.windPhase);
+    var breath=1+(lung*0.06);
+    var base=u.base, tx,ty,tz;
+    if(isT){
+      // LAYER B: carnivorous bloom — hungry-flower dilation + lean to cursor
+      var bloom=1.38+0.08*Math.sin(t*3);
+      tx=base*bloom; ty=base*bloom; tz=base*bloom;
+      u.targetVisc=1;
+      node.rotation.y+=(Lens.mNX*0.45-node.rotation.y)*0.045;
+      node.rotation.x+=((-Lens.mNY*0.45)-node.rotation.x)*0.045;
+    }else{
+      tx=base*breath; ty=base*breath; tz=base*breath;
+      u.targetVisc=0;
+      node.rotation.x+=(0-node.rotation.x)*0.03;
+    }
+    // LAYER C: slime — syrup cling, stretch Y / compress XZ on departure
+    u.visc+=(u.targetVisc-u.visc)*0.025;
+    var sY=1+u.visc*0.22, sXZ=1-u.visc*0.08;
+    var c=u.cur;
+    c.x+=(tx*sXZ-c.x)*0.05; c.y+=(ty*sY-c.y)*0.05; c.z+=(tz*sXZ-c.z)*0.05;
+    node.scale.set(c.x,c.y,c.z);
+    // drift integration off the cloned base position, stirred by cursor water
+    var bp=u.basePos;
+    if(bp){
+      node.position.set(
+        bp.x+Math.sin(t*0.4+u.windPhase)*0.35*stir,
+        bp.y+Math.cos(t*0.3+u.windPhase)*0.35*stir,
+        bp.z+Math.sin(t*0.2+u.windPhase)*0.25*stir
+      );
+    }
+    if(u.beam) u.beam.position.copy(node.position);
+  }
+};
 Lens.buildLegend=function(counts){
   var lg=$('soulverse-legend'); if(!lg) return;
   var types=Object.keys(counts).sort(function(a,b){ return counts[b]-counts[a]; });
@@ -294,7 +504,9 @@ Lens.close=function(){
   document.body.style.overflow=Lens.prevScroll||'';
   document.body.style.cursor='';
   Lens.renderer=null; Lens.scene=null; Lens.camera=null; Lens.group=null;
-  Lens.nodes=[]; Lens.hover=null; Lens.sel=null; Lens.vx=0; Lens.vy=0;
+  Lens.bgScene=null; Lens.bgCamera=null; Lens.bgMat=null;
+  Lens.nodes=[]; Lens.shaders=[]; Lens.sprites=[]; Lens.beams=[];
+  Lens.hover=null; Lens.sel=null; Lens.vx=0; Lens.vy=0;
   Lens.bound={};
 };
 
