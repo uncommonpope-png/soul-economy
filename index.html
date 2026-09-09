@@ -1125,14 +1125,19 @@ function renderDiscussions(){
   const filtered=filter==='all'?discs:discs.filter(d=>d.soul===filter||d.soul==='General');
   if(!filtered.length){ list.innerHTML='<div style="color:var(--text-muted);font-size:0.85rem;text-align:center;padding:16px">No threads yet — start one!</div>'; return; }
   list.innerHTML=filtered.map(d=>`
-    <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:12px;display:flex;justify-content:space-between;align-items:center;gap:12px">
+    <div id="disc-${d.id}" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:12px;display:flex;justify-content:space-between;align-items:center;gap:12px">
       <div>
         <div style="font-size:0.85rem;font-weight:600">${d.title}</div>
         <div style="font-size:0.7rem;color:var(--text-muted)">${d.soul} · by ${d.author} · ${d.replies} replies · ${new Date(d.created).toLocaleDateString()}</div>
       </div>
+      <div style="display:flex;gap:6px">
+      <button onclick="copyDiscLink(${d.id})" title="Copy thread link" style="padding:6px 10px;border-radius:20px;background:transparent;border:1px solid rgba(255,255,255,0.12);color:var(--text-muted);font-size:0.75rem">⇪</button>
       <button onclick="openDiscussion(${d.id})" style="padding:6px 14px;border-radius:20px;background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.2);color:#8B5CF6;font-size:0.75rem">Open</button>
+      </div>
     </div>
   `).join('');
+  const hm=/^#disc-(\d+)$/.exec(location.hash||'');
+  if(hm){ const t=document.getElementById('disc-'+hm[1]); if(t){ t.style.borderColor='rgba(139,92,246,0.5)'; t.scrollIntoView({block:'nearest'}); } }
 }
 function newDiscussion(){
   const user=localStorage.getItem('soulUser');
@@ -1147,6 +1152,12 @@ function openDiscussion(id){
   if(!d) return;
   const reply=prompt(`Thread: ${d.title}\nSoul: ${d.soul}\n\nReply (or Cancel):`);
   if(reply){ d.replies++; saveDiscs(discs); renderDiscussions(); alert('Reply saved locally. Future: GitHub Discussions sync.'); }
+}
+function copyDiscLink(id){
+  const url=location.origin+location.pathname+'#disc-'+id;
+  const done=()=>alert('Thread link copied — it deep-links back to this thread');
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(url).then(done,()=>{prompt('Copy thread link:',url);});
+  else prompt('Copy thread link:',url);
 }
 // Check OAuth response
 const urlParams = new URLSearchParams(window.location.search);
@@ -1917,6 +1928,7 @@ document.body.insertAdjacentHTML('beforeend',
     <button class="on" data-p="pulse">⚡ Pulse</button>
     <button data-p="hot">🔥 Trending</button>
     <button data-p="watch">📦 Watchlist</button>
+    <button data-p="groups">🎪 Groups</button>
     <button data-p="you">🧑 You</button>
   </div>
   <div class="ss-view" id="ssView"></div>
@@ -1940,7 +1952,43 @@ let watch=LS.get('soulSocialWatch',{});
 let events=LS.get('soulSocialEvents',[]);
 let shoutsAll=LS.get('soulSocialShouts',{});
 let shoutVotes=LS.get('soulSocialVotes',{});
-let SAVE=()=>{LS.set('soulSocialPre',prefs);LS.set('soulSocialStars',stars);LS.set('soulSocialFollows',follows);LS.set('soulSocialWatch',watch);LS.set('soulSocialEvents',events.slice(0,150));LS.set('soulSocialShouts',shoutsAll);LS.set('soulSocialVotes',shoutVotes);};
+let shoutReacts=LS.get('soulShoutReacts',{});
+let shoutReplies=LS.get('soulShoutReplies',{});
+let pfollow=LS.get('soulPeopleFollows',{});
+let remixes=LS.get('soulRemixs',[]);
+let versions=LS.get('soulVersions',{});
+let issues=LS.get('soulIssues',{});
+let groups=LS.get('soulGroups',[]);
+let pevents=LS.get('soulPartyEvents',[]);
+let dms=LS.get('soulDMs',{});
+let dmSeen=LS.get('soulDMSeen',0);
+let notesSeen=LS.get('soulNotesSeen',0);
+let collections=LS.get('soulCollections',[]);
+let blocks=LS.get('soulBlocks',{});
+let mutes=LS.get('soulMutes',{});
+let reports=LS.get('soulReports',[]);
+let reported=LS.get('soulReportedShouts',{});
+let tips=LS.get('soulTips',[]);
+let ledger=LS.get('soulLedger',[]);
+let SAVE=()=>{LS.set('soulSocialPre',prefs);LS.set('soulSocialStars',stars);LS.set('soulSocialFollows',follows);LS.set('soulSocialWatch',watch);LS.set('soulSocialEvents',events.slice(0,150));LS.set('soulSocialShouts',shoutsAll);LS.set('soulSocialVotes',shoutVotes);LS.set('soulShoutReacts',shoutReacts);LS.set('soulShoutReplies',shoutReplies);LS.set('soulPeopleFollows',pfollow);LS.set('soulRemixs',remixes);LS.set('soulVersions',versions);LS.set('soulIssues',issues);LS.set('soulGroups',groups);LS.set('soulPartyEvents',pevents);LS.set('soulDMs',dms);LS.set('soulDMSeen',dmSeen);LS.set('soulNotesSeen',notesSeen);LS.set('soulCollections',collections);LS.set('soulBlocks',blocks);LS.set('soulMutes',mutes);LS.set('soulReports',reports);LS.set('soulReportedShouts',reported);LS.set('soulTips',tips);LS.set('soulLedger',ledger);};
+function escH(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function linkify(s){
+  var e=escH(s);
+  e=e.replace(/(https?:\/\/[^\s<]+)/g,'<a href="$1" target="_blank" rel="noopener" style="color:#00D4FF">$1</a>');
+  e=e.replace(/(^|\s)@([A-Za-z0-9-]{1,39})/g,'$1<a href="profile.html#@$2" target="_blank" style="color:#B866FF">@$2</a>');
+  return e;
+}
+function myHandle(){return (prefs.user&&prefs.user.handle)||'You';}
+function isBlocked(h){return !!blocks[String(h||'').toLowerCase()];}
+function isMuted(h){return !!mutes[String(h||'').toLowerCase()];}
+function isPerson(u){return !findItem(u);}
+function togglePeople(h){
+  h=String(h||'').trim();if(!h||!isPerson(h))return;
+  var k=h.toLowerCase();
+  if(pfollow[k]){delete pfollow[k];toast('Unfollowed '+h);}
+  else{pfollow[k]={h:h,t:Date.now()};mineEvent('followed person',h,'👥');toast('👥 Following '+h+' — their shouts now surface in Following feed');}
+  SAVE();if(!$('ssModal').classList.contains('hidden')&&profKey)openProfile(profKey);if(view==='you')renderYou();
+}
 
 // ── data ──
 let items=[];
@@ -2014,6 +2062,8 @@ function doAction(t,n,b){
   else if(t==='follow'){toggleMap(follows,k);mineEvent('followed',nm,'🤝');toast((hasFollow(k)?'🤝 Following ':'Unfollowed ')+nm);}
   else if(t==='watch'){toggleMap(watch,k);mineEvent('watched',nm,'📦');toast((hasWatch(k)?'📦 Added to Watchlist':'Removed from Watchlist')+' — '+nm);refreshWatch();}
   else if(t==='share')share(nm);
+  else if(t==='remix')remixSoul(nm);
+  else if(t==='save')openCollections(nm);
   else if(t==='open')openProfile(k);
   SAVE();paintActions();
 }
@@ -2041,6 +2091,8 @@ function attach(card){
   bar.innerHTML=`<button data-a="star" title="Star it (GitHub)">☆ ${countStar(k)}</button>
     <button data-a="follow" title="Follow (Facebook)">＋ ${countFollow(k)}</button>
     <button data-a="watch" title="Watchlist (HuggingFace)">📦 Watch</button>
+    <button data-a="remix" title="Remix this soul">🌱</button>
+    <button data-a="save" title="Save to collection">💾</button>
     <button data-a="share" title="Share the link">⇪</button>
     <button data-a="open" title="Open soul profile (MySpace)">👤</button>`;
   bar.addEventListener('click',ev=>{
@@ -2059,22 +2111,36 @@ function initObserver(){
 
 // ── dock views ──
 let view='pulse';
+function fyScore(e){let s=0;if(e.mine)s+=1000;if(e.tgt&&hasFollow(e.tgt))s+=500;if(e.tgt)s+=Math.min(200,countStar(e.tgt)/5);s+=Math.max(0,100-(Date.now()-e.t)/3600000);return s;}
 function renderPulse(){
   const mode=prefs.feedMode||'all';
+  const sort=prefs.feedSort||'latest';
   let list=feed;
   if(mode==='mine')list=feed.filter(e=>e.mine);
-  else if(mode==='following')list=feed.filter(e=>e.mine||(e.tgt&&hasFollow(e.tgt)));
+  else if(mode==='following')list=feed.filter(e=>e.mine||(e.tgt&&hasFollow(e.tgt))||(e.a&&pfollow[String(e.a).toLowerCase()]));
   else if(mode==='circle'){const set=new Set(circleOf().map(k=>keyN(k)));list=feed.filter(e=>e.mine||(e.tgt&&set.has(keyN(e.tgt)))||e.a==='you');}
+  const facet=prefs.feedFacet||'all';
+  if(facet==='people')list=list.filter(e=>e.mine||isPerson(e.a||''));
+  else if(facet==='groups')list=list.filter(e=>e.tgt&&String(e.tgt).indexOf('group ')===0);
+  else if(facet!=='all')list=list.filter(e=>{const it=e.tgt?findItem(e.tgt):null;const ty=it?it.type:'';if(facet==='souls')return ty==='soul';if(facet==='agents')return ty==='agent';if(facet==='projects')return ty==='pack'||ty==='world'||ty==='combo';return true;});
+  if(sort==='foryou')list=list.slice().sort((a,b)=>fyScore(b)-fyScore(a));
   const root=$('ssView');
+  const nu=notesUnread();
   root.innerHTML=`<div class="ss-chip">
     ${[['all','All'],['following','Following'],['circle','My Circle'],['mine','Mine']].map(m=>`<button class="${mode===m[0]?'on':''}" data-m="${m[0]}">${m[1]}</button>`).join('')}
-  </div><div class="ss-feed">${list.length?list.slice(0,40).map(e=>`
+    <span style="opacity:.4">·</span>
+    <button class="${sort==='latest'?'on':''}" data-s="latest">🕘 Latest</button><button class="${sort==='foryou'?'on':''}" data-s="foryou">✨ For you</button>
+    <select id="ssFacet" style="background:rgba(255,255,255,0.04);color:#fff;border:1px solid rgba(255,255,255,0.1);border-radius:12px;font-size:0.65rem;padding:3px 6px">${[['all','ALL'],['people','PEOPLE'],['souls','SOULS'],['agents','AGENTS'],['projects','PROJECTS'],['groups','GROUPS']].map(f=>`<option value="${f[0]}"${facet===f[0]?' selected':''}>${f[1]}</option>`).join('')}</select>
+    <button data-n="notes">🔔 Notes${nu?' ('+nu+')':''}</button>
+  </div>${odayBanner()}<div class="ss-feed">${list.length?list.slice(0,40).map(e=>`
     <div class="ss-ev${e.mine?' mine':''}">
       <div class="av">${e.e}</div>
       <div class="tx"><b data-op="p-${keyN(e.tgt)}">${e.a}</b> <span class="vh">${e.iv} ${e.v}</span>${e.tgt?` <b data-op="p-${keyN(e.tgt)}">${e.tgt}</b>`:''}
         <div class="tm">${timeAgo(e.t)}${e.mine?' · you':''}</div></div>
     </div>`).join(''):'<div class="ss-empty">Nothing here yet. Star, follow or watch a soul.</div>'}</div>`;
-  root.querySelectorAll('.ss-chip button').forEach(b=>b.addEventListener('click',()=>{prefs.feedMode=b.dataset.m;SAVE();renderPulse();}));
+  root.querySelectorAll('.ss-chip button').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.n){renderNotes();return;}if(b.dataset.m)prefs.feedMode=b.dataset.m;if(b.dataset.s)prefs.feedSort=b.dataset.s;SAVE();renderPulse();}));
+  const fs=root.querySelector('#ssFacet');if(fs)fs.addEventListener('change',()=>{prefs.feedFacet=fs.value;SAVE();renderPulse();});
+  root.querySelectorAll('[data-oday]').forEach(b=>b.addEventListener('click',()=>openProfile(b.dataset.oday)));
   root.querySelectorAll('b[data-op]').forEach(b=>b.addEventListener('click',()=>{const n=b.dataset.op.slice(2);if(n)openProfile(n);}));
 }
 function scoreIt(it,metric){
@@ -2084,13 +2150,15 @@ function scoreIt(it,metric){
   if(metric==='downloads')return (it.downloads||0)+rnd(60);
   if(metric==='likes')return countLike(k);
   if(metric==='hot')return countStar(k)*3+countFollow(k)*2+countLike(k);
+  if(metric==='rising')return shoutActivity(k)*5+countStar(k);
+  if(metric==='fresh')return 10000-(countStar(k)+countFollow(k)*3+countLike(k)+shoutActivity(k)*5);
   return countStar(k);
 }
 function renderHot(){
   const metric=prefs.hotMetric||'hot';
   const top=items.slice().sort((a,b)=>scoreIt(b,metric)-scoreIt(a,metric)).slice(0,10);
   const mx=Math.max(1,scoreIt(top[0]||{},metric));
-  const mets=[['hot','🔥 Hot'],['stars','⭐ Stars'],['follow','🤝 Followers'],['downloads','⬇ Downloads']];
+  const mets=[['hot','🔥 Hot'],['stars','⭐ Stars'],['follow','🤝 Followers'],['downloads','⬇ Downloads'],['rising','📈 Rising'],['fresh','✨ Fresh']];
   const root=$('ssView');
   root.innerHTML=`<div class="ss-chip">${mets.map(m=>`<button class="${metric===m[0]?'on':''}" data-h="${m[0]}">${m[1]}</button>`).join('')}</div>`+
     (top.length?top.map(it=>{const sc=scoreIt(it,metric);const w=Math.max(4,Math.round(sc/mx*100));return `
@@ -2111,6 +2179,15 @@ function renderWatch(){
     if(ev.target.closest('[data-rm]')){const k=r.dataset.w;delete watch[keyN(k)];SAVE();toast('Removed from Watchlist');renderWatch();return;}
     openProfile(r.dataset.w);
   }));
+  const cl=document.createElement('div');
+  cl.innerHTML='<div class="ss-sub" style="margin-top:10px">🗂 My Collections ('+collections.length+')</div>'+
+    (collections.length?collections.map(function(c,ci){
+      return '<div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:8px 10px;margin-bottom:6px"><div style="display:flex;gap:6px;align-items:center"><b style="flex:1;color:#fff;font-size:0.75rem">'+escH(c.name)+'</b><span style="font-size:0.65rem;color:#888">'+c.items.length+'</span><button data-cdel="'+ci+'" style="background:none;border:none;color:#EF4444;cursor:pointer">✕</button></div>'+
+      '<div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:6px">'+c.items.map(function(nm){return '<button data-copen="'+escH(nm)+'" style="padding:2px 8px;border-radius:10px;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.3);color:#c9b8ff;font-size:0.65rem;cursor:pointer">'+escH(nm)+'</button>';}).join('')+'</div></div>';
+    }).join(''):'<div class="ss-empty">No collections yet — hit 💾 Save on any soul card.</div>');
+  root.appendChild(cl);
+  cl.querySelectorAll('[data-cdel]').forEach(b=>b.addEventListener('click',()=>{collections.splice(+b.dataset.cdel,1);SAVE();renderWatch();}));
+  cl.querySelectorAll('[data-copen]').forEach(b=>b.addEventListener('click',()=>openProfile(b.dataset.copen)));
 }
 function circleOf(){
   const ks=[];
@@ -2127,13 +2204,143 @@ function renderYou(){
       <span class="grow"><b style="color:#fff">${u.handle||'You (not set up yet)'}</b><div style="font-size:0.62rem;color:#6b7280">${u.anthem?('Anthem: '+u.anthem):'tap Edit identity ▶'}</div></span>
       <button id="ssEditMe" style="padding:6px 12px;border-radius:20px;background:rgba(0,212,255,0.12);border:1px solid rgba(0,212,255,0.4);color:#00D4FF;font-size:0.7rem;font-weight:600;cursor:pointer">Edit</button></div>
     <div style="display:flex;gap:8px;margin:10px 0 6px">
-      ${[['⭐ '+Object.keys(stars).length,'stars you\'ve cast'],['🤝 '+Object.keys(follows).length,'souls you follow'],['📦 '+Object.keys(watch).length,'in your watchlist'],['💬 '+shoutCount(),'shouts left']].map(s=>`<div class="ss-stat" style="margin:0;padding:8px 2px"><b>${s[0]}</b><span>${s[1]}</span></div>`).join('')}
+      ${[['⭐ '+Object.keys(stars).length,'stars you\'ve cast'],['🤝 '+Object.keys(follows).length,'souls you follow'],['👥 '+Object.keys(pfollow).length,'people you follow'],['📦 '+Object.keys(watch).length,'in your watchlist'],['💬 '+shoutCount(),'shouts left']].map(s=>`<div class="ss-stat" style="margin:0;padding:8px 2px"><b>${s[0]}</b><span>${s[1]}</span></div>`).join('')}
     </div>
     <div style="font-size:0.7rem;color:#8b8b98;line-height:1.6;margin-top:6px">💡 Every ❤ like, ⭐ star, 🤝 follow, 📦 watch and 💬 shout is saved <b>in your browser</b>. The Pulse feed mixes your moves with the family's. Trending is computed live from stars, followers and downloads.<br><br>🌐 Share any soul's ⇪ link to bring the family here.</div>`;
   root.querySelector('#ssEditMe').addEventListener('click',openIdentity);
+  const dmThreads=Object.keys(dms).filter(k=>(dms[k]||[]).length&&!isBlocked(k)).sort((a,b)=>{const la=(dms[a]||[]).slice(-1)[0],lb=(dms[b]||[]).slice(-1)[0];return (lb?lb.t:0)-(la?la.t:0);});
+  const du=dmUnread();
+  const box2=document.createElement('div');
+  box2.innerHTML='<div class="ss-sub" style="margin-top:10px">✉ Messages'+(du?' ('+du+' new)':'')+'</div>'+
+    (dmThreads.length?dmThreads.slice(0,6).map(k=>{const L=dms[k],last=L[L.length-1];let h=k;for(const m of L){if(m.u!==myHandle()){h=m.u;break;}}return '<div class="ss-row" data-dm="'+escH(k)+'"><span>✉</span><span class="grow">'+escH(h)+'<div style="font-size:0.6rem;color:#888">'+escH(String(last.b||'').slice(0,60))+'</div></span>'+(last.t>dmSeen&&last.u!==myHandle()?'<span style="width:8px;height:8px;border-radius:50%;background:#FF6B9D"></span>':'')+'</div>';}).join(''):'<div class="ss-empty">No threads — tap ✉ on anybody’s shout to message them.</div>');
+  root.appendChild(box2);
+  box2.querySelectorAll('[data-dm]').forEach(r=>r.addEventListener('click',()=>openDM(r.dataset.dm)));
+  const sf=document.createElement('div');
+  const bk=Object.keys(blocks),mu=Object.keys(mutes);
+  sf.innerHTML='<div class="ss-sub" style="margin-top:10px">🛡 Safety</div><div style="font-size:0.7rem;color:#8b8b98">'+bk.length+' blocked · '+mu.length+' muted · '+reports.length+' reports sent · 🔒 private shouts visible only to you</div>'+
+    (bk.length?'<div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:6px">'+bk.map(k=>'<button data-unb="'+escH(k)+'" style="padding:2px 8px;border-radius:10px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.35);color:#F87171;font-size:0.65rem;cursor:pointer">⛔ '+escH((blocks[k]&&blocks[k].h)||k)+'</button>').join('')+'</div>':'')+
+    (mu.length?'<div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:6px">'+mu.map(k=>'<button data-unm="'+escH(k)+'" style="padding:2px 8px;border-radius:10px;background:rgba(255,209,102,0.08);border:1px solid rgba(255,209,102,0.3);color:#FFD166;font-size:0.65rem;cursor:pointer">🔇 '+escH(k)+'</button>').join('')+'</div>':'');
+  root.appendChild(sf);
+  sf.querySelectorAll('[data-unb]').forEach(b=>b.addEventListener('click',()=>{delete blocks[b.dataset.unb];SAVE();toast('Unblocked');renderYou();}));
+  sf.querySelectorAll('[data-unm]').forEach(b=>b.addEventListener('click',()=>{delete mutes[b.dataset.unm];SAVE();toast('Unmuted');renderYou();}));
 }
 function shoutCount(){let n=0;for(const k in shoutsAll)n+=shoutsAll[k].length;return n;}
 
+// ── social phases P2-P6: people, kinds, reactions, threads, safety ──
+const REACTS=['❤️','🔥','🧠','👁️','⚡','✨','😂','🌑'];
+let repOpen={};
+function shoutVisible(k,s){
+  if(reported[k+'@'+s.id])return false;
+  if(isBlocked(s.u)||isMuted(s.u))return false;
+  if(s.vis==='private'&&!(s.m||s.u===myHandle()))return false;
+  return true;
+}
+function shoutBody(s){
+  var b=linkify(s.b||'');
+  if(s.k==='link'&&s.url&&/^https?:\/\//i.test(s.url))return b+'<div style="margin-top:4px"><a href="'+escH(s.url)+'" target="_blank" rel="noopener" style="color:#00D4FF">🔗 '+escH(s.url)+'</a></div>';
+  if(s.k==='image'&&s.url&&/^https?:\/\//i.test(s.url))return b+'<div style="margin-top:4px"><img src="'+escH(s.url)+'" style="max-width:100%;border-radius:8px" loading="lazy" onerror="this.style.display=\'none\'"></div>';
+  return b;
+}
+function renderReacts(k,s){
+  var rk=k+'@'+s.id,R=shoutReacts[rk]||{n:{},mine:{}};
+  return '<div style="display:flex;gap:2px;flex-wrap:wrap;margin-top:4px">'+REACTS.map(function(em){
+    var n=(R.n&&R.n[em])||0,on=R.mine&&R.mine[em];
+    return '<button data-r="'+em+'" data-sid="'+s.id+'" title="React '+em+'" style="background:'+(on?'rgba(255,209,102,0.15)':'transparent')+';border:1px solid '+(on?'rgba(255,209,102,0.5)':'rgba(255,255,255,0.08)')+';border-radius:12px;font-size:0.7rem;padding:1px 6px;cursor:pointer">'+em+(n?' '+n:'')+'</button>';
+  }).join('')+'</div>';
+}
+function renderReplies(k,s){
+  var rk=k+'@'+s.id,list=(shoutReplies[rk]||[]).filter(function(r){return !isBlocked(r.u);});
+  if(!repOpen[rk]&&!list.length)return '';
+  var h='<div style="margin-top:6px;padding-left:10px;border-left:2px solid rgba(139,92,246,0.25);display:flex;flex-direction:column;gap:6px">';
+  h+=list.map(function(r){
+    var own=r.u===myHandle();
+    var nest=((r.r||[]).filter(function(n){return !isBlocked(n.u);})).map(function(n){
+      var nown=n.u===myHandle();
+      return '<div style="font-size:0.72rem;color:#c8c8d4"><b style="color:#fff">'+escH(n.u)+'</b> '+linkify(n.b)+
+        ' <span style="color:#666;font-size:0.62rem">'+timeAgo(n.t)+'</span>'+
+        (nown?' <button data-red="'+n.id+'" data-sid="'+s.id+'" style="background:none;border:none;color:#888;cursor:pointer;font-size:0.65rem">✎</button><button data-rdel="'+n.id+'" data-sid="'+s.id+'" style="background:none;border:none;color:#888;cursor:pointer;font-size:0.65rem">✕</button>':'')+'</div>';
+    }).join('');
+    return '<div style="font-size:0.75rem;color:#c8c8d4"><b style="color:#fff">'+escH(r.u)+'</b> '+linkify(r.b)+
+      ' <span style="color:#666;font-size:0.62rem">'+timeAgo(r.t)+'</span>'+
+      ' <button data-nrep="'+r.id+'" style="background:none;border:none;color:#00D4FF;cursor:pointer;font-size:0.65rem">↩</button>'+
+      (own?' <button data-red="'+r.id+'" data-sid="'+s.id+'" style="background:none;border:none;color:#888;cursor:pointer;font-size:0.65rem">✎</button><button data-rdel="'+r.id+'" data-sid="'+s.id+'" style="background:none;border:none;color:#888;cursor:pointer;font-size:0.65rem">✕</button>':'')+
+      '<div data-nform="'+r.id+'" style="display:none;margin-top:4px"><input data-nin="'+r.id+'" maxlength="200" placeholder="Nested reply…" style="width:100%;padding:6px 10px;border-radius:12px;border:1px solid rgba(139,92,246,0.3);background:rgba(255,255,255,0.04);color:#fff;font-size:0.72rem"><button data-nsend="'+r.id+'" data-sid="'+s.id+'" style="margin-top:4px;padding:4px 12px;border-radius:14px;background:rgba(139,92,246,0.2);border:1px solid rgba(139,92,246,0.4);color:#c9b8ff;font-size:0.65rem;cursor:pointer">Reply</button></div>'+
+      (nest?'<div style="margin:4px 0 0 10px;padding-left:8px;border-left:2px solid rgba(0,212,255,0.25);display:flex;flex-direction:column;gap:4px">'+nest+'</div>':'')+'</div>';
+  }).join('');
+  h+='<div style="display:flex;gap:4px"><input data-rin="'+s.id+'" maxlength="200" placeholder="Reply…" style="flex:1;padding:6px 10px;border-radius:12px;border:1px solid rgba(139,92,246,0.3);background:rgba(255,255,255,0.04);color:#fff;font-size:0.72rem"><button data-rsend="'+s.id+'" style="padding:6px 12px;border-radius:12px;background:rgba(139,92,246,0.2);border:1px solid rgba(139,92,246,0.4);color:#c9b8ff;font-size:0.68rem;cursor:pointer">↩</button></div>';
+  h+='</div>';
+  return h;
+}
+// ── social phases P7-P10, P19: remix, forks, versions, issues, collections ──
+function remixKids(parent){return remixes.filter(r=>keyN(r.parent)===keyN(parent));}
+function remixParent(name){const r=remixes.find(x=>keyN(x.name)===keyN(name));return r?r.parent:'';}
+function remixSoul(nm){
+  const name=prompt('Remix "'+nm+'" — name your evolution:',nm+' (remix)');
+  if(!name)return;
+  const t=name.trim().slice(0,80);if(!t)return;
+  remixes.unshift({id:Date.now()+''+rnd(9999),name:t,parent:nm,by:myHandle(),t:Date.now()});
+  SAVE();mineEvent('remixed',nm,'🌱');toast('🌱 Remixed! "'+t+'" evolves from '+nm+' — publish it via Profile to go live');
+  if(!$('ssModal').classList.contains('hidden')&&profKey)openProfile(profKey);
+}
+function remixSection(k,nm){
+  const kids=remixKids(nm),par=remixParent(nm);
+  let h='<div class="ss-sub">🌱 Remixes ('+kids.length+')</div>';
+  if(par)h+='<div style="font-size:0.72rem;color:#8b8b98;margin-bottom:6px">Evolved from <b style="color:#fff;cursor:pointer" data-opx="'+escH(par)+'">'+escH(par)+'</b></div>';
+  if(kids.length)h+='<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px">'+kids.slice(0,12).map(r=>'<button data-opx="'+escH(r.name)+'" style="padding:4px 10px;border-radius:14px;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.3);color:#9adec0;font-size:0.68rem;cursor:pointer" title="by '+escH(r.by||'?')+' · '+timeAgo(r.t)+'">🌱 '+escH(r.name)+'</button>').join('')+'</div>';
+  h+='<button id="ssRemixBtn" style="padding:6px 14px;border-radius:16px;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.4);color:#9adec0;font-size:0.7rem;font-weight:600;cursor:pointer">🌱 Remix this soul</button>';
+  return h;
+}
+function forkSection(k,nm){
+  let forks={};try{forks=JSON.parse(localStorage.getItem('soulForks')||'{}');}catch(e){}
+  const kk=keyN(nm);
+  const kids=Object.keys(forks).filter(x=>forks[x]&&keyN(forks[x].parent)===kk);
+  let par='';for(const x in forks){if(keyN(x)===kk&&forks[x].parent){par=forks[x].parent;break;}}
+  if(!kids.length&&!par)return '';
+  let h='<div class="ss-sub">🍴 Forks ('+kids.length+')</div>';
+  if(par)h+='<div style="font-size:0.72rem;color:#8b8b98;margin-bottom:6px">Forked from <b style="color:#fff">'+escH(par)+'</b></div>';
+  if(kids.length)h+='<div style="font-size:0.72rem;color:#8b8b98">'+kids.slice(0,10).map(x=>escH((forks[x]&&forks[x].name)||x)).join(' · ')+'</div>';
+  return h;
+}
+function versionSection(k,nm){
+  const vs=versions[keyN(nm)]||[];
+  let h='<div class="ss-sub">🏷️ Versions ('+vs.length+')</div>';
+  h+='<div style="display:flex;flex-direction:column;gap:4px;margin-bottom:6px">'+(vs.slice(0,8).map(v=>'<div style="font-size:0.72rem;color:#c8c8d4"><b style="color:#FFD166">v'+escH(v.v)+'</b> '+escH(v.note||'')+' <span style="color:#666">· '+timeAgo(v.t)+' · by '+escH(v.by||'?')+'</span></div>').join('')||'<div class="ss-empty">No versions logged.</div>')+'</div>';
+  h+='<button id="ssVerBtn" style="padding:6px 14px;border-radius:16px;background:rgba(255,209,102,0.1);border:1px solid rgba(255,209,102,0.35);color:#FFD166;font-size:0.7rem;font-weight:600;cursor:pointer">＋ Log version</button>';
+  return h;
+}
+const ISTATES=['OPEN','IN PROGRESS','RESOLVED','CLOSED'];
+const ISCOL={OPEN:'#EF4444','IN PROGRESS':'#FFD166','RESOLVED':'#10B981','CLOSED':'#666'};
+function issueSection(k,nm){
+  const list=issues[keyN(nm)]||[];
+  const open=list.filter(x=>x.st==='OPEN'||x.st==='IN PROGRESS').length;
+  let h='<div class="ss-sub">🐞 Issues ('+open+' open / '+list.length+')</div>';
+  h+='<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:6px">'+(list.slice(0,6).map(x=>'<div style="font-size:0.72rem;color:#c8c8d4;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:6px 8px"><b style="color:#fff">'+escH(x.title)+'</b> <button data-ist="'+x.id+'" title="Advance state" style="padding:1px 8px;border-radius:10px;font-size:0.62rem;font-weight:700;cursor:pointer;background:transparent;color:'+(ISCOL[x.st]||'#fff')+';border:1px solid '+(ISCOL[x.st]||'#fff')+'">'+escH(x.st)+'</button><div style="color:#8b8b98">'+escH(x.body||'')+'</div><div style="color:#666;font-size:0.62rem">by '+escH(x.by||'?')+' · '+timeAgo(x.t)+'</div></div>').join('')||'<div class="ss-empty">No issues — the soul is healthy.</div>')+'</div>';
+  h+='<button id="ssIssueBtn" style="padding:6px 14px;border-radius:16px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.35);color:#F87171;font-size:0.7rem;font-weight:600;cursor:pointer">＋ Report issue</button>';
+  return h;
+}
+function openCollections(nm){
+  const sheet=$('ssSheet');
+  sheet.innerHTML='<div class="ss-banner" style="background:linear-gradient(135deg,#10B981,#0EA5E9)"><button class="ss-close" id="ssProfClose">✕</button><div class="ss-ht"><h2>💾 Save “'+escH(nm)+'”</h2><div class="ty">Pick collections — or start a new one</div></div></div>'+
+  '<div class="ss-body"><div style="display:flex;flex-direction:column;gap:6px">'+
+  (collections.length?collections.map(function(c,ci){
+    const on=c.items.some(x=>keyN(x)===keyN(nm));
+    return '<button data-ctog="'+ci+'" style="display:flex;gap:8px;align-items:center;padding:8px 12px;border-radius:12px;background:rgba(255,255,255,0.03);border:1px solid '+(on?'rgba(16,185,129,0.5)':'rgba(255,255,255,0.08)')+';color:#fff;font-size:0.78rem;cursor:pointer"><span>'+(on?'✅':'💾')+'</span><b style="flex:1;text-align:left">'+escH(c.name)+'</b><span style="color:#888;font-size:0.65rem">'+c.items.length+'</span></button>';
+  }).join(''):'<div class="ss-empty">No collections yet.</div>')+'</div>'+
+  '<div style="display:flex;gap:6px;margin-top:10px"><input id="ssColNew" maxlength="40" placeholder="New collection…" style="flex:1;padding:8px 12px;border-radius:12px;border:1px solid rgba(16,185,129,0.35);background:rgba(255,255,255,0.04);color:#fff;font-size:0.75rem"><button id="ssColAdd" style="padding:8px 14px;border-radius:12px;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.4);color:#9adec0;font-size:0.72rem;font-weight:600;cursor:pointer">＋ New</button></div></div>';
+  $('ssModal').classList.remove('hidden');
+  sheet.querySelector('#ssProfClose').addEventListener('click',closeModal);
+  sheet.querySelectorAll('[data-ctog]').forEach(b=>b.addEventListener('click',()=>{
+    const c=collections[+b.dataset.ctog];
+    const ix=c.items.findIndex(x=>keyN(x)===keyN(nm));
+    if(ix>=0){c.items.splice(ix,1);toast('Removed from '+c.name);}else{c.items.push(nm);mineEvent('saved to collection',nm+' → '+c.name,'💾');toast('💾 Saved to '+c.name);}
+    SAVE();openCollections(nm);if(view==='watch')renderWatch();
+  }));
+  sheet.querySelector('#ssColAdd').addEventListener('click',()=>{
+    const v=sheet.querySelector('#ssColNew').value.trim().slice(0,40);if(!v)return;
+    collections.unshift({id:Date.now()+'',name:v,items:[nm],t:Date.now()});
+    SAVE();toast('🗂 Collection "'+v+'" created');openCollections(nm);
+  });
+}
 // ── profile modal (MySpace) ──
 let profKey='';
 function openProfile(k){
@@ -2142,7 +2349,7 @@ function openProfile(k){
   const themes=['linear-gradient(135deg,#8B5CF6,#6D28D9)','linear-gradient(135deg,#0EA5E9,#8B5CF6)','linear-gradient(135deg,#F59E0B,#EF4444)','linear-gradient(135deg,#10B981,#0EA5E9)','linear-gradient(135deg,#FF6B9D,#8B5CF6)','linear-gradient(135deg,#334155,#0F172A)'];
   const th=themes[(hash(k)%themes.length)];
   const t8=topFriends(it);
-  const sh=(shoutsAll[k]||[]).slice();
+  const sh=(shoutsAll[k]||[]).filter(s=>shoutVisible(k,s));
   const sheet=$('ssSheet');
   sheet.innerHTML=`
   <div class="ss-banner" style="background:${th}">
@@ -2167,13 +2374,18 @@ function openProfile(k){
     ${it.plt?`<div class="card-plt" style="margin-top:8px"><span class="plt-p">P ${it.plt.split('/')[0]}</span><span class="plt-l">L ${it.plt.split('/')[1]}</span><span class="plt-t">T ${it.plt.split('/')[2]}</span></div>`:''}
     <div class="ss-sub">💎 Top 8 Friends</div>
     <div class="ss-t8">${t8.length?t8.map(f=>`<div class="ss-fr" data-f="${keyN(f.name)}"><span class="e">${f.icon||tEmoji(f.type)}</span><span class="n">${f.name}</span></div>`).join(''):'<div class="ss-empty" style="grid-column:span 4">No friends yet.</div>'}</div>
+    ${remixSection(k,it.name)}${forkSection(k,it.name)}${versionSection(k,it.name)}${issueSection(k,it.name)}
     <div class="ss-sub">💬 Shoutbox (${sh.length})</div>
-    <div class="ss-shouts">${sh.slice(0,30).map((s,i)=>`
+    <div class="ss-shouts">${sh.slice(0,30).map((s,i)=>{
+      const rk=k+'@'+s.id, own=!!(s.m||s.u===myHandle());
+      const reps=shoutReplies[rk]||[];
+      const pf=isPerson(s.u||'')&&String(s.u)!=='You';
+      return `
       <div class="ss-sh"><div class="av" style="width:24px;height:24px;min-width:24px;font-size:0.8rem">${s.e||'🫂'}</div>
-        <div class="b"><b style="color:#fff">${s.u||'Anonymous'}</b> ${s.b}<div class="m">${timeAgo(s.t)}</div></div>
-        <div class="ss-votes"><span class="v${(shoutVotes[k+'@'+s.id]===1)?' up':''}" data-v="1" data-id="${s.id}">▲</span> <b>${s.v||0}</b> <span class="v${(shoutVotes[k+'@'+s.id]===-1)?' dn':''}" data-v="-1" data-id="${s.id}">▼</span></div>
-      </div>`).join('')||'<div class="ss-empty">No shouts yet. Be the first.</div>'}</div>
-    <div class="ss-shin"><input id="ssShoutIn" maxlength="200" placeholder="Leave a shout on ${it.name}…"><button id="ssShoutBtn">Shout</button></div>
+        <div class="b"><b style="color:#fff">${escH(s.u||'Anonymous')}</b>${s.k&&s.k!=='text'?' <span style="font-size:0.6rem;color:#00D4FF">'+(s.k==='image'?'🖼 IMAGE':'🔗 LINK')+'</span>':''}${s.vis==='private'?' <span style="font-size:0.6rem;color:#888">🔒 only you</span>':''}${pf?`<button data-pf="${escH(s.u)}" title="Follow this person" style="background:none;border:1px solid rgba(0,212,255,0.4);border-radius:10px;color:#00D4FF;font-size:0.6rem;padding:0 6px;cursor:pointer;margin-left:4px">${pfollow[String(s.u).toLowerCase()]?'✓':'＋'}</button>`:''} ${shoutBody(s)}<div class="m">${timeAgo(s.t)} · <button data-rep="${s.id}" style="background:none;border:none;color:#00D4FF;cursor:pointer;font-size:0.65rem">↩ ${reps.length||'Reply'}</button>${own?` <button data-sedit="${s.id}" style="background:none;border:none;color:#888;cursor:pointer;font-size:0.65rem">✎</button><button data-sdel="${s.id}" style="background:none;border:none;color:#888;cursor:pointer;font-size:0.65rem">✕</button>`:''} <button data-flag="${s.id}" title="Report (hides for you)" style="background:none;border:none;color:#666;cursor:pointer;font-size:0.65rem">⚑</button><button data-blocku="${escH(s.u||'')}" title="Block author" style="background:none;border:none;color:#666;cursor:pointer;font-size:0.65rem">⛔</button><button data-muteu="${escH(s.u||'')}" title="Mute author shouts" style="background:none;border:none;color:#666;cursor:pointer;font-size:0.65rem">🔇</button>${pf?`<button data-dmu="${escH(s.u)}" title="Message this person" style="background:none;border:1px solid rgba(0,212,255,0.4);border-radius:10px;color:#00D4FF;font-size:0.6rem;padding:0 6px;cursor:pointer;margin-left:4px">✉</button>`:''}<button data-shareshout="1" title="Copy soul link" style="background:none;border:none;color:#666;cursor:pointer;font-size:0.65rem">⇪</button></div>${renderReacts(k,s)}${renderReplies(k,s)}</div>
+        <div class="ss-votes"><span class="v${(shoutVotes[rk]===1)?' up':''}" data-v="1" data-id="${s.id}">▲</span> <b>${s.v||0}</b> <span class="v${(shoutVotes[rk]===-1)?' dn':''}" data-v="-1" data-id="${s.id}">▼</span></div>
+      </div>`;}).join('')||'<div class="ss-empty">No shouts yet. Be the first.</div>'}</div>
+    <div class="ss-shin" style="flex-wrap:wrap"><select id="ssShoutKind" style="background:rgba(255,255,255,0.04);color:#fff;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:6px;font-size:0.7rem"><option value="text">💬 Text</option><option value="link">🔗 Link</option><option value="image">🖼 Image</option></select><input id="ssShoutIn" maxlength="200" placeholder="Leave a shout on ${it.name}…"><input id="ssShoutUrl" maxlength="300" placeholder="https://…" style="display:none;flex:1;min-width:120px;padding:8px 10px;border-radius:12px;border:1px solid rgba(0,212,255,0.3);background:rgba(255,255,255,0.04);color:#fff;font-size:0.75rem"><select id="ssShoutVis" title="Visibility" style="background:rgba(255,255,255,0.04);color:#fff;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:6px;font-size:0.7rem"><option value="public">🌐</option><option value="private">🔒</option></select><button id="ssShoutBtn">Shout</button></div>
   </div>`;
   $('ssModal').classList.remove('hidden');
   sheet.querySelector('#ssProfClose').addEventListener('click',closeModal);
@@ -2182,19 +2394,132 @@ function openProfile(k){
     const b=ev.target.closest('button[data-a]');if(!b)return;ev.preventDefault();
     if(b.dataset.sh)share(it.name);else doAction(b.dataset.a,k);
   });
-  sheet.querySelector('#ssShoutBtn').addEventListener('click',()=>{
-    const inp=sheet.querySelector('#ssShoutIn');const v=inp.value.trim();if(!v)return;
-    const list=shoutsAll[k]||(shoutsAll[k]=[]);
-    list.unshift({id:Date.now()+''+rnd(9999),u:prefs.user.handle||'You',e:prefs.user.emoji||'🫂',t:Date.now(),b:v.slice(0,200),v:0});
-    SAVE();mineEvent('shouted on',it.name,'💬');toast('💬 Shouted on '+it.name);openProfile(k);
+  sheet.querySelectorAll('[data-opx]').forEach(x=>x.addEventListener('click',()=>openProfile(x.dataset.opx)));
+  const rb=sheet.querySelector('#ssRemixBtn');if(rb)rb.addEventListener('click',()=>remixSoul(it.name));
+  const vb=sheet.querySelector('#ssVerBtn');if(vb)vb.addEventListener('click',()=>{
+    const v=prompt('Version number (e.g. 1.1):','1.1');if(!v)return;
+    const note=prompt('What changed?','')||'';
+    const L=versions[keyN(it.name)]||(versions[keyN(it.name)]=[]);
+    L.unshift({v:v.trim().slice(0,12),note:note.trim().slice(0,140),t:Date.now(),by:myHandle()});
+    SAVE();mineEvent('logged version',''+it.name+' v'+v.trim(),'🏷️');toast('🏷️ Version logged');openProfile(k);
   });
-  sheet.querySelectorAll('.ss-votes .v').forEach(v=>v.addEventListener('click',()=>{
-    const sid=v.dataset.id,val=parseInt(v.dataset.v);const id=k+'@'+sid;
-    const s=(shoutsAll[k]||[]).find(x=>String(x.id)===String(sid));if(!s)return;
-    if(shoutVotes[id]===val){delete shoutVotes[id];s.v=(s.v||0)-val;}
-    else{if(shoutVotes[id])s.v=(s.v||0)-shoutVotes[id];shoutVotes[id]=val;s.v=(s.v||0)+val;}
-    SAVE();openProfile(k);
+  const ib=sheet.querySelector('#ssIssueBtn');if(ib)ib.addEventListener('click',()=>{
+    const title=prompt('Issue title (bug / idea / incompatibility):');if(!title||!title.trim())return;
+    const body=prompt('Details:')||'';
+    const L=issues[keyN(it.name)]||(issues[keyN(it.name)]=[]);
+    L.unshift({id:Date.now()+''+rnd(9999),title:title.trim().slice(0,80),body:body.trim().slice(0,300),st:'OPEN',t:Date.now(),by:myHandle()});
+    SAVE();mineEvent('reported issue',it.name,'🐞');toast('🐞 Issue opened');openProfile(k);
+  });
+  sheet.querySelectorAll('[data-ist]').forEach(b=>b.addEventListener('click',()=>{
+    const L=issues[keyN(it.name)]||[];
+    const x=L.find(y=>String(y.id)===String(b.dataset.ist));if(!x)return;
+    x.st=ISTATES[(ISTATES.indexOf(x.st)+1)%ISTATES.length];
+    SAVE();toast('🐞 → '+x.st);openProfile(k);
   }));
+  const kd=sheet.querySelector('#ssShoutKind'), urlIn=sheet.querySelector('#ssShoutUrl');
+  if(kd&&urlIn)kd.addEventListener('change',()=>{urlIn.style.display=kd.value==='text'?'none':'block';});
+  const sendShout=()=>{
+    const inp=sheet.querySelector('#ssShoutIn');const v=inp.value.trim();if(!v)return;
+    const kind=kd?kd.value:'text';
+    let url=urlIn?urlIn.value.trim():'';
+    if(url&&!/^https?:\/\//i.test(url))url='https://'+url;
+    if(kind!=='text'&&!url){toast('Add a URL for link/image posts');return;}
+    const visEl=sheet.querySelector('#ssShoutVis');
+    const list=shoutsAll[k]||(shoutsAll[k]=[]);
+    list.unshift({id:Date.now()+''+rnd(9999),u:myHandle(),e:prefs.user.emoji||'🫂',t:Date.now(),b:v.slice(0,200),v:0,k:kind,url:url,vis:visEl?visEl.value:'public',m:1});
+    SAVE();mineEvent('shouted on',it.name,'💬');toast('💬 Shouted on '+it.name);openProfile(k);
+  };
+  sheet.querySelector('#ssShoutBtn').addEventListener('click',sendShout);
+  sheet.querySelector('#ssShoutIn').addEventListener('keydown',ev=>{if(ev.key==='Enter'){ev.preventDefault();sendShout();}});
+  sheet.addEventListener('click',ev=>{
+    const vv=ev.target.closest('.ss-votes .v');
+    if(vv&&sheet.contains(vv)){
+      const sid=vv.dataset.id,val=parseInt(vv.dataset.v),id=k+'@'+sid;
+      const s=(shoutsAll[k]||[]).find(x=>String(x.id)===String(sid));if(!s)return;
+      if(shoutVotes[id]===val){delete shoutVotes[id];s.v=(s.v||0)-val;}
+      else{if(shoutVotes[id])s.v=(s.v||0)-shoutVotes[id];shoutVotes[id]=val;s.v=(s.v||0)+val;}
+      SAVE();openProfile(k);return;
+    }
+    const b=ev.target.closest('button');if(!b||!sheet.contains(b))return;
+    if(b.closest('.ss-act')||b.id==='ssShoutBtn'||b.id==='ssProfClose')return;
+    const sid=b.dataset.sid;
+    if(b.dataset.r&&sid){
+      const rk=k+'@'+sid,R=shoutReacts[rk]||(shoutReacts[rk]={n:{},mine:{}});
+      const em=b.dataset.r;
+      if(R.mine[em]){delete R.mine[em];R.n[em]=(R.n[em]||1)-1;if(R.n[em]<=0)delete R.n[em];}
+      else{R.mine[em]=1;R.n[em]=(R.n[em]||0)+1;}
+      SAVE();openProfile(k);return;
+    }
+    if(b.dataset.pf){togglePeople(b.dataset.pf);return;}
+    if(b.dataset.shareshout){share(it.name);return;}
+    if(b.dataset.rep&&sid){const rk=k+'@'+sid;repOpen[rk]=!repOpen[rk];openProfile(k);return;}
+    if(b.dataset.flag&&sid){
+      const rk=k+'@'+sid;reported[rk]=1;reports.push({kind:'shout',k:k,sid:String(sid),t:Date.now(),by:myHandle()});
+      SAVE();toast('⚑ Reported — hidden for you. Thank you.');openProfile(k);return;
+    }
+    if(b.dataset.blocku){
+      const h=String(b.dataset.blocku||'');if(h){blocks[h.toLowerCase()]={h:h,t:Date.now()};SAVE();toast('⛔ Blocked '+h+' — hidden everywhere for you');openProfile(k);}
+      return;
+    }
+    if(b.dataset.muteu){
+      const h=String(b.dataset.muteu||'');if(h){mutes[h.toLowerCase()]={h:h,t:Date.now()};SAVE();toast('🔇 Muted '+h+' — their shouts are hidden');openProfile(k);}
+      return;
+    }
+    if(b.dataset.dmu){openDM(b.dataset.dmu);return;}
+    if(b.dataset.sedit&&sid){
+      const s=(shoutsAll[k]||[]).find(x=>String(x.id)===String(sid));if(!s||!(s.m||s.u===myHandle()))return;
+      const nv=prompt('Edit shout:',s.b);if(nv==null)return;
+      s.b=nv.slice(0,200);SAVE();openProfile(k);return;
+    }
+    if(b.dataset.sdel&&sid){
+      const s=(shoutsAll[k]||[]).find(x=>String(x.id)===String(sid));if(!s||!(s.m||s.u===myHandle()))return;
+      shoutsAll[k]=(shoutsAll[k]||[]).filter(x=>String(x.id)!==String(sid));
+      SAVE();toast('Shout deleted');openProfile(k);return;
+    }
+    if(b.dataset.rsend&&sid){
+      const inp=sheet.querySelector('[data-rin="'+sid+'"]');const v=inp?inp.value.trim():'';
+      if(!v)return;
+      const rk=k+'@'+sid,L=shoutReplies[rk]||(shoutReplies[rk]=[]);
+      L.push({id:Date.now()+''+rnd(9999),u:myHandle(),e:prefs.user.emoji||'🫂',t:Date.now(),b:v.slice(0,200),r:[]});
+      repOpen[rk]=true;SAVE();openProfile(k);return;
+    }
+    if(b.dataset.nrep){
+      const f=sheet.querySelector('[data-nform="'+b.dataset.nrep+'"]');
+      if(f)f.style.display=f.style.display==='none'?'block':'none';
+      return;
+    }
+    if(b.dataset.nsend&&sid){
+      const rid=b.dataset.nsend;
+      const inp=sheet.querySelector('[data-nin="'+rid+'"]');const v=inp?inp.value.trim():'';
+      if(!v)return;
+      const rk=k+'@'+sid,L=shoutReplies[rk]||[];
+      const r=L.find(x=>String(x.id)===String(rid));if(!r||!r.r)return;
+      r.r.push({id:Date.now()+''+rnd(9999),u:myHandle(),e:prefs.user.emoji||'🫂',t:Date.now(),b:v.slice(0,200)});
+      repOpen[rk]=true;SAVE();openProfile(k);return;
+    }
+    if((b.dataset.red||b.dataset.rdel)&&sid){
+      const rid=b.dataset.red||b.dataset.rdel;
+      const rk=k+'@'+sid,L=shoutReplies[rk]||[];
+      let done=false;
+      for(let i=0;i<L.length&&!done;i++){
+        if(String(L[i].id)===String(rid)&&L[i].u===myHandle()){
+          if(b.dataset.red){const nv=prompt('Edit reply:',L[i].b);if(nv!=null)L[i].b=nv.slice(0,200);}
+          else L.splice(i,1);
+          done=true;break;
+        }
+        const nest=L[i].r||[];
+        for(let j=0;j<nest.length;j++){
+          if(String(nest[j].id)===String(rid)&&nest[j].u===myHandle()){
+            if(b.dataset.red){const nv2=prompt('Edit reply:',nest[j].b);if(nv2!=null)nest[j].b=nv2.slice(0,200);}
+            else nest.splice(j,1);
+            done=true;break;
+          }
+        }
+      }
+      if(done){SAVE();if(b.dataset.rdel)toast('Reply deleted');openProfile(k);}
+      return;
+    }
+  });
 }
 function topFriends(it){
   const same=items.filter(i=>i.type===it.type&&keyN(i.name)!==keyN(it.name)).slice(0,8);
@@ -2230,11 +2555,177 @@ function openIdentity(){
   box.querySelector('#ssIdCancel').addEventListener('click',()=>$('ssIdentity').classList.add('hidden'));
 }
 
+// ── social phases P13-P18, P24-P25, P28: groups, events, DMs, notes, discovery ──
+function daySeed(){return new Date().toISOString().slice(0,10);}
+function seededPick(arr,salt){if(!arr||!arr.length)return null;return arr[hash(daySeed()+salt)%arr.length];}
+function odayBanner(){
+  if(!items.length)return '';
+  const soul=seededPick(items,'soul');
+  const creator=seededPick(ghosts.length?ghosts.map(g=>({name:g.h})):items,'creator');
+  const proj=seededPick(items.filter(i=>i.type==='pack'||i.type==='world'||i.type==='combo'),'proj');
+  const agent=seededPick(items.filter(i=>i.type==='agent'),'agent');
+  const world=seededPick(items.filter(i=>i.type==='world'),'world');
+  const chip=(label,it)=>it?'<button data-oday="'+escH(it.name)+'" style="padding:2px 8px;border-radius:10px;background:rgba(255,209,102,0.08);border:1px solid rgba(255,209,102,0.3);color:#FFD166;font-size:0.62rem;cursor:pointer;white-space:nowrap">'+label+' '+escH(it.name)+'</button>':'';
+  return '<div style="display:flex;gap:4px;overflow-x:auto;padding:6px 2px">'+chip('☀️ Soul',soul)+chip('👑 Creator',creator)+chip('📦 Project',proj)+chip('🤖 Agent',agent)+chip('🌍 World',world)+'</div>';
+}
+function shoutActivity(k){
+  let n=0;const L=shoutsAll[k]||[];
+  n+=L.length*3;
+  for(const id in shoutVotes){if(id.indexOf(k+'@')===0)n+=2;}
+  for(const rk in shoutReacts){if(rk.indexOf(k+'@')===0){const R=shoutReacts[rk];for(const em in (R.n||{}))n+=R.n[em];}}
+  for(const rk in shoutReplies){if(rk.indexOf(k+'@')===0)n+=(shoutReplies[rk]||[]).length*2;}
+  return n;
+}
+function renderGroups(){
+  const root=$('ssView'),me=myHandle();
+  root.innerHTML='<div class="ss-sub">🎪 Soul Groups ('+groups.length+')</div>'+
+  (groups.length?groups.map(g=>{
+    const member=(g.members||[]).some(m=>m.toLowerCase()===me.toLowerCase());
+    return '<div class="ss-row" data-g="'+escH(g.id)+'"><span>🎪</span><span class="grow">'+escH(g.name)+'<div style="font-size:0.6rem;color:#888">'+escH(g.vis||'PUBLIC')+' · '+(g.members||[]).length+' members</div></span>'+(member?'<span style="font-size:0.6rem;color:#9adec0">✓</span>':'')+'</div>';
+  }).join(''):'<div class="ss-empty">No groups yet — found the first.</div>')+
+  '<div style="display:flex;gap:6px;margin:8px 0"><input id="ssGName" maxlength="40" placeholder="Group name…" style="flex:1;padding:8px 12px;border-radius:12px;border:1px solid rgba(245,158,11,0.35);background:rgba(255,255,255,0.04);color:#fff;font-size:0.75rem"><select id="ssGVis" style="background:rgba(255,255,255,0.04);color:#fff;border:1px solid rgba(255,255,255,0.1);border-radius:12px;font-size:0.7rem"><option>PUBLIC</option><option>PRIVATE</option><option>INVITE ONLY</option></select><button id="ssGCreate" style="padding:8px 14px;border-radius:12px;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.4);color:#FCD34D;font-size:0.72rem;font-weight:600;cursor:pointer">＋</button></div>'+
+  '<div class="ss-sub">📅 Soul Events ('+pevents.length+')</div>'+
+  (pevents.length?pevents.slice(0,10).map(v=>'<div class="ss-row" data-ev="'+escH(v.id)+'"><span>📅</span><span class="grow">'+escH(v.title)+'<div style="font-size:0.6rem;color:#888">'+escH(v.when||'')+' · '+escH(v.where||'')+'</div></span><span style="font-size:0.62rem;color:#00D4FF">'+(v.rsvp||[]).length+' ✋</span></div>').join(''):'<div class="ss-empty">No events — call the first gathering.</div>')+
+  '<div style="display:flex;gap:6px;margin:8px 0"><input id="ssEvT" maxlength="60" placeholder="Event title…" style="flex:2;padding:8px 12px;border-radius:12px;border:1px solid rgba(0,212,255,0.35);background:rgba(255,255,255,0.04);color:#fff;font-size:0.75rem"><input id="ssEvW" maxlength="40" placeholder="When / where" style="flex:1;padding:8px 12px;border-radius:12px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:#fff;font-size:0.75rem"><button id="ssEvCreate" style="padding:8px 14px;border-radius:12px;background:rgba(0,212,255,0.12);border:1px solid rgba(0,212,255,0.4);color:#00D4FF;font-size:0.72rem;font-weight:600;cursor:pointer">＋</button></div>';
+  root.querySelectorAll('[data-g]').forEach(r=>r.addEventListener('click',()=>openGroup(r.dataset.g)));
+  root.querySelectorAll('[data-ev]').forEach(r=>r.addEventListener('click',()=>openEvent(r.dataset.ev)));
+  root.querySelector('#ssGCreate').addEventListener('click',()=>{
+    const v=root.querySelector('#ssGName').value.trim().slice(0,40);if(!v)return;
+    groups.unshift({id:Date.now()+'',name:v,desc:'',vis:root.querySelector('#ssGVis').value,by:myHandle(),members:[myHandle()],t:Date.now()});
+    SAVE();mineEvent('founded group','group '+v,'🎪');toast('🎪 Group "'+v+'" founded');renderGroups();
+  });
+  root.querySelector('#ssEvCreate').addEventListener('click',()=>{
+    const t=root.querySelector('#ssEvT').value.trim().slice(0,60);if(!t)return;
+    pevents.unshift({id:Date.now()+'',title:t,when:root.querySelector('#ssEvW').value.trim().slice(0,40),where:'',by:myHandle(),rsvp:[myHandle()],t:Date.now()});
+    SAVE();mineEvent('called event',t,'📅');toast('📅 Event called');renderGroups();
+  });
+}
+function openGroup(id){
+  const g=groups.find(x=>String(x.id)===String(id));if(!g)return;
+  const me=myHandle(),member=(g.members||[]).some(m=>m.toLowerCase()===me.toLowerCase())||g.by===me;
+  const locked=(g.vis!=='PUBLIC')&&!member;
+  const sheet=$('ssSheet');
+  let body='';
+  if(locked){
+    body='<div class="ss-empty">'+(g.vis==='INVITE ONLY'?'🔒 Invite-only — ask a member to invite you.':'🔒 Private group — join to view inside.')+'</div>';
+  }else{
+    const feed=(shoutsAll['group:'+g.id]||[]).filter(s=>!isBlocked(s.u)&&!reported['group:'+g.id+'@'+s.id]);
+    body='<div class="ss-sub">👥 Members ('+(g.members||[]).length+')</div><div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px">'+(g.members||[]).map(m=>'<span style="padding:2px 8px;border-radius:10px;background:rgba(139,92,246,0.1);font-size:0.65rem;color:#c9b8ff">'+escH(m)+'</span>').join('')+'</div>'+
+    (member&&g.vis==='INVITE ONLY'?'<button id="ssGInvite" style="margin-bottom:8px;padding:4px 12px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.15);color:#888;font-size:0.65rem;cursor:pointer">＋ Invite someone</button>':'')+
+    '<div class="ss-sub">📜 Group feed ('+feed.length+')</div><div class="ss-shouts">'+(feed.slice(0,20).map(s=>'<div class="ss-sh"><div class="av" style="width:24px;height:24px;min-width:24px;font-size:0.8rem">'+(s.e||'🫂')+'</div><div class="b"><b style="color:#fff">'+escH(s.u)+'</b> '+linkify(s.b)+' <span style="color:#666;font-size:0.62rem">'+timeAgo(s.t)+'</span></div></div>').join('')||'<div class="ss-empty">Quiet hall. Post the first decree.</div>')+'</div>'+
+    '<div style="display:flex;gap:6px;margin-top:8px"><input id="ssGPost" maxlength="200" placeholder="Post to '+escH(g.name)+'…" style="flex:1;padding:8px 12px;border-radius:12px;border:1px solid rgba(139,92,246,0.3);background:rgba(255,255,255,0.04);color:#fff;font-size:0.75rem"><button id="ssGPostBtn" style="padding:8px 14px;border-radius:12px;background:rgba(139,92,246,0.2);border:1px solid rgba(139,92,246,0.4);color:#c9b8ff;font-size:0.72rem;cursor:pointer">Post</button></div>';
+  }
+  sheet.innerHTML='<div class="ss-banner" style="background:linear-gradient(135deg,#F59E0B,#8B5CF6)"><button class="ss-close" id="ssProfClose">✕</button><div class="ss-ht"><h2>🎪 '+escH(g.name)+'</h2><div class="ty">'+escH(g.vis||'PUBLIC')+' · by '+escH(g.by||'?')+'</div></div></div>'+
+  '<div class="ss-body"><div style="font-size:0.75rem;color:#b6b6c4;margin-bottom:8px">'+escH(g.desc||'')+'</div>'+
+  '<div style="display:flex;gap:6px;margin-bottom:10px">'+(member?'<button id="ssGLeave" style="padding:6px 14px;border-radius:14px;background:transparent;border:1px solid rgba(255,255,255,0.15);color:#888;font-size:0.7rem;cursor:pointer">Leave</button>':(g.vis==='INVITE ONLY'?'<span style="font-size:0.7rem;color:#888">🔒 invite only</span>':'<button id="ssGJoin" style="padding:6px 14px;border-radius:14px;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.4);color:#9adec0;font-size:0.7rem;font-weight:600;cursor:pointer">＋ Join</button>'))+'<button id="ssGShare" style="padding:6px 10px;border-radius:14px;background:transparent;border:1px solid rgba(255,255,255,0.12);color:#888;font-size:0.7rem;cursor:pointer">⇪ Share</button></div>'+body+'</div>';
+  $('ssModal').classList.remove('hidden');
+  sheet.querySelector('#ssProfClose').addEventListener('click',closeModal);
+  const j=sheet.querySelector('#ssGJoin');if(j)j.addEventListener('click',()=>{g.members.push(me);SAVE();mineEvent('joined group','group '+g.name,'🎪');toast('🎪 Joined '+g.name);openGroup(g.id);});
+  const lv=sheet.querySelector('#ssGLeave');if(lv)lv.addEventListener('click',()=>{g.members=g.members.filter(m=>m.toLowerCase()!==me.toLowerCase());SAVE();toast('Left '+g.name);openGroup(g.id);});
+  const iv=sheet.querySelector('#ssGInvite');if(iv)iv.addEventListener('click',()=>{const h=prompt('Handle to invite:');if(!h||!h.trim())return;g.members.push(h.trim().slice(0,40));SAVE();toast('Invited '+h.trim());openGroup(g.id);});
+  sheet.querySelector('#ssGShare').addEventListener('click',()=>{
+    const url=location.origin+location.pathname+'#group-'+encodeURIComponent(g.id);
+    const done=()=>toast('⇪ Group link copied');
+    if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(url).then(done,()=>copyOld(url,done));else copyOld(url,done);
+  });
+  const pb=sheet.querySelector('#ssGPostBtn');
+  if(pb)pb.addEventListener('click',()=>{
+    const inp=sheet.querySelector('#ssGPost'),v=inp.value.trim();if(!v)return;
+    const L=shoutsAll['group:'+g.id]||(shoutsAll['group:'+g.id]=[]);
+    L.unshift({id:Date.now()+''+rnd(9999),u:me,e:prefs.user.emoji||'🫂',t:Date.now(),b:v.slice(0,200),v:0,m:1});
+    SAVE();mineEvent('posted in group','group '+g.name,'📜');openGroup(g.id);
+  });
+}
+function openEvent(id){
+  const v=pevents.find(x=>String(x.id)===String(id));if(!v)return;
+  const me=myHandle(),going=(v.rsvp||[]).some(m=>m.toLowerCase()===me.toLowerCase());
+  const sheet=$('ssSheet');
+  sheet.innerHTML='<div class="ss-banner" style="background:linear-gradient(135deg,#0EA5E9,#8B5CF6)"><button class="ss-close" id="ssProfClose">✕</button><div class="ss-ht"><h2>📅 '+escH(v.title)+'</h2><div class="ty">'+escH(v.when||'soon')+(v.where?' · '+escH(v.where):'')+' · by '+escH(v.by||'?')+'</div></div></div>'+
+  '<div class="ss-body"><div class="ss-sub">✋ Attendees ('+(v.rsvp||[]).length+')</div><div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px">'+(v.rsvp||[]).map(m=>'<span style="padding:2px 8px;border-radius:10px;background:rgba(0,212,255,0.1);font-size:0.65rem;color:#9be8ff">'+escH(m)+'</span>').join('')+'</div>'+
+  '<div style="display:flex;gap:6px"><button id="ssEvRsvp" style="padding:8px 16px;border-radius:14px;background:'+(going?'transparent':'rgba(0,212,255,0.15)')+';border:1px solid rgba(0,212,255,0.4);color:#00D4FF;font-size:0.72rem;font-weight:600;cursor:pointer">'+(going?'Withdraw RSVP':'✋ RSVP')+'</button><button id="ssEvShare" style="padding:8px 10px;border-radius:14px;background:transparent;border:1px solid rgba(255,255,255,0.12);color:#888;font-size:0.72rem;cursor:pointer">⇪ Share</button></div></div>';
+  $('ssModal').classList.remove('hidden');
+  sheet.querySelector('#ssProfClose').addEventListener('click',closeModal);
+  sheet.querySelector('#ssEvRsvp').addEventListener('click',()=>{
+    if(going)v.rsvp=v.rsvp.filter(m=>m.toLowerCase()!==me.toLowerCase());
+    else{v.rsvp.push(me);mineEvent('RSVPd',v.title,'📅');}
+    SAVE();openEvent(v.id);
+  });
+  sheet.querySelector('#ssEvShare').addEventListener('click',()=>{
+    const url=location.origin+location.pathname+'#event-'+encodeURIComponent(v.id);
+    const done=()=>toast('⇪ Event link copied');
+    if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(url).then(done,()=>copyOld(url,done));else copyOld(url,done);
+  });
+}
+function dmKey(h){return String(h||'').toLowerCase();}
+function dmUnread(){let n=0;for(const k in dms)(dms[k]||[]).forEach(m=>{if(m.t>dmSeen&&m.u!==myHandle()&&!isBlocked(m.u))n++;});return n;}
+function openDM(h){
+  h=String(h||'');const k=dmKey(h);
+  if(isBlocked(h)){toast('⛔ Blocked — unblock to message');return;}
+  const sheet=$('ssSheet'),thread=(dms[k]||[]).filter(m=>!isBlocked(m.u));
+  sheet.innerHTML='<div class="ss-banner" style="background:linear-gradient(135deg,#0EA5E9,#8B5CF6)"><button class="ss-close" id="ssProfClose">✕</button><div class="ss-ht"><h2>✉ '+escH(h)+'</h2><div class="ty">Human direct message — separate from AI chat</div></div></div>'+
+  '<div class="ss-body"><div style="display:flex;flex-direction:column;gap:6px;max-height:300px;overflow-y:auto">'+(thread.slice(-40).map(m=>'<div style="align-self:'+(m.u===myHandle()?'flex-end':'flex-start')+';max-width:85%;background:'+(m.u===myHandle()?'rgba(139,92,246,0.18)':'rgba(255,255,255,0.05)')+';border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:6px 10px;font-size:0.75rem;color:#e3e3ea"><b style="color:#fff">'+escH(m.u)+'</b> '+linkify(m.b)+' <span style="color:#666;font-size:0.62rem">'+timeAgo(m.t)+'</span></div>').join('')||'<div class="ss-empty">No messages yet — say hi. One click soul complete.</div>')+'</div>'+
+  '<div style="display:flex;gap:6px;margin-top:8px"><input id="ssDMIn" maxlength="300" placeholder="Message '+escH(h)+'…" style="flex:1;padding:8px 12px;border-radius:14px;border:1px solid rgba(0,212,255,0.3);background:rgba(255,255,255,0.04);color:#fff;font-size:0.75rem"><button id="ssDMSend" style="padding:8px 14px;border-radius:14px;background:linear-gradient(135deg,#0EA5E9,#8B5CF6);color:#fff;border:none;font-weight:700;font-size:0.72rem;cursor:pointer">→</button></div></div>';
+  $('ssModal').classList.remove('hidden');
+  sheet.querySelector('#ssProfClose').addEventListener('click',closeModal);
+  const send=()=>{
+    const inp=sheet.querySelector('#ssDMIn'),v=inp.value.trim();if(!v)return;
+    const L=dms[k]||(dms[k]=[]);
+    L.push({u:myHandle(),t:Date.now(),b:v.slice(0,300)});
+    SAVE();openDM(h);if(view==='you')renderYou();
+  };
+  sheet.querySelector('#ssDMSend').addEventListener('click',send);
+  sheet.querySelector('#ssDMIn').addEventListener('keydown',ev=>{if(ev.key==='Enter'){ev.preventDefault();send();}});
+  dmSeen=Date.now();SAVE();
+}
+function notesUnread(){
+  let n=0;const me=myHandle().toLowerCase();
+  for(const k in dms)(dms[k]||[]).forEach(m=>{if(m.t>notesSeen&&String(m.u).toLowerCase()!==me&&!isBlocked(m.u))n++;});
+  for(const k in shoutsAll){
+    if(k.indexOf('group:')===0)continue;
+    (shoutsAll[k]||[]).forEach(s=>{
+      if(s.t>notesSeen&&String(s.u).toLowerCase()!==me&&!isBlocked(s.u)&&String(s.b||'').toLowerCase().indexOf('@'+me)>=0)n++;
+    });
+  }
+  for(const rk in shoutReplies){
+    const soulK=rk.split('@')[0];
+    const parent=(shoutsAll[soulK]||[]).find(x=>rk===soulK+'@'+x.id);
+    if(!parent||!(parent.m||String(parent.u).toLowerCase()===me))continue;
+    (shoutReplies[rk]||[]).forEach(r=>{
+      if(r.t>notesSeen&&String(r.u).toLowerCase()!==me&&!isBlocked(r.u))n++;
+      (r.r||[]).forEach(x=>{if(x.t>notesSeen&&String(x.u).toLowerCase()!==me&&!isBlocked(x.u))n++;});
+    });
+  }
+  return n;
+}
+function renderNotes(){
+  const root=$('ssView'),me=myHandle(),items=[];
+  for(const k in dms)(dms[k]||[]).forEach(m=>{if(String(m.u).toLowerCase()!==me.toLowerCase()&&!isBlocked(m.u))items.push({t:m.t,h:'✉ DM from '+m.u,sub:m.b,go:(function(u){return function(){openDM(u);};})(m.u)});});
+  for(const k in shoutsAll){
+    if(k.indexOf('group:')===0)continue;
+    const soul=k;
+    (shoutsAll[k]||[]).forEach(s=>{
+      if(!isBlocked(s.u)&&String(s.b||'').toLowerCase().indexOf('@'+me.toLowerCase())>=0&&String(s.u).toLowerCase()!==me.toLowerCase())items.push({t:s.t,h:'📣 '+s.u+' mentioned you on '+soul,sub:s.b,go:(function(n){return function(){openProfile(n);};})(soul)});
+    });
+  }
+  for(const rk in shoutReplies){
+    const soulK=rk.split('@')[0];
+    const parent=(shoutsAll[soulK]||[]).find(x=>rk===soulK+'@'+x.id);
+    if(!parent||!(parent.m||String(parent.u).toLowerCase()===me.toLowerCase()))continue;
+    (shoutReplies[rk]||[]).forEach(r=>{
+      if(String(r.u).toLowerCase()!==me.toLowerCase()&&!isBlocked(r.u))items.push({t:r.t,h:'↩ '+r.u+' replied on '+soulK,sub:r.b,go:(function(n){return function(){repOpen[rk]=true;openProfile(n);};})(soulK)});
+    });
+  }
+  items.sort((a,b)=>b.t-a.t);
+  root.innerHTML='<div class="ss-sub">🔔 Notifications ('+items.length+')</div>'+
+    (items.length?items.slice(0,30).map((x,i)=>'<div class="ss-row" data-ni="'+i+'"><span>🔔</span><span class="grow">'+escH(x.h)+'<div style="font-size:0.62rem;color:#888">'+escH(String(x.sub||'').slice(0,80))+' · '+timeAgo(x.t)+'</div></span></div>').join(''):'<div class="ss-empty">All quiet. Shouts, replies and mentions land here.</div>');
+  root.querySelectorAll('[data-ni]').forEach(b=>b.addEventListener('click',()=>items[+b.dataset.ni].go()));
+  notesSeen=Date.now();SAVE();
+}
 // ── wiring ──
 function switchView(v){
   view=v;
   document.querySelectorAll('.ss-tabs button').forEach(b=>b.classList.toggle('on',b.dataset.p===v));
-  if(v==='pulse')renderPulse();else if(v==='hot')renderHot();else if(v==='watch')renderWatch();else renderYou();
+  if(v==='pulse')renderPulse();else if(v==='hot')renderHot();else if(v==='watch')renderWatch();else if(v==='groups')renderGroups();else renderYou();
 }
 function setDock(open){
   dock.classList.toggle('hidden',!open);
@@ -2252,6 +2743,14 @@ try{
   const hl=decodeURIComponent(location.hash||'');const m=hl.match(/^#soul-(.+)$/i);
   if(m){setDock(false);openProfile(m[1]);}
 }catch(e){}
+try{
+  const hh=decodeURIComponent(location.hash||'');let mm=hh.match(/^#disc-(\d+)$/i);
+  if(mm){const tb=document.querySelector('.category-tab[data-cat="discussions"]');if(tb)tb.click();}
+  mm=hh.match(/^#group-(.+)$/i);
+  if(mm){setDock(true);switchView('groups');openGroup(decodeURIComponent(mm[1]));}
+  mm=hh.match(/^#event-(.+)$/i);
+  if(mm){setDock(true);switchView('groups');openEvent(decodeURIComponent(mm[1]));}
+}catch(e){}
 
 // ── boot ──
 function boot(){
@@ -2264,7 +2763,7 @@ function boot(){
   const iv=setInterval(()=>{if(document.querySelectorAll('.ss-act').length)paintActions();},3000);
   window.__familySocial={items,feed,ghosts,stars,follows,watch,prefs,views:(v)=>switchView(v),openProfile,closeModal,
     hash,keyN,findItem,countStar,countFollow,countLike,tCol,tEmoji,TYPE_COLOR,TYPE_EMOJI,rnd,
-    toast,mineEvent,pushFeed,upDot,share,timeAgo,dm:1};
+    toast,mineEvent,pushFeed,upDot,share,timeAgo,togglePeople,remixSoul,openCollections,openGroup,openEvent,openDM,renderNotes,dm:1};
 }
 async function load(){
   try{const r=await fetch('data/catalog.json',{cache:'reload'});if(r.ok){const j=await r.json();if(Array.isArray(j))items=j;}}catch(e){}

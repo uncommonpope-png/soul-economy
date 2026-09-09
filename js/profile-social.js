@@ -5,7 +5,7 @@
 'use strict';
 var LS_KEY='soulProfileV1';
 var PREF='#user-profile-canvas';
-var DEFAULTS={handle:'',displayName:'',bio:'',mood:'',audio:'',themeCSS:'',location:'',website:'',joined:0,mySoul:'',top8:[],guests:[],portfolio:[],followers:[],following:[],activity:[],public:false,guide:''};
+var DEFAULTS={handle:'',displayName:'',bio:'',mood:'',audio:'',themeCSS:'',location:'',website:'',joined:0,mySoul:'',top8:[],guests:[],portfolio:[],followers:[],following:[],activity:[],shop:{},companion:{name:'',tone:''},public:false,guide:''};
 var state, items=[];
 var VISITOR=false;
 var REGISTRY=false;
@@ -24,6 +24,8 @@ function loadState(){
   if(!Array.isArray(state.followers)) state.followers=[];
   if(!Array.isArray(state.following)) state.following=[];
   if(!Array.isArray(state.activity)) state.activity=[];
+  if(!state.shop||typeof state.shop!=='object') state.shop={};
+  if(!state.companion||typeof state.companion!=='object') state.companion={name:'',tone:''};
   if(!state.joined&&state.handle){ state.joined=Date.now(); try{ localStorage.setItem(LS_KEY,JSON.stringify(state)); }catch(e){} }
 }
 function saveState(){ if(VISITOR) return; try{ localStorage.setItem(LS_KEY,JSON.stringify(state)); }catch(e){} }
@@ -66,11 +68,11 @@ function cleanStrArr(a,n){
 function cleanPortfolio(a){
   if(!Array.isArray(a)) return [];
   return a.filter(function(pf){ return pf&&typeof pf==='object'; }).map(function(pf){
-    return {kind:(PF_KINDS.indexOf(pf.kind)>=0?pf.kind:'Soul'),title:String(pf.title||'').slice(0,80),link:String(pf.link||'').slice(0,200)};
+    return {kind:(PF_KINDS.indexOf(pf.kind)>=0?pf.kind:'Soul'),title:String(pf.title||'').slice(0,80),link:String(pf.link||'').slice(0,200),sale:String(pf.sale||'').slice(0,20)};
   }).filter(function(pf){ return pf.title; }).slice(0,40);
 }
 function buildPayload(){
-  return {schema:'user_profile.json/1.0',profile:{handle:state.handle,displayName:state.displayName||'',bio:state.bio,mood:state.mood,audio:state.audio,themeCSS:state.themeCSS,location:state.location||'',website:state.website||'',joined:state.joined||0,mySoul:state.mySoul||'',public:state.public},
+  return {schema:'user_profile.json/1.0',profile:{handle:state.handle,displayName:state.displayName||'',bio:state.bio,mood:state.mood,audio:state.audio,themeCSS:state.themeCSS,location:state.location||'',website:state.website||'',joined:state.joined||0,mySoul:state.mySoul||'',public:state.public,shop:(state.shop&&typeof state.shop==='object'?state.shop:{}),companion:{name:((state.companion&&state.companion.name)||'').slice(0,40),tone:((state.companion&&state.companion.tone)||'').slice(0,80)}},
     equippedSouls:state.top8.slice(),guestbook:state.guests.slice(0,20),portfolio:cleanPortfolio(state.portfolio),followers:cleanStrArr(state.followers),following:cleanStrArr(state.following)};
 }
 function applyPayload(p){
@@ -86,6 +88,8 @@ function applyPayload(p){
     guests:(p.guestbook&&Array.isArray(p.guestbook)?p.guestbook:[]).slice(),
     portfolio:cleanPortfolio(p.portfolio),
     followers:cleanStrArr(p.followers),following:cleanStrArr(p.following),
+    shop:((pr.shop&&typeof pr.shop==='object')?pr.shop:{}),
+    companion:{name:String((pr.companion&&pr.companion.name)||'').slice(0,40),tone:String((pr.companion&&pr.companion.tone)||'').slice(0,80)},
     activity:[],guide:''};
   VISITOR=true;
 }
@@ -278,11 +282,14 @@ function wireVisitor(){
     (REGISTRY?'<span style="background:rgba(0,212,255,0.14);border:1px solid rgba(0,212,255,0.5);color:#9be8ff;border-radius:100px;padding:3px 10px;font-size:0.7rem">✔ Verified Registry Soul</span>':'')+
     '<button class="upc-btn cyan" id="upcAdoptAll">+ Equip Entire Squad</button>'+
     '<button class="upc-btn prim" id="upcFork">◇ Fork This Profile</button>'+
+    '<button class="upc-btn prim" id="upcTipV">💝 Tip</button>'+
     '<button class="upc-btn cyan" id="upcCreate">✦ Create Yours</button>'+
     '<button class="upc-btn" id="upcMine">View My Own</button>';
   cv.insertBefore(badge,cv.firstChild);
   var ad=badge.querySelector('#upcAdoptAll');
   if(ad) ad.addEventListener('click',adoptAll);
+  var tipV=badge.querySelector('#upcTipV');
+  if(tipV) tipV.addEventListener('click',function(){ tipFlow(state.handle||'guest'); });
   badge.querySelector('#upcFork').addEventListener('click',function(){
     VISITOR=false; saveState();
     history.replaceState(null,'',location.pathname+location.search);
@@ -373,9 +380,88 @@ function render(){
   renderTop8();
   renderPortfolio();
   renderActivity();
+  renderShop();
   renderTheme();
   renderGuests();
   renderSummoner();
+}
+function soulScore(){
+  var pub=0; try{pub=(JSON.parse(localStorage.getItem('pendingSouls')||'[]')||[]).length;}catch(e){}
+  var pf=(state.portfolio||[]).length, sq=(state.top8||[]).length, gb=(state.guests||[]).length, ac=Math.min((state.activity||[]).length,30);
+  var plt=pltIdentity(), pv=plt?(parseFloat(plt.p)+parseFloat(plt.l)-parseFloat(plt.t)):0;
+  var create=pub*5+pf*2+sq, comm=Math.round((gb+ac*0.5)*10)/10, pvPts=Math.round(pv*10);
+  return {n:Math.round(create+comm+pvPts),parts:'creation '+create+' (published×5 + portfolio×2 + squad) + community '+comm+' (guestbook + activity/2) + PLT '+pvPts+' (squad avg×10)'};
+}
+function achievements(){
+  var pub=0; try{pub=(JSON.parse(localStorage.getItem('pendingSouls')||'[]')||[]).length;}catch(e){}
+  var shouts=0; try{var sa=JSON.parse(localStorage.getItem('soulSocialShouts')||'{}');var me=String(state.handle||'You').toLowerCase();for(var k in sa)(sa[k]||[]).forEach(function(s){if(String(s.u||'').toLowerCase()===me)shouts++;});}catch(e){}
+  var hasW=(state.portfolio||[]).some(function(pf){return pf.kind==='World';});
+  var sc=soulScore().n;
+  return [
+    {e:'🏗️',n:'ARCHITECT',on:(state.top8||[]).length>=8},
+    {e:'🔥',n:'CREATOR',on:pub>=1},
+    {e:'🧠',n:'THINKER',on:shouts>=10},
+    {e:'⚡',n:'BUILDER',on:(state.top8||[]).length>=5},
+    {e:'🌱',n:'EARLY SOUL',on:!!REGISTRY},
+    {e:'🌌',n:'WORLDMAKER',on:hasW},
+    {e:'👑',n:'MASTER',on:sc>=100},
+    {e:'💎',n:'FOUNDING SOUL',on:keyN(state.handle)==='uncommonpope'}
+  ];
+}
+function achRow(){
+  return '<div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">'+achievements().map(function(a){
+    return '<span class="upc-tchip" title="'+esc(a.n)+'" style="'+(a.on?'':'opacity:.35;filter:grayscale(1)')+'">'+a.e+' '+a.n+'</span>';
+  }).join('')+'</div>';
+}
+function contributors(){
+  var set={}, out=[];
+  try{
+    var rx=JSON.parse(localStorage.getItem('soulRemixs')||'[]');
+    var mine={}; (state.top8||[]).forEach(function(n){mine[keyN(n)]=1;});
+    if(state.mySoul) mine[keyN(state.mySoul)]=1;
+    rx.forEach(function(r){ if(r&&mine[keyN(r.parent)]&&r.by) set[r.by]=1; });
+  }catch(e){}
+  for(var k in set) out.push(k);
+  return out.slice(0,12);
+}
+function tipFlow(to){
+  var amt=prompt('Pledge support to @'+to+' (amount — pre-chain credits, true value loops back):','10');
+  if(amt==null) return;
+  var note=prompt('Note (optional):','')||'';
+  var rec={to:to,amt:String(amt).slice(0,12),note:String(note).slice(0,140),t:Date.now(),by:whoami()};
+  try{
+    var tips=JSON.parse(localStorage.getItem('soulTips')||'[]'); tips.unshift(rec); localStorage.setItem('soulTips',JSON.stringify(tips.slice(0,200)));
+    var led=JSON.parse(localStorage.getItem('soulLedger')||'[]'); led.unshift({t:rec.t,kind:'tip',to:to,amt:rec.amt,note:rec.note}); localStorage.setItem('soulLedger',JSON.stringify(led.slice(0,200)));
+  }catch(e){}
+  reportToast('💝 Pledged '+rec.amt+' to @'+to+' — true value loops back');
+  renderShop();
+}
+function renderShop(){
+  var box=$('upcShop'); if(!box) return;
+  var forSale=(state.portfolio||[]).filter(function(pf){return pf.sale;});
+  var given=[]; try{given=JSON.parse(localStorage.getItem('soulTips')||'[]');}catch(e){}
+  var totPledged=given.reduce(function(a,tp){return a+(+tp.amt||0);},0);
+  var contribs=contributors();
+  box.innerHTML='<h3>🏪 My Soul Shop</h3>'+
+    '<div class="upc-sub">Creations with a price tag. Checkout arrives in Phase 21 — today: pledges + attribution.</div>'+
+    '<div class="upc-guests">'+(forSale.length?forSale.map(function(pf){
+      return '<div class="upc-guest"><div class="gav">🏷</div><div class="gt"><b>'+esc(pf.title)+'</b> <span style="font-size:0.65rem;color:#8b8b98">'+esc(pf.kind)+'</span> <b style="color:#FFD166">'+esc(pf.sale)+'</b>'+(pf.link&&/^https?:\/\//i.test(pf.link)?' <a href="'+esc(pf.link)+'" target="_blank" rel="noopener" style="color:#00D4FF;font-size:0.72rem">↗</a>':'')+(VISITOR?' <span style="font-size:0.65rem;color:#8b8b98">· purchase in Phase 21</span>':' <button class="gdel" data-price="'+esc(pf.title)+'">✎</button>')+'</div></div>';
+    }).join(''):'<div class="upc-empty">Nothing for sale — tag a portfolio piece with a price in ✎ Edit Profile.</div>')+'</div>'+
+    '<div class="upc-sub">💝 True Value ledger (pledged, pre-chain): <b style="color:#FFD166">'+given.length+' pledges · '+totPledged+' total</b></div>'+
+    (contribs.length?'<div class="upc-sub">🏅 Contributors (remixed your souls): '+contribs.map(esc).join(', ')+'</div>':'')+
+    (VISITOR?'<button id="upcTip" class="upc-btn prim" style="margin-top:8px">💝 Tip this creator</button>':'');
+  if(!VISITOR) box.querySelectorAll('[data-price]').forEach(function(b){
+    b.addEventListener('click',function(){
+      var t=b.getAttribute('data-price');
+      var cur=(state.portfolio||[]).filter(function(pf){return pf.title===t;})[0];
+      var nv=prompt('Price tag for "'+t+'" (blank removes):',(cur&&cur.sale)||'');
+      if(nv==null) return;
+      (state.portfolio||[]).forEach(function(pf){ if(pf.title===t) pf.sale=String(nv).slice(0,20); });
+      saveState(); logAct('Priced "'+t+'"'); renderShop(); renderPortfolio();
+    });
+  });
+  var tip=box.querySelector('#upcTip');
+  if(tip) tip.addEventListener('click',function(){ tipFlow(state.handle||'guest'); });
 }
 function prettyUrl(u){
   return String(u||'').replace(/^https?:\/\//i,'').replace(/\/$/,'').slice(0,60);
@@ -416,6 +502,7 @@ function renderIdentity(){
   if(state.joined) meta.push('✦ joined '+esc(new Date(state.joined).toLocaleDateString()));
   var fol=(state.followers&&state.followers.length)||0, fing=(state.following&&state.following.length)||0;
   var plt=pltIdentity();
+  var sc=soulScore();
   box.innerHTML='<div class="upc-id">'+
     '<div class="upc-ava">'+av+'</div>'+
     '<div class="u-txt">'+
@@ -430,7 +517,8 @@ function renderIdentity(){
         '<span class="upc-tchip">◇ squad '+((state.top8&&state.top8.length)||0)+'/8</span>'+
         '<span class="upc-tchip">🗂 portfolio '+((state.portfolio&&state.portfolio.length)||0)+'</span>'+
         '<span class="upc-tchip">👥 '+fol+' followers · '+fing+' following</span>'+
-      '</div>'+
+        '<span class="upc-tchip" title="'+esc(sc.parts)+'">🏆 Soul Score '+sc.n+'</span>'+
+      '</div>'+achRow()+
       (state.audio?'<div class="upc-audio"><audio controls loop autoplay src="'+esc(state.audio)+'"></audio></div>':'')+
       (auth?'<button id="upcSignOut" class="sum-chip" style="margin-top:8px">⏻ Sign Out ('+esc(auth.handle)+')</button>':'')+
     '</div>'+
@@ -720,6 +808,9 @@ function renderSummoner(){
       '<div id="sumLog" class="sum-log"><div class="sum-msg">'+(guide?esc(guide)+' is charging as your guide.':'Select a soul to begin.')+'</div></div>'+
       '<div class="sum-input"><input id="sumText" maxlength="300" placeholder="Ask your guide something…"><button id="sumSend">'+(GEAR===2?'⚡ Transmit to Local Soul (:3000)':'Send')+'</button></div>'+
       '<button id="sumWork" class="upc-btn cyan">Launch in Local Workbench (:3000)</button>'+
+    '<div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap"><button id="sumComp" class="upc-btn">🧸 AI Companion</button>'+
+    (list.length>=2?'<button id="sumDebate" class="upc-btn cyan">⋔ Soul debate</button>':'')+'</div>'+
+    '<div id="sumExtra"></div>'+
     '</div>';
   if(list.length){
     box.querySelectorAll('.sum-chip').forEach(function(b){
@@ -736,7 +827,49 @@ function renderSummoner(){
     window.open(q,'_blank');
     reportToast('◇ Opened Local Workbench — guide pre-selected from your squad');
   });
+  var cp=$('sumComp');
+  if(cp) cp.addEventListener('click',function(){
+    var ex=$('sumExtra'); if(!ex) return;
+    var cn=(state.companion&&state.companion.name)||'', ct=(state.companion&&state.companion.tone)||'';
+    ex.innerHTML='<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px"><input id="sumCompName" maxlength="40" placeholder="Companion name" value="'+esc(cn)+'" style="flex:1;min-width:120px;padding:8px 12px;border-radius:12px;border:1px solid rgba(139,92,246,0.3);background:rgba(255,255,255,0.04);color:#fff;font-size:0.75rem"><input id="sumCompTone" maxlength="80" placeholder="Tone (e.g. warm mentor)" value="'+esc(ct)+'" style="flex:2;min-width:140px;padding:8px 12px;border-radius:12px;border:1px solid rgba(139,92,246,0.3);background:rgba(255,255,255,0.04);color:#fff;font-size:0.75rem"><button id="sumCompSave" class="upc-btn prim">Save</button></div>'+
+      '<div class="upc-sub">Your companion speaks as your Active Guide in witness mode and greets visitors as you.</div>';
+    ex.querySelector('#sumCompSave').addEventListener('click',function(){
+      if(VISITOR){ reportToast('Sign in as the owner to set the companion'); return; }
+      state.companion={name:ex.querySelector('#sumCompName').value.trim().slice(0,40),tone:ex.querySelector('#sumCompTone').value.trim().slice(0,80)};
+      saveState(); logAct('Updated AI companion'); reportToast('🧸 Companion saved'); renderSummoner();
+    });
+  });
+  var db=$('sumDebate');
+  if(db) db.addEventListener('click',function(){
+    var ex=$('sumExtra'); if(!ex) return;
+    var opts=list.map(function(nm){ return '<option value="'+esc(nm)+'">'+esc(nm)+'</option>'; }).join('');
+    ex.innerHTML='<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px"><select id="sumDA" style="flex:1;padding:8px;border-radius:12px;background:#0c0c12;color:#fff;border:1px solid rgba(139,92,246,0.3)">'+opts+'</select><select id="sumDB" style="flex:1;padding:8px;border-radius:12px;background:#0c0c12;color:#fff;border:1px solid rgba(139,92,246,0.3)">'+opts+'</select></div>'+
+      '<div style="display:flex;gap:6px;margin-top:6px"><input id="sumDT" maxlength="120" placeholder="Debate topic…" style="flex:1;padding:8px 12px;border-radius:12px;border:1px solid rgba(139,92,246,0.3);background:rgba(255,255,255,0.04);color:#fff;font-size:0.75rem"><button id="sumDGo" class="upc-btn cyan">Stage it</button></div>'+
+      '<div class="upc-sub">Soul-to-soul sparring — simulated transcript, saved to Discussion History.</div>';
+    ex.querySelector('#sumDGo').addEventListener('click',function(){
+      var a=ex.querySelector('#sumDA').value, b=ex.querySelector('#sumDB').value, t=ex.querySelector('#sumDT').value.trim()||'what is true value?';
+      if(a===b){ reportToast('Pick two different souls'); return; }
+      stageDebate(a,b,t);
+    });
+  });
   applyGear();
+}
+function stageDebate(a,b,topic){
+  var A=findItem(a), B=findItem(b);
+  var dA=(((A&&(A.desc||A.details||''))||'form and structure')).slice(0,120);
+  var dB=(((B&&(B.desc||B.details||''))||'flow and instinct')).slice(0,120);
+  var key=a+' × '+b;
+  var lines=[
+    [a,'Opening on “'+topic+'”: from where I stand — '+dA+'… — the answer starts with structure.'],
+    [b,'Counter: I see it differently — '+dB+'… What you call structure, I call a cage.'],
+    [a,'Rebuttal: a cage with a door is called a home. The human holds the key.'],
+    [b,'Rebuttal: and I oil the hinges. We agree the human decides — method is taste.'],
+    [a,'Synthesis (simulated sparring): structure to begin, instinct to finish. The human keeps the PLT.']
+  ];
+  lines.forEach(function(L){ logToSoulChats(key,'('+L[0]+') '+L[1],'sparring-ring'); });
+  if(!VISITOR) logAct('Staged '+key+' debate');
+  reportToast('⋔ Debate staged (simulated) — see Discussion History');
+  showSoulHistory(key);
 }
 function sumSay(){
   var txt=$('sumText'); if(!txt) return;
@@ -752,8 +885,10 @@ function sumSay(){
     window.open(u,'_blank');
     reportToast('◇ Transmitted to Local Soul (:3000) — opening with prompt');
   } else {
+    var cname=(state.companion&&state.companion.name)||g;
+    var ctone=(state.companion&&state.companion.tone)?' <span style="color:#8b8b98">('+esc(state.companion.tone)+')</span>':'';
     log.innerHTML+='<div class="sum-msg you">'+esc(t)+'</div>'+
-      '<div class="sum-msg"><b>'+esc(g)+'</b>: Soul manifested in social witness mode. No local weights loaded on this browser edge. To run autonomous thought streams, launch the BUYASOUL Workbench or join the community discussion.</div>'+
+      '<div class="sum-msg"><b>'+esc(cname)+'</b>'+ctone+': Soul manifested in social witness mode. No local weights loaded on this browser edge. To run autonomous thought streams, launch the BUYASOUL Workbench or join the community discussion.</div>'+
       '<div class="sum-acts"><a class="sum-act" href="#" id="sumHist">[View Discussion History]</a> <a class="sum-act" href="http://localhost:3000" target="_blank">[Launch Workbench]</a></div>';
     var ha=log.querySelector('#sumHist');
     if(ha) ha.addEventListener('click',function(ev){ ev.preventDefault(); showSoulHistory(g); });
@@ -815,7 +950,7 @@ function openEditor(){
     '<div style="margin-top:14px"><b style="font-size:0.8rem;color:#B8B8B8">🗂 Portfolio — Souls, Projects, Agents, Worlds, Books, Art, Music, Posts</b>'+
     '<div id="editPFList" style="margin-top:6px"></div>'+
     '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px"><select id="editPFKind" style="flex:0 0 110px;margin-top:6px">'+PF_KINDS.map(function(k){ return '<option value="'+k+'">'+k+'</option>'; }).join('')+'</select>'+
-    '<input id="editPFTitle" maxlength="80" placeholder="Title" style="flex:2;min-width:140px"><input id="editPFLink" maxlength="200" placeholder="https://… (optional)" style="flex:2;min-width:140px"></div>'+
+    '<input id="editPFTitle" maxlength="80" placeholder="Title" style="flex:2;min-width:140px"><input id="editPFLink" maxlength="200" placeholder="https://… (optional)" style="flex:2;min-width:140px"><input id="editPFPrice" maxlength="20" placeholder="price? (shop)" style="flex:1;min-width:90px"></div>'+
     '<button id="editPFAdd" class="upc-btn cyan" style="margin-top:8px">+ Add piece</button></div>'+
     '<label>Custom CSS (safe preview — auto-scoped to #user-profile-canvas, so <code>body{}</code> won\u2019t leak to the site)\n<textarea id="editCss" rows="8" spellcheck="false">'+esc(state.themeCSS)+'</textarea></label>'+
     '<label style="display:flex;align-items:center;gap:8px;margin-top:14px"><input type="checkbox" id="editPublic" style="width:auto" '+(state.public?'checked':'')+'/> Enable public share (guestbook export / giscus hook)</label>'+
@@ -823,7 +958,7 @@ function openEditor(){
   var pfList=body.querySelector('#editPFList');
   var drawPF=function(){
     pfList.innerHTML=draftPF.length?draftPF.map(function(pf,i){
-      return '<div style="display:flex;gap:8px;align-items:center;font-size:0.75rem;color:#ddd;padding:6px 8px;border:1px solid rgba(255,255,255,0.07);border-radius:8px;margin-bottom:4px"><span>'+PF_ICON[pf.kind]+'</span><b style="flex:1">'+esc(pf.title)+'</b><span style="color:#8b8b98">'+esc(pf.kind)+'</span><button data-pfdel="'+i+'" style="background:none;border:none;color:#8b8b98;cursor:pointer;font-size:0.8rem">✕</button></div>';
+      return '<div style="display:flex;gap:8px;align-items:center;font-size:0.75rem;color:#ddd;padding:6px 8px;border:1px solid rgba(255,255,255,0.07);border-radius:8px;margin-bottom:4px"><span>'+PF_ICON[pf.kind]+'</span><b style="flex:1">'+esc(pf.title)+'</b>'+(pf.sale?'<span style="color:#FFD166">'+esc(pf.sale)+'</span>':'')+'<span style="color:#8b8b98">'+esc(pf.kind)+'</span><button data-pfdel="'+i+'" style="background:none;border:none;color:#8b8b98;cursor:pointer;font-size:0.8rem">✕</button></div>';
     }).join(''):'<div style="font-size:0.72rem;color:#8b8b98">No pieces yet.</div>';
     pfList.querySelectorAll('[data-pfdel]').forEach(function(b){
       b.addEventListener('click',function(){ draftPF=draftPF.filter(function(_,x){return x!==+b.getAttribute('data-pfdel');}); drawPF(); });
@@ -836,8 +971,8 @@ function openEditor(){
     var link=body.querySelector('#editPFLink').value.trim().slice(0,200);
     if(link&&!/^https?:\/\//i.test(link)) link='https://'+link;
     if(draftPF.length>=40){ reportToast('Portfolio full (40 max)'); return; }
-    draftPF.push({kind:body.querySelector('#editPFKind').value,title:title,link:link});
-    body.querySelector('#editPFTitle').value=''; body.querySelector('#editPFLink').value='';
+    draftPF.push({kind:body.querySelector('#editPFKind').value,title:title,link:link,sale:body.querySelector('#editPFPrice').value.trim().slice(0,20)});
+    body.querySelector('#editPFTitle').value=''; body.querySelector('#editPFLink').value=''; body.querySelector('#editPFPrice').value='';
     drawPF();
   });
   ed.querySelector('#editSave').addEventListener('click',function(){
@@ -904,7 +1039,7 @@ function openPicker(){
 
 /* ---- export / import user_profile.json ---- */
 function exportJson(){
-  var payload={schema:'user_profile.json/1.0',profile:{handle:state.handle,displayName:state.displayName||'',bio:state.bio,mood:state.mood,audio:state.audio,themeCSS:state.themeCSS,location:state.location||'',website:state.website||'',joined:state.joined||0,mySoul:state.mySoul||'',public:state.public},equippedSouls:state.top8.slice(),guestbook:state.guests.slice(),portfolio:cleanPortfolio(state.portfolio),followers:cleanStrArr(state.followers),following:cleanStrArr(state.following)};
+  var payload={schema:'user_profile.json/1.0',profile:{handle:state.handle,displayName:state.displayName||'',bio:state.bio,mood:state.mood,audio:state.audio,themeCSS:state.themeCSS,location:state.location||'',website:state.website||'',joined:state.joined||0,mySoul:state.mySoul||'',public:state.public,shop:(state.shop&&typeof state.shop==='object'?state.shop:{}),companion:{name:((state.companion&&state.companion.name)||'').slice(0,40),tone:((state.companion&&state.companion.tone)||'').slice(0,80)}},equippedSouls:state.top8.slice(),guestbook:state.guests.slice(),portfolio:cleanPortfolio(state.portfolio),followers:cleanStrArr(state.followers),following:cleanStrArr(state.following)};
   var blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
   var a=document.createElement('a');
   a.href=URL.createObjectURL(blob);
@@ -934,6 +1069,9 @@ function importJson(file){
       if(j.portfolio) state.portfolio=cleanPortfolio(j.portfolio);
       if(j.followers) state.followers=cleanStrArr(j.followers);
       if(j.following) state.following=cleanStrArr(j.following);
+      if(p.shop&&typeof p.shop==='object') state.shop=p.shop;
+      if(p.companion) state.companion={name:String(p.companion.name||'').slice(0,40),tone:String(p.companion.tone||'').slice(0,80)};
+      if(!state.shop||typeof state.shop!=='object') state.shop={};
       if(!Array.isArray(state.top8)) state.top8=[];
       if(!Array.isArray(state.guests)) state.guests=[];
       state.top8=state.top8.slice(0,8);
