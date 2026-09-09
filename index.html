@@ -3002,7 +3002,7 @@ function addSphereCards(list){
   w.id='sphereWrap';
   var core=ctx('position:absolute;left:50%;top:50%;border-radius:50%;pointer-events:none;z-index:1;opacity:0.94;background:radial-gradient(circle at 38% 32%, #D9B3FF, #8B5CF6 36%, #00D4FF 70%, rgba(0,212,255,0) 100%);box-shadow:0 0 90px 30px rgba(139,92,246,0.55), 0 0 210px 70px rgba(0,212,255,0.30)');
   core.id='sphereCore';
-  var R=348*SC, cw=214*SC;
+  var R=380*SC, cw=228*SC;
   core.style.width=(R*1.72)+'px'; core.style.height=(R*1.72)+'px';
   core.style.marginLeft=(-R*0.86)+'px'; core.style.marginTop=(-R*0.86)+'px';
   w.appendChild(core);
@@ -3030,43 +3030,41 @@ function addSphereCards(list){
   var sc=el('scene'); if(sc) sc.appendChild(w);
 }
 function addCube(list){
-  var wrap=ctx('position:absolute;transform-style:preserve-3d;transform:translate3d('+Math.round(620*SC)+'px,'+Math.round(-150*SC)+'px,'+Math.round(-240*SC)+'px)');
+  var wrap=ctx('position:absolute;transform-style:preserve-3d;transform:translate3d('+Math.round(680*SC)+'px,'+Math.round(-140*SC)+'px,'+Math.round(-280*SC)+'px)');
   wrap.id='cubeWrap';
   var rot=ctx('transform-style:preserve-3d'); rot.id='cubeRot';
   wrap.appendChild(rot);
-  var E=500*SC, cw=182*SC, gap=10;
+  var E=560*SC;
+  var cw=E*0.82;
   var faces=[['rotateY(0deg)'],['rotateY(180deg)'],['rotateY(90deg)'],['rotateY(-90deg)'],['rotateX(90deg)'],['rotateX(-90deg)']];
   for(var f=0;f<6;f++){
-    var face=ctx('position:absolute;left:50%;top:50%;display:flex;flex-wrap:wrap;gap:'+gap+'px;align-items:center;justify-content:center;backface-visibility:hidden;transform:translate(-50%,-50%) '+faces[f][0]+' translateZ('+(E/2)+'px)');
-    face.style.width=(cw*2+gap)+'px';
-    for(var i2=0;i2<4;i2++){
-      var card=cloneCard(list[f*4+i2],cw);
-      face.appendChild(card);
-      card.addEventListener('mouseenter',function(){ this.style.transform='scale(1.08)'; this.style.zIndex='9'; });
-      card.addEventListener('mouseleave',function(){ this.style.transform=''; this.style.zIndex=''; });
-    }
+    var face=ctx('position:absolute;left:50%;top:50%;display:flex;align-items:center;justify-content:center;backface-visibility:hidden;transform:translate(-50%,-50%) '+faces[f][0]+' translateZ('+(E/2)+'px)');
+    face.style.width=E+'px'; face.style.height=E+'px';
+    var card=cloneCard(list[f],cw);
+    face.appendChild(card);
+    card.addEventListener('mouseenter',function(){ this.style.transform='scale(1.04)'; });
+    card.addEventListener('mouseleave',function(){ this.style.transform=''; });
     rot.appendChild(face);
   }
   S.refs.cubeRot=rot;
   var sc=el('scene'); if(sc) sc.appendChild(wrap);
 }
 function addPyramid(list){
-  var wrap=ctx('position:absolute;transform-style:preserve-3d;transform:translate3d('+Math.round(-600*SC)+'px,'+Math.round(20*SC)+'px,'+Math.round(150*SC)+'px)');
+  var wrap=ctx('position:absolute;transform-style:preserve-3d;transform:translate3d('+Math.round(-640*SC)+'px,'+Math.round(30*SC)+'px,'+Math.round(180*SC)+'px)');
   wrap.id='pyrWrap';
   var rot=ctx('transform-style:preserve-3d'); rot.id='pyrRot';
   wrap.appendChild(rot);
-  var b=330*SC, hh=520*SC, L=Math.sqrt(b*b+hh*hh);
+  var b=360*SC, hh=560*SC, L=Math.sqrt(b*b+hh*hh);
   var d=(2*b*hh)/(3*L);
   var theta=-Math.asin(b/L)*(180/Math.PI);
-  var cw=150*SC;
+  var cw=210*SC;
   for(var f=0;f<4;f++){
-    var face=ctx('position:absolute;left:50%;top:50%;display:flex;gap:10px;align-items:center;justify-content:center;backface-visibility:hidden;transform:translate(-50%,-50%) rotateY('+(f*90)+'deg) rotateX('+theta+'deg) translateZ('+d+'px)');
-    for(var i2=0;i2<2;i2++){
-      var card=cloneCard(list[f*2+i2],cw);
-      face.appendChild(card);
-      card.addEventListener('mouseenter',function(){ this.style.transform='scale(1.1)'; });
-      card.addEventListener('mouseleave',function(){ this.style.transform=''; });
-    }
+    var face=ctx('position:absolute;left:50%;top:50%;display:flex;align-items:center;justify-content:center;backface-visibility:hidden;transform:translate(-50%,-50%) rotateY('+(f*90)+'deg) rotateX('+theta+'deg) translateZ('+d+'px)');
+    face.style.width=(b*1.2)+'px';
+    var card=cloneCard(list[f],cw);
+    face.appendChild(card);
+    card.addEventListener('mouseenter',function(){ this.style.transform='scale(1.06)'; });
+    card.addEventListener('mouseleave',function(){ this.style.transform=''; });
     rot.appendChild(face);
   }
   S.refs.pyrRot=rot;
@@ -3081,7 +3079,7 @@ function buildGarden(){
   list.sort(function(a,b){ return pltScore(b)-pltScore(a); });
   S.cards=list.length;
   scene.innerHTML='';
-  var sph=list.slice(0,15), cub=list.slice(15,39), pyr=list.slice(39,47);
+  var sph=list.slice(0,15), cub=list.slice(15,21), pyr=list.slice(21,25);
   addSphereCards(sph);
   addCube(cub);
   addPyramid(pyr);
