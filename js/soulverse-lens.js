@@ -33,7 +33,7 @@ var Lens={
   raf:0, nodes:[], disposables:[], shaders:[], sprites:[], beams:[],
   arcMesh:null, arcMat:null, zapPool:[],
   bgScene:null, bgCamera:null, bgMat:null, lastT:0, _tmpV:null,
-  mNX:0, mNY:0, mVel:0,
+  mNX:0, mNY:0, mVel:0, focusOpen:false, catalog:null,
   vis:{}, hover:null, sel:null,
   dist:80, vx:0, vy:0, dragOn:false, dragX:0, dragY:0, moved:0,
   prevScroll:'', bound:{}, focusNode:null, prevAccept:[]
@@ -128,6 +128,7 @@ Lens.build=function(THREE,catalog){
     }
   });
 
+  Lens.catalog=catalog;
   Lens.buildLegend(counts);
   var cc=$('soulverse-count');
   if(cc) cc.textContent=N+' NODES · '+Object.keys(counts).length+' TYPES';
@@ -150,7 +151,7 @@ Lens.build=function(THREE,catalog){
     var dx=nx-Lens.mNX, dy=ny-Lens.mNY;
     Lens.mVel=Math.sqrt(dx*dx+dy*dy);
     Lens.mNX=nx; Lens.mNY=ny;
-    if(Lens.dragOn||!Lens.active) return;
+    if(Lens.focusOpen||Lens.dragOn||!Lens.active) return;
     Lens.setHover(Lens.castAt(ev.clientX,ev.clientY),ev.clientX,ev.clientY);
   };
   B.down=function(ev){ Lens.dragOn=true; Lens.moved=0; Lens.dragX=ev.clientX; Lens.dragY=ev.clientY; Lens.focusNode=null; var tip=$('soulverse-tip'); if(tip) tip.style.display='none'; };
@@ -174,7 +175,7 @@ Lens.build=function(THREE,catalog){
     Lens.dist=clamp(Lens.dist+(ev.deltaY>0?6:-6),30,160);
     if(Lens.camera) Lens.camera.position.z=Lens.dist;
   };
-  B.key=function(ev){ if(ev.key==='Escape') Lens.close(); };
+  B.key=function(ev){ if(ev.key==='Escape'){ if(Lens.focusOpen){ Lens.closeFocus(); } else Lens.close(); } };
   B.resize=function(){
     if(!Lens.camera||!Lens.renderer) return;
     Lens.camera.aspect=window.innerWidth/window.innerHeight;
@@ -282,11 +283,123 @@ Lens.showHud=function(u){
     '<button id="soulverse-next" style="flex:1;padding:6px 0;border-radius:12px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);color:#fff;font-size:0.7rem;cursor:pointer">▶</button></div>';
   hud.style.display='block';
   var b=$('soulverse-open');
-  if(b) b.onclick=function(){ Lens.openCard(b.getAttribute('data-name')); };
+  if(b) b.onclick=function(){ Lens.openFocus(b.getAttribute('data-name')); };
   var pv2=$('soulverse-prev'), nx2=$('soulverse-next'), fc2=$('soulverse-focus');
   if(pv2) pv2.onclick=function(){ Lens.step(-1); };
   if(nx2) nx2.onclick=function(){ Lens.step(1); };
   if(fc2) fc2.onclick=function(){ if(Lens.sel) Lens.focusOn(Lens.sel); };
+};
+// FOCUS WINDOW: standalone real card + similar souls + merge partners.
+var STOPWORDS={the:1,a:1,an:1,and:1,or:1,of:1,to:1,in:1,on:1,for:1,with:1,by:1,from:1,that:1,this:1,is:1,are:1,it:1,as:1,at:1,be:1,you:1,your:1,all:1,new:1,one:1,soul:1,souls:1};
+function wordsOf(it){
+  var ws=String((it.name||'')+' '+(it.desc||it.details||'')).toLowerCase().replace(/[^a-z0-9 ]/g,' ').split(/\s+/);
+  var set={};
+  ws.forEach(function(w){ if(w.length>2&&!STOPWORDS[w]) set[w]=1; });
+  return set;
+}
+function sharedWords(a,b){
+  var A=wordsOf(a), B=wordsOf(b), sh=[];
+  for(var w in A){ if(B[w]) sh.push(w); }
+  return sh;
+}
+Lens.similar=function(item,n){
+  var out=[];
+  (Lens.catalog||[]).forEach(function(o){
+    if(String(o.name).toLowerCase()===String(item.name).toLowerCase()) return;
+    var s=0, why=[];
+    if(String(o.type)===String(item.type)){ s+=3; why.push('same '+item.type); }
+    if(Math.abs(pltVal(o)-pltVal(item))<0.3){ s+=2; why.push('PLT close'); }
+    var sh=sharedWords(item,o).slice(0,3);
+    s+=Math.min(sh.length,3);
+    if(sh.length) why.push('shares '+sh.slice(0,2).join(', '));
+    if(o.featured&&item.featured){ s+=1; why.push('both featured'); }
+    out.push({item:o,s:s,why:why.join(' · ')||'in the family'});
+  });
+  out.sort(function(a,b){ return b.s-a.s; });
+  return out.slice(0,n||5);
+};
+var COMPLEMENT={soul:['role','agent'],role:['soul','skill'],skill:['agent','role'],agent:['skill','soul'],world:['chamber','pack'],chamber:['world','soul'],pack:['world','combo'],combo:['pack','role'],book:['soul','role'],infrastructure:['agent','skill']};
+Lens.mergers=function(item,n){
+  var out=[], comp=COMPLEMENT[String(item.type)]||[];
+  (Lens.catalog||[]).forEach(function(o){
+    if(String(o.name).toLowerCase()===String(item.name).toLowerCase()) return;
+    var s=0, why=[];
+    if(String(o.type)!==String(item.type)){ s+=2; why.push('cross-type'); }
+    if(comp.indexOf(String(o.type))>=0){ s+=3; why.push(item.type+'⊕'+o.type); }
+    var ps=pltVal(o)+pltVal(item);
+    s+=ps; why.push('PLT Σ '+ps.toFixed(2));
+    var sh=sharedWords(item,o).slice(0,2);
+    s+=sh.length; if(sh.length) why.push('shares '+sh.join(', '));
+    out.push({item:o,s:s,why:why.join(' · ')});
+  });
+  out.sort(function(a,b){ return b.s-a.s; });
+  return out.slice(0,n||5);
+};
+function recRow(r){
+  return '<div data-focus="'+esc(r.item.name)+'" style="display:flex;gap:8px;align-items:center;padding:7px 9px;border-radius:10px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);margin-bottom:6px;cursor:pointer">'+
+    '<span style="font-size:1.1rem">'+esc(r.item.icon||'✦')+'</span>'+
+    '<span style="flex:1;min-width:0"><b style="color:#fff;font-size:0.75rem;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(r.item.name)+'</b>'+
+    '<span style="font-size:0.62rem;color:#8b8b98">'+esc(r.why)+'</span></span>'+
+    '<button data-locate="'+esc(r.item.name)+'" title="Locate in 3D" style="background:none;border:1px solid rgba(0,212,255,.4);border-radius:10px;color:#00D4FF;font-size:0.65rem;padding:2px 8px;cursor:pointer">⌖</button></div>';
+}
+Lens.openFocus=function(name){
+  Lens.closeFocus();
+  var item=null, i;
+  for(i=0;i<(Lens.catalog||[]).length;i++){
+    if(String(Lens.catalog[i].name).toLowerCase()===String(name).toLowerCase()){ item=Lens.catalog[i]; break; }
+  }
+  if(!item){ toast('Soul not found'); return; }
+  var ov=$('soulverse-overlay');
+  if(!ov) return;
+  var col=PALCSS[String(item.type)]||'#fff';
+  var sim=Lens.similar(item,5), mrg=Lens.mergers(item,5);
+  var win=document.createElement('div');
+  win.id='soulverse-focuswin';
+  win.style.cssText='position:absolute;inset:0;z-index:8;display:flex;align-items:center;justify-content:center;background:rgba(3,3,8,.72);padding:18px';
+  win.innerHTML='<div style="width:880px;max-width:100%;max-height:92%;overflow-y:auto;background:rgba(8,8,14,.97);border:1px solid rgba(255,209,102,.35);border-radius:20px;padding:20px;box-shadow:0 30px 120px rgba(0,0,0,.85)">'+
+    '<div style="display:flex;gap:10px;align-items:center;margin-bottom:12px">'+
+    '<span style="font-size:1.6rem">'+esc(item.icon||'✦')+'</span>'+
+    '<span style="flex:1;min-width:0"><b style="color:#fff;font-size:1.05rem">'+esc(item.name)+'</b>'+
+    '<span style="display:block;font-size:0.65rem;letter-spacing:.08em;color:'+col+'">'+esc(String(item.type)).toUpperCase()+(item.plt?' · PLT '+esc(item.plt):'')+'</span></span>'+
+    '<button id="svf-lib" style="padding:8px 16px;border-radius:20px;background:linear-gradient(135deg,#FFD166,#8B5CF6);border:none;color:#000;font-weight:800;font-size:0.72rem;cursor:pointer">Open in Library →</button>'+
+    '<button id="svf-close" style="padding:8px 14px;border-radius:20px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);color:#fff;font-size:0.72rem;cursor:pointer">✕</button></div>'+
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">'+
+    '<div><div style="font-size:0.7rem;letter-spacing:.08em;color:#8b8b98;margin-bottom:8px">STANDALONE CARD</div><div id="svf-card"></div></div>'+
+    '<div><div style="font-size:0.7rem;letter-spacing:.08em;color:#8b8b98;margin-bottom:8px">🧬 SIMILAR SOULS</div>'+sim.map(recRow).join('')+
+    '<div style="font-size:0.7rem;letter-spacing:.08em;color:#8b8b98;margin:12px 0 8px">⚗ MERGES WELL WITH</div>'+mrg.map(recRow).join('')+'</div>'+
+    '</div></div>';
+  ov.appendChild(win);
+  Lens.focusOpen=true;
+  var src=realCardEl(item.name), slot=win.querySelector('#svf-card');
+  if(src&&slot){
+    var c=cleanClone(src);
+    c.style.width='100%';
+    var act=c.querySelector('.ss-act'); if(act) act.remove();
+    slot.appendChild(c);
+  }
+  win.querySelector('#svf-close').addEventListener('click',function(){ Lens.closeFocus(); });
+  win.querySelector('#svf-lib').addEventListener('click',function(){ Lens.openCard(item.name); });
+  win.addEventListener('click',function(ev){
+    var loc=ev.target.closest('[data-locate]');
+    if(loc){
+      ev.stopPropagation();
+      var nm=loc.getAttribute('data-locate');
+      Lens.closeFocus();
+      for(var k=0;k<Lens.nodes.length;k++){
+        if(String(Lens.nodes[k].userData.name).toLowerCase()===String(nm).toLowerCase()){
+          Lens.sel=Lens.nodes[k]; Lens.showHud(Lens.nodes[k].userData); Lens.focusOn(Lens.nodes[k]); break;
+        }
+      }
+      return;
+    }
+    var fo=ev.target.closest('[data-focus]');
+    if(fo) Lens.openFocus(fo.getAttribute('data-focus'));
+  });
+};
+Lens.closeFocus=function(){
+  var w=$('soulverse-focuswin');
+  if(w&&w.parentNode) w.parentNode.removeChild(w);
+  Lens.focusOpen=false;
 };
 Lens.step=function(dir){
   if(!Lens.nodes.length) return;
@@ -374,11 +487,18 @@ function cleanClone(src){
   c.style.width='260px';
   var inner=c.querySelectorAll('[id]');
   for(var i=0;i<inner.length;i++){ inner[i].removeAttribute('id'); }
+  // dead dock bar (listeners live on the original) → live soul-profile button
+  var bar=c.querySelector('.ss-act');
+  if(bar){
+    var nm=c.dataset.id||'';
+    bar.innerHTML='<button data-lens-open="'+esc(nm)+'" title="Open soul profile" style="flex:1;padding:7px 0;border-radius:14px;background:rgba(139,92,246,.16);border:1px solid rgba(139,92,246,.45);color:#c9b8ff;font-size:0.72rem;font-weight:700;cursor:pointer">👤 Open soul</button>';
+  }
   return c;
 }
 Lens.syncCards=function(){
   var cont=$('soulverse-cards');
   if(!cont||!Lens.camera||!Lens.group||!Lens.active) return;
+  cont.style.perspective='900px';
   while(Lens.cardPool.length<Lens.MAXCARDS){
     var d=document.createElement('div');
     d.style.cssText='position:absolute;left:0;top:0;pointer-events:none;will-change:transform,opacity;display:none';
@@ -404,8 +524,14 @@ Lens.syncCards=function(){
   cands.sort(function(a,b){ return a.d-b.d; });
   var byIdx={};
   cands.forEach(function(c){ byIdx[c.n.userData.idx]=c; });
-  // sticky pass: keep last frame's cards when still valid + uncluttered
+  // focus pin: hovered/selected node's card always shows, wins overlaps
   var accepted=[], taken={};
+  [Lens.hover,Lens.sel].forEach(function(nd){
+    if(!nd) return;
+    var fc=byIdx[nd.userData.idx];
+    if(fc&&!taken[nd.userData.idx]){ accepted.push(fc); taken[nd.userData.idx]=1; }
+  });
+  // sticky pass: keep last frame's cards when still valid + uncluttered
   var overlaps=function(x,y){
     for(var q=0;q<accepted.length;q++){
       if(Math.abs(accepted[q].x-x)<170&&Math.abs(accepted[q].y-y)<120) return true;
@@ -433,12 +559,28 @@ Lens.syncCards=function(){
       if(!src){ el.style.display='none'; el._key=-1; continue; }
       el.innerHTML='';
       el.appendChild(cleanClone(src));
-      el._key=idx;
+      el._key=idx; el._act=false;
     }
+    // spotlight: hovered/selected card goes full-lit, squares up, goes live
+    var isA=(Lens.hover&&Lens.hover.userData.idx===idx)||(Lens.sel&&Lens.sel.userData.idx===idx);
     var sc=clamp(1.1-rec.d/120,0.45,0.85);
+    if(isA) sc=Math.min(sc*1.3,1.05);
+    var tF=isA?0.25:1;
+    var ry=(((rec.x/w)-0.5)*-28*tF).toFixed(1), rx=(((rec.y/h)-0.5)*22*tF).toFixed(1);
     el.style.display='block';
-    el.style.opacity=clamp(1.3-rec.d/70,0,1).toFixed(2);
-    el.style.transform='translate(-50%,-50%) translate('+Math.round(rec.x)+'px,'+Math.round(rec.y)+'px) scale('+sc.toFixed(2)+')';
+    el.style.opacity=isA?'1':clamp(1.3-rec.d/70,0,1).toFixed(2);
+    el.style.zIndex=isA?'4':'auto';
+    if(isA&&!el._act){
+      el._act=true;
+      var inter=el.querySelectorAll('a,button');
+      for(var q=0;q<inter.length;q++){ inter[q].style.pointerEvents='auto'; }
+    }
+    else if(!isA&&el._act){
+      el._act=false;
+      var inter2=el.querySelectorAll('a,button');
+      for(var q2=0;q2<inter2.length;q2++){ inter2[q2].style.pointerEvents=''; }
+    }
+    el.style.transform='translate(-50%,-50%) translate('+Math.round(rec.x)+'px,'+Math.round(rec.y)+'px) rotateY('+ry+'deg) rotateX('+rx+'deg) scale('+sc.toFixed(2)+')';
   }
 };
 // unified raycast over visible nodes (clones pass clicks through to canvas)
@@ -558,6 +700,7 @@ Lens.buildArcs=function(){
   Lens.group.add(lines);
   Lens.arcMesh=lines; Lens.arcMat=m;
   Lens.disposables.push(g,m);
+  return pairs.length;
 };
 // SCREEN LIGHTNING: jagged live arcs crackling between floating cards.
 function zapPoints(x1,y1,x2,y2){
@@ -619,7 +762,13 @@ Lens.buildLegend=function(counts){
       btn.style.opacity=Lens.vis[t]?'1':'0.35';
       Lens.nodes.forEach(function(n){ if(n.userData.type===t) n.visible=Lens.vis[t]; });
       if(Lens.hover&&!Lens.hover.visible) Lens.setHover(null,0,0);
-      Lens.buildArcs();
+  var arcN=Lens.buildArcs()||0;
+  console.info('[soulverse] synapses built:',arcN,'arcs');
+  var cc2v=$('soulverse-count');
+  if(cc2v) cc2v.textContent=N+' NODES · '+Object.keys(counts).length+' TYPES · '+arcN+' SYNAPSES';
+  var vv=$('soulverse-ver');
+  if(vv) vv.textContent='lens v8';
+  console.info('[soulverse] zap layer:',!!$('soulverse-zaps')?'ready':'MISSING');
     });
   });
   var cc2=$('soulverse-count');
@@ -627,7 +776,22 @@ Lens.buildLegend=function(counts){
     Lens.nodes.forEach(function(n){ n.visible=true; });
     Object.keys(Lens.vis).forEach(function(t){ Lens.vis[t]=true; });
     lg.querySelectorAll('[data-lt]').forEach(function(b){ b.style.opacity='1'; });
-    Lens.buildArcs();
+  Lens.buildArcs();
+  if(!Lens._cardsWired){
+    Lens._cardsWired=true;
+    var cc0=$('soulverse-cards');
+    if(cc0) cc0.addEventListener('click',function(ev){
+      var b=ev.target.closest('[data-lens-open]');
+      if(!b) return;
+      ev.stopPropagation();
+      try{
+        if(window.__familySocial&&window.__familySocial.openProfile){
+          window.__familySocial.openProfile(b.getAttribute('data-lens-open'));
+          var m=$('ssModal'); if(m) m.style.zIndex='6000';
+        }
+      }catch(e){}
+    });
+  }
   }; }
 };
 
@@ -657,6 +821,7 @@ Lens.openCard=function(name){
 
 Lens.close=function(){
   if(!Lens.active&&!Lens.renderer) return;
+  Lens.closeFocus();
   Lens.active=false;
   if(Lens.raf) cancelAnimationFrame(Lens.raf);
   Lens.raf=0;
@@ -683,6 +848,7 @@ Lens.close=function(){
   if(container) container.innerHTML='';
   var sc2=$('soulverse-cards');
   if(sc2){ for(var ci=0;ci<sc2.children.length;ci++){ sc2.children[ci].style.display='none'; sc2.children[ci]._key=-1; } }
+  var smm=$('ssModal'); if(smm) smm.style.zIndex='';
   var zp=$('soulverse-zaps');
   if(zp&&zp.parentNode) zp.parentNode.removeChild(zp);
   var overlay=$('soulverse-overlay');
@@ -712,5 +878,5 @@ window.SoulverseLens=Lens;
 window.initBestOrb=function(){
   try{ if(window.SoulverseLens&&!SoulverseLens.active&&!SoulverseLens.opening){ console.info('[soulverse] tab entry — igniting'); SoulverseLens.open(); } }catch(e){}
 };
-console.info('[soulverse] lens v6 loaded (synapse arcs + card lightning + all v5 systems)');
+console.info('[soulverse] lens v8 loaded (hover spotlight + live cards + 3D tilt)');
 })();

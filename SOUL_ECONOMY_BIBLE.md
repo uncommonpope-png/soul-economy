@@ -18,7 +18,7 @@
 
 ```
 Soul Economy (GitHub Pages)  ←  main project, all roads lead here
-  ├── index.html            — Library + Graph + Workbench tab + Guide + Profile link
+  ├── index.html            — Library + Graph + Workbench tab + Guide + Profile link + Family Social dock + Model Universe overlay shell (Best tab)
   ├── profile.html          — Soul Sanctuary (canvas), auth, README badges, Trading Card PNG, reg publish
   ├── data/catalog.json     — 282 items, source of truth (JSON)
   ├── downloads/            — zips + .mds + images/souls/*.jpg (dayz art)
@@ -265,6 +265,22 @@ Card-level actions:
 - **Extended CLI Flyout (`index.html`):** `[>_ Modelfile]` now opens a flyout with three options: `📄 Copy Ollama Modelfile`, `⚙ Copy Ollama CLI Run` → `ollama run hf.co/uncommonpope-png/<slug>`, `🌐 Copy cURL (localhost:11434)` → `curl http://localhost:11434/api/generate -d {"model":"<slug>","prompt":"hello"}`. Menu closes on outside click / Escape; `stopPropagation` everywhere so cards don't flip. `slugify()` normalizes any soul name to URL-safe kebab-case. `data-hardened` marker prevents re-attach on MutationObserver scan.
 - **WebGPU Browser Preview Foundation (`js/webgpu-bridge.js`):** lazy ESM module loaded via `import()`. `WebGPUBridge` with `isSupported`, `checkAdapter()`, `loadTransformers()` (dynamic `@huggingface/transformers@3.3.3` import), `status()` (adapter vendor/arch). Cards matching `0.5b`/`0.8b`/`qwen2.*:0.5`/micro/tiny patterns get a subtle `⚡ In-Browser Ready (WebGPU)` chip. Click probes adapter and toasts result. No model weights download yet — detection/streaming foundation only.
 
+### Phase J — Social Economy Transformation (P0–P30, `d0f0de5`, `5233448`)
+- **Phase 0 audit (`SOCIAL_EVOLUTION_AUDIT.md`):** immutable baseline — every requested capability graded EXISTS / PARTIAL / SIMULATED / MISSING / BROKEN. UI declared APPROVED / LOCKED / SACRED. Everything after is additive.
+- **P1 Social Identity (`js/profile-social.js`, `profile.html`):** `soulProfileV1` gains `displayName/location/website/joined(mySoul auto-stamp)/mySoul/PLT-identity(squad P/L/T average)/portfolio[8 kinds]/activity[30]/followers[]/following[]/shop{}/companion{}`. Public render on the existing `#@handle` / `#view=` sanctuary. OG meta fixed to read `equippedSouls`.
+- **P2–P6 Social dock (`index.html` Family Social):** people-follow (＋ on shout authors, Following feed includes people), Latest/✨For-you ranking, post kinds (text/link/image + public/🔒private + linkified URLs/@mentions), 8 native reactions (LOVE/FIRE/GENIUS/I SEE IT/POWER/AWAKENED/PLAY/SHADOW), threaded replies (2 levels) + edit/delete-own + ⚑ report/⛔ block. XSS-hardened (`escH` + linkify).
+- **P7–P12 Lineage & governance:** 🌱 Remix (prompt-named evolutions + lineage section), 🍴 Fork display (reads existing `soulForks` store, no duplication), 🏷️ version log, 🐞 issue tracker (OPEN→IN PROGRESS→RESOLVED→CLOSED), `#disc-<id>` anchors + copy-links, ⇄ improves field on Publish (PR-title attribution flow).
+- **P13–P19 Community:** 🎪 Groups tab (PUBLIC/PRIVATE/INVITE ONLY, join/leave/invite, per-group feed + post box), 📅 Events + RSVP, ✉ human DMs + inbox (kept distinct from AI chat), 🔔 notification center (DMs + replies-to-me + mentions), `#group-/#event-` deep links, 💾 named collections + Save picker, 🗂 collections manager in Watchlist.
+- **P20–P23 Creator layer (`profile.html` Shop card):** price-tagged portfolio (checkout labeled Phase-21), 💝 tip pledges + True Value ledger (local, pre-chain), transparent 🏆 Soul Score formula chip, 8 achievements (ARCHITECT/CREATOR/THINKER/BUILDER/EARLY/ WORLDMAKER/MASTER/FOUNDING), contributor credits from local remixes.
+- **P24–P30 Discovery & safety:** 📈 Rising / ✨ Fresh Hot metrics, seeded daily Soul/Creator/Project/Agent/World picks, 🧸 AI companion config (signs witness replies), ⋔ simulated soul debates → Discussion History, feed facets (People/Souls/Agents/Projects/Groups), 🛡 Safety panel (block/mute/unblock/unmute/report log). All state local-first under existing keys; known limit: multi-user truth needs a backend.
+
+### Phase K — Model Universe 3D Lens (SIP-17, `082dd27` → `b80906e`)
+- **Replaces the Best tab.** Dead garden/WebGL-orb/role-list code removed (`-55`). `filterAndRender` untouched — `window.initBestOrb()` is re-provided by the lens and auto-ignites on tab entry.
+- **Engine (`js/soulverse-lens.js`, classic script, ~600 lines):** lazy `import()` of Three.js with esm.sh → jsdelivr fallback (zero page-load cost); Node X = Catalog Item X on a fibonacci sphere; 9-type palette; node size = PLT true value; drag-rotate + inertia, wheel zoom, ESC close; `renderer.dispose()` + `forceContextLoss()` teardown; console `[soulverse]` diagnostics + version stamp.
+- **Living shaders:** per-node breathing plasma `ShaderMaterial` (PLT-tied pulse rate, fresnel aura, gold-shift), pulsing PLT energy beams on high-value entities, starfield. Matrix-rain background was built then **removed per user veto** — void gradient + stars only.
+- **Real-card stapling (no canvas fakes):** the 24 nearest nodes wear projected `cloneNode` clones of the actual library cards (originals never moved, ids stripped, clicks pass through to raycast). Sticky slots + screen-space declutter stop popping/pile-up.
+- **Synapses & lightning (v6):** nearest-neighbor arc web with traveling fire pulse (one draw call, rebuilt on legend filter); jagged SVG bolts crackling card-to-card with flicker regen. Hover tooltip, HUD card (◀ ▶ tour + ◎ focus flight + Open Real Card → All tab → scroll → 2.2s gold flash), header search, clickable legend, double-click focus, hidden-tab GPU pause, pixelRatio cap 1.75.
+
 ---
 
 ## 8. COMMANDS
@@ -279,7 +295,7 @@ python extract_scripts.py                # from temp tooling path
 node --check check_1.js .. check_14.js   # each inline block
 python validate2.py                      # HTML structure + catalog count
 python upc_check.py                      # profile.html tag/ID sanity
-node --check js/profile-social.js js/readme-badges.js js/soul-card-export.js js/webgpu-bridge.js
+node --check js/profile-social.js js/readme-badges.js js/soul-card-export.js js/webgpu-bridge.js js/soulverse-lens.js
 # workbench (local)
 cd WORKBENCH_COMPLETE/workbench && npx tsx server.ts  # :3000
 # exe
@@ -302,6 +318,14 @@ SIP-11 c542b0e  auth-client.js (OAuth), workers/auth-gate.js
 SIP-12 b10177f  legacy-auth fold, registry CI, guide strip
 SIP-13 13e9664  trading card PNG, theme presets, Modelfile
 SIP-14 34b779f  README badges, CLI flyout, WebGPU bridge
+P0    d0f0de5  SOCIAL_EVOLUTION_AUDIT.md + P1 social identity (audit doc also in this commit)
+P2-30 5233448  social economy: graph/feed/posts/reactions/threads/remix/forks/versions/issues/discussions/PRs/groups/events/DMs/notes/share/collections/shop/tips/score/achievements/discovery/of-day/companion/debate/safety/ledger
+SIP-17 082dd27  Model Universe lens v1 (Best tab portal + overlay + HUD + anchor drop)
+SIP-17 560c4e2  breathing shaders + beams + canvas billboards + kinematics hook
+SIP-17 a8a0ce9  auto-ignite on tab, CDN fallback, diagnostics stamp
+SIP-17 464889f  real cloned card staples replace canvas fakes, matrix rain removed (vetoed)
+SIP-17 86be544  v5 restudy: sticky declutter, focus flight, search, HUD tour, perf guards
+SIP-17 b80906e  v6 synapse arc web + card lightning, filter-aware rebuild
 ```
 
 ---
