@@ -422,8 +422,9 @@ input{font-family:inherit;outline:none;border:none;background:none}
     <div style="display:flex;gap:8px;margin-top:10px"><input id="chatInput" placeholder="Ask about a soul, share a build, or say hi..." style="flex:1;padding:10px 14px;border-radius:20px;border:1px solid rgba(139,92,246,0.2);background:rgba(255,255,255,0.04);color:#fff;font-size:0.85rem"><button onclick="sendChat()" style="padding:10px 18px;border-radius:20px;background:linear-gradient(135deg,#8B5CF6,#00D4FF);color:#fff;border:none;font-weight:600">→</button></div>
     <div style="margin-top:8px;font-size:0.7rem;color:var(--text-muted)">Stored in <code>localStorage:soulChats</code> · Future: <code>giscus</code> (GitHub Discussions) for shared history. Guide agent also reads this.</div>
   </div>
-  <!-- giscus placeholder — enable Discussions in repo settings, then uncomment -->
-  <!-- <script src="https://giscus.app/client.js" data-repo="uncommonpope-png/soul-economy" data-category="General" data-mapping="pathname" data-theme="dark" crossorigin="anonymous" async></script> -->
+  <!-- GISCUS (GitHub Discussions) — enable the repo's Discussions tab, install the giscus app at
+       https://giscus.app, then paste your repoId/categoryId below so soul cards get live threads. -->
+  <script>window.GISCUS={repo:'uncommonpope-png/soul-economy',category:'General',repoId:'',categoryId:''};</script>
 </div>
 
 <div class="plt-filters" id="pltFilters">
@@ -854,6 +855,43 @@ function expandCard(btn) {
   const isHidden = details.classList.contains('hidden');
   details.classList.toggle('hidden', !isHidden);
   btn.innerHTML = isHidden ? '<span>▲ Collapse</span>' : '<span>▼ Details</span>';
+  if(isHidden) mountGiscus(card);
+}
+// Giscus (GitHub Discussions) — one thread per soul, mapped by term = card name.
+// Configure window.GISCUS.repoId/categoryId from https://giscus.app (enable the
+// repo's Discussions tab + install the giscus app). Until then, a "Start /
+// View Discussion" link opens a pre-filled new-discussion form as fallback.
+function mountGiscus(card){
+  if(card.dataset.giscus) return;
+  card.dataset.giscus='1';
+  const det=card.querySelector('.card-details'); if(!det) return;
+  const term=(card.dataset.id||'').trim(); if(!term) return;
+  const wrap=document.createElement('div');
+  wrap.className='giscus-wrap';
+  wrap.style.cssText='margin-top:12px;padding-top:10px;border-top:1px dashed rgba(139,92,246,0.22)';
+  const a=document.createElement('a');
+  a.href='https://github.com/uncommonpope-png/soul-economy/discussions/new?category=General&title='+encodeURIComponent(term);
+  a.target='_blank';
+  a.style.cssText='display:inline-block;margin:2px 0 10px;padding:5px 12px;border-radius:30px;border:1px solid rgba(255,209,102,0.3);color:#FFD166;font-size:0.7rem';
+  a.textContent='💬 Start / View Discussion';
+  wrap.appendChild(a);
+  const cfg=window.GISCUS||{};
+  if(cfg.repoId&&cfg.categoryId){
+    const s=document.createElement('script');
+    s.src='https://giscus.app/client.js';
+    s.async=true; s.crossOrigin='anonymous';
+    s.setAttribute('data-repo',cfg.repo||'uncommonpope-png/soul-economy');
+    s.setAttribute('data-repo-id',cfg.repoId);
+    s.setAttribute('data-category',cfg.category||'General');
+    s.setAttribute('data-category-id',cfg.categoryId);
+    s.setAttribute('data-mapping','specific');
+    s.setAttribute('data-term',term);
+    s.setAttribute('data-reactions-enabled','1');
+    s.setAttribute('data-theme','transparent_dark');
+    s.setAttribute('data-lang','en');
+    wrap.appendChild(s);
+  }
+  det.appendChild(wrap);
 }
 
 // FUSE.JS FUZZY SEARCH
@@ -2663,7 +2701,8 @@ function openModelfileMenu(ev,k){
   var items=[
     ['📄 Copy Ollama Modelfile',modelfileFor(k),'✦ Modelfile copied to clipboard'],
     ['⚙ Copy Ollama CLI Run','ollama run hf.co/uncommonpope-png/'+slug,'✦ Ollama run command copied'],
-    ['🌐 Copy cURL (localhost:11434)','curl http://localhost:11434/api/generate -d '+JSON.stringify({model:slug,prompt:'hello'}),'✦ cURL request copied']
+    ['🌐 Copy cURL (localhost:11434)','curl http://localhost:11434/api/generate -d '+JSON.stringify({model:slug,prompt:'hello'}),'✦ cURL request copied'],
+    ['🔗 Copy API cURL (public)','curl https://soul-api.buyasoul.workers.dev/api/soul?name='+slug,'✦ Public API cURL copied']
   ];
   var rc=ev.target.getBoundingClientRect();
   var m=document.createElement('div');

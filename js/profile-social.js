@@ -135,13 +135,33 @@ function resolveRegistry(){
     return r.json();
   }).then(function(p){
     applyPayload(p); REGISTRY=true;
+    updateOgMeta(handle,p);
     finishBoot();
   }).catch(function(){
     reportToast('Profile @'+handle+' has not yet settled in the registry. Showing local sanctuary.');
     loadState(); REGISTRY=false;
+    updateOgMeta(handle,null);
     finishBoot();
   });
   return true;
+}
+function setOg(name,val){
+  var all=document.querySelectorAll('meta[property="og:'+name+'"],meta[name="twitter:'+name+'"]');
+  if(all.length){ for(var i=0;i<all.length;i++) all[i].setAttribute('content',val); return; }
+  var el=document.createElement('meta'); el.setAttribute('property','og:'+name); el.setAttribute('content',val);
+  document.head.appendChild(el);
+}
+function updateOgMeta(handle,p){
+  try{
+    var count=(p&&Array.isArray(p.top8))?p.top8.length:0;
+    var mood=(p&&p.mood)?String(p.mood):'✦ Compiling Sovereignty';
+    var title='@'+handle+' — Soul Economy Sanctuary';
+    var desc='◇ Squad '+count+'/8 · '+mood+' · '+((p&&p.bio)?String(p.bio).slice(0,160):'A living digital soul in the BUYaSOUL registry.');
+    var img='https://soul-api.buyasoul.workers.dev/og/profile?user='+encodeURIComponent(handle);
+    setOg('title',title); setOg('description',desc); setOg('image',img);
+    var u=document.querySelector('meta[property="og:url"]'); if(u) u.setAttribute('content',location.origin+location.pathname+'#@'+encodeURIComponent(handle));
+    document.title=title;
+  }catch(e){}
 }
 function copyText(t,label){
   var ta=document.createElement('textarea');
@@ -182,15 +202,30 @@ function openRegModal(){
   var box=document.createElement('div');
   box.style.cssText='width:640px;max-width:100%;max-height:90vh;overflow-y:auto;background:#0c0c12;border:1px solid rgba(255,209,102,0.3);border-radius:20px;padding:20px;box-shadow:0 30px 120px rgba(0,0,0,0.8)';
   box.innerHTML='<h3 style="margin:0 0 6px;font-size:1.05rem">⛭ Publish to Registry</h3>'+
-    '<p style="margin:0 0 12px;color:#8b8b98;font-size:0.78rem">Opens a pre-filled GitHub issue; once approved, your profile lands at <code>profiles/'+h+'.json</code> and becomes a permanent <b>#@'+esc(state.handle)+'</b> link. If the URL gets too long for your browser, use <b>Copy Full Payload</b> and paste it into the issue manually.</p>'+
+    '<p style="margin:0 0 12px;color:#8b8b98;font-size:0.78rem"><b>⛭ Open Pull Request</b> creates <code>profiles/'+h+'.json</code> directly on GitHub and jumps straight to a PR — merging triggers the registry CI. If the URL is too long for your browser, use <b>Open GitHub Issue</b> instead, or <b>Copy Full Payload</b>.</p>'+
     '<textarea id="upcRegBody" rows="9" spellcheck="false" readonly style="white-space:pre-wrap;font-size:0.72rem;min-height:190px;width:100%">'+esc(body)+'</textarea>'+
     '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px">'+
-      '<button id="upcRegOpen" class="upc-btn prim" style="flex:1;min-width:160px">Open GitHub Issue</button>'+
-      '<button id="upcRegCopyJson" class="upc-btn cyan">Copy Raw JSON</button>'+
+      '<button id="upcRegPr" class="upc-btn prim" style="flex:1;min-width:170px">⛭ Open Pull Request</button>'+
+      '<button id="upcRegOpen" class="upc-btn cyan" style="flex:1;min-width:150px">Open GitHub Issue</button>'+
+      '<button id="upcRegCopyJson" class="upc-btn">Copy Raw JSON</button>'+
       '<button id="upcRegCopyAll" class="upc-btn">Copy Full Payload</button>'+
       '<button id="upcRegClose" class="upc-btn">Close</button>'+
     '</div>';
   ov.appendChild(box); document.body.appendChild(ov);
+  // ⛭ PR path: GitHub "create file" URL pre-fills profiles/<handle>.json with the
+  // payload; &pr=1 jumps straight to a pull-request review. Submitting triggers
+  // .github/workflows/registry-sync.yml to rebuild profiles/index.json.
+  box.querySelector('#upcRegPr').addEventListener('click',function(){
+    var branch='master';
+    var prUrl='https://github.com/uncommonpope-png/soul-economy/new/'+branch+
+      '?filename='+encodeURIComponent('profiles/'+h+'.json')+
+      '&value='+encodeURIComponent(JSON.stringify(buildPayload(),null,2))+
+      '&message='+encodeURIComponent('Add profile @'+state.handle)+
+      '&description='+encodeURIComponent('Soul Economy registry submission — @'+state.handle+' ('+((state.top8&&state.top8.length)||0)+'/8 squad). Registry CI auto-rebuilds profiles/index.json on merge.')+
+      '&pr=1';
+    window.open(prUrl,'_blank');
+    reportToast('⛭ Opened GitHub create-file — commit to open your PR');
+  });
   box.querySelector('#upcRegOpen').addEventListener('click',function(){
     window.open('https://github.com/uncommonpope-png/soul-economy/issues/new?title='+encodeURIComponent(title)+'&body='+encodeURIComponent(body),'_blank');
   });
