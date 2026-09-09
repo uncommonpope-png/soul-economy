@@ -60,3 +60,24 @@
 .upc-regline{margin-top:10px;font-size:0.75rem}
 .upc-regline .upc-tchip{cursor:default}
 .upc-tchip a{color:#00D4FF;text-decoration:underline}
+
+/* ---- SIP-8: squad summoner dock ---- */
+#upcSummoner .sum-chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 12px}
+.sum-chip{padding:8px 14px;border-radius:30px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.04);color:var(--text-gray);font-size:0.75rem;cursor:pointer;font-family:inherit;transition:all .15s ease}
+.sum-chip:hover{border-color:var(--cyan);color:#fff}
+.sum-chip.on{border-color:var(--cyan);color:#9be8ff;background:rgba(0,212,255,0.1);box-shadow:0 0 24px rgba(0,212,255,0.15)}
+.sum-guide{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-radius:14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);margin-bottom:12px}
+.sum-ava{font-size:1.6rem;line-height:1}
+.sum-ginfo{display:flex;flex-direction:column;gap:3px}
+.sum-gname{color:#fff}
+.sum-gtype{font-size:0.7rem;color:var(--text-gray);font-weight:500}
+.sum-ctx{font-size:0.75rem;color:var(--text-gray);line-height:1.5}
+.sum-log{max-height:180px;overflow-y:auto;display:flex;flex-direction:column;gap:6px;padding:10px;border-radius:12px;background:rgba(0,0,0,0.25);border:1px solid rgba(255,255,255,0.06);font-size:0.75rem}
+.sum-msg{border-radius:12px;padding:7px 10px;max-width:85%;color:var(--text-gray)}
+.sum-msg.you{align-self:flex-end;background:rgba(139,92,246,0.2);color:#fff}
+.sum-msg:not(.you){align-self:flex-start;background:rgba(255,255,255,0.05)}
+.sum-msg b{color:var(--cyan)}
+.sum-input{display:flex;gap:8px;margin-top:8px}
+.sum-input input{flex:1;margin:0}
+.sum-input button{padding:8px 18px;border-radius:30px;background:linear-gradient(135deg,var(--purple),#00D4FF);border:none;color:#fff;font-weight:700;font-size:0.75rem;cursor:pointer;font-family:inherit}
+#sumWork{margin-top:10px;width:100%;padding:10px}

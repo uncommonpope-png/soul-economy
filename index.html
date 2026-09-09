@@ -333,6 +333,13 @@ input{font-family:inherit;outline:none;border:none;background:none}
     <div class="stat"><span class="stat-number">∞</span><span class="stat-label">PLT</span></div>
   </div>
 </section>
+
+<!-- SIP-8: Living Sanctuaries shelf (hidden until manifest loads) -->
+<section id="livingSanctuaries" style="display:none">
+  <h2>✦ Living Sanctuaries</h2>
+  <p class="shelf-sub" style="color:var(--text-gray);font-size:0.85rem;margin:0 0 20px">Browse verified community profiles &amp; squad formations.</p>
+  <div id="shelfGrid" class="shelf-grid"></div>
+</section>
 </div>
 </div>
 
@@ -2620,6 +2627,49 @@ function renderNavBadge(){
   }
   else setTimeout(waiter,120);
 })();
+})();
+</script>
+<script>
+// ─── SIP-8 — LIVING SANCTUARIES SHELF (additive discovery rail) ───
+(function(){
+'use strict';
+var css='#livingSanctuaries{padding:44px 28px 8px;max-width:1280px;margin:0 auto}'
++'#livingSanctuaries h2{font-size:1.35rem;margin:6px 0 4px}'
++'#shelfGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}'
++'.shelf-card{background:rgba(255,255,255,0.05);border:1px solid rgba(139,92,246,0.18);border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:8px;transition:transform .15s ease,box-shadow .15s ease,border-color .15s ease;text-decoration:none;color:var(--text-white,#fff)}'
++'.shelf-card:hover{transform:translateY(-3px);box-shadow:0 16px 50px rgba(139,92,246,0.2);border-color:rgba(139,92,246,0.5)}'
++'.shelf-card .sh-name{font-weight:700;font-size:1rem;text-transform:lowercase}'
++'.shelf-card .sh-sub{font-size:0.72rem;color:var(--text-gray,#B8B8B8)}'
++'.shelf-card .sh-mood{font-size:0.8rem;color:var(--text-gray,#B8B8B8);font-style:italic}'
++'.shelf-card .sh-verified{font-size:0.65rem;color:#00D4FF;border:1px solid rgba(0,212,255,0.5);border-radius:100px;padding:2px 8px;align-self:flex-start}'
++'.shelf-card .sh-squad{font-size:0.72rem;color:#00D4FF}'
++'.shelf-card .sh-go{margin-top:auto;font-size:0.75rem;color:var(--purple,#8B5CF6);font-weight:600}'
++'@media(max-width:640px){#livingSanctuaries{padding:32px 16px 4px}}';
+var style=document.createElement('style'); style.textContent=css; document.head.appendChild(style);
+function escS(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function mount(list){
+  var shell=document.getElementById('livingSanctuaries'); if(!shell) return;
+  var grid=document.getElementById('shelfGrid'); if(!grid) return;
+  var rows=(list||[]).filter(function(r){ return r&&r.handle; });
+  if(!rows.length){ shell.style.display='none'; return; }
+  shell.style.display='block';
+  grid.innerHTML=rows.map(function(r){
+    var h=String(r.handle).replace(/^@/,'').toLowerCase();
+    return '<a class="shelf-card" href="profile.html#@'+encodeURIComponent(h)+'" title="Visit @'+escS(h)+'\u2019s sanctuary">'+
+      '<span class="sh-name">@'+escS(h)+'</span>'+
+      (r.name?'<span class="sh-sub">'+escS(r.name)+'</span>':'')+
+      (r.mood?'<span class="sh-mood">“'+escS(r.mood)+'”</span>':'')+
+      (r.verified?'<span class="sh-verified">✔ Verified Registry Soul</span>':'')+
+      '<span class="sh-squad">'+(Number(r.squad_count)||0)+'/8 Squad Active</span>'+
+      '<span class="sh-go">Visit Sanctuary →</span>'+
+    '</a>';
+  }).join('');
+}
+try{
+  fetch('profiles/index.json',{cache:'no-store'}).then(function(r){ if(!r.ok) throw new Error(); return r.json(); })
+    .then(function(j){ mount(Array.isArray(j)?j:[]); })
+    .catch(function(){ var s=document.getElementById('livingSanctuaries'); if(s) s.style.display='none'; });
+}catch(e){}
 })();
 </script>
 </body>

@@ -5,7 +5,7 @@
 'use strict';
 var LS_KEY='soulProfileV1';
 var PREF='#user-profile-canvas';
-var DEFAULTS={handle:'',bio:'',mood:'',audio:'',themeCSS:'',top8:[],guests:[],public:false};
+var DEFAULTS={handle:'',bio:'',mood:'',audio:'',themeCSS:'',top8:[],guests:[],public:false,guide:''};
 var state, items=[];
 var VISITOR=false;
 var REGISTRY=false;
@@ -79,7 +79,11 @@ function readShareHash(cb){
       }catch(e){ cb(false); }
     };
     if(raw.indexOf('lz:')===0){
-      if(!HAVE_COMP){ cb(false); return; }
+      if(!HAVE_COMP){
+        console.warn('DecompressionStream unsupported in this environment. Falling back gracefully.');
+        reportToast('Mobile webview detected. Open in Safari/Chrome for full theme unpacking.');
+        cb(false); return;
+      }
       decompressPayload(raw.slice(3)).then(finish).catch(function(){ cb(false); });
       return;
     }
@@ -285,6 +289,7 @@ function render(){
   renderTop8();
   renderTheme();
   renderGuests();
+  renderSummoner();
 }
 function renderIdentity(){
   var box=$('upcIdentity'); if(!box) return;
@@ -423,6 +428,58 @@ function updateAdoptLabels(){
   box.querySelectorAll('.adh').forEach(function(b){
     if(s.some(function(n){return keyN(n)===keyN(b.getAttribute('data-adh'));})) b.textContent='✓ In your Squad';
   });
+}
+
+/* ---- squad summoner / active guide chat (SIP-8) ---- */
+function renderSummoner(){
+  var box=$('upcSummoner'); if(!box) return;
+  var list=state.top8||[];
+  var chips=list.map(function(nm){
+    var on=(keyN(nm)===keyN(state.guide));
+    return '<button class="sum-chip'+(on?' on':'')+'" data-s="'+esc(nm)+'">⚡ '+esc(nm)+'</button>';
+  }).join('');
+  var guide=(list.length&&state.guide)?state.guide:'';
+  var it=guide?findItem(guide):null;
+  var ctx=it?(it.desc||it.details||''):'';
+  box.innerHTML='<h3>⚡ Summon Squad Member</h3>'+
+    '<div class="upc-sub">Pick an equipped soul to set it as your Active Guide for quick-chat and local inference. If the shelf is empty, drop by “◇ Equip Souls”.</div>'+
+    '<div class="sum-chips">'+(chips||'<div class="upc-empty">No squad yet — equip souls above to summon them here.</div>')+'</div>'+
+    '<div class="sum-guide">'+
+      (guide
+        ?'<span class="sum-ava">'+(it?esc(it.icon||'✦'):'✦')+'</span>'+
+         '<span class="sum-ginfo"><b class="sum-gname">'+esc(guide)+'</b> <span class="sum-gtype">· '+(it?esc(it.type||'soul'):'catalog item')+'</span>'+
+         '<div class="sum-ctx">'+esc(ctx.slice(0,220)||(guide+' has been summoned as your Active Guide.'))+'</div></span>'
+        :'<span class="upc-empty">No Active Guide selected — summon one above.</span>')+
+    '</div>'+
+    '<div class="sum-chat">'+
+      '<div id="sumLog" class="sum-log"><div class="sum-msg">'+(guide?esc(guide)+' is charging as your guide. Offline quick-chat — no weights loaded.':'Select a soul to begin.')+'</div></div>'+
+      '<div class="sum-input"><input id="sumText" maxlength="300" placeholder="Ask your guide something…"><button id="sumSend">Send</button></div>'+
+      '<button id="sumWork" class="upc-btn cyan">Launch in Local Workbench (:3000)</button>'+
+    '</div>';
+  if(list.length){
+    box.querySelectorAll('.sum-chip').forEach(function(b){
+      b.addEventListener('click',function(){ state.guide=b.getAttribute('data-s'); saveState(); renderSummoner(); });
+    });
+  }
+  var send=$('sumSend');
+  if(send) send.addEventListener('click',sumSay);
+  var txt=$('sumText');
+  if(txt) txt.addEventListener('keydown',function(ev){ if(ev.key==='Enter'){ ev.preventDefault(); sumSay(); } });
+  var wk=$('sumWork');
+  if(wk) wk.addEventListener('click',function(){
+    window.open('http://localhost:3000'+(state.guide?('?guide='+encodeURIComponent(state.guide)):''),'_blank');
+    reportToast('◇ Opened Local Workbench — guide pre-selected from your squad');
+  });
+}
+function sumSay(){
+  var txt=$('sumText'); if(!txt) return;
+  var t=txt.value.trim(); if(!t) return;
+  var log=$('sumLog'); if(!log) return;
+  var g=state.guide||'Guide';
+  log.innerHTML+='<div class="sum-msg you">'+esc(t)+'</div>'+
+    '<div class="sum-msg"><b>'+esc(g)+'</b>: ◌ No weights loaded in this offline quick-chat. Open the Local Workbench (:3000) for full inference with '+esc(g)+' as your Active Guide.</div>';
+  txt.value='';
+  log.scrollTop=log.scrollHeight;
 }
 
 /* ---- editor modal ---- */
