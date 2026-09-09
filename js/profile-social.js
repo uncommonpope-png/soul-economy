@@ -368,6 +368,56 @@ function renderTop8(){
     });
   }
 }
+/* ---- 1-click MySpace presets (SIP-13) — pass through scopeCss so nav/workbench stay shielded ---- */
+var PRESETS={
+  obsidian:{ label:'Obsidian Gold', css:[
+    '.upc-card{background:#050505;border:1px solid #ffd700;box-shadow:0 0 22px rgba(255,215,0,0.08)}',
+    '.upc-card h3,.upc-handle,.upc-mood,.upc-sub{color:#ffd700}',
+    '.upc-handle em{color:#ffb800;text-shadow:0 0 8px rgba(255,184,0,0.55)}',
+    '.upc-tchip{background:#000;border-color:#8a6d1f;color:#ffe08a}',
+    '.upc-btn{background:#000;border:1px solid #ffd700;color:#ffe08a}',
+    '.upc-btn.prim{background:linear-gradient(135deg,#261500,#000);border-color:#ffd700}',
+    '.upc-btn.cyan{color:#ffd700;border-color:#ffd700}',
+    '#upcNote,.upc-guest,.gav{background:#050505;border-color:#8a6d1f}'
+  ].join('\n') },
+  phosphor:{ label:'Phosphor CRT', css:[
+    '.upc-card{font-family:ui-monospace,Consolas,monospace;background:#021008;border:1px solid #00ff66;box-shadow:0 0 14px rgba(0,255,102,0.18);position:relative}',
+    '.upc-card h3,.upc-handle,.upc-mood{color:#00ff66;text-shadow:0 0 7px rgba(0,255,102,0.55)}',
+    '.upc-card:after{content:\'\';position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(0,255,102,0.05) 0 1px,transparent 1px 3px);border-radius:inherit;z-index:1}',
+    '.upc-btn{background:#021008;border:1px solid #00ff66;color:#7dffb0}',
+    '.upc-btn.prim{background:#003311;border-color:#00ff66}',
+    '.upc-tchip{background:#021008;border-color:#00ff66;color:#7dffb0}',
+    '#upcNote{border-color:#00ff66;background:#000}'
+  ].join('\n') },
+  cyber:{ label:'Cyber Neon', css:[
+    '.upc-card{background:#0d0b1e;border:1px solid #ff007f;border-radius:14px;box-shadow:0 0 16px rgba(255,0,127,0.14),0 0 4px rgba(0,243,255,0.4)}',
+    '.upc-card h3{color:#00f3ff;text-shadow:0 0 8px rgba(0,243,255,0.5)}',
+    '.upc-handle,.upc-mood{color:#ff007f;text-shadow:0 0 8px rgba(255,0,127,0.5)}',
+    '.upc-handle em{color:#ff007f}',
+    '.upc-btn{border:1px solid #00f3ff;color:#aef8ff;background:#0d0b1e}',
+    '.upc-btn.prim{background:linear-gradient(135deg,#ff007f,#00f3ff);color:#000;border-color:#ff007f}',
+    '.upc-btn.cyan{color:#00f3ff;border-color:#00f3ff}',
+    '.upc-tchip{border-color:#6a2f8f;background:#0d0b1e;color:#d7b3ff}',
+    '#upcNote{border-color:#ff007f;background:#0d0b1e}'
+  ].join('\n') },
+  void:{ label:'90s Web Void', css:[
+    '.upc-card{background:#000080;border:2px dotted #ffff00;border-radius:0}',
+    '.upc-card h3,.upc-handle,.upc-mood{color:#ffff33}',
+    '.upc-handle em{color:#ffaa00}',
+    '.upc-btn{background:#008080;border:2px outset #cccccc;color:#fff;border-radius:0;font-family:ui-monospace,Consolas,monospace}',
+    '.upc-btn.prim{background:#000;color:#00ff00;border:2px inset #c0c0c0}',
+    '.upc-tchip{background:#000080;border:1px dotted #ffff00;color:#ffffcc}',
+    '#upcNote,textarea{background:#000080;border:2px dotted #ffff00;color:#fff}',
+    '.upc-guest,.gav{background:#000080;border:1px dotted #0099cc}'
+  ].join('\n') }
+};
+function applyPreset(key){
+  var p=PRESETS[key]; if(!p) return;
+  state.themeCSS=p.css; saveState(); applyTheme();
+  var ed=document.getElementById('editCss'); if(ed) ed.value=p.css;
+  var st=document.getElementById('upcPresetStatus');
+  if(st){ st.textContent='⚡ '+p.label+' applied'; st.style.opacity=1; clearTimeout(st._t); st._t=setTimeout(function(){ st.style.opacity=0; },2200); }
+}
 function renderTheme(){
   var box=$('upcCss'); if(!box) return;
   var active=!!state.themeCSS;
@@ -380,7 +430,16 @@ function renderTheme(){
       '<span class="upc-tchip">guestbook: '+state.guests.length+' signed</span>'+
       (state.public?'<span class="upc-tchip" style="color:#00D4FF">public share: on</span>':'')+
     '</div>'+
+    '<div class="upc-presets" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:10px;font-size:0.72rem;color:var(--text-gray)">Presets: '+
+      Object.keys(PRESETS).map(function(k){
+        return '<button data-preset="'+k+'" style="padding:5px 12px;border-radius:30px;cursor:pointer;font-family:inherit;font-size:0.72rem;background:rgba(255,255,255,0.05);border:1px solid rgba(139,92,246,0.35);color:#c9b8ff">'+PRESETS[k].label+'</button>';
+      }).join('')+
+      '<span id="upcPresetStatus" style="font-size:0.7rem;color:#00D4FF;opacity:0;transition:opacity .4s">⚡ applied</span>'+
+    '</div>'+
     (!VISITOR?'<div class="upc-regline"><span class="upc-tchip" id="upcRegStatus">● checking registry…</span></div>':'');
+  box.querySelectorAll('[data-preset]').forEach(function(b){
+    b.addEventListener('click',function(){ applyPreset(b.getAttribute('data-preset')); });
+  });
 }
 function checkRegistryStatus(){
   var el=$('upcRegStatus'); if(!el) return;

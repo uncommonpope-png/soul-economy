@@ -2589,7 +2589,7 @@ function addSquad(name){
   try{ window.dispatchEvent(new CustomEvent('squad-updated')); }catch(e){}
 }
 function attach(card){
-  var bar=card.querySelector('.ss-act'); if(!bar||bar.querySelector('[data-squad]'))return;
+  var bar=card.querySelector('.ss-act'); if(!bar||bar.querySelector('[data-squad]')||bar.querySelector('[data-modelfile]'))return;
   var k=(card.dataset.id||'').trim(); if(!k)return;
   var b=document.createElement('button');
   b.type='button'; b.dataset.squad='1'; b.textContent='◇ Squad';
@@ -2602,6 +2602,35 @@ function attach(card){
     addSquad(nm);
   });
   bar.appendChild(b);
+  var m=document.createElement('button');
+  m.type='button'; m.dataset.modelfile='1'; m.textContent='[>_ Modelfile]';
+  m.title='Copy a ready-to-run Ollama Modelfile for this soul';
+  m.style.cssText='border-color:rgba(255,209,102,0.25);color:#ffd166';
+  m.addEventListener('click',function(ev){
+    ev.stopPropagation(); ev.preventDefault();
+    copyModelfile(modelfileFor(k));
+  });
+  bar.appendChild(m);
+}
+function modelfileFor(k){
+  var nm=k,desc='';
+  try{ var it=FS&&FS.findItem?FS.findItem(k):null; if(it){ nm=it.name||k; desc=String(it.desc||it.description||''); } }catch(e){}
+  var d=desc.replace(/"""/g,"'''").replace(new RegExp(String.fromCharCode(96),"g"),"'").trim().slice(0,400);
+  return 'FROM qwen2.5:0.5b\n# BUYaSOUL Entity: '+nm+'\n# PLT True Value: Sovereign\nSYSTEM """'+d+'"""\nPARAMETER temperature 0.7\n';
+}
+function copyModelfile(t){
+  var done=function(){ toast('✦ Modelfile copied to clipboard'); };
+  function fb(){
+    var ta=document.createElement('textarea');
+    ta.value=t; ta.style.cssText='position:fixed;opacity:0';
+    document.body.appendChild(ta); ta.select();
+    var ok=false; try{ ok=document.execCommand('copy'); }catch(e){}
+    document.body.removeChild(ta);
+    toast(ok?'✦ Modelfile copied to clipboard':'⚠ Clipboard blocked — copy manually');
+  }
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(t).then(done,fb);
+  } else fb();
 }
 function initObs(){
   var grid=document.getElementById('resourceGrid'); if(!grid) return;
