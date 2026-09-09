@@ -80,42 +80,11 @@ Lens.build=function(THREE,catalog){
   catch(e){ overlay.style.display='none'; document.body.style.overflow=Lens.prevScroll; throw e; }
   renderer.setSize(window.innerWidth,window.innerHeight);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
-  renderer.autoClear=false;
   container.appendChild(renderer.domElement);
   Lens.scene=scene; Lens.camera=camera; Lens.renderer=renderer;
   Lens.disposables.push(renderer);
 
-  // SIP-17 PHASE 1: matrix code-rain background quad (own scene/camera, zero DOM cost)
-  var bgMat=new THREE.ShaderMaterial({
-    uniforms:{uTime:{value:0},uResolution:{value:new THREE.Vector2(window.innerWidth,window.innerHeight)}},
-    vertexShader:'varying vec2 vUv; void main(){ vUv=uv; gl_Position=vec4(position,1.0); }',
-    fragmentShader:[
-      'uniform float uTime; uniform vec2 uResolution; varying vec2 vUv;',
-      'float random(vec2 st){ return fract(sin(dot(st.xy,vec2(12.9898,78.233)))*43758.5453123); }',
-      'void main(){',
-      ' vec2 st=gl_FragCoord.xy/uResolution.xy;',
-      ' st.y*=uResolution.y/uResolution.x;',
-      ' float columns=60.0;',
-      ' vec2 ipos=floor(st*vec2(columns,columns));',
-      ' float speed=0.4+random(vec2(ipos.x,0.0))*0.7;',
-      ' float drop=fract(uTime*speed+random(vec2(ipos.x,1.0)));',
-      ' float trail=smoothstep(0.0,0.4,drop-fract(st.y*3.0));',
-      ' float glyph=step(0.5,random(ipos+floor(uTime*12.0)));',
-      ' vec3 greenCode=vec3(0.0,1.0,0.4)*trail*glyph;',
-      ' vec3 deepVoid=vec3(0.04,0.04,0.06);',
-      ' gl_FragColor=vec4(mix(deepVoid,greenCode,0.25),1.0);',
-      '}'
-    ].join('\n'),
-    depthWrite:false, depthTest:false
-  });
-  var bgGeo=new THREE.PlaneGeometry(2,2);
-  var bgQuad=new THREE.Mesh(bgGeo,bgMat);
-  bgQuad.frustumCulled=false;
-  var bgScene=new THREE.Scene(); bgScene.add(bgQuad);
-  Lens.bgScene=bgScene; Lens.bgCamera=new THREE.Camera(); Lens.bgMat=bgMat;
-  Lens.disposables.push(bgGeo,bgMat);
-
-  // starfield depth layer (cheap points under the matrix wash)
+  // starfield depth layer (cheap points over the CSS void gradient)
   var sg=new THREE.BufferGeometry(), sp=new Float32Array(900*3);
   for(var s=0;s<900;s++){ sp[s*3]=(Math.random()-0.5)*400; sp[s*3+1]=(Math.random()-0.5)*400; sp[s*3+2]=(Math.random()-0.5)*400; }
   sg.setAttribute('position',new THREE.BufferAttribute(sp,3));
@@ -143,7 +112,7 @@ Lens.build=function(THREE,catalog){
     mesh.position.set(R*Math.cos(th)*Math.cos(ph),R*Math.sin(ph),R*Math.sin(th)*Math.cos(ph));
     var base=0.55+pn*1.1;
     mesh.scale.setScalar(base);
-    mesh.userData={name:item.name,type:t,plt:String(item.plt||''),desc:String(item.desc||item.details||''),icon:String(item.icon||'✦'),base:base,pv:pv,item:item,billboard:null,
+    mesh.userData={name:item.name,type:t,plt:String(item.plt||''),desc:String(item.desc||item.details||''),icon:String(item.icon||'✦'),base:base,pv:pv,item:item,billboard:null,idx:i,
       basePos:null,windPhase:Math.random()*6.2832,breathSpeed:0.8+Math.random()*0.4,visc:0,targetVisc:0,cur:{x:base,y:base,z:base},beam:null};
     mesh.userData.basePos=mesh.position.clone();
     group.add(mesh);
@@ -157,10 +126,7 @@ Lens.build=function(THREE,catalog){
       Lens.beams.push({mesh:beam,mat:beam.material,phase:Math.random()*6.28});
     }
   });
-  // SIP-17 PHASE 3: stapled mini-cards for top-64 PLT (rest on-demand on select)
-  Lens.nodes.slice().sort(function(a,b){ return b.userData.pv-a.userData.pv; }).slice(0,64).forEach(function(n){
-    Lens.ensureBillboard(n);
-  });
+
   Lens.buildLegend(counts);
   var cc=$('soulverse-count');
   if(cc) cc.textContent=N+' NODES · '+Object.keys(counts).length+' TYPES';
@@ -203,7 +169,6 @@ Lens.build=function(THREE,catalog){
     Lens.camera.aspect=window.innerWidth/window.innerHeight;
     Lens.camera.updateProjectionMatrix();
     Lens.renderer.setSize(window.innerWidth,window.innerHeight);
-    if(Lens.bgMat) Lens.bgMat.uniforms.uResolution.value.set(window.innerWidth,window.innerHeight);
   };
   window.addEventListener('pointermove',B.move);
   el.addEventListener('pointerdown',B.down);
@@ -224,8 +189,7 @@ Lens.build=function(THREE,catalog){
     var now=performance.now(), dt=Math.min(0.05,(now-Lens.lastT)/1000);
     Lens.lastT=now;
     var t=now/1000;
-    // SIP-17 PHASE 4: synced uniforms — matrix rain + all breathing nodes
-    if(Lens.bgMat) Lens.bgMat.uniforms.uTime.value=t;
+    // breathing node uniforms stay synced to wall-clock delta
     for(var i=0;i<Lens.shaders.length;i++){ Lens.shaders[i].uniforms.uTime.value+=dt; }
     for(var j=0;j<Lens.beams.length;j++){
       var bm=Lens.beams[j];
@@ -241,25 +205,9 @@ Lens.build=function(THREE,catalog){
     }
     // SIP-17 ADDENDUM: predatory kinematics before render (wind/water/slime/bloom)
     Lens.updateKinematics(t,dt);
-    // SIP-17 PHASE 4: dynamic distance fade — billboards dissolve past focus range
-    if(Lens.camera){
-      var tmp=Lens._tmpV||(Lens._tmpV=new Lens.THREE.Vector3());
-      for(var k2=0;k2<Lens.sprites.length;k2++){
-        var rec=Lens.sprites[k2];
-        if(!rec.node.visible){ rec.sp.visible=false; continue; }
-        // stapled: billboard rides the node's drifted position
-        rec.sp.position.copy(rec.node.position); rec.sp.position.y+=4.2;
-        rec.node.getWorldPosition(tmp);
-        var dist=Lens.camera.position.distanceTo(tmp);
-        var op=clamp(1-(dist-30)/60,0,1);
-        if(rec.node===Lens.hover||rec.node===Lens.sel) op=Math.max(op,0.95);
-        rec.sp.material.opacity=op;
-        rec.sp.visible=op>0.02;
-      }
-    }
+    // projected real-card clones ride the nodes (originals never touched)
+    Lens.syncCards();
     try{
-      Lens.renderer.clear();
-      if(Lens.bgScene) Lens.renderer.render(Lens.bgScene,Lens.bgCamera);
       Lens.renderer.render(Lens.scene,Lens.camera);
     }catch(e){}
   })();
@@ -282,7 +230,6 @@ Lens.pick=function(x,y){
   if(!Lens.THREE||!Lens.active) return;
   var node=Lens.castAt(x,y);
   if(!node) return;
-  Lens.ensureBillboard(node);
   Lens.sel=node;
   Lens.showHud(node.userData);
 };
@@ -339,48 +286,73 @@ Lens.pltBeam=function(colorHex,h){
   Lens.disposables.push(g,m);
   return new Lens.THREE.Mesh(g,m);
 };
-// SIP-17 PHASE 3: HTML5 canvas mini-card → sprite stapled above a node
-function makeBillboard(THREE,item,colorCss){
-  var canvas=document.createElement('canvas');
-  canvas.width=512; canvas.height=256;
-  var ctx=canvas.getContext('2d');
-  ctx.fillStyle='rgba(10,10,15,0.88)'; ctx.fillRect(0,0,512,256);
-  ctx.strokeStyle='#ffd700'; ctx.lineWidth=6; ctx.strokeRect(10,10,492,236);
-  ctx.fillStyle=colorCss||'#00ffcc'; ctx.font='bold 24px monospace';
-  ctx.fillText('['+String(item.type||'SOUL').toUpperCase()+']',30,50);
-  ctx.fillStyle='#ffffff'; ctx.font='bold 34px monospace';
-  var name=String(item.name||'?');
-  if(name.length>20) name=name.substring(0,18)+'..';
-  ctx.fillText(name,30,100);
-  ctx.fillStyle='#a5b4fc'; ctx.font='20px monospace';
-  var desc=String(item.desc||item.details||'Autonomous sovereign entity');
-  if(desc.length>48) desc=desc.substring(0,48)+'...';
-  ctx.fillText(desc,30,145);
-  ctx.fillStyle='#1e1b4b'; ctx.fillRect(30,175,452,45);
-  ctx.strokeStyle='#00ffcc'; ctx.lineWidth=2; ctx.strokeRect(30,175,452,45);
-  ctx.fillStyle='#ffd700'; ctx.font='bold 22px monospace';
-  ctx.fillText('PLT SCORE: '+String(item.plt||'∞')+' TRUE VALUE',45,206);
-  var tex=new THREE.CanvasTexture(canvas);
-  tex.minFilter=THREE.LinearFilter;
-  var mat=new THREE.SpriteMaterial({map:tex,transparent:true,depthTest:false});
-  var sprite=new THREE.Sprite(mat);
-  sprite.scale.set(16,8,1);
-  return {sprite:sprite,tex:tex,mat:mat};
+// REAL-CARD STAPLING: projected clones of the actual library cards.
+// Originals in #resourceGrid are never moved — clones only. Clicks pass through
+// (pointer-events:none) to the canvas raycast, which selects the node behind.
+Lens.MAXCARDS=24;
+Lens.cardPool=[];
+function realCardEl(name){
+  var nm=String(name||'').toLowerCase(), hit=null;
+  var grid=$('resourceGrid');
+  if(!grid) return null;
+  var cards=grid.querySelectorAll('.card');
+  for(var i=0;i<cards.length;i++){
+    if(String(cards[i].dataset.id||'').toLowerCase()===nm){ hit=cards[i]; break; }
+  }
+  return hit;
 }
-Lens.ensureBillboard=function(node){
-  if(!node||!Lens.group||node.userData.billboard) return node?node.userData.billboard:null;
-  var u=node.userData;
-  var b=makeBillboard(Lens.THREE,u.item,PALCSS[u.type]||'#00ffcc');
-  b.sprite.position.copy(node.position);
-  b.sprite.position.y+=4.2;
-  b.sprite.userData.node=node;
-  u.billboard=b.sprite;
-  Lens.group.add(b.sprite);
-  Lens.sprites.push({sp:b.sprite,node:node});
-  Lens.disposables.push(b.tex,b.mat);
-  return b.sprite;
+function cleanClone(src){
+  var c=src.cloneNode(true);
+  c.removeAttribute('id');
+  c.style.width='260px';
+  var inner=c.querySelectorAll('[id]');
+  for(var i=0;i<inner.length;i++){ inner[i].removeAttribute('id'); }
+  return c;
+}
+Lens.syncCards=function(){
+  var cont=$('soulverse-cards');
+  if(!cont||!Lens.camera||!Lens.group||!Lens.active) return;
+  while(Lens.cardPool.length<Lens.MAXCARDS){
+    var d=document.createElement('div');
+    d.style.cssText='position:absolute;left:0;top:0;pointer-events:none;will-change:transform,opacity;display:none';
+    d._key=-1;
+    cont.appendChild(d);
+    Lens.cardPool.push(d);
+  }
+  var tmp=Lens._tmpV||(Lens._tmpV=new Lens.THREE.Vector3());
+  var cands=[];
+  for(var i=0;i<Lens.nodes.length;i++){
+    var n=Lens.nodes[i];
+    if(!n.visible) continue;
+    n.getWorldPosition(tmp);
+    var dist=Lens.camera.position.distanceTo(tmp);
+    if(dist>95) continue;
+    cands.push({n:n,d:dist,wx:tmp.x,wy:tmp.y,wz:tmp.z});
+  }
+  cands.sort(function(a,b){ return a.d-b.d; });
+  var w=window.innerWidth, h=window.innerHeight;
+  var pv=new Lens.THREE.Vector3();
+  for(var k=0;k<Lens.cardPool.length;k++){
+    var el=Lens.cardPool[k];
+    if(k>=cands.length){ el.style.display='none'; el._key=-1; continue; }
+    var rec=cands[k], node=rec.n, idx=node.userData.idx;
+    if(el._key!==idx){
+      var src=realCardEl(node.userData.name);
+      if(!src){ el.style.display='none'; el._key=-1; continue; }
+      el.innerHTML='';
+      el.appendChild(cleanClone(src));
+      el._key=idx;
+    }
+    pv.set(rec.wx,rec.wy,rec.wz).project(Lens.camera);
+    if(pv.z>1){ el.style.display='none'; continue; }
+    var x=(pv.x*0.5+0.5)*w, y=(-pv.y*0.5+0.5)*h;
+    var sc=clamp(1.1-rec.d/120,0.45,0.85);
+    el.style.display='block';
+    el.style.opacity=clamp(1.3-rec.d/70,0,1).toFixed(2);
+    el.style.transform='translate(-50%,-50%) translate('+Math.round(x)+'px,'+Math.round(y)+'px) scale('+sc.toFixed(2)+')';
+  }
 };
-// unified raycast: nodes first, then visible billboards (both open the real card)
+// unified raycast over visible nodes (clones pass clicks through to canvas)
 Lens.castAt=function(x,y){
   if(!Lens.THREE||!Lens.camera) return null;
   var ptr=new Lens.THREE.Vector2((x/window.innerWidth)*2-1,-(y/window.innerHeight)*2+1);
@@ -388,13 +360,10 @@ Lens.castAt=function(x,y){
   ray.setFromCamera(ptr,Lens.camera);
   var hits=ray.intersectObjects(Lens.nodes.filter(function(n){ return n.visible; }),false);
   if(hits.length) return hits[0].object;
-  var sps=Lens.sprites.filter(function(s){ return s.sp.visible&&s.sp.material.opacity>0.1; }).map(function(s){ return s.sp; });
-  var hits2=ray.intersectObjects(sps,false);
-  if(hits2.length&&hits2[0].object.userData.node) return hits2[0].object.userData.node;
   return null;
 };
 // SIP-17 ADDENDUM: bio-fluid predatory kinematics (wind / water / slime / bloom)
-// Layers A–C run here; Layer D (billboard fade) lives in the existing fade pass.
+// Layers A–C run here; Layer D (card fade) lives in syncCards below.
 Lens.updateKinematics=function(t,dt){
   var stir=1+Math.min(Lens.mVel*8,0.6);
   for(var i=0;i<Lens.nodes.length;i++){
@@ -500,6 +469,8 @@ Lens.close=function(){
   Lens.disposables=[];
   var container=$('soulverse-canvas-container');
   if(container) container.innerHTML='';
+  var sc2=$('soulverse-cards');
+  if(sc2){ for(var ci=0;ci<sc2.children.length;ci++){ sc2.children[ci].style.display='none'; sc2.children[ci]._key=-1; } }
   var overlay=$('soulverse-overlay');
   if(overlay) overlay.style.display='none';
   var hud=$('soulverse-hud'); if(hud){ hud.style.display='none'; hud.innerHTML=''; }
@@ -525,5 +496,5 @@ window.SoulverseLens=Lens;
 window.initBestOrb=function(){
   try{ if(window.SoulverseLens&&!SoulverseLens.active&&!SoulverseLens.opening){ console.info('[soulverse] tab entry — igniting'); SoulverseLens.open(); } }catch(e){}
 };
-console.info('[soulverse] lens v3 loaded (matrix + breath + billboards + kinematics)');
+console.info('[soulverse] lens v4 loaded (breath + beams + real-card staples + kinematics)');
 })();
