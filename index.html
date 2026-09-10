@@ -1388,7 +1388,57 @@ render = function(data) {
         if (leS1) { leS1.badge = sprite; sprite.userData.bs = { x: sprite.scale.x, y: sprite.scale.y }; }
       }
     });
-    if (edgePositions.length) { const eg = new BufferGeometry(); eg.setAttribute('position', new Float32BufferAttribute(edgePositions, 3)); scene.add(new LineSegments(eg, new LineBasicMaterial({ color: 0x00D4FF, transparent: true, opacity: 0.06, blending: AdditiveBlending }))); }
+    // DNA double-helix links (same language as the model-card strands) — baked static, one draw call
+    function buildDnaEdges(ep) {
+      const pos = [], col = [];
+      const A = new V3(), B = new V3(), D = new V3(), U = new V3(), Vv = new V3(), P = new V3(), Q = new V3();
+      const UP = new V3(0, 1, 0);
+      const cA = [0, 1, 0.8], cB = [0.55, 0.36, 0.96], cR = [1, 0.84, 0.4];
+      const SEG = 12, TURNS = 3, AMP = 0.05;
+      function strandPt(t, phase, out) {
+        const a = Math.PI*2*TURNS*t + phase;
+        out.copy(A).addScaledVector(D, t * A.distanceTo(B));
+        out.x += (U.x*Math.cos(a) + Vv.x*Math.sin(a)) * AMP;
+        out.y += (U.y*Math.cos(a) + Vv.y*Math.sin(a)) * AMP;
+        out.z += (U.z*Math.cos(a) + Vv.z*Math.sin(a)) * AMP;
+        return out;
+      }
+      function pushPt(p, c) { pos.push(p.x, p.y, p.z); col.push(c[0], c[1], c[2]); }
+      for (let e = 0; e + 5 < ep.length; e += 6) {
+        A.set(ep[e], ep[e+1], ep[e+2]); B.set(ep[e+3], ep[e+4], ep[e+5]);
+        D.copy(B).sub(A);
+        const len = D.length() || 1; D.multiplyScalar(1/len);
+        U.crossVectors(D, UP);
+        if (U.lengthSq() < 0.001) U.set(1, 0, 0);
+        U.normalize(); Vv.crossVectors(D, U).normalize();
+        let pxA = 0, pyA = 0, pzA = 0, pxB = 0, pyB = 0, pzB = 0, started = false;
+        for (let s = 0; s <= SEG; s++) {
+          const t = s / SEG;
+          strandPt(t, 0, P); strandPt(t, Math.PI, Q);
+          if (started) {
+            pushPt({x:pxA,y:pyA,z:pzA}, cA); pushPt(P, cA);
+            pushPt({x:pxB,y:pyB,z:pzB}, cB); pushPt(Q, cB);
+          }
+          pxA = P.x; pyA = P.y; pzA = P.z; pxB = Q.x; pyB = Q.y; pzB = Q.z;
+          started = true;
+          if (s % 3 === 0) { pushPt(P, cR); pushPt(Q, cR); }
+        }
+      }
+      const g = new BufferGeometry();
+      g.setAttribute('position', new Float32BufferAttribute(pos, 3));
+      g.setAttribute('color', new Float32BufferAttribute(col, 3));
+      const m = new LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0.4, blending: AdditiveBlending, depthWrite: false });
+      const lines = new LineSegments(g, m);
+      lines.frustumCulled = false;
+      scene.add(lines);
+    }
+    if (edgePositions.length) {
+      try { buildDnaEdges(edgePositions); }
+      catch(e) {
+        console.warn('DNA links skipped:', e);
+        const eg = new BufferGeometry(); eg.setAttribute('position', new Float32BufferAttribute(edgePositions, 3)); scene.add(new LineSegments(eg, new LineBasicMaterial({ color: 0x00D4FF, transparent: true, opacity: 0.06, blending: AdditiveBlending })));
+      }
+    }
 
     // Background stars — near + far parallax shells
     function starShell(count, rMin, rMax, color, size, opacity) {
@@ -1408,13 +1458,13 @@ render = function(data) {
       scene.add(new Mesh(wg, wm));
     });
     // rising ambient motes
-    const moteCount = 60;
+    const moteCount = 24;
     const moteArr = new Float32Array(moteCount * 3);
     const moteSpeed = new Float32Array(moteCount);
     for (let mi = 0; mi < moteCount; mi++) { moteArr[mi*3]=(Math.random()-0.5)*16; moteArr[mi*3+1]=(Math.random()-0.5)*10; moteArr[mi*3+2]=(Math.random()-0.5)*16; moteSpeed[mi]=0.15+Math.random()*0.4; }
     const moteGeo = new BufferGeometry();
     moteGeo.setAttribute('position', new Float32BufferAttribute(moteArr, 3));
-    const motes = new Points(moteGeo, new PointsMaterial({ color: 0x88ffcc, size: 0.03, transparent: true, opacity: 0.32, blending: AdditiveBlending, depthWrite: false }));
+    const motes = new Points(moteGeo, new PointsMaterial({ color: 0x88ffcc, size: 0.028, transparent: true, opacity: 0.28, blending: AdditiveBlending, depthWrite: false }));
     motes.frustumCulled = false;
     scene.add(motes);
 
@@ -1508,7 +1558,7 @@ render = function(data) {
         beaconRing = new Mesh(brg, brm); beaconRing.rotation.x = -Math.PI/2; beaconRing.visible = false; scene.add(beaconRing);
       }
       edges.forEach((e, ei) => {
-        if (ei % 3) return;
+        if (ei % 6) return;
         const pa = positions[e[0]], pb = positions[e[1]];
         if (pa && pb) pulsePairs.push([pa, pb]);
       });
@@ -1523,7 +1573,7 @@ render = function(data) {
         pulseGeo = new BufferGeometry();
         pulseGeo.setAttribute('position', new Float32BufferAttribute(arr, 3));
         for (let pi = 0; pi < pulsePairs.length; pi++) pulsePhases.push(Math.random());
-        pulsePts = new Points(pulseGeo, new PointsMaterial({ map: dollarTex, color: 0xFFE9A8, size: 0.14, transparent: true, opacity: 0.95, blending: AdditiveBlending, depthWrite: false }));
+        pulsePts = new Points(pulseGeo, new PointsMaterial({ map: dollarTex, color: 0xFFE9A8, size: 0.11, transparent: true, opacity: 0.8, blending: AdditiveBlending, depthWrite: false }));
         pulsePts.frustumCulled = false;
         scene.add(pulsePts);
       }
@@ -1711,7 +1761,7 @@ render = function(data) {
       if (pulsePts && !REDUCED) {
         const attr = pulseGeo.getAttribute('position');
         for (let pi = 0; pi < pulsePairs.length; pi++) {
-          const f = (TT*0.15 + pulsePhases[pi]) % 1;
+          const f = (TT*0.12 + pulsePhases[pi]) % 1;
           const pa = pulsePairs[pi][0], pb = pulsePairs[pi][1];
           attr.setXYZ(pi, pa.x + (pb.x-pa.x)*f, pa.y + (pb.y-pa.y)*f, pa.z + (pb.z-pa.z)*f);
         }
