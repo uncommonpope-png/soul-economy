@@ -1220,7 +1220,7 @@ render = function(data) {
     // items is in closure scope from outer script (line 277)
     canvas.width = window.innerWidth; canvas.height = window.innerHeight;
     const T = await import('three');
-    const { Scene, PerspectiveCamera, WebGLRenderer, Color, AmbientLight, DirectionalLight, MeshPhysicalMaterial, OctahedronGeometry, Mesh, SphereGeometry, MeshBasicMaterial, BufferGeometry, Float32BufferAttribute, PointsMaterial, Points, AdditiveBlending, EdgesGeometry, LineBasicMaterial, LineSegments, Group, Vector2, Raycaster, TetrahedronGeometry, BoxGeometry, InstancedMesh, Matrix4 } = T;
+    const { Scene, PerspectiveCamera, WebGLRenderer, Color, AmbientLight, DirectionalLight, MeshPhysicalMaterial, OctahedronGeometry, Mesh, SphereGeometry, MeshBasicMaterial, BufferGeometry, Float32BufferAttribute, PointsMaterial, Points, AdditiveBlending, EdgesGeometry, LineBasicMaterial, LineSegments, Group, Vector2, Raycaster, TetrahedronGeometry, BoxGeometry, InstancedMesh, Matrix4, RingGeometry, CylinderGeometry, DodecahedronGeometry, ConeGeometry } = T;
     const { OrbitControls } = await import('three/addons/controls/OrbitControls.js');
 
     const scene = new Scene(); scene.background = new Color(0x080808);
@@ -1247,6 +1247,10 @@ render = function(data) {
       chamber: { geom: new TetrahedronGeometry(0.07,0), radius: 3.4 },
       infrastructure: { geom: new BoxGeometry(0.08,0.08,0.08), radius: 3.8 },
       combo: { geom: null, radius: 4.5 },
+      pack: { geom: new DodecahedronGeometry(0.09,0), radius: 4.2 },
+      world: { geom: new SphereGeometry(0.11,12,12), radius: 4.9 },
+      agent: { geom: new ConeGeometry(0.08,0.18,6), radius: 5.4 },
+      book: { geom: new BoxGeometry(0.12,0.03,0.16), radius: 5.9 },
     };
     const root = new Group(); scene.add(root);
     const clickTargets = [], nodeData = [], catItems = {};
@@ -1256,7 +1260,7 @@ render = function(data) {
     const nodeList = []; // { index, cat, item }
     Object.keys(catItems).forEach(cat => { catItems[cat].forEach(e => nodeList.push({ idx: e.idx, cat, item: e.item })); });
     const edges = [];
-    const catOrder = ['soul','role','skill','chamber','infrastructure','combo'];
+    const catOrder = ['soul','role','skill','chamber','infrastructure','combo','pack','world','agent','book'];
     for (let ci = 0; ci < catOrder.length - 1; ci++) {
       const la = catItems[catOrder[ci]] || [], lb = catItems[catOrder[ci+1]] || [];
       la.forEach(a => { lb.forEach(b => { if (Math.random() < 0.1) edges.push([a.idx, b.idx]); }); });
@@ -1414,6 +1418,76 @@ render = function(data) {
       const leS1b = nodeData.find(d => d.index === idx); if (leS1b) leS1b.label = sprite;
     });
 
+    // ─── SLICE 2 POST-PASS (additive visuals; a failure here must never hide the graph) ───
+    let beacon = null, beaconRing = null;
+    let pulseGeo = null, pulsePts = null;
+    const pulsePhases = [], pulsePairs = [];
+    function kgSelect(idx) {
+      const d = nodeData.find(x => x.index === idx);
+      if (!d || !d.pos) return;
+      if (beacon) { beacon.position.copy(d.pos); beacon.position.y += 1.5; beacon.visible = true; }
+      if (beaconRing) { beaconRing.position.copy(d.pos); beaconRing.position.y -= 0.3; beaconRing.visible = true; }
+    }
+    function kgHideBeacon() { if (beacon) beacon.visible = false; if (beaconRing) beaconRing.visible = false; }
+    try {
+      const radialCv = document.createElement('canvas'); radialCv.width = radialCv.height = 128;
+      const rcx = radialCv.getContext('2d');
+      const rg = rcx.createRadialGradient(64,64,4,64,64,64);
+      rg.addColorStop(0,'rgba(255,255,255,0.85)'); rg.addColorStop(1,'rgba(255,255,255,0)');
+      rcx.fillStyle = rg; rcx.fillRect(0,0,128,128);
+      const auraTex = new T.CanvasTexture(radialCv);
+      const runeTexs = [];
+      for (let ri = 0; ri < 6; ri++) {
+        const cv = document.createElement('canvas'); cv.width = cv.height = 64;
+        const cx = cv.getContext('2d');
+        if (window.AlienHieroglyphs && window.AlienHieroglyphs.draw) {
+          try { window.AlienHieroglyphs.draw(cx, ri*7+2, 16, 16, 32, '#00ffcc', 0.95); }
+          catch(e) { cx.strokeStyle = '#00ffcc'; cx.strokeRect(20,20,24,24); }
+        } else {
+          cx.strokeStyle = '#00ffcc'; cx.lineWidth = 2;
+          cx.beginPath(); cx.moveTo(14,50); cx.lineTo(32,14); cx.lineTo(50,50); cx.moveTo(22,36); cx.lineTo(42,36); cx.stroke();
+        }
+        runeTexs.push(new T.CanvasTexture(cv));
+      }
+      nodeData.forEach(d => {
+        if (d.mesh && d.mesh.isMesh) {
+          const am = new SpriteMaterial({ map: auraTex, color: d.mesh.material.color, transparent: true, opacity: 0.22, blending: AdditiveBlending, depthWrite: false });
+          const aura = new Sprite(am);
+          aura.position.copy(d.pos); aura.scale.setScalar(1.1);
+          root.add(aura); d.aura = aura;
+          if (d.item.type === 'soul' || d.item.type === 'role') {
+            d.orbiters = [0,1].map(k => {
+              const sm = new SpriteMaterial({ map: runeTexs[(d.index+k*3)%6], transparent: true, opacity: 0.85, depthWrite: false });
+              const sp = new Sprite(sm); sp.scale.setScalar(0.16);
+              root.add(sp);
+              return { sp, ang: d.phase + k*Math.PI, r: 0.45 + k*0.15 };
+            });
+          }
+        }
+      });
+      {
+        const bg = new CylinderGeometry(0.05, 0.12, 3, 8, 1, true);
+        const bm = new MeshBasicMaterial({ color: 0xFFD166, transparent: true, opacity: 0.35, blending: AdditiveBlending, depthWrite: false, side: T.DoubleSide });
+        beacon = new Mesh(bg, bm); beacon.visible = false; scene.add(beacon);
+        const brg = new RingGeometry(0.3, 0.36, 40);
+        const brm = new MeshBasicMaterial({ color: 0xFFD166, transparent: true, opacity: 0.6, blending: AdditiveBlending, depthWrite: false, side: T.DoubleSide });
+        beaconRing = new Mesh(brg, brm); beaconRing.rotation.x = -Math.PI/2; beaconRing.visible = false; scene.add(beaconRing);
+      }
+      edges.forEach(e => {
+        const pa = positions[e[0]], pb = positions[e[1]];
+        if (pa && pb) pulsePairs.push([pa, pb]);
+      });
+      if (pulsePairs.length) {
+        const arr = new Float32Array(pulsePairs.length * 3);
+        pulseGeo = new BufferGeometry();
+        pulseGeo.setAttribute('position', new Float32BufferAttribute(arr, 3));
+        for (let pi = 0; pi < pulsePairs.length; pi++) pulsePhases.push(Math.random());
+        pulsePts = new Points(pulseGeo, new PointsMaterial({ color: 0xBFFFFF, size: 0.07, transparent: true, opacity: 0.9, blending: AdditiveBlending, depthWrite: false }));
+        pulsePts.frustumCulled = false;
+        scene.add(pulsePts);
+      }
+    } catch(e) { console.warn('Graph slice-2 visuals skipped:', e); }
+
     // ─── SCREEN-SPACE PROXIMITY CLICKING ───
     // Projects each node's 3D position to 2D screen, finds nearest within threshold
     const pan = document.getElementById('soul-info-panel'), pt = document.getElementById('soul-info-title'), pd = document.getElementById('soul-info-desc'), pp = document.getElementById('soul-info-plt'), pb = document.getElementById('soul-info-btn'), pc = document.getElementById('soul-info-close');
@@ -1452,10 +1526,10 @@ render = function(data) {
         pt.textContent = item.name; pd.textContent = item.desc || ''; pp.textContent = item.plt ? `PLT: ${item.plt}` : '';
         if (item.file) { pb.textContent = '⬇ Awaken'; pb.style.display = 'inline-block'; pb.onclick = () => { const a = document.createElement('a'); a.href = 'downloads/' + item.file; a.download = item.file; a.click(); pan.classList.remove('active'); }; }
         else if (item.url) { pb.textContent = '▶ Open'; pb.style.display = 'inline-block'; pb.onclick = () => { window.open(item.url, '_blank'); pan.classList.remove('active'); }; }
-        else pb.style.display = 'none'; pan.classList.add('active'); return; }
-      if (pan.classList.contains('active')) pan.classList.remove('active');
+        else pb.style.display = 'none'; pan.classList.add('active'); kgSelect(idx); return; }
+      if (pan.classList.contains('active')) { pan.classList.remove('active'); kgHideBeacon(); }
     } catch(e) { console.error('Click error:', e); } });
-    pc.onclick = () => pan.classList.remove('active');
+    pc.onclick = () => { pan.classList.remove('active'); kgHideBeacon(); };
     // Graph internals exposed for read-only overlays (fog / FXAA / bloom / matrix floor)
     window.__soulGraph = { scene, camera, renderer, root, items, nodeData };
 
@@ -1488,7 +1562,25 @@ render = function(data) {
           const ld = camera.position.distanceTo(d.label.position);
           d.label.material.opacity = Math.max(0.08, Math.min(0.55, 0.75 - ld/18));
         }
+        if (d.aura) {
+          d.aura.material.opacity = 0.2 + (REDUCED ? 0 : 0.1 * Math.sin(TT*1.6 + d.phase + 1));
+          d.aura.scale.setScalar(1.05 + (REDUCED ? 0 : 0.12 * Math.sin(TT*1.6 + d.phase)));
+        }
+        if (d.orbiters && !REDUCED) d.orbiters.forEach((o, oi) => {
+          o.ang += 0.008 + oi*0.003;
+          o.sp.position.set(d.pos.x + Math.cos(o.ang)*o.r, d.pos.y + Math.sin(TT*2 + o.ang)*0.08, d.pos.z + Math.sin(o.ang)*o.r);
+        });
       } });
+      if (pulsePts && !REDUCED) {
+        const attr = pulseGeo.getAttribute('position');
+        for (let pi = 0; pi < pulsePairs.length; pi++) {
+          const f = (TT*0.25 + pulsePhases[pi]) % 1;
+          const pa = pulsePairs[pi][0], pb = pulsePairs[pi][1];
+          attr.setXYZ(pi, pa.x + (pb.x-pa.x)*f, pa.y + (pb.y-pa.y)*f, pa.z + (pb.z-pa.z)*f);
+        }
+        attr.needsUpdate = true;
+      }
+      if (beacon && beacon.visible && !REDUCED) { beacon.material.opacity = 0.28 + 0.12*Math.sin(TT*3); beaconRing.rotation.z -= 0.01; }
       renderer.render(scene, camera);
     }
     animate();
