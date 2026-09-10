@@ -1224,6 +1224,7 @@ render = function(data) {
     const { OrbitControls } = await import('three/addons/controls/OrbitControls.js');
 
     const scene = new Scene(); scene.background = new Color(0x080808);
+    const REDUCED = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const camera = new PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 100);
     camera.position.set(0, 2, 7);
     const renderer = new WebGLRenderer({ canvas, antialias: true, alpha: false });
@@ -1338,8 +1339,9 @@ render = function(data) {
 
       const mat = new MeshPhysicalMaterial({ color: c, emissive: c, emissiveIntensity: 0.25, metalness: 0.3, roughness: 0.2, transparent: true, opacity: 0.8, clearcoat: 0.2 });
       const mesh = new Mesh(cfg.geom.clone(), mat);
-      mesh.position.copy(pos); mesh.scale.setScalar(0.8 + plt[0] * 0.4);
-      mesh.userData.index = idx; root.add(mesh); clickTargets.push(mesh); nodeData.push({ mesh, index: idx, pos, item });
+      const ndS1 = { mesh, index: idx, pos, item, baseScale: (0.8 + plt[0] * 0.4), phase: idx*0.7, badge: null, label: null };
+      mesh.position.copy(pos); mesh.scale.setScalar(ndS1.baseScale);
+      mesh.userData.index = idx; root.add(mesh); clickTargets.push(mesh); nodeData.push(ndS1);
       // Invisible click collider (larger sphere for easier clicking) — NOT visible:false, raycaster can't hit invisible
       const collider = new Mesh(new SphereGeometry(0.35, 8, 8), new MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false }));
       collider.position.copy(pos); collider.userData.index = idx;
@@ -1374,6 +1376,8 @@ render = function(data) {
         sprite.scale.set(s, s * 0.27, 1);
         sprite.position.copy(pos); sprite.position.y += 0.5;
         root.add(sprite);
+        const leS1 = nodeData.find(d => d.index === idx);
+        if (leS1) { leS1.badge = sprite; sprite.userData.bs = { x: sprite.scale.x, y: sprite.scale.y }; }
       }
     });
     if (edgePositions.length) { const eg = new BufferGeometry(); eg.setAttribute('position', new Float32BufferAttribute(edgePositions, 3)); scene.add(new LineSegments(eg, new LineBasicMaterial({ color: 0x00D4FF, transparent: true, opacity: 0.06, blending: AdditiveBlending }))); }
@@ -1407,6 +1411,7 @@ render = function(data) {
       sprite.position.copy(pos); sprite.position.y += yOff;
       sprite.scale.set(0.6, 0.1, 1);
       root.add(sprite);
+      const leS1b = nodeData.find(d => d.index === idx); if (leS1b) leS1b.label = sprite;
     });
 
     // ─── SCREEN-SPACE PROXIMITY CLICKING ───
@@ -1430,9 +1435,11 @@ render = function(data) {
       return nearest;
     }
     let hoverIdx = -1;
+    const hoverRef = { d: null };
     document.addEventListener('mousemove', e => {
       const idx = getNearestNode(e.clientX, e.clientY);
       if (idx !== hoverIdx) { hoverIdx = idx;
+        hoverRef.d = idx >= 0 ? (nodeData.find(d => d.index === idx) || null) : null;
         document.querySelectorAll('.card').forEach(c => { c.style.borderColor = ''; c.style.boxShadow = ''; });
         if (idx >= 0) { const card = document.querySelectorAll('.card')[idx]; if (card) { card.style.borderColor = '#8B5CF6'; card.style.boxShadow = '0 0 40px rgba(139,92,246,0.3)'; } }
       }
@@ -1454,15 +1461,33 @@ render = function(data) {
 
     function animate() {
       requestAnimationFrame(animate); controls.update();
-      const t = Date.now() * 0.001;
+      const nowMs = performance.now();
+      const t = nowMs * 0.001;
+      const TT = REDUCED ? 0 : t;
+      controls.autoRotateSpeed = REDUCED ? 0.8 : 0.8 + Math.sin(t*0.3)*0.3;
       nodeData.forEach(d => { if (d.mesh && d.mesh.isMesh) {
-        d.mesh.rotation.x = Math.sin(t + d.index) * 0.05;
-        d.mesh.rotation.y = Math.cos(t + d.index) * 0.05;
-        // Proximity glow — brighter when camera is near
+        d.mesh.rotation.x = Math.sin(TT + d.index) * 0.05;
+        d.mesh.rotation.y = Math.cos(TT + d.index) * 0.05;
+        const isHov = hoverRef.d && hoverRef.d.index === d.index;
+        // Slice 1: breathing nodes — phase-offset lung
+        const br = REDUCED ? 1 : 1 + 0.07 * Math.sin(TT*1.6 + d.phase);
+        d.mesh.scale.setScalar(d.baseScale * br * (isHov ? 1.25 : 1));
+        // Proximity glow — brighter when camera is near (+hover bloom spike)
         const dist = controls.target.distanceTo(d.pos || d.mesh.position);
         const proximity = Math.max(0, 1 - (dist - 0.5) / 4);
-        d.mesh.material.emissiveIntensity = 0.15 + proximity * 0.6;
+        d.mesh.material.emissiveIntensity = Math.min(1.3, 0.15 + proximity * 0.6 + (isHov ? 0.8 : 0));
         d.mesh.material.opacity = 0.6 + proximity * 0.3;
+        // Slice 1: breathing PLT badges + distance-faded labels
+        if (d.badge) {
+          d.badge.material.opacity = 0.45 + (REDUCED ? 0 : 0.2 * Math.sin(TT*1.6 + d.phase));
+          const bbs = d.badge.userData.bs || { x: 0.4, y: 0.11 };
+          const bbr = 1 + (REDUCED ? 0 : 0.06 * Math.sin(TT*1.6 + d.phase));
+          d.badge.scale.set(bbs.x*bbr, bbs.y*bbr, 1);
+        }
+        if (d.label) {
+          const ld = camera.position.distanceTo(d.label.position);
+          d.label.material.opacity = Math.max(0.08, Math.min(0.55, 0.75 - ld/18));
+        }
       } });
       renderer.render(scene, camera);
     }
