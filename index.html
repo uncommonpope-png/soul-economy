@@ -2268,6 +2268,7 @@ document.body.insertAdjacentHTML('beforeend',
     <button data-p="hot">🔥 Trending</button>
     <button data-p="watch">📦 Watchlist</button>
     <button data-p="groups">🎪 Groups</button>
+    <button data-p="people">👥 People</button>
     <button data-p="you">🧑 You</button>
   </div>
   <div class="ss-view" id="ssView"></div>
@@ -3124,11 +3125,57 @@ function renderNotes(){
   root.querySelectorAll('[data-ni]').forEach(b=>b.addEventListener('click',()=>items[+b.dataset.ni].go()));
   notesSeen=Date.now();SAVE();
 }
+// ── people directory: registry now, live souls after cloud deploys ──
+let peopleCache=null, peopleLive=null;
+function mergeLive(reg){
+  const map={};
+  (reg||[]).forEach(p=>{ if(p&&p.handle)map[String(p.handle).toLowerCase()]={handle:p.handle,name:p.name,mood:p.mood,verified:p.verified}; });
+  (peopleLive||[]).forEach(p=>{
+    if(!p||!p.handle)return;
+    const k=String(p.handle).toLowerCase();
+    map[k]=Object.assign(map[k]||{handle:p.handle},{followers:(p.c!=null?p.c:p.followers)});
+    if(p.avatar&&!map[k].avatar)map[k].avatar=p.avatar;
+  });
+  Object.keys(pfollow).forEach(k=>{ if(!map[k])map[k]={handle:(pfollow[k]&&pfollow[k].h)||k}; });
+  return Object.values(map).sort((a,b)=>String(a.handle).localeCompare(String(b.handle)));
+}
+function renderPeople(){
+  const root=$('ssView');
+  root.innerHTML='<div class="ss-sub">👥 People (<span id="ssPCnt">…</span>)</div><div id="ssPList"><div class="ss-empty">Reading the registry…</div></div>'+
+    '<div style="font-size:0.65rem;color:#8b8b98;margin-top:6px">On-chain registry today; live souls merge in once Cloud Sync deploys.</div>';
+  const paint=(list)=>{
+    if(view!=='people')return;
+    const cnt=root.querySelector('#ssPCnt'), box=root.querySelector('#ssPList');
+    if(!cnt||!box)return;
+    cnt.textContent=list.length;
+    box.innerHTML=list.length?list.map(p=>{
+      const h=String(p.handle), following=!!pfollow[h.toLowerCase()];
+      return '<div class="ss-row"><img src="https://github.com/'+escH(h)+'.png" style="width:28px;height:28px;border-radius:50%;background:#111" onerror="this.style.display=\'none\'">'+
+      '<span class="grow"><b style="color:#fff">'+escH(p.name||('@'+h))+'</b><div style="font-size:0.6rem;color:#888">@'+escH(h)+(p.verified?' ✔':'')+(p.mood?' · '+escH(p.mood):'')+(p.followers!=null?' · '+p.followers+' followers':'')+'</div></span>'+
+      '<button data-ppf="'+escH(h)+'" title="Follow / unfollow" style="background:none;border:1px solid rgba(0,212,255,0.4);border-radius:10px;color:#00D4FF;font-size:0.65rem;padding:2px 8px;cursor:pointer">'+(following?'✓':'＋')+'</button>'+
+      '<button data-pdm="'+escH(h)+'" title="Message" style="background:none;border:none;color:#888;font-size:0.8rem;cursor:pointer">✉</button>'+
+      '<a href="profile.html#@'+escH(h)+'" target="_blank" title="Open sanctuary" style="font-size:0.8rem;text-decoration:none">🏛</a></div>';
+    }).join(''):'<div class="ss-empty">No souls registered yet — claim the first handle on your Profile.</div>';
+    box.querySelectorAll('[data-ppf]').forEach(b=>b.addEventListener('click',ev=>{ev.stopPropagation();togglePeople(b.dataset.ppf);renderPeople();}));
+    box.querySelectorAll('[data-pdm]').forEach(b=>b.addEventListener('click',ev=>{ev.stopPropagation();openDM(b.dataset.pdm);}));
+  };
+  fetch('profiles/index.json',{cache:'no-store'}).then(r=>r.json()).then(j=>{
+    peopleCache=Array.isArray(j)?j:[];
+    paint(mergeLive(peopleCache));
+  }).catch(()=>paint(mergeLive([])));
+  try{
+    if(window.SocialSync&&SocialSync.enabled()&&SocialSync.token()){
+      fetch(SocialSync.API+'/people',{headers:{Authorization:'Bearer '+SocialSync.token()}}).then(r=>r.json()).then(j=>{
+        if(j&&j.ok&&Array.isArray(j.data)){ peopleLive=j.data; paint(mergeLive(peopleCache||[])); }
+      }).catch(()=>{});
+    }
+  }catch(e){}
+}
 // ── wiring ──
 function switchView(v){
   view=v;
   document.querySelectorAll('.ss-tabs button').forEach(b=>b.classList.toggle('on',b.dataset.p===v));
-  if(v==='pulse')renderPulse();else if(v==='hot')renderHot();else if(v==='watch')renderWatch();else if(v==='groups')renderGroups();else renderYou();
+  if(v==='pulse')renderPulse();else if(v==='hot')renderHot();else if(v==='watch')renderWatch();else if(v==='groups')renderGroups();else if(v==='people')renderPeople();else renderYou();
 }
 function setDock(open){
   dock.classList.toggle('hidden',!open);
