@@ -1225,6 +1225,10 @@ render = function(data) {
 
     const scene = new Scene(); scene.background = new Color(0x080808);
     const REDUCED = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    scene.fog = new T.FogExp2(0x080808, 0.015);
+    const vig = document.createElement('div');
+    vig.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(circle at 50% 42%,transparent 55%,rgba(0,0,0,0.55) 100%)';
+    document.body.appendChild(vig);
     const camera = new PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 100);
     camera.position.set(0, 2, 7);
     const renderer = new WebGLRenderer({ canvas, antialias: true, alpha: false });
@@ -1386,11 +1390,33 @@ render = function(data) {
     });
     if (edgePositions.length) { const eg = new BufferGeometry(); eg.setAttribute('position', new Float32BufferAttribute(edgePositions, 3)); scene.add(new LineSegments(eg, new LineBasicMaterial({ color: 0x00D4FF, transparent: true, opacity: 0.06, blending: AdditiveBlending }))); }
 
-    // Background stars
-    const sc = 1200, sp = new Float32Array(sc * 3);
-    for (let i = 0; i < sc; i++) { const r = 10 + Math.random() * 30, t1 = Math.random() * Math.PI * 2, t2 = Math.acos(2 * Math.random() - 1); sp[i*3]=r*Math.sin(t2)*Math.cos(t1); sp[i*3+1]=r*Math.sin(t2)*Math.sin(t1); sp[i*3+2]=r*Math.cos(t2); }
-    const sg = new BufferGeometry(); sg.setAttribute('position', new Float32BufferAttribute(sp, 3));
-    scene.add(new Points(sg, new PointsMaterial({ color: 0x444488, size: 0.04, transparent: true, opacity: 0.4 })));
+    // Background stars — near + far parallax shells
+    function starShell(count, rMin, rMax, color, size, opacity) {
+      const sp = new Float32Array(count * 3);
+      for (let i = 0; i < count; i++) { const r = rMin + Math.random() * (rMax - rMin), t1 = Math.random() * Math.PI * 2, t2 = Math.acos(2 * Math.random() - 1); sp[i*3]=r*Math.sin(t2)*Math.cos(t1); sp[i*3+1]=r*Math.sin(t2)*Math.sin(t1); sp[i*3+2]=r*Math.cos(t2); }
+      const sg = new BufferGeometry(); sg.setAttribute('position', new Float32BufferAttribute(sp, 3));
+      const pts = new Points(sg, new PointsMaterial({ color, size, transparent: true, opacity }));
+      scene.add(pts);
+      return pts;
+    }
+    const starNear = starShell(700, 10, 25, 0x6666aa, 0.05, 0.5);
+    const starFar = starShell(700, 26, 45, 0x444488, 0.04, 0.4);
+    // constellation shell wireframes echoing the category radii
+    [2, 3, 4, 5, 6].forEach((r, si) => {
+      const wg = new SphereGeometry(r, 24, 16);
+      const wm = new MeshBasicMaterial({ color: si % 2 ? 0x8B5CF6 : 0x00D4FF, wireframe: true, transparent: true, opacity: 0.035, depthWrite: false });
+      scene.add(new Mesh(wg, wm));
+    });
+    // rising ambient motes
+    const moteCount = 220;
+    const moteArr = new Float32Array(moteCount * 3);
+    const moteSpeed = new Float32Array(moteCount);
+    for (let mi = 0; mi < moteCount; mi++) { moteArr[mi*3]=(Math.random()-0.5)*16; moteArr[mi*3+1]=(Math.random()-0.5)*10; moteArr[mi*3+2]=(Math.random()-0.5)*16; moteSpeed[mi]=0.15+Math.random()*0.4; }
+    const moteGeo = new BufferGeometry();
+    moteGeo.setAttribute('position', new Float32BufferAttribute(moteArr, 3));
+    const motes = new Points(moteGeo, new PointsMaterial({ color: 0x88ffcc, size: 0.035, transparent: true, opacity: 0.5, blending: AdditiveBlending, depthWrite: false }));
+    motes.frustumCulled = false;
+    scene.add(motes);
 
     // ─── NODE NAME LABELS ───
     nodeList.forEach(entry => {
@@ -1427,6 +1453,12 @@ render = function(data) {
       if (!d || !d.pos) return;
       if (beacon) { beacon.position.copy(d.pos); beacon.position.y += 1.5; beacon.visible = true; }
       if (beaconRing) { beaconRing.position.copy(d.pos); beaconRing.position.y -= 0.3; beaconRing.visible = true; }
+      const rg = new RingGeometry(0.2, 0.26, 40);
+      const rm = new MeshBasicMaterial({ color: 0x00D4FF, transparent: true, opacity: 0.9, blending: AdditiveBlending, depthWrite: false, side: T.DoubleSide });
+      const ring = new Mesh(rg, rm);
+      ring.rotation.x = -Math.PI/2; ring.position.copy(d.pos);
+      scene.add(ring);
+      ripples.push({ mesh: ring, born: performance.now() });
     }
     function kgHideBeacon() { if (beacon) beacon.visible = false; if (beaconRing) beaconRing.visible = false; }
     try {
@@ -1487,6 +1519,45 @@ render = function(data) {
         scene.add(pulsePts);
       }
     } catch(e) { console.warn('Graph slice-2 visuals skipped:', e); }
+    try {
+      const flareCv = document.createElement('canvas'); flareCv.width = flareCv.height = 128;
+      const flx = flareCv.getContext('2d');
+      flx.strokeStyle = 'rgba(255,255,255,0.9)'; flx.lineWidth = 3;
+      flx.beginPath(); flx.moveTo(64,8); flx.lineTo(64,120); flx.moveTo(8,64); flx.lineTo(120,64); flx.stroke();
+      const flg = flx.createRadialGradient(64,64,2,64,64,30);
+      flg.addColorStop(0,'rgba(255,255,255,1)'); flg.addColorStop(1,'rgba(255,255,255,0)');
+      flx.fillStyle = flg; flx.beginPath(); flx.arc(64,64,30,0,7); flx.fill();
+      const flareTex = new T.CanvasTexture(flareCv);
+      const orbiterGeo = new TetrahedronGeometry(0.03,0);
+      const orbiterMat = new MeshBasicMaterial({ color: 0xFFD166, transparent: true, opacity: 0.9 });
+      nodeData.forEach(d => {
+        if (d.mesh && d.mesh.isMesh) {
+          const pv = (d.item.plt || '0.5/0.5/0.5').split('/').map(Number);
+          if ((pv[0]+pv[1]-pv[2]) > 1.2) {
+            const hg = new RingGeometry(0.32, 0.38, 40);
+            const hm = new MeshBasicMaterial({ color: 0xFFD166, transparent: true, opacity: 0.5, blending: AdditiveBlending, depthWrite: false, side: T.DoubleSide });
+            const halo = new Mesh(hg, hm);
+            halo.rotation.x = -Math.PI/2; halo.position.copy(d.pos); halo.position.y -= 0.28;
+            scene.add(halo); d.halo = halo;
+          }
+          if (d.item.featured) {
+            if (!d.orbiters) d.orbiters = [];
+            [0,1].forEach(k => {
+              const m = new Mesh(orbiterGeo, orbiterMat);
+              root.add(m);
+              d.orbiters.push({ mesh: m, ang: d.phase + k*Math.PI, r: 0.55 });
+            });
+          }
+        }
+        if (d.star) {
+          const fm = new SpriteMaterial({ map: flareTex, transparent: true, opacity: 0.7, blending: AdditiveBlending, depthWrite: false });
+          const fl = new Sprite(fm); fl.position.copy(d.pos); fl.scale.setScalar(0.5);
+          root.add(fl); d.flare = fl;
+        }
+      });
+      const sb0 = root.userData._sb;
+      if (sb0) { const wc = new T.Color(1,1,1); for (let ci = 0; ci < sb0.count; ci++) sb0.setColorAt(ci, wc); if (sb0.instanceColor) sb0.instanceColor.needsUpdate = true; }
+    } catch(e) { console.warn('Graph slice-3 visuals skipped:', e); }
 
     // ─── SCREEN-SPACE PROXIMITY CLICKING ───
     // Projects each node's 3D position to 2D screen, finds nearest within threshold
@@ -1533,11 +1604,18 @@ render = function(data) {
     // Graph internals exposed for read-only overlays (fog / FXAA / bloom / matrix floor)
     window.__soulGraph = { scene, camera, renderer, root, items, nodeData };
 
+    let emaDt = 16, slowFrames = 0, degraded = false, lastT = performance.now();
+    const _m4 = new Matrix4(), _sv = new V3(1,1,1), _cc = new T.Color();
+    const sb = root.userData._sb;
     function animate() {
       requestAnimationFrame(animate); controls.update();
       const nowMs = performance.now();
+      emaDt = emaDt * 0.95 + (nowMs - lastT) * 0.05; lastT = nowMs;
+      if (!degraded && emaDt > 40) { if (++slowFrames > 120) { degraded = true; renderer.setPixelRatio(1); starFar.visible = false; } } else if (emaDt <= 40) slowFrames = 0;
       const t = nowMs * 0.001;
       const TT = REDUCED ? 0 : t;
+      starNear.rotation.y += REDUCED ? 0 : 0.00012;
+      starFar.rotation.y -= REDUCED ? 0 : 0.00007;
       controls.autoRotateSpeed = REDUCED ? 0.8 : 0.8 + Math.sin(t*0.3)*0.3;
       nodeData.forEach(d => { if (d.mesh && d.mesh.isMesh) {
         d.mesh.rotation.x = Math.sin(TT + d.index) * 0.05;
@@ -1568,8 +1646,14 @@ render = function(data) {
         }
         if (d.orbiters && !REDUCED) d.orbiters.forEach((o, oi) => {
           o.ang += 0.008 + oi*0.003;
-          o.sp.position.set(d.pos.x + Math.cos(o.ang)*o.r, d.pos.y + Math.sin(TT*2 + o.ang)*0.08, d.pos.z + Math.sin(o.ang)*o.r);
+          const ox = d.pos.x + Math.cos(o.ang)*o.r, oz = d.pos.z + Math.sin(o.ang)*o.r;
+          const oy = d.pos.y + Math.sin(TT*2 + o.ang)*0.08;
+          if (o.sp) o.sp.position.set(ox, oy, oz);
+          if (o.mesh) { o.mesh.position.set(ox, oy, oz); o.mesh.rotation.y += 0.03; o.mesh.rotation.x += 0.02; }
         });
+        if (d.halo && !REDUCED) d.halo.rotation.z += 0.004;
+        if (d.star) d.star.material.size = 0.04 + (REDUCED ? 0 : 0.02 * Math.sin(TT*2.4 + (d.phase||0)));
+        if (d.flare) d.flare.material.opacity = 0.55 + (REDUCED ? 0 : 0.3 * Math.sin(TT*2.4 + (d.phase||0)));
       } });
       if (pulsePts && !REDUCED) {
         const attr = pulseGeo.getAttribute('position');
@@ -1579,6 +1663,35 @@ render = function(data) {
           attr.setXYZ(pi, pa.x + (pb.x-pa.x)*f, pa.y + (pb.y-pa.y)*f, pa.z + (pb.z-pa.z)*f);
         }
         attr.needsUpdate = true;
+      }
+      if (sb && !REDUCED) {
+        const inst = sb.userData.instances;
+        for (let si = 0; si < sb.count; si++) {
+          const bp = inst[si].pos;
+          const s = 1 + 0.12 * Math.sin(TT*2.2 + si*0.5);
+          _m4.makeTranslation(bp.x, bp.y, bp.z);
+          _m4.scale(_sv.set(s, s, s));
+          sb.setMatrixAt(si, _m4);
+          sb.setColorAt(si, _cc.setHSL(0.72 + 0.06*Math.sin(TT*2 + si*0.35), 0.7, 0.55));
+        }
+        sb.instanceMatrix.needsUpdate = true;
+        if (sb.instanceColor) sb.instanceColor.needsUpdate = true;
+      }
+      if (!REDUCED) {
+        const ma = moteGeo.getAttribute('position');
+        for (let mi = 0; mi < moteCount; mi++) {
+          let y = ma.getY(mi) + moteSpeed[mi] * 0.016;
+          if (y > 6) y = -6;
+          ma.setY(mi, y);
+        }
+        ma.needsUpdate = true;
+      }
+      for (let ri = ripples.length - 1; ri >= 0; ri--) {
+        const rp = ripples[ri];
+        const age = (nowMs - rp.born) / 1000;
+        if (age > 0.9) { scene.remove(rp.mesh); rp.mesh.geometry.dispose(); rp.mesh.material.dispose(); ripples.splice(ri, 1); continue; }
+        rp.mesh.scale.setScalar(1 + age*4);
+        rp.mesh.material.opacity = 0.9 * (1 - age/0.9);
       }
       if (beacon && beacon.visible && !REDUCED) { beacon.material.opacity = 0.28 + 0.12*Math.sin(TT*3); beaconRing.rotation.z -= 0.01; }
       renderer.render(scene, camera);
@@ -1598,6 +1711,7 @@ render = function(data) {
   <div style="padding:8px 12px;display:flex;gap:6px;flex-wrap:wrap"><span class="gchip" onclick="guideQuick('which soul for coding?')">coding</span><span class="gchip" onclick="guideQuick('what is PLT?')">PLT?</span><span class="gchip" onclick="guideQuick('how to publish?')">publish</span><span class="gchip" onclick="guideQuick('best for beginners?')">beginners</span></div>
 </div>
 <style>.gchip{font-size:0.7rem;padding:4px 10px;border-radius:20px;background:rgba(139,92,246,0.12);border:1px solid rgba(139,92,246,0.15);color:#B8B8B8;cursor:pointer}.gchip:hover{background:rgba(139,92,246,0.2);color:#fff}</style>
+<style id="kg-panel-skin">#soul-info-panel.active{box-shadow:0 0 0 1px rgba(255,209,102,0.45),0 0 60px rgba(255,209,102,0.12),0 0 80px rgba(139,92,246,0.15);animation:kgPanelIn 0.45s cubic-bezier(0.22,1,0.36,1)}#soul-info-panel .name{filter:drop-shadow(0 0 12px rgba(139,92,246,0.55))}#soul-info-panel .plt{color:#FFD166;text-shadow:0 0 14px rgba(255,209,102,0.5)}@keyframes kgPanelIn{0%{opacity:0;transform:translateY(-50%) translateX(34px) scale(0.97)}100%{opacity:1;transform:translateY(-50%) translateX(0) scale(1)}}</style>
 <script>
 (function(){
   const btn=document.getElementById('guideBtn'), panel=document.getElementById('guidePanel'), log=document.getElementById('guideLog'), input=document.getElementById('guideInput');
