@@ -1220,7 +1220,7 @@ render = function(data) {
     // items is in closure scope from outer script (line 277)
     canvas.width = window.innerWidth; canvas.height = window.innerHeight;
     const T = await import('three');
-    const { Scene, PerspectiveCamera, WebGLRenderer, Color, AmbientLight, DirectionalLight, MeshPhysicalMaterial, OctahedronGeometry, Mesh, SphereGeometry, MeshBasicMaterial, BufferGeometry, Float32BufferAttribute, PointsMaterial, Points, AdditiveBlending, EdgesGeometry, LineBasicMaterial, LineSegments, Group, Vector2, Raycaster, TetrahedronGeometry, BoxGeometry, InstancedMesh, Matrix4, RingGeometry, CylinderGeometry, DodecahedronGeometry, ConeGeometry } = T;
+    const { Scene, PerspectiveCamera, WebGLRenderer, Color, AmbientLight, DirectionalLight, MeshPhysicalMaterial, OctahedronGeometry, Mesh, SphereGeometry, MeshBasicMaterial, BufferGeometry, Float32BufferAttribute, PointsMaterial, Points, AdditiveBlending, EdgesGeometry, LineBasicMaterial, LineSegments, Group, Vector2, Raycaster, TetrahedronGeometry, BoxGeometry, InstancedMesh, Matrix4, RingGeometry, CylinderGeometry, DodecahedronGeometry, ConeGeometry, TorusGeometry } = T;
     const { OrbitControls } = await import('three/addons/controls/OrbitControls.js');
 
     const scene = new Scene(); scene.background = new Color(0x080808);
@@ -1380,7 +1380,7 @@ render = function(data) {
         const tex = new T.CanvasTexture(canvas);
         const spriteMat = new T.SpriteMaterial({ map: tex, transparent: true, opacity: 0.6, depthTest: false, sizeAttenuation: true });
         const sprite = new T.Sprite(spriteMat);
-        const s = 0.4 + plt[0] * 0.3;
+        const s = 0.46 + plt[0] * 0.34;
         sprite.scale.set(s, s * 0.27, 1);
         sprite.position.copy(pos); sprite.position.y += 0.5;
         root.add(sprite);
@@ -1408,13 +1408,13 @@ render = function(data) {
       scene.add(new Mesh(wg, wm));
     });
     // rising ambient motes
-    const moteCount = 220;
+    const moteCount = 60;
     const moteArr = new Float32Array(moteCount * 3);
     const moteSpeed = new Float32Array(moteCount);
     for (let mi = 0; mi < moteCount; mi++) { moteArr[mi*3]=(Math.random()-0.5)*16; moteArr[mi*3+1]=(Math.random()-0.5)*10; moteArr[mi*3+2]=(Math.random()-0.5)*16; moteSpeed[mi]=0.15+Math.random()*0.4; }
     const moteGeo = new BufferGeometry();
     moteGeo.setAttribute('position', new Float32BufferAttribute(moteArr, 3));
-    const motes = new Points(moteGeo, new PointsMaterial({ color: 0x88ffcc, size: 0.035, transparent: true, opacity: 0.5, blending: AdditiveBlending, depthWrite: false }));
+    const motes = new Points(moteGeo, new PointsMaterial({ color: 0x88ffcc, size: 0.03, transparent: true, opacity: 0.32, blending: AdditiveBlending, depthWrite: false }));
     motes.frustumCulled = false;
     scene.add(motes);
 
@@ -1428,10 +1428,11 @@ render = function(data) {
       canvas.width = 256; canvas.height = 36;
       const ctx = canvas.getContext('2d');
       ctx.clearRect(0, 0, 256, 36);
-      ctx.shadowColor = 'rgba(139,92,246,0.6)';
-      ctx.shadowBlur = 8;
-      ctx.fillStyle = 'rgba(255,255,255,0.7)';
-      ctx.font = '14px Inter, sans-serif';
+      const NEONL = {soul:'#d8b4fe',role:'#5eead4',skill:'#a5b4fc',chamber:'#f0abfc',infrastructure:'#fca5a5',combo:'#fde68a',pack:'#6ee7b7',world:'#7dd3fc',agent:'#86efac',book:'#fcd34d'};
+      ctx.shadowColor = NEONL[cat] || 'rgba(139,92,246,0.6)';
+      ctx.shadowBlur = 12;
+      ctx.fillStyle = NEONL[cat] || 'rgba(255,255,255,0.7)';
+      ctx.font = 'bold 13px Inter, sans-serif';
       ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
       ctx.fillText(label, 128, 18);
       const tex = new T.CanvasTexture(canvas);
@@ -1439,7 +1440,7 @@ render = function(data) {
       const sprite = new T.Sprite(mat);
       const yOff = cat === 'skill' ? 0.15 : cat === 'soul' ? 0.5 : cat === 'role' ? 0.35 : 0.2;
       sprite.position.copy(pos); sprite.position.y += yOff;
-      sprite.scale.set(0.6, 0.1, 1);
+      sprite.scale.set(0.46, 0.08, 1);
       root.add(sprite);
       const leS1b = nodeData.find(d => d.index === idx); if (leS1b) leS1b.label = sprite;
     });
@@ -1489,7 +1490,7 @@ render = function(data) {
           aura.position.copy(d.pos); aura.scale.setScalar(1.1);
           root.add(aura); d.aura = aura;
           if (d.item.type === 'soul' || d.item.type === 'role') {
-            d.orbiters = [0,1].map(k => {
+            d.orbiters = [0,1,2].map(k => {
               const sm = new T.SpriteMaterial({ map: runeTexs[(d.index+k*3)%6], transparent: true, opacity: 0.85, depthWrite: false });
               const sp = new T.Sprite(sm); sp.scale.setScalar(0.16);
               root.add(sp);
@@ -1506,21 +1507,34 @@ render = function(data) {
         const brm = new MeshBasicMaterial({ color: 0xFFD166, transparent: true, opacity: 0.6, blending: AdditiveBlending, depthWrite: false, side: T.DoubleSide });
         beaconRing = new Mesh(brg, brm); beaconRing.rotation.x = -Math.PI/2; beaconRing.visible = false; scene.add(beaconRing);
       }
-      edges.forEach(e => {
+      edges.forEach((e, ei) => {
+        if (ei % 3) return;
         const pa = positions[e[0]], pb = positions[e[1]];
         if (pa && pb) pulsePairs.push([pa, pb]);
       });
       if (pulsePairs.length) {
+        const dollarCv = document.createElement('canvas'); dollarCv.width = dollarCv.height = 64;
+        const dlx = dollarCv.getContext('2d');
+        dlx.font = 'bold 46px monospace'; dlx.textAlign = 'center'; dlx.textBaseline = 'middle';
+        dlx.shadowColor = '#FFD166'; dlx.shadowBlur = 12;
+        dlx.fillStyle = '#FFD166'; dlx.fillText('$', 32, 34);
+        const dollarTex = new T.CanvasTexture(dollarCv);
         const arr = new Float32Array(pulsePairs.length * 3);
         pulseGeo = new BufferGeometry();
         pulseGeo.setAttribute('position', new Float32BufferAttribute(arr, 3));
         for (let pi = 0; pi < pulsePairs.length; pi++) pulsePhases.push(Math.random());
-        pulsePts = new Points(pulseGeo, new PointsMaterial({ color: 0xBFFFFF, size: 0.07, transparent: true, opacity: 0.9, blending: AdditiveBlending, depthWrite: false }));
+        pulsePts = new Points(pulseGeo, new PointsMaterial({ map: dollarTex, color: 0xFFE9A8, size: 0.14, transparent: true, opacity: 0.95, blending: AdditiveBlending, depthWrite: false }));
         pulsePts.frustumCulled = false;
         scene.add(pulsePts);
       }
     } catch(e) { console.warn('Graph slice-2 visuals skipped:', e); }
+    let brandSpr = null, codeTorus = null;
     try {
+      const featCv = document.createElement('canvas'); featCv.width = featCv.height = 64;
+      const fcx = featCv.getContext('2d');
+      if (window.AlienHieroglyphs && window.AlienHieroglyphs.draw) { try { window.AlienHieroglyphs.draw(fcx, 11, 16, 16, 32, '#ffd700', 0.95); } catch(e){} }
+      else { fcx.strokeStyle = '#ffd700'; fcx.lineWidth = 2; fcx.strokeRect(20,20,24,24); }
+      const featTex = new T.CanvasTexture(featCv);
       const flareCv = document.createElement('canvas'); flareCv.width = flareCv.height = 128;
       const flx = flareCv.getContext('2d');
       flx.strokeStyle = 'rgba(255,255,255,0.9)'; flx.lineWidth = 3;
@@ -1542,7 +1556,12 @@ render = function(data) {
             scene.add(halo); d.halo = halo;
           }
           if (d.item.featured) {
-            if (!d.orbiters) d.orbiters = [];
+            if (!d.orbiters) {
+              const fsm = new T.SpriteMaterial({ map: featTex, transparent: true, opacity: 0.9, depthWrite: false });
+              const fsp = new T.Sprite(fsm); fsp.scale.setScalar(0.18);
+              root.add(fsp);
+              d.orbiters = [{ sp: fsp, ang: d.phase, r: 0.5 }];
+            }
             [0,1].forEach(k => {
               const m = new Mesh(orbiterGeo, orbiterMat);
               root.add(m);
@@ -1558,6 +1577,26 @@ render = function(data) {
       });
       const sb0 = root.userData._sb;
       if (sb0) { const wc = new T.Color(1,1,1); for (let ci = 0; ci < sb0.count; ci++) sb0.setColorAt(ci, wc); if (sb0.instanceColor) sb0.instanceColor.needsUpdate = true; }
+      const brandCv = document.createElement('canvas'); brandCv.width = 512; brandCv.height = 160;
+      const bcx = brandCv.getContext('2d');
+      bcx.textAlign = 'center';
+      bcx.shadowColor = '#FFD166'; bcx.shadowBlur = 26;
+      bcx.fillStyle = '#FFD166';
+      bcx.font = 'bold 64px Georgia, serif';
+      bcx.fillText('BUYaSOUL', 256, 72);
+      bcx.shadowBlur = 8;
+      bcx.fillStyle = '#B8B8B8';
+      bcx.font = '20px monospace';
+      bcx.fillText('PROFIT + LOVE - TAX = TRUE VALUE', 256, 118);
+      const brandTex = new T.CanvasTexture(brandCv);
+      brandSpr = new T.Sprite(new T.SpriteMaterial({ map: brandTex, transparent: true, opacity: 0.9, depthWrite: false }));
+      brandSpr.scale.set(2.6, 0.8, 1);
+      brandSpr.position.set(0, 1.35, 0);
+      scene.add(brandSpr);
+      const tg = new TorusGeometry(2.4, 0.015, 8, 72);
+      codeTorus = new Mesh(tg, new MeshBasicMaterial({ color: 0x8B5CF6, wireframe: true, transparent: true, opacity: 0.10, depthWrite: false }));
+      codeTorus.rotation.x = Math.PI/2.3;
+      scene.add(codeTorus);
     } catch(e) { console.warn('Graph slice-3 visuals skipped:', e); }
 
     // ─── SCREEN-SPACE PROXIMITY CLICKING ───
@@ -1606,6 +1645,11 @@ render = function(data) {
     window.__soulGraph = { scene, camera, renderer, root, items, nodeData };
 
     let emaDt = 16, slowFrames = 0, degraded = false, lastT = performance.now();
+    function heartbeat(t, ph) {
+      var p1 = Math.pow(Math.max(0, Math.sin(t*2.1 + ph)), 6);
+      var p2 = 0.55*Math.pow(Math.max(0, Math.sin(t*2.1 + 0.7 + ph)), 8);
+      return p1 + p2;
+    }
     const _m4 = new Matrix4(), _sv = new V3(1,1,1), _cc = new T.Color();
     const sb = root.userData._sb;
     function animate() {
@@ -1615,36 +1659,44 @@ render = function(data) {
       if (!degraded && emaDt > 40) { if (++slowFrames > 120) { degraded = true; renderer.setPixelRatio(1); starFar.visible = false; } } else if (emaDt <= 40) slowFrames = 0;
       const t = nowMs * 0.001;
       const TT = REDUCED ? 0 : t;
-      starNear.rotation.y += REDUCED ? 0 : 0.00012;
-      starFar.rotation.y -= REDUCED ? 0 : 0.00007;
+      starNear.rotation.y += REDUCED ? 0 : 0.00006;
+      starFar.rotation.y -= REDUCED ? 0 : 0.00004;
       controls.autoRotateSpeed = REDUCED ? 0.8 : 0.8 + Math.sin(t*0.3)*0.3;
       nodeData.forEach(d => { if (d.mesh && d.mesh.isMesh) {
         d.mesh.rotation.x = Math.sin(TT + d.index) * 0.05;
         d.mesh.rotation.y = Math.cos(TT + d.index) * 0.05;
         const isHov = hoverRef.d && hoverRef.d.index === d.index;
-        // Slice 1: breathing nodes — phase-offset lung
-        const br = REDUCED ? 1 : 1 + 0.07 * Math.sin(TT*1.6 + d.phase);
+        // Heartbeat lungs — lub-dub thump, phase-offset per node
+        const hb = REDUCED ? 0 : heartbeat(TT, d.phase);
+        const br = 1 + 0.10 * hb;
         d.mesh.scale.setScalar(d.baseScale * br * (isHov ? 1.25 : 1));
-        // Proximity glow — brighter when camera is near (+hover bloom spike)
+        // bio-swell: the body drifts outward along its radial axis with each beat
+        if (!REDUCED) {
+          const px = d.pos.x, py = d.pos.y, pz = d.pos.z;
+          const pl = Math.sqrt(px*px + py*py + pz*pz) || 1;
+          const sw = 1 + 0.05 * hb / pl;
+          d.mesh.position.set(px*sw, py*sw, pz*sw);
+        } else d.mesh.position.copy(d.pos);
+        // Proximity glow — brighter when camera is near (+hover bloom spike + heartbeat)
         const dist = controls.target.distanceTo(d.pos || d.mesh.position);
         const proximity = Math.max(0, 1 - (dist - 0.5) / 4);
-        d.mesh.material.emissiveIntensity = Math.min(1.3, 0.15 + proximity * 0.6 + (isHov ? 0.8 : 0));
+        d.mesh.material.emissiveIntensity = Math.min(1.4, 0.15 + proximity * 0.6 + (isHov ? 0.8 : 0) + 0.45 * hb);
         d.mesh.material.opacity = 0.6 + proximity * 0.3;
         // Slice 1: breathing PLT badges + distance-faded labels
-        if (d.badge) {
-          d.badge.material.opacity = 0.45 + (REDUCED ? 0 : 0.2 * Math.sin(TT*1.6 + d.phase));
-          const bbs = d.badge.userData.bs || { x: 0.4, y: 0.11 };
-          const bbr = 1 + (REDUCED ? 0 : 0.06 * Math.sin(TT*1.6 + d.phase));
-          d.badge.scale.set(bbs.x*bbr, bbs.y*bbr, 1);
-        }
+          if (d.badge) {
+            d.badge.material.opacity = 0.55 + (REDUCED ? 0 : 0.25 * hb);
+            const bbs = d.badge.userData.bs || { x: 0.46, y: 0.125 };
+            const bbr = 1 + (REDUCED ? 0 : 0.09 * hb);
+            d.badge.scale.set(bbs.x*bbr, bbs.y*bbr, 1);
+          }
         if (d.label) {
           const ld = camera.position.distanceTo(d.label.position);
           d.label.material.opacity = Math.max(0.08, Math.min(0.55, 0.75 - ld/18));
         }
-        if (d.aura) {
-          d.aura.material.opacity = 0.2 + (REDUCED ? 0 : 0.1 * Math.sin(TT*1.6 + d.phase + 1));
-          d.aura.scale.setScalar(1.05 + (REDUCED ? 0 : 0.12 * Math.sin(TT*1.6 + d.phase)));
-        }
+          if (d.aura) {
+            d.aura.material.opacity = 0.2 + (REDUCED ? 0 : 0.16 * hb);
+            d.aura.scale.setScalar(1.05 + (REDUCED ? 0 : 0.18 * hb));
+          }
         if (d.orbiters && !REDUCED) d.orbiters.forEach((o, oi) => {
           o.ang += 0.008 + oi*0.003;
           const ox = d.pos.x + Math.cos(o.ang)*o.r, oz = d.pos.z + Math.sin(o.ang)*o.r;
@@ -1659,7 +1711,7 @@ render = function(data) {
       if (pulsePts && !REDUCED) {
         const attr = pulseGeo.getAttribute('position');
         for (let pi = 0; pi < pulsePairs.length; pi++) {
-          const f = (TT*0.25 + pulsePhases[pi]) % 1;
+          const f = (TT*0.15 + pulsePhases[pi]) % 1;
           const pa = pulsePairs[pi][0], pb = pulsePairs[pi][1];
           attr.setXYZ(pi, pa.x + (pb.x-pa.x)*f, pa.y + (pb.y-pa.y)*f, pa.z + (pb.z-pa.z)*f);
         }
@@ -1694,6 +1746,8 @@ render = function(data) {
         rp.mesh.scale.setScalar(1 + age*4);
         rp.mesh.material.opacity = 0.9 * (1 - age/0.9);
       }
+      if (brandSpr) { brandSpr.position.y = 1.35 + (REDUCED ? 0 : 0.08*Math.sin(TT*0.9)); brandSpr.material.opacity = 0.85 + (REDUCED ? 0 : 0.15*Math.sin(TT*1.3)); }
+      if (codeTorus && !REDUCED) codeTorus.rotation.z += 0.0012;
       if (beacon && beacon.visible && !REDUCED) { beacon.material.opacity = 0.28 + 0.12*Math.sin(TT*3); beaconRing.rotation.z -= 0.01; }
       renderer.render(scene, camera);
     }
