@@ -1245,16 +1245,16 @@ render = function(data) {
     const fill = new DirectionalLight(0x00D4FF, 0.8); fill.position.set(-3, 1, -2); scene.add(fill);
 
     const CAT = {
-      soul: { geom: new OctahedronGeometry(0.22,0), radius: 1.5 },
-      role: { geom: new OctahedronGeometry(0.14,0), radius: 2.2 },
-      skill: { geom: new OctahedronGeometry(0.045,0), radius: 2.9 },
-      chamber: { geom: new TetrahedronGeometry(0.07,0), radius: 3.4 },
-      infrastructure: { geom: new BoxGeometry(0.08,0.08,0.08), radius: 3.8 },
+      soul: { geom: new OctahedronGeometry(0.28,0), radius: 1.5 },
+      role: { geom: new OctahedronGeometry(0.18,0), radius: 2.2 },
+      skill: { geom: new OctahedronGeometry(0.06,0), radius: 2.9 },
+      chamber: { geom: new TetrahedronGeometry(0.09,0), radius: 3.4 },
+      infrastructure: { geom: new BoxGeometry(0.10,0.10,0.10), radius: 3.8 },
       combo: { geom: null, radius: 4.5 },
-      pack: { geom: new DodecahedronGeometry(0.09,0), radius: 4.2 },
-      world: { geom: new SphereGeometry(0.11,12,12), radius: 4.9 },
-      agent: { geom: new ConeGeometry(0.08,0.18,6), radius: 5.4 },
-      book: { geom: new BoxGeometry(0.12,0.03,0.16), radius: 5.9 },
+      pack: { geom: new DodecahedronGeometry(0.11,0), radius: 4.2 },
+      world: { geom: new SphereGeometry(0.14,12,12), radius: 4.9 },
+      agent: { geom: new ConeGeometry(0.10,0.22,6), radius: 5.4 },
+      book: { geom: new BoxGeometry(0.15,0.04,0.20), radius: 5.9 },
     };
     const root = new Group(); scene.add(root);
     const clickTargets = [], nodeData = [], catItems = {};
@@ -1335,7 +1335,7 @@ render = function(data) {
 
       if (cat === 'skill') {
         if (!root.userData._sb) {
-          const im = new InstancedMesh(new OctahedronGeometry(0.09, 0), new MeshPhysicalMaterial({ color: 0x8B5CF6, emissive: 0x6D28D9, emissiveIntensity: 0.2, metalness: 0.3, roughness: 0.2 }), 300);
+          const im = new InstancedMesh(new OctahedronGeometry(0.11, 0), new MeshPhysicalMaterial({ color: 0x8B5CF6, emissive: 0x6D28D9, emissiveIntensity: 0.35, metalness: 0.3, roughness: 0.2 }), 300);
           im.userData.instances = []; im.userData.bc = 0; root.add(im); root.userData._sb = im; clickTargets.push(im);
         }
         const b = root.userData._sb, bi = b.userData.bc;
@@ -1345,9 +1345,9 @@ render = function(data) {
         nodeData.push({ type: 'instanced', batch: b, instanceIdx: bi, index: idx, pos, item }); return;
       }
 
-      const mat = new MeshPhysicalMaterial({ color: c, emissive: c, emissiveIntensity: 0.25, metalness: 0.3, roughness: 0.2, transparent: true, opacity: 0.8, clearcoat: 0.2 });
+      const mat = new MeshPhysicalMaterial({ color: c, emissive: c, emissiveIntensity: 0.4, metalness: 0.3, roughness: 0.2, transparent: true, opacity: 0.9, clearcoat: 0.2 });
       const mesh = new Mesh(cfg.geom.clone(), mat);
-      const ndS1 = { mesh, index: idx, pos, item, baseScale: (0.8 + plt[0] * 0.4), phase: idx*0.7, badge: null, label: null };
+      const ndS1 = { mesh, index: idx, pos, item, baseScale: (1.0 + plt[0] * 0.5), phase: idx*0.7, badge: null, label: null };
       mesh.position.copy(pos); mesh.scale.setScalar(ndS1.baseScale);
       mesh.userData.index = idx; root.add(mesh); clickTargets.push(mesh); nodeData.push(ndS1);
       // Invisible click collider (larger sphere for easier clicking) — NOT visible:false, raycaster can't hit invisible
@@ -1373,16 +1373,16 @@ render = function(data) {
           ctx.fillStyle = pColors[i] + '40';
           ctx.beginPath(); ctx.roundRect(px, 8, 75, 44, 8); ctx.fill();
           ctx.fillStyle = pColors[i];
-          ctx.font = 'bold 18px Inter, sans-serif';
+          ctx.font = 'bold 20px Inter, sans-serif';
           ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
           ctx.fillText(`${pLabels[i]} ${val.toFixed(1)}`, px + 37, 30);
         });
         const tex = new T.CanvasTexture(canvas);
         const spriteMat = new T.SpriteMaterial({ map: tex, transparent: true, opacity: 0.6, depthTest: false, sizeAttenuation: true });
         const sprite = new T.Sprite(spriteMat);
-        const s = 0.46 + plt[0] * 0.34;
+        const s = 0.6 + plt[0] * 0.42;
         sprite.scale.set(s, s * 0.27, 1);
-        sprite.position.copy(pos); sprite.position.y += 0.5;
+        sprite.position.copy(pos); sprite.position.y += 0.58;
         root.add(sprite);
         const leS1 = nodeData.find(d => d.index === idx);
         if (leS1) { leS1.badge = sprite; sprite.userData.bs = { x: sprite.scale.x, y: sprite.scale.y }; }
@@ -1488,7 +1488,7 @@ render = function(data) {
       const tex = new T.CanvasTexture(canvas);
       const mat = new T.SpriteMaterial({ map: tex, transparent: true, opacity: 0.5, depthTest: false, sizeAttenuation: true });
       const sprite = new T.Sprite(mat);
-      const yOff = cat === 'skill' ? 0.15 : cat === 'soul' ? 0.5 : cat === 'role' ? 0.35 : 0.2;
+      const yOff = cat === 'skill' ? 0.18 : cat === 'soul' ? 0.56 : cat === 'role' ? 0.4 : 0.24;
       sprite.position.copy(pos); sprite.position.y += yOff;
       sprite.scale.set(0.46, 0.08, 1);
       root.add(sprite);
@@ -1535,7 +1535,7 @@ render = function(data) {
       }
       nodeData.forEach(d => {
         if (d.mesh && d.mesh.isMesh) {
-          const am = new T.SpriteMaterial({ map: auraTex, color: d.mesh.material.color, transparent: true, opacity: 0.22, blending: AdditiveBlending, depthWrite: false });
+          const am = new T.SpriteMaterial({ map: auraTex, color: d.mesh.material.color, transparent: true, opacity: 0.3, blending: AdditiveBlending, depthWrite: false });
           const aura = new T.Sprite(am);
           aura.position.copy(d.pos); aura.scale.setScalar(1.1);
           root.add(aura); d.aura = aura;
@@ -1598,7 +1598,7 @@ render = function(data) {
       nodeData.forEach(d => {
         if (d.mesh && d.mesh.isMesh) {
           const pv = (d.item.plt || '0.5/0.5/0.5').split('/').map(Number);
-          if ((pv[0]+pv[1]-pv[2]) > 1.2) {
+          if ((pv[0]+pv[1]-pv[2]) > 1.0) {
             const hg = new RingGeometry(0.32, 0.38, 40);
             const hm = new MeshBasicMaterial({ color: 0xFFD166, transparent: true, opacity: 0.5, blending: AdditiveBlending, depthWrite: false, side: T.DoubleSide });
             const halo = new Mesh(hg, hm);
@@ -1730,12 +1730,12 @@ render = function(data) {
         // Proximity glow — brighter when camera is near (+hover bloom spike + heartbeat)
         const dist = controls.target.distanceTo(d.pos || d.mesh.position);
         const proximity = Math.max(0, 1 - (dist - 0.5) / 4);
-        d.mesh.material.emissiveIntensity = Math.min(1.4, 0.15 + proximity * 0.6 + (isHov ? 0.8 : 0) + 0.45 * hb);
-        d.mesh.material.opacity = 0.6 + proximity * 0.3;
+        d.mesh.material.emissiveIntensity = Math.min(1.5, 0.3 + proximity * 0.65 + (isHov ? 0.8 : 0) + 0.45 * hb);
+        d.mesh.material.opacity = 0.72 + proximity * 0.25;
         // Slice 1: breathing PLT badges + distance-faded labels
           if (d.badge) {
-            d.badge.material.opacity = 0.55 + (REDUCED ? 0 : 0.25 * hb);
-            const bbs = d.badge.userData.bs || { x: 0.46, y: 0.125 };
+            d.badge.material.opacity = 0.68 + (REDUCED ? 0 : 0.27 * hb);
+            const bbs = d.badge.userData.bs || { x: 0.6, y: 0.16 };
             const bbr = 1 + (REDUCED ? 0 : 0.09 * hb);
             d.badge.scale.set(bbs.x*bbr, bbs.y*bbr, 1);
           }
@@ -1744,8 +1744,8 @@ render = function(data) {
           d.label.material.opacity = Math.max(0.08, Math.min(0.55, 0.75 - ld/18));
         }
           if (d.aura) {
-            d.aura.material.opacity = 0.2 + (REDUCED ? 0 : 0.16 * hb);
-            d.aura.scale.setScalar(1.05 + (REDUCED ? 0 : 0.18 * hb));
+            d.aura.material.opacity = 0.28 + (REDUCED ? 0 : 0.2 * hb);
+            d.aura.scale.setScalar(1.15 + (REDUCED ? 0 : 0.2 * hb));
           }
         if (d.orbiters && !REDUCED) d.orbiters.forEach((o, oi) => {
           o.ang += 0.008 + oi*0.003;
@@ -2307,7 +2307,7 @@ let reports=LS.get('soulReports',[]);
 let reported=LS.get('soulReportedShouts',{});
 let tips=LS.get('soulTips',[]);
 let ledger=LS.get('soulLedger',[]);
-let SAVE=()=>{LS.set('soulSocialPre',prefs);LS.set('soulSocialStars',stars);LS.set('soulSocialFollows',follows);LS.set('soulSocialWatch',watch);LS.set('soulSocialEvents',events.slice(0,150));LS.set('soulSocialShouts',shoutsAll);LS.set('soulSocialVotes',shoutVotes);LS.set('soulShoutReacts',shoutReacts);LS.set('soulShoutReplies',shoutReplies);LS.set('soulPeopleFollows',pfollow);LS.set('soulRemixs',remixes);LS.set('soulVersions',versions);LS.set('soulIssues',issues);LS.set('soulGroups',groups);LS.set('soulPartyEvents',pevents);LS.set('soulDMs',dms);LS.set('soulDMSeen',dmSeen);LS.set('soulNotesSeen',notesSeen);LS.set('soulCollections',collections);LS.set('soulBlocks',blocks);LS.set('soulMutes',mutes);LS.set('soulReports',reports);LS.set('soulReportedShouts',reported);LS.set('soulTips',tips);LS.set('soulLedger',ledger);};
+let SAVE=()=>{LS.set('soulSocialPre',prefs);LS.set('soulSocialStars',stars);LS.set('soulSocialFollows',follows);LS.set('soulSocialWatch',watch);LS.set('soulSocialEvents',events.slice(0,150));LS.set('soulSocialShouts',shoutsAll);LS.set('soulSocialVotes',shoutVotes);LS.set('soulShoutReacts',shoutReacts);LS.set('soulShoutReplies',shoutReplies);LS.set('soulPeopleFollows',pfollow);LS.set('soulRemixs',remixes);LS.set('soulVersions',versions);LS.set('soulIssues',issues);LS.set('soulGroups',groups);LS.set('soulPartyEvents',pevents);LS.set('soulDMs',dms);LS.set('soulDMSeen',dmSeen);LS.set('soulNotesSeen',notesSeen);LS.set('soulCollections',collections);LS.set('soulBlocks',blocks);LS.set('soulMutes',mutes);LS.set('soulReports',reports);LS.set('soulReportedShouts',reported);LS.set('soulTips',tips);LS.set('soulLedger',ledger);try{window.SocialSync&&SocialSync.touch();}catch(e){}};
 function escH(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function linkify(s){
   var e=escH(s);
@@ -2324,6 +2324,7 @@ function togglePeople(h){
   var k=h.toLowerCase();
   if(pfollow[k]){delete pfollow[k];toast('Unfollowed '+h);}
   else{pfollow[k]={h:h,t:Date.now()};mineEvent('followed person',h,'👥');toast('👥 Following '+h+' — their shouts now surface in Following feed');}
+  try{window.SocialSync&&SocialSync.queue({op:pfollow[k]?'follow':'unfollow',kind:'person',target:h});}catch(e){}
   SAVE();if(!$('ssModal').classList.contains('hidden')&&profKey)openProfile(profKey);if(view==='you')renderYou();
 }
 
@@ -2396,7 +2397,7 @@ function toggleMap(m,n){const k=keyN(n);m[k]=m[k]?undefined:1;if(!m[k])delete m[
 function doAction(t,n,b){
   const k=keyN(n),it=findItem(n);const nm=it?it.name:n;
   if(t==='star'){toggleMap(stars,k);mineEvent('starred',nm,'⭐');toast((hasStar(k)?'⭐ Starred ':'Removed star from ')+nm);}
-  else if(t==='follow'){toggleMap(follows,k);mineEvent('followed',nm,'🤝');toast((hasFollow(k)?'🤝 Following ':'Unfollowed ')+nm);}
+  else if(t==='follow'){toggleMap(follows,k);mineEvent('followed',nm,'🤝');toast((hasFollow(k)?'🤝 Following ':'Unfollowed ')+nm);try{window.SocialSync&&SocialSync.queue({op:hasFollow(k)?'follow':'unfollow',kind:'soul',target:nm});}catch(e){}}
   else if(t==='watch'){toggleMap(watch,k);mineEvent('watched',nm,'📦');toast((hasWatch(k)?'📦 Added to Watchlist':'Removed from Watchlist')+' — '+nm);refreshWatch();}
   else if(t==='share')share(nm);
   else if(t==='remix')remixSoul(nm);
@@ -2560,6 +2561,28 @@ function renderYou(){
   root.appendChild(sf);
   sf.querySelectorAll('[data-unb]').forEach(b=>b.addEventListener('click',()=>{delete blocks[b.dataset.unb];SAVE();toast('Unblocked');renderYou();}));
   sf.querySelectorAll('[data-unm]').forEach(b=>b.addEventListener('click',()=>{delete mutes[b.dataset.unm];SAVE();toast('Unmuted');renderYou();}));
+  try{
+    if(window.SocialSync){
+      const on=SocialSync.enabled(), hasTok=!!SocialSync.token();
+      const box=JSON.parse(localStorage.getItem('soulSocialOutbox')||'[]').length;
+      const vh=(window.SoulAuth&&window.SoulAuth.getUser)?window.SoulAuth.getUser():null;
+      const cl=document.createElement('div');
+      cl.innerHTML='<div class="ss-sub" style="margin-top:10px">🌐 Cloud sync (shared truth)</div>'+
+        '<div style="font-size:0.7rem;color:#8b8b98;line-height:1.6">'+(on?('ON'+(hasTok?' · linked':' · <b>not linked</b>')+' · '+box+' queued'):'OFF — local only. Nothing leaves this browser.')+'</div>'+
+        '<div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap">'+
+        '<button data-cstoggle style="padding:6px 14px;border-radius:14px;background:'+(on?'rgba(239,68,68,0.12)':'rgba(16,185,129,0.15)')+';border:1px solid '+(on?'rgba(239,68,68,0.4)':'rgba(16,185,129,0.4)')+';color:'+(on?'#F87171':'#9adec0')+';font-size:0.7rem;font-weight:600;cursor:pointer">'+(on?'Disable':'Enable')+'</button>'+
+        ((on&&!hasTok)?'<button data-csconnect style="padding:6px 14px;border-radius:14px;background:rgba(0,212,255,0.12);border:1px solid rgba(0,212,255,0.4);color:#00D4FF;font-size:0.7rem;font-weight:600;cursor:pointer">🔗 Link GitHub</button>':'')+
+        '</div>'+((on&&!hasTok)?'<div style="font-size:0.65rem;color:#8b8b98;margin-top:4px">Link uses your verified GitHub session'+(vh&&vh.handle?' (@'+escH(vh.handle)+')':' (sign in via nav first)')+' — never a password.</div>':'');
+      root.appendChild(cl);
+      cl.querySelector('[data-cstoggle]').addEventListener('click',()=>{SocialSync.setEnabled(!on);toast(!on?'🌐 Cloud sync ON — local stays primary':'🌐 Cloud sync OFF — local only');renderYou();});
+      const cb=cl.querySelector('[data-csconnect]');
+      if(cb)cb.addEventListener('click',()=>{
+        let t='';try{const a=window.SoulAuth.getUser();if(a&&a.token)t=a.token;}catch(e){}
+        if(!t){toast('Sign in with GitHub first (nav ⭐), then Link');return;}
+        SocialSync.loginWithGitHub(t).then(h=>{toast('🔗 Linked @'+h+' — syncing');renderYou();}).catch(()=>toast('Link failed — try again'));
+      });
+    }
+  }catch(e){}
 }
 function shoutCount(){let n=0;for(const k in shoutsAll)n+=shoutsAll[k].length;return n;}
 
@@ -2615,8 +2638,10 @@ function remixSoul(nm){
   const name=prompt('Remix "'+nm+'" — name your evolution:',nm+' (remix)');
   if(!name)return;
   const t=name.trim().slice(0,80);if(!t)return;
-  remixes.unshift({id:Date.now()+''+rnd(9999),name:t,parent:nm,by:myHandle(),t:Date.now()});
-  SAVE();mineEvent('remixed',nm,'🌱');toast('🌱 Remixed! "'+t+'" evolves from '+nm+' — publish it via Profile to go live');
+  const rmid=Date.now()+''+rnd(9999);
+  remixes.unshift({id:rmid,name:t,parent:nm,by:myHandle(),t:Date.now()});
+  SAVE();try{window.SocialSync&&SocialSync.queue({op:'remix',id:rmid,name:t,parent:nm});}catch(e){}
+  mineEvent('remixed',nm,'🌱');toast('🌱 Remixed! "'+t+'" evolves from '+nm+' — publish it via Profile to go live');
   if(!$('ssModal').classList.contains('hidden')&&profKey)openProfile(profKey);
 }
 function remixSection(k,nm){
@@ -2737,21 +2762,26 @@ function openProfile(k){
     const v=prompt('Version number (e.g. 1.1):','1.1');if(!v)return;
     const note=prompt('What changed?','')||'';
     const L=versions[keyN(it.name)]||(versions[keyN(it.name)]=[]);
-    L.unshift({v:v.trim().slice(0,12),note:note.trim().slice(0,140),t:Date.now(),by:myHandle()});
-    SAVE();mineEvent('logged version',''+it.name+' v'+v.trim(),'🏷️');toast('🏷️ Version logged');openProfile(k);
+    const vid=Date.now()+''+rnd(9999);
+    L.unshift({id:vid,v:v.trim().slice(0,12),note:note.trim().slice(0,140),t:Date.now(),by:myHandle()});
+    SAVE();try{window.SocialSync&&SocialSync.queue({op:'version',id:vid,soul:it.name,v:v.trim().slice(0,12),note:note.trim().slice(0,140)});}catch(e){}
+    mineEvent('logged version',''+it.name+' v'+v.trim(),'🏷️');toast('🏷️ Version logged');openProfile(k);
   });
   const ib=sheet.querySelector('#ssIssueBtn');if(ib)ib.addEventListener('click',()=>{
     const title=prompt('Issue title (bug / idea / incompatibility):');if(!title||!title.trim())return;
     const body=prompt('Details:')||'';
     const L=issues[keyN(it.name)]||(issues[keyN(it.name)]=[]);
-    L.unshift({id:Date.now()+''+rnd(9999),title:title.trim().slice(0,80),body:body.trim().slice(0,300),st:'OPEN',t:Date.now(),by:myHandle()});
-    SAVE();mineEvent('reported issue',it.name,'🐞');toast('🐞 Issue opened');openProfile(k);
+    const iid=Date.now()+''+rnd(9999);
+    L.unshift({id:iid,title:title.trim().slice(0,80),body:body.trim().slice(0,300),st:'OPEN',t:Date.now(),by:myHandle()});
+    SAVE();try{window.SocialSync&&SocialSync.queue({op:'issue',id:iid,soul:it.name,title:title.trim().slice(0,80),body:body.trim().slice(0,300)});}catch(e){}
+    mineEvent('reported issue',it.name,'🐞');toast('🐞 Issue opened');openProfile(k);
   });
   sheet.querySelectorAll('[data-ist]').forEach(b=>b.addEventListener('click',()=>{
     const L=issues[keyN(it.name)]||[];
     const x=L.find(y=>String(y.id)===String(b.dataset.ist));if(!x)return;
     x.st=ISTATES[(ISTATES.indexOf(x.st)+1)%ISTATES.length];
-    SAVE();toast('🐞 → '+x.st);openProfile(k);
+    SAVE();try{window.SocialSync&&SocialSync.queue({op:'issue_state',id:String(x.id),state:x.st});}catch(e){}
+    toast('🐞 → '+x.st);openProfile(k);
   }));
   const kd=sheet.querySelector('#ssShoutKind'), urlIn=sheet.querySelector('#ssShoutUrl');
   if(kd&&urlIn)kd.addEventListener('change',()=>{urlIn.style.display=kd.value==='text'?'none':'block';});
@@ -2763,8 +2793,10 @@ function openProfile(k){
     if(kind!=='text'&&!url){toast('Add a URL for link/image posts');return;}
     const visEl=sheet.querySelector('#ssShoutVis');
     const list=shoutsAll[k]||(shoutsAll[k]=[]);
-    list.unshift({id:Date.now()+''+rnd(9999),u:myHandle(),e:prefs.user.emoji||'🫂',t:Date.now(),b:v.slice(0,200),v:0,k:kind,url:url,vis:visEl?visEl.value:'public',m:1});
-    SAVE();mineEvent('shouted on',it.name,'💬');toast('💬 Shouted on '+it.name);openProfile(k);
+    const sid=Date.now()+''+rnd(9999);
+    list.unshift({id:sid,u:myHandle(),e:prefs.user.emoji||'🫂',t:Date.now(),b:v.slice(0,200),v:0,k:kind,url:url,vis:visEl?visEl.value:'public',m:1});
+    SAVE();try{window.SocialSync&&SocialSync.queue({op:'post',id:sid,soul:k,kind:kind,body:v.slice(0,200),url:url,vis:visEl?visEl.value:'public'});}catch(e){}
+    mineEvent('shouted on',it.name,'💬');toast('💬 Shouted on '+it.name);openProfile(k);
   };
   sheet.querySelector('#ssShoutBtn').addEventListener('click',sendShout);
   sheet.querySelector('#ssShoutIn').addEventListener('keydown',ev=>{if(ev.key==='Enter'){ev.preventDefault();sendShout();}});
@@ -2785,40 +2817,46 @@ function openProfile(k){
       const em=b.dataset.r;
       if(R.mine[em]){delete R.mine[em];R.n[em]=(R.n[em]||1)-1;if(R.n[em]<=0)delete R.n[em];}
       else{R.mine[em]=1;R.n[em]=(R.n[em]||0)+1;}
-      SAVE();openProfile(k);return;
+      SAVE();try{window.SocialSync&&SocialSync.queue({op:'react',post_id:String(sid),emoji:em});}catch(e){}
+      openProfile(k);return;
     }
     if(b.dataset.pf){togglePeople(b.dataset.pf);return;}
     if(b.dataset.shareshout){share(it.name);return;}
     if(b.dataset.rep&&sid){const rk=k+'@'+sid;repOpen[rk]=!repOpen[rk];openProfile(k);return;}
     if(b.dataset.flag&&sid){
       const rk=k+'@'+sid;reported[rk]=1;reports.push({kind:'shout',k:k,sid:String(sid),t:Date.now(),by:myHandle()});
-      SAVE();toast('⚑ Reported — hidden for you. Thank you.');openProfile(k);return;
+      SAVE();try{window.SocialSync&&SocialSync.queue({op:'report',kind:'shout',ref:rk});}catch(e){}
+      toast('⚑ Reported — hidden for you. Thank you.');openProfile(k);return;
     }
     if(b.dataset.blocku){
-      const h=String(b.dataset.blocku||'');if(h){blocks[h.toLowerCase()]={h:h,t:Date.now()};SAVE();toast('⛔ Blocked '+h+' — hidden everywhere for you');openProfile(k);}
+      const h=String(b.dataset.blocku||'');if(h){blocks[h.toLowerCase()]={h:h,t:Date.now()};SAVE();try{window.SocialSync&&SocialSync.queue({op:'block',handle:h});}catch(e){}toast('⛔ Blocked '+h+' — hidden everywhere for you');openProfile(k);}
       return;
     }
     if(b.dataset.muteu){
-      const h=String(b.dataset.muteu||'');if(h){mutes[h.toLowerCase()]={h:h,t:Date.now()};SAVE();toast('🔇 Muted '+h+' — their shouts are hidden');openProfile(k);}
+      const h=String(b.dataset.muteu||'');if(h){mutes[h.toLowerCase()]={h:h,t:Date.now()};SAVE();try{window.SocialSync&&SocialSync.queue({op:'mute',handle:h});}catch(e){}toast('🔇 Muted '+h+' — their shouts are hidden');openProfile(k);}
       return;
     }
     if(b.dataset.dmu){openDM(b.dataset.dmu);return;}
     if(b.dataset.sedit&&sid){
       const s=(shoutsAll[k]||[]).find(x=>String(x.id)===String(sid));if(!s||!(s.m||s.u===myHandle()))return;
       const nv=prompt('Edit shout:',s.b);if(nv==null)return;
-      s.b=nv.slice(0,200);SAVE();openProfile(k);return;
+      s.b=nv.slice(0,200);SAVE();try{window.SocialSync&&SocialSync.queue({op:'edit_post',id:String(sid),body:s.b});}catch(e){}
+      openProfile(k);return;
     }
     if(b.dataset.sdel&&sid){
       const s=(shoutsAll[k]||[]).find(x=>String(x.id)===String(sid));if(!s||!(s.m||s.u===myHandle()))return;
       shoutsAll[k]=(shoutsAll[k]||[]).filter(x=>String(x.id)!==String(sid));
-      SAVE();toast('Shout deleted');openProfile(k);return;
+      SAVE();try{window.SocialSync&&SocialSync.queue({op:'delete_post',id:String(sid)});}catch(e){}
+      toast('Shout deleted');openProfile(k);return;
     }
     if(b.dataset.rsend&&sid){
       const inp=sheet.querySelector('[data-rin="'+sid+'"]');const v=inp?inp.value.trim():'';
       if(!v)return;
       const rk=k+'@'+sid,L=shoutReplies[rk]||(shoutReplies[rk]=[]);
-      L.push({id:Date.now()+''+rnd(9999),u:myHandle(),e:prefs.user.emoji||'🫂',t:Date.now(),b:v.slice(0,200),r:[]});
-      repOpen[rk]=true;SAVE();openProfile(k);return;
+      const rid=Date.now()+''+rnd(9999);
+      L.push({id:rid,u:myHandle(),e:prefs.user.emoji||'🫂',t:Date.now(),b:v.slice(0,200),r:[]});
+      repOpen[rk]=true;SAVE();try{window.SocialSync&&SocialSync.queue({op:'reply',id:rid,post_id:String(sid),body:v.slice(0,200)});}catch(e){}
+      openProfile(k);return;
     }
     if(b.dataset.nrep){
       const f=sheet.querySelector('[data-nform="'+b.dataset.nrep+'"]');
@@ -2831,8 +2869,10 @@ function openProfile(k){
       if(!v)return;
       const rk=k+'@'+sid,L=shoutReplies[rk]||[];
       const r=L.find(x=>String(x.id)===String(rid));if(!r||!r.r)return;
-      r.r.push({id:Date.now()+''+rnd(9999),u:myHandle(),e:prefs.user.emoji||'🫂',t:Date.now(),b:v.slice(0,200)});
-      repOpen[rk]=true;SAVE();openProfile(k);return;
+      const nid=Date.now()+''+rnd(9999);
+      r.r.push({id:nid,u:myHandle(),e:prefs.user.emoji||'🫂',t:Date.now(),b:v.slice(0,200)});
+      repOpen[rk]=true;SAVE();try{window.SocialSync&&SocialSync.queue({op:'reply',id:nid,post_id:String(sid),parent_id:String(rid),body:v.slice(0,200)});}catch(e){}
+      openProfile(k);return;
     }
     if((b.dataset.red||b.dataset.rdel)&&sid){
       const rid=b.dataset.red||b.dataset.rdel;
@@ -2853,7 +2893,21 @@ function openProfile(k){
           }
         }
       }
-      if(done){SAVE();if(b.dataset.rdel)toast('Reply deleted');openProfile(k);}
+      if(done){
+        try{
+          var _op=b.dataset.rdel?'delete_reply':'edit_reply', _bd='';
+          if(_op==='edit_reply'){
+            var _LL=shoutReplies[rk]||[];
+            for(var _qi=0;_qi<_LL.length;_qi++){
+              if(String(_LL[_qi].id)===String(rid)){_bd=_LL[_qi].b;break;}
+              var _nn=_LL[_qi].r||[];
+              for(var _qj=0;_qj<_nn.length;_qj++){ if(String(_nn[_qj].id)===String(rid)){_bd=_nn[_qj].b;break;} }
+            }
+          }
+          if(window.SocialSync)SocialSync.queue({op:_op,id:String(rid),body:String(_bd||'').slice(0,200)});
+        }catch(e){}
+        SAVE();if(b.dataset.rdel)toast('Reply deleted');openProfile(k);
+      }
       return;
     }
   });
@@ -2928,13 +2982,18 @@ function renderGroups(){
   root.querySelectorAll('[data-ev]').forEach(r=>r.addEventListener('click',()=>openEvent(r.dataset.ev)));
   root.querySelector('#ssGCreate').addEventListener('click',()=>{
     const v=root.querySelector('#ssGName').value.trim().slice(0,40);if(!v)return;
-    groups.unshift({id:Date.now()+'',name:v,desc:'',vis:root.querySelector('#ssGVis').value,by:myHandle(),members:[myHandle()],t:Date.now()});
-    SAVE();mineEvent('founded group','group '+v,'🎪');toast('🎪 Group "'+v+'" founded');renderGroups();
+    const gid=Date.now()+'';
+    groups.unshift({id:gid,name:v,desc:'',vis:root.querySelector('#ssGVis').value,by:myHandle(),members:[myHandle()],t:Date.now()});
+    SAVE();try{window.SocialSync&&SocialSync.queue({op:'group_create',id:gid,name:v,desc:'',vis:root.querySelector('#ssGVis').value});}catch(e){}
+    mineEvent('founded group','group '+v,'🎪');toast('🎪 Group "'+v+'" founded');renderGroups();
   });
   root.querySelector('#ssEvCreate').addEventListener('click',()=>{
     const t=root.querySelector('#ssEvT').value.trim().slice(0,60);if(!t)return;
-    pevents.unshift({id:Date.now()+'',title:t,when:root.querySelector('#ssEvW').value.trim().slice(0,40),where:'',by:myHandle(),rsvp:[myHandle()],t:Date.now()});
-    SAVE();mineEvent('called event',t,'📅');toast('📅 Event called');renderGroups();
+    const eid=Date.now()+'';
+    const ewhen=root.querySelector('#ssEvW').value.trim().slice(0,40);
+    pevents.unshift({id:eid,title:t,when:ewhen,where:'',by:myHandle(),rsvp:[myHandle()],t:Date.now()});
+    SAVE();try{window.SocialSync&&SocialSync.queue({op:'event_create',id:eid,title:t,when:ewhen,where:''});}catch(e){}
+    mineEvent('called event',t,'📅');toast('📅 Event called');renderGroups();
   });
 }
 function openGroup(id){
@@ -2957,8 +3016,8 @@ function openGroup(id){
   '<div style="display:flex;gap:6px;margin-bottom:10px">'+(member?'<button id="ssGLeave" style="padding:6px 14px;border-radius:14px;background:transparent;border:1px solid rgba(255,255,255,0.15);color:#888;font-size:0.7rem;cursor:pointer">Leave</button>':(g.vis==='INVITE ONLY'?'<span style="font-size:0.7rem;color:#888">🔒 invite only</span>':'<button id="ssGJoin" style="padding:6px 14px;border-radius:14px;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.4);color:#9adec0;font-size:0.7rem;font-weight:600;cursor:pointer">＋ Join</button>'))+'<button id="ssGShare" style="padding:6px 10px;border-radius:14px;background:transparent;border:1px solid rgba(255,255,255,0.12);color:#888;font-size:0.7rem;cursor:pointer">⇪ Share</button></div>'+body+'</div>';
   $('ssModal').classList.remove('hidden');
   sheet.querySelector('#ssProfClose').addEventListener('click',closeModal);
-  const j=sheet.querySelector('#ssGJoin');if(j)j.addEventListener('click',()=>{g.members.push(me);SAVE();mineEvent('joined group','group '+g.name,'🎪');toast('🎪 Joined '+g.name);openGroup(g.id);});
-  const lv=sheet.querySelector('#ssGLeave');if(lv)lv.addEventListener('click',()=>{g.members=g.members.filter(m=>m.toLowerCase()!==me.toLowerCase());SAVE();toast('Left '+g.name);openGroup(g.id);});
+  const j=sheet.querySelector('#ssGJoin');if(j)j.addEventListener('click',()=>{g.members.push(me);SAVE();try{window.SocialSync&&SocialSync.queue({op:'group_join',id:g.id});}catch(e){}mineEvent('joined group','group '+g.name,'🎪');toast('🎪 Joined '+g.name);openGroup(g.id);});
+  const lv=sheet.querySelector('#ssGLeave');if(lv)lv.addEventListener('click',()=>{g.members=g.members.filter(m=>m.toLowerCase()!==me.toLowerCase());SAVE();try{window.SocialSync&&SocialSync.queue({op:'group_leave',id:g.id});}catch(e){}toast('Left '+g.name);openGroup(g.id);});
   const iv=sheet.querySelector('#ssGInvite');if(iv)iv.addEventListener('click',()=>{const h=prompt('Handle to invite:');if(!h||!h.trim())return;g.members.push(h.trim().slice(0,40));SAVE();toast('Invited '+h.trim());openGroup(g.id);});
   sheet.querySelector('#ssGShare').addEventListener('click',()=>{
     const url=location.origin+location.pathname+'#group-'+encodeURIComponent(g.id);
@@ -2969,8 +3028,10 @@ function openGroup(id){
   if(pb)pb.addEventListener('click',()=>{
     const inp=sheet.querySelector('#ssGPost'),v=inp.value.trim();if(!v)return;
     const L=shoutsAll['group:'+g.id]||(shoutsAll['group:'+g.id]=[]);
-    L.unshift({id:Date.now()+''+rnd(9999),u:me,e:prefs.user.emoji||'🫂',t:Date.now(),b:v.slice(0,200),v:0,m:1});
-    SAVE();mineEvent('posted in group','group '+g.name,'📜');openGroup(g.id);
+    const gpid=Date.now()+''+rnd(9999);
+    L.unshift({id:gpid,u:me,e:prefs.user.emoji||'🫂',t:Date.now(),b:v.slice(0,200),v:0,m:1});
+    SAVE();try{window.SocialSync&&SocialSync.queue({op:'post',id:gpid,soul:'',kind:'text',body:v.slice(0,200),url:'',vis:'public',group_id:g.id});}catch(e){}
+    mineEvent('posted in group','group '+g.name,'📜');openGroup(g.id);
   });
 }
 function openEvent(id){
@@ -2985,7 +3046,8 @@ function openEvent(id){
   sheet.querySelector('#ssEvRsvp').addEventListener('click',()=>{
     if(going)v.rsvp=v.rsvp.filter(m=>m.toLowerCase()!==me.toLowerCase());
     else{v.rsvp.push(me);mineEvent('RSVPd',v.title,'📅');}
-    SAVE();openEvent(v.id);
+    SAVE();try{window.SocialSync&&SocialSync.queue({op:'rsvp',id:v.id});}catch(e){}
+    openEvent(v.id);
   });
   sheet.querySelector('#ssEvShare').addEventListener('click',()=>{
     const url=location.origin+location.pathname+'#event-'+encodeURIComponent(v.id);
@@ -3007,8 +3069,10 @@ function openDM(h){
   const send=()=>{
     const inp=sheet.querySelector('#ssDMIn'),v=inp.value.trim();if(!v)return;
     const L=dms[k]||(dms[k]=[]);
-    L.push({u:myHandle(),t:Date.now(),b:v.slice(0,300)});
-    SAVE();openDM(h);if(view==='you')renderYou();
+    const mid=Date.now()+''+rnd(9999);
+    L.push({id:mid,u:myHandle(),t:Date.now(),b:v.slice(0,300)});
+    SAVE();try{window.SocialSync&&SocialSync.queue({op:'dm',id:mid,to:h,body:v.slice(0,300)});}catch(e){}
+    openDM(h);if(view==='you')renderYou();
   };
   sheet.querySelector('#ssDMSend').addEventListener('click',send);
   sheet.querySelector('#ssDMIn').addEventListener('keydown',ev=>{if(ev.key==='Enter'){ev.preventDefault();send();}});
@@ -3066,7 +3130,7 @@ function switchView(v){
 }
 function setDock(open){
   dock.classList.toggle('hidden',!open);
-  if(open){prefs.seen=Date.now();SAVE();upDot();switchView(view);}
+  if(open){prefs.seen=Date.now();SAVE();upDot();switchView(view);try{if(window.SocialSync){SocialSync.armAutoPull();SocialSync.pull().catch(function(){});}}catch(e){}}
 }
 $('ssDockToggle').addEventListener('click',()=>{setDock(dock.classList.contains('hidden'));});
 $('ssClose').addEventListener('click',()=>setDock(false));
@@ -3768,6 +3832,7 @@ else wire();
 <script defer src="js/soulverse-lens.js"></script>
 <script defer src="js/alien-hieroglyphs.js"></script>
 <script defer src="js/card-dna-strands.js"></script>
+<script defer src="js/social-sync.js"></script>
 <div id="soulverse-overlay" style="display:none;position:fixed;inset:0;z-index:5000;background:radial-gradient(circle at 50% 40%,rgba(20,10,40,.96),rgba(5,5,10,.98));overflow:hidden">
   <div style="position:absolute;top:0;left:0;right:0;display:flex;align-items:center;gap:12px;padding:14px 18px;z-index:5;pointer-events:none">
     <span style="font-weight:800;letter-spacing:.1em;color:#fff">🌌 MODEL UNIVERSE</span>

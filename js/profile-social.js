@@ -433,6 +433,7 @@ function tipFlow(to){
     var tips=JSON.parse(localStorage.getItem('soulTips')||'[]'); tips.unshift(rec); localStorage.setItem('soulTips',JSON.stringify(tips.slice(0,200)));
     var led=JSON.parse(localStorage.getItem('soulLedger')||'[]'); led.unshift({t:rec.t,kind:'tip',to:to,amt:rec.amt,note:rec.note}); localStorage.setItem('soulLedger',JSON.stringify(led.slice(0,200)));
   }catch(e){}
+  try{ if(window.SocialSync) SocialSync.queue({op:'tip',to:to,amt:String(rec.amt).slice(0,12),note:String(rec.note||'').slice(0,140)}); }catch(e){}
   reportToast('💝 Pledged '+rec.amt+' to @'+to+' — true value loops back');
   renderShop();
 }
