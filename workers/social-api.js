@@ -388,6 +388,102 @@ async function readFeed(db, me, q) {
   return { items: out, cursor: last ? last.t + '|' + last.id : null };
 }
 
+/* ---- link reader: public URL -> draft soul card (never writes) ---- */
+const READ_HOSTS = ['github.com', 'huggingface.co', 'x.com', 'twitter.com', 'youtube.com', 'youtu.be', 'instagram.com', 'tiktok.com', 'facebook.com', 'linkedin.com', 'reddit.com', 'twitch.tv'];
+function readHostKind(host) {
+  const h = String(host || '').toLowerCase();
+  if (READ_HOSTS.includes(h)) return h;
+  if (h.endsWith('.myshopify.com')) return 'myshopify';
+  return null;
+}
+function blockedHost(h) {
+  h = String(h || '').toLowerCase();
+  if (['localhost', '127.0.0.1', '0.0.0.0', '[::1]'].includes(h)) return true;
+  if (h.endsWith('.internal') || h.endsWith('.local')) return true;
+  return /^(10|192\.168|172\.(1[6-9]|2\d|3[01]))\./.test(h);
+}
+function decodeEnt(s) {
+  return String(s || '').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+}
+function ogMeta(html, key) {
+  const k = key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  let m = html.match(new RegExp('<meta[^>]+(?:property|name)=["\'](?:og:|twitter:)?' + k + '["\'][^>]*?content=["\']([^"\']{1,500})["\']', 'i'));
+  if (!m) m = html.match(new RegExp('<meta[^>]+?content=["\']([^"\']{1,500})["\'][^>]*?(?:property|name)=["\'](?:og:|twitter:)?' + k + '["\']', 'i'));
+  return m ? decodeEnt(m[1]).trim() : '';
+}
+function pageTitle(html) {
+  const m = html.match(/<title[^>]*>([^<]{1,120})<\/title>/i);
+  return m ? decodeEnt(m[1]).trim() : '';
+}
+function stripTags(s, n) {
+  return String(s || '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, n || 220);
+}
+async function fetchTextCapped(rawUrl, ms) {
+  const ctl = new AbortController();
+  const to = setTimeout(() => { try { ctl.abort(); } catch (e) {} }, ms || 8000);
+  try {
+    const r = await fetch(rawUrl, { signal: ctl.signal, headers: { 'User-Agent': 'SoulEconomy-link-reader/1.0', Accept: 'text/html,application/json' }, redirect: 'follow' });
+    if (!r.ok) throw { status: 502, msg: 'fetch failed (' + r.status + ')' };
+    const buf = await r.arrayBuffer();
+    if (buf.byteLength > 1048576) throw { status: 413, msg: 'page too large' };
+    return new TextDecoder().decode(buf);
+  } finally { clearTimeout(to); }
+}
+async function readLink(url, raw) {
+  let u;
+  try { u = new URL(raw); } catch (e) { throw { status: 400, msg: 'bad url' }; }
+  if (u.protocol !== 'https:') throw { status: 400, msg: 'https only' };
+  if (blockedHost(u.hostname)) throw { status: 400, msg: 'host blocked' };
+  const kind = readHostKind(u.hostname);
+  if (!kind) throw { status: 400, msg: 'unsupported host in v1' };
+  // GitHub fast path: repo API (clean data, no scraping)
+  if (kind === 'github.com') {
+    const m = u.pathname.match(/^\/([^/]+)\/([^/]+?)(?:\.git)?\/?$/);
+    if (!m) throw { status: 400, msg: 'expected github.com/owner/repo' };
+    const r = await fetch('https://api.github.com/repos/' + m[1] + '/' + m[2], { headers: { Accept: 'application/vnd.github+json', 'User-Agent': 'SoulEconomy-link-reader/1.0' } });
+    if (!r.ok) throw { status: 502, msg: 'github lookup failed' };
+    const j = await r.json();
+    const nm = String(j.full_name || j.name || m[2]);
+    return {
+      name: nm.slice(0, 80),
+      type: /dataset|data/i.test(nm + ' ' + String(j.description || '')) ? 'pack' : 'skill',
+      desc: stripTags(j.description || '', 220) || ('GitHub repo by @' + String(j.owner && j.owner.login || m[1])),
+      image: '', stars: j.stargazers_count || 0,
+      source: 'github', sourceUrl: raw
+    };
+  }
+  // Shopify fast path: products.js JSON (title, price, image, body)
+  if (kind === 'myshopify') {
+    const m = u.pathname.match(/\/products\/([a-z0-9-]+)/i);
+    if (!m) throw { status: 400, msg: 'expected .../products/<handle>' };
+    const r = await fetch(u.origin + '/products/' + m[1] + '.js', { headers: { Accept: 'application/json', 'User-Agent': 'SoulEconomy-link-reader/1.0' } });
+    if (!r.ok) throw { status: 502, msg: 'shopify lookup failed' };
+    const j = await r.json();
+    const price = j.price ? (Number(j.price) / 100) : null;
+    return {
+      name: String(j.title || m[1]).slice(0, 80),
+      type: 'pack',
+      desc: (stripTags(j.description || '', 180) + (price != null ? ' — $' + price : '')).slice(0, 220),
+      image: String((j.images && j.images[0]) || ''),
+      source: 'shopify', sourceUrl: raw
+    };
+  }
+  // HuggingFace + social: OG/Twitter meta with graceful degrade
+  const html = await fetchTextCapped(raw, 8000);
+  const name = ogMeta(html, 'title') || pageTitle(html) || u.hostname;
+  const desc = ogMeta(html, 'description') || '';
+  const image = ogMeta(html, 'image');
+  const p = u.pathname.toLowerCase();
+  const type = (kind === 'huggingface.co' && (p.includes('/datasets/') || p.includes('/spaces/'))) ? 'pack' : 'soul';
+  return {
+    name: name.slice(0, 80),
+    type,
+    desc: desc.slice(0, 220) || ('Shared via ' + kind),
+    image: /^https:\/\//i.test(image) ? image.slice(0, 300) : '',
+    source: kind === 'huggingface.co' ? 'huggingface' : 'web', sourceUrl: raw
+  };
+}
+
 /* ---- router ---- */
 export default {
   async fetch(req, env) {
@@ -443,6 +539,13 @@ export default {
           soul: souls.length ? souls[seed % souls.length].s : null,
           creator: f.length ? f[0].t : null
         });
+      }
+      if (req.method === 'GET' && seg[0] === 'read-link') {
+        const ip = req.headers.get('CF-Connecting-IP') || 'local';
+        if (!(await checkRate(db, 'rl:' + ip, 10))) return bad(env, req, 'rate limited', 429);
+        try {
+          return ok(env, req, await readLink(url, url.searchParams.get('url') || ''));
+        } catch (e) { return bad(env, req, (e && e.msg) || 'read failed', (e && e.status) || 400); }
       }
       if (req.method === 'GET' && seg[0] === 'groups') {
         const me = await verifyToken(env, req);

@@ -7957,7 +7957,7 @@
       "grafted",
       "ui/ux"
     ],
-    "image": "",
+    "image": "downloads/images/skills/ui-ux-orchestrator.jpg",
     "version": "1.0.0",
     "size": "3 KB",
     "details": "Vendor-neutral orchestration for Kimi/Codex/Claude/Gemini/Qwen/Copilot/GLM Grafted from ui-ux-agent-skill-system.",
@@ -8559,7 +8559,7 @@
       "claude-code",
       "grafted"
     ],
-    "image": "",
+    "image": "downloads/images/skills/claude-code-skill-factory.jpg",
     "version": "1.0.0",
     "size": "2 KB",
     "details": "Production-ready Claude Code skills factory",
@@ -8616,7 +8616,7 @@
       "a11y",
       "grafted"
     ],
-    "image": "",
+    "image": "downloads/images/skills/ux-ui-agent-skills.jpg",
     "version": "1.0.0",
     "size": "2 KB",
     "details": "Design architect agent skills bundle",
@@ -8788,7 +8788,7 @@
       "claude",
       "grafted"
     ],
-    "image": "",
+    "image": "downloads/images/skills/anthropic-agent-skills.jpg",
     "version": "1.0.0",
     "size": "2 KB",
     "details": "Foundational agent skill framework",

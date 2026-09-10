@@ -16,6 +16,8 @@ var PALETTE={
 var TYPE_STRAND={soul:'soul',agent:'soul',role:'witness',infrastructure:'witness',skill:'mind',pack:'mind',world:'memory',book:'memory',chamber:'sovereign',combo:'sovereign'};
 var REDUCED=false;
 try{ REDUCED=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches; }catch(e){}
+var LITE=false;
+try{ LITE=window.matchMedia&&window.matchMedia('(pointer:coarse)').matches&&Math.min(window.screen.width,window.screen.height)<820; }catch(e){}
 var DPR=1;
 try{ DPR=Math.min(window.devicePixelRatio||1,1.5); }catch(e){ DPR=1; }
 
@@ -230,6 +232,7 @@ function attach(card){
       stamp.textContent='BUYaSOUL';
       card.prepend(stamp);
     }
+    if (LITE) return;
     var icon=card.querySelector('.card-icon');
     if(icon) icon.classList.add('card-emblem-pulse');
     var img=card.querySelector('img.card-image, img');

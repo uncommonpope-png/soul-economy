@@ -84,3 +84,11 @@
     animation: none;
   }
 }
+
+/* Mobile lite: identical look, zero motion cost (engines already skip boot) */
+@media (pointer: coarse) and (max-width: 820px) {
+  .card-emblem-pulse,
+  .card-avatar-breathing {
+    animation: none;
+  }
+}

@@ -1225,6 +1225,7 @@ render = function(data) {
 
     const scene = new Scene(); scene.background = new Color(0x080808);
     const REDUCED = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const LITE = window.matchMedia && matchMedia('(pointer:coarse)').matches && Math.min(screen.width, screen.height) < 820;
     scene.fog = new T.FogExp2(0x080808, 0.015);
     const vig = document.createElement('div');
     vig.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(circle at 50% 42%,transparent 55%,rgba(0,0,0,0.55) 100%)';
@@ -1233,7 +1234,7 @@ render = function(data) {
     camera.position.set(0, 2, 7);
     const renderer = new WebGLRenderer({ canvas, antialias: true, alpha: false });
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(LITE ? 1 : Math.min(window.devicePixelRatio, 2));
 
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true; controls.dampingFactor = 0.08;
@@ -1449,8 +1450,8 @@ render = function(data) {
       scene.add(pts);
       return pts;
     }
-    const starNear = starShell(700, 10, 25, 0x6666aa, 0.05, 0.5);
-    const starFar = starShell(700, 26, 45, 0x444488, 0.04, 0.4);
+    const starNear = starShell(LITE ? 250 : 700, 10, 25, 0x6666aa, 0.05, 0.5);
+    const starFar = starShell(LITE ? 250 : 700, 26, 45, 0x444488, 0.04, 0.4);
     // constellation shell wireframes echoing the category radii
     [2, 3, 4, 5, 6].forEach((r, si) => {
       const wg = new SphereGeometry(r, 24, 16);
@@ -1458,7 +1459,7 @@ render = function(data) {
       scene.add(new Mesh(wg, wm));
     });
     // rising ambient motes
-    const moteCount = 24;
+    const moteCount = LITE ? 0 : 24;
     const moteArr = new Float32Array(moteCount * 3);
     const moteSpeed = new Float32Array(moteCount);
     for (let mi = 0; mi < moteCount; mi++) { moteArr[mi*3]=(Math.random()-0.5)*16; moteArr[mi*3+1]=(Math.random()-0.5)*10; moteArr[mi*3+2]=(Math.random()-0.5)*16; moteSpeed[mi]=0.15+Math.random()*0.4; }
@@ -1920,7 +1921,7 @@ window.guideSendWithAdapter = async (q) => {
         g.addColorStop(1, 'rgba('+b.color+',0)');
         ctx.fillStyle=g; ctx.fill();
       });
-      requestAnimationFrame(draw);
+      if (!(window.matchMedia && matchMedia('(pointer:coarse)').matches && Math.min(screen.width, screen.height) < 820)) requestAnimationFrame(draw);
     }
     draw();
   }
@@ -2032,6 +2033,7 @@ spinOnce(card);
   try{
     const g = window.__soulGraph;
     if (!g || !g.renderer || !g.scene || !g.camera) { console.info('graph overlays skipped (graph not ready)'); return; }
+    if (window.matchMedia && matchMedia('(pointer:coarse)').matches && Math.min(screen.width, screen.height) < 820) { console.info('graph overlays skipped (mobile lite)'); return; }
     const { scene, camera, renderer, items } = g;
     const T = await import('three');
     const { EffectComposer } = await import('three/addons/postprocessing/EffectComposer.js');

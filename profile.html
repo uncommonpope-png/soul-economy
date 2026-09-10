@@ -120,8 +120,14 @@ button{cursor:pointer;font-family:inherit}
   <div class="card">
     <h3>🚀 Publish a Soul — One Click Soul Complete</h3>
     <p style="color:var(--text-muted);font-size:0.85rem">Share your soul, role, or skill. It becomes a card for everyone. No backend — we create a ready-to-PR JSON + instructions.</p>
+    <details id="fromLinkBox" style="margin:10px 0;padding:10px 12px;border:1px dashed rgba(0,212,255,0.3);border-radius:10px">
+      <summary style="cursor:pointer;font-size:0.8rem;color:var(--cyan)">🔗 From link — auto-read a model, dataset, product or post</summary>
+      <div style="display:flex;gap:8px;margin-top:8px"><input id="pLink" placeholder="https://github.com/... · huggingface.co/... · yourshop.myshopify.com/products/..."><button id="pLinkBtn" class="publish" style="margin-top:6px;white-space:nowrap">Read link →</button></div>
+      <div id="pLinkMsg" style="font-size:0.75rem;color:var(--text-muted);margin-top:6px">GitHub · HuggingFace · Shopify + X, YouTube, Instagram, TikTok, Reddit, LinkedIn, Facebook, Twitch. We read it — we never host it.</div>
+      <input type="hidden" id="pSource"><input type="hidden" id="pSourceUrl">
+    </details>
     <label>Name <input id="pName" placeholder="e.g. Soul Sentinel"></label>
-    <label>Type <select id="pType"><option value="soul">soul</option><option value="role">role</option><option value="skill">skill</option><option value="chamber">chamber</option><option value="infrastructure">infrastructure</option><option value="combo">combo</option></select></label>
+    <label>Type <select id="pType"><option value="soul">soul</option><option value="role">role</option><option value="skill">skill</option><option value="chamber">chamber</option><option value="infrastructure">infrastructure</option><option value="combo">combo</option><option value="pack">pack</option></select></label>
     <label>Description <textarea id="pDesc" rows="3" placeholder="What it does, what the downloader gets"></textarea></label>
     <label>File or URL <input id="pFile" placeholder="my-soul.zip or https://..."></label>
     <label>PLT (e.g. 0.8/0.5/0.3) <input id="pPlt" value="0.8/0.5/0.3"></label>
@@ -182,7 +188,7 @@ function renderPublished(){
   const grid=document.getElementById('publishedGrid');
   const pub=JSON.parse(localStorage.getItem('pendingSouls')||'[]');
   if(!pub.length){ grid.innerHTML='<div style="color:var(--text-muted);font-size:0.85rem">Nothing published yet — use the form below. One click soul complete.</div>'; return; }
-  grid.innerHTML=pub.map(p=>`<div class="mini-card"><h4>${p.name}</h4><p>${p.type} · ${p.plt}</p><p style="font-size:0.7rem;color:var(--text-muted)">${p.desc.substring(0,80)}</p><span class="badge">pending PR</span>${p.improves?` <span class="badge" style="margin-left:4px">⇄ improves ${p.improves}</span>`:''}</div>`).join('');
+  grid.innerHTML=pub.map(p=>`<div class="mini-card"><h4>${p.name}</h4><p>${p.type} · ${p.plt}</p><p style="font-size:0.7rem;color:var(--text-muted)">${p.desc.substring(0,80)}</p><span class="badge">pending PR</span>${p.improves?` <span class="badge" style="margin-left:4px">⇄ improves ${p.improves}</span>`:''}${p.source?` <span class="badge" style="margin-left:4px">via ${p.source}</span>`:''}</div>`).join('');
 }
 
 function publishSoul(){
@@ -195,6 +201,8 @@ function publishSoul(){
     file: document.getElementById('pFile').value.trim(),
     plt: document.getElementById('pPlt').value.trim() || '0.8/0.5/0.3',
     improves: document.getElementById('pImprove').value.trim(),
+    source: document.getElementById('pSource').value.trim(),
+    sourceUrl: document.getElementById('pSourceUrl').value.trim(),
     image: document.getElementById('pImage').value.trim(),
     icon: ({soul:'🧠',role:'🎭',skill:'⚡',chamber:'💜',infrastructure:'⚙️',combo:'🔥'})[document.getElementById('pType').value] || '❓',
     author: user,
@@ -215,9 +223,30 @@ function publishSoul(){
   out.style.display='block';
   out.textContent=JSON.stringify(item, null, 2);
   document.getElementById('publishHelp').style.display='block';
-  document.getElementById('publishHelp').innerHTML='Copied to pending. To go live: <br>1. Fork <a href="https://github.com/uncommonpope-png/soul-economy" target="_blank" style="color:var(--cyan)">uncommonpope-png/soul-economy</a><br>2. Add this JSON to <code>data/catalog.json</code><br>3. Put your file in <code>downloads/</code><br>4. Open PR — we merge and it appears on the Library + Graph. '+(item.improves?'<br>⇄ Proposed improvement of <b>'+item.improves+'</b> — put that in your PR title so the owner can ACCEPT / REJECT / DISCUSS.':'')+'<br><br>Or <a href="#" onclick="downloadPending();return false" style="color:var(--purple)">⬇ Download pending JSON</a>';
+  document.getElementById('publishHelp').innerHTML='Copied to pending. To go live: <br>1. Fork <a href="https://github.com/uncommonpope-png/soul-economy" target="_blank" style="color:var(--cyan)">uncommonpope-png/soul-economy</a><br>2. Add this JSON to <code>data/catalog.json</code><br>3. Put your file in <code>downloads/</code><br>4. Open PR — we merge and it appears on the Library + Graph. '+(item.improves?'<br>⇄ Proposed improvement of <b>'+item.improves+'</b> — put that in your PR title so the owner can ACCEPT / REJECT / DISCUSS.':'')+(item.sourceUrl?'<br>🔗 Source: <b>'+item.source+'</b> — <a href="'+item.sourceUrl+'" target="_blank" style="color:var(--cyan)">'+item.sourceUrl.substring(0,60)+'</a> (linked, never hosted).':'')+'<br><br>Or <a href="#" onclick="downloadPending();return false" style="color:var(--purple)">⬇ Download pending JSON</a>';
   updateProfile();
 }
+document.getElementById('pLinkBtn').addEventListener('click',function(){
+  const u=document.getElementById('pLink').value.trim();
+  const msg=document.getElementById('pLinkMsg');
+  if(!u){ msg.textContent='Paste a link first.'; return; }
+  msg.textContent='◌ Reading link…';
+  fetch('https://soul-api.buyasoul.workers.dev/social/read-link?url='+encodeURIComponent(u)).then(r=>r.json()).then(j=>{
+    if(!j.ok) throw new Error(j.error||'read failed');
+    const d=j.data||{};
+    if(d.name) document.getElementById('pName').value=d.name;
+    if(d.desc) document.getElementById('pDesc').value=d.desc;
+    if(d.image) document.getElementById('pImage').value=d.image;
+    if(d.type){
+      const sel=document.getElementById('pType');
+      const allowed=['soul','role','skill','chamber','infrastructure','combo','pack'];
+      if(allowed.includes(d.type)) sel.value=d.type;
+    }
+    document.getElementById('pSource').value=d.source||'';
+    document.getElementById('pSourceUrl').value=d.sourceUrl||u;
+    msg.innerHTML='✓ Draft filled'+(d.stars?' · ★ '+d.stars:'')+' <span class="badge">via '+d.source+'</span> — review, then Publish below.';
+  }).catch(e=>{ msg.textContent='⚠ Could not read that link ('+(e.message||'offline')+'). Fill the form manually — nothing is broken.'; });
+});
 function downloadPending(){
   const pending=JSON.parse(localStorage.getItem('pendingSouls')||'[]');
   const blob=new Blob([JSON.stringify(pending,null,2)],{type:'application/json'});
