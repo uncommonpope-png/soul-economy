@@ -1,13 +1,13 @@
-@import url('https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Fira+Code:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Pirata+One&family=Fira+Code:wght@400;700&display=swap');
 
 /* BIO-FLUID CARD BRANDING — additive only. The locked .card base
    (background/border/shadow) is intentionally NOT restyled here. */
 
-/* Old English Bible Stamp */
+/* Old English Bible Stamp (Pirata One — legible blackletter) */
 .card-bible-stamp {
-  font-family: 'UnifrakturMaguntia', cursive, serif;
-  font-size: 1.45rem;
-  letter-spacing: 0.08em;
+  font-family: 'Pirata One', 'UnifrakturMaguntia', cursive, serif;
+  font-size: 1.6rem;
+  letter-spacing: 0.12em;
   color: #ffd700;
   text-shadow: 0 0 12px rgba(255, 215, 0, 0.65), 0 0 24px rgba(255, 140, 0, 0.4);
   text-align: center;
