@@ -383,34 +383,6 @@ input{font-family:inherit;outline:none;border:none;background:none}
 </div>
 
 <div class="app" id="scrollContent">
-<div class="search-section">
-  <div class="search-wrapper">
-    <span class="search-icon">🔍</span>
-    <input type="text" class="search-input" id="searchInput" placeholder="Search Skills, Agents, Books, Worlds..." autocomplete="off" />
-    <button class="search-clear" id="searchClear">✕</button>
-  </div>
-  <div class="search-results" id="searchResults"></div>
-</div>
-
-<div class="categories" id="categoryTabs">
-  <button class="category-tab active" data-cat="all">✦ All</button>
-  <button class="category-tab" data-cat="trending" style="background:rgba(255,209,102,0.08);border-color:rgba(255,209,102,0.2);color:var(--gold)">🔥 Trending</button>
-  <button class="category-tab" data-cat="soul">🧠 Souls</button>
-  <button class="category-tab" data-cat="skill">⚡ Skills</button>
-  <button class="category-tab" data-cat="pack">📦 Packs</button>
-  <button class="category-tab" data-cat="world">🌍 Worlds</button>
-  <button class="category-tab" data-cat="agent">🤖 Agents</button>
-  <button class="category-tab" data-cat="book">📖 Books</button>
-  <button class="category-tab" data-cat="chamber">💜 Chambers</button>
-  <button class="category-tab" data-cat="infrastructure">⚙️ Infrastructure</button>
-  <button class="category-tab" data-cat="role">🎭 Roles</button>
-  <button class="category-tab" data-cat="combo">🔥 Combos</button>
-  <button class="category-tab" data-cat="workbench" style="background:linear-gradient(135deg,rgba(139,92,246,0.12),rgba(0,212,255,0.08));border-color:rgba(139,92,246,0.25)">⚡ Workbench</button>
-  <button class="category-tab" data-cat="chat" style="background:rgba(0,212,255,0.08);border-color:rgba(0,212,255,0.15);color:#00D4FF">💬 Chat</button>
-  <button class="category-tab" data-cat="discussions" style="background:rgba(255,209,102,0.08);border-color:rgba(255,209,102,0.15);color:var(--gold)">💭 Discussions</button>
-  <button class="category-tab" data-cat="best" style="background:linear-gradient(135deg,rgba(255,209,102,0.16),rgba(139,92,246,0.12));border-color:rgba(255,209,102,0.4);color:#FFD166">🥇 Best Models</button>
-</div>
-
 <div id="workbenchPanel" style="display:none">
   <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:20px;margin-bottom:20px;text-align:center">
     <h3 style="font-size:1.2rem;margin-bottom:6px">⚡ BUYASOUL Workbench — Family Live</h3>
@@ -454,12 +426,6 @@ input{font-family:inherit;outline:none;border:none;background:none}
     <span style="margin-left:10px;font-size:0.7rem;color:var(--text-muted)">ESC closes · GPU freed on exit</span>
   </div>
 </section>
-
-<div class="plt-filters" id="pltFilters">
-  <div class="plt-filter"><label class="p-val">P</label><input type="range" min="0" max="10" value="0" class="p-thumb" id="pltP"><span class="value p-val" id="pltPVal">0</span></div>
-  <div class="plt-filter"><label class="l-val">L</label><input type="range" min="0" max="10" value="0" class="l-thumb" id="pltL"><span class="value l-val" id="pltLVal">0</span></div>
-  <div class="plt-filter"><label class="t-val">T</label><input type="range" min="0" max="10" value="0" class="t-thumb" id="pltT"><span class="value t-val" id="pltTVal">0</span></div>
-</div>
 
 <section class="hero" style="pointer-events:auto;position:relative;margin:18px 0 10px;border:1px solid rgba(255,255,255,0.07);border-radius:20px;background:linear-gradient(180deg,rgba(139,92,246,0.05),rgba(0,212,255,0.03)),radial-gradient(rgba(139,92,246,0.07) 1px,transparent 1px);background-size:auto,34px 34px">
   <canvas id="auroraCanvas"></canvas>
@@ -509,6 +475,40 @@ input{font-family:inherit;outline:none;border:none;background:none}
   }
 })();
 </script>
+
+<div class="search-section">
+  <div class="search-wrapper">
+    <span class="search-icon">🔍</span>
+    <input type="text" class="search-input" id="searchInput" placeholder="Search Skills, Agents, Books, Worlds..." autocomplete="off" />
+    <button class="search-clear" id="searchClear">✕</button>
+  </div>
+  <div class="search-results" id="searchResults"></div>
+</div>
+
+<div class="categories" id="categoryTabs">
+  <button class="category-tab active" data-cat="all">✦ All</button>
+  <button class="category-tab" data-cat="trending" style="background:rgba(255,209,102,0.08);border-color:rgba(255,209,102,0.2);color:var(--gold)">🔥 Trending</button>
+  <button class="category-tab" data-cat="soul">🧠 Souls</button>
+  <button class="category-tab" data-cat="skill">⚡ Skills</button>
+  <button class="category-tab" data-cat="pack">📦 Packs</button>
+  <button class="category-tab" data-cat="world">🌍 Worlds</button>
+  <button class="category-tab" data-cat="agent">🤖 Agents</button>
+  <button class="category-tab" data-cat="book">📖 Books</button>
+  <button class="category-tab" data-cat="chamber">💜 Chambers</button>
+  <button class="category-tab" data-cat="infrastructure">⚙️ Infrastructure</button>
+  <button class="category-tab" data-cat="role">🎭 Roles</button>
+  <button class="category-tab" data-cat="combo">🔥 Combos</button>
+  <button class="category-tab" data-cat="workbench" style="background:linear-gradient(135deg,rgba(139,92,246,0.12),rgba(0,212,255,0.08));border-color:rgba(139,92,246,0.25)">⚡ Workbench</button>
+  <button class="category-tab" data-cat="chat" style="background:rgba(0,212,255,0.08);border-color:rgba(0,212,255,0.15);color:#00D4FF">💬 Chat</button>
+  <button class="category-tab" data-cat="discussions" style="background:rgba(255,209,102,0.08);border-color:rgba(255,209,102,0.15);color:var(--gold)">💭 Discussions</button>
+  <button class="category-tab" data-cat="best" style="background:linear-gradient(135deg,rgba(255,209,102,0.16),rgba(139,92,246,0.12));border-color:rgba(255,209,102,0.4);color:#FFD166">🥇 Best Models</button>
+</div>
+
+<div class="plt-filters" id="pltFilters">
+  <div class="plt-filter"><label class="p-val">P</label><input type="range" min="0" max="10" value="0" class="p-thumb" id="pltP"><span class="value p-val" id="pltPVal">0</span></div>
+  <div class="plt-filter"><label class="l-val">L</label><input type="range" min="0" max="10" value="0" class="l-thumb" id="pltL"><span class="value l-val" id="pltLVal">0</span></div>
+  <div class="plt-filter"><label class="t-val">T</label><input type="range" min="0" max="10" value="0" class="t-thumb" id="pltT"><span class="value t-val" id="pltTVal">0</span></div>
+</div>
 
 <section id="catalog">
   <div class="resource-grid" id="resourceGrid"></div>
