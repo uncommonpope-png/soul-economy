@@ -90,6 +90,18 @@ input{font-family:inherit;outline:none;border:none;background:none}
 .stat-number{display:block;font-size:1.8rem;font-weight:800;background:linear-gradient(135deg,#fff,var(--text-gray));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .stat-label{font-size:0.75rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted)}
 
+/* FAMILY TREASURY HERO */
+.treasury-title{font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:clamp(2.6rem,7vw,4.6rem);letter-spacing:0.02em;line-height:1.05;margin-bottom:12px;background:linear-gradient(135deg,#FFD166,#E8C96A,#C4A95A);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.treasury-sub{font-family:Georgia,'Times New Roman',serif;font-style:italic;font-size:clamp(1rem,2.2vw,1.4rem);letter-spacing:0.22em;text-transform:uppercase;color:var(--text-gray);margin-bottom:18px}
+.treasury-msg{font-family:Georgia,'Times New Roman',serif;font-size:1.05rem;color:var(--text-gray);max-width:640px;margin:0 auto 30px;line-height:1.9}
+.chip{display:inline-flex;align-items:center;gap:10px;padding:14px 26px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:50px;font-size:0.85rem;font-weight:600;color:var(--text-gray);cursor:pointer;transition:var(--transition)}
+.chip:hover{border-color:rgba(255,209,102,0.45);color:var(--text-white);box-shadow:0 0 30px rgba(255,209,102,0.15);transform:translateY(-2px)}
+.chip .chip-ico{font-size:1.1rem;color:var(--gold)}
+.copy-note{min-height:20px;font-size:0.75rem;color:var(--text-muted);margin-top:10px;letter-spacing:0.03em}
+.treasury-scroll{margin-top:22px}
+.treasury-scroll a{font-size:0.8rem;color:var(--text-muted);letter-spacing:0.14em;text-transform:uppercase;transition:var(--transition)}
+.treasury-scroll a:hover{color:var(--cyan)}
+
 /* SEARCH */
 .search-section{width:100%;max-width:720px;margin:0 auto;position:relative}
 .search-wrapper{display:flex;align-items:center;background:rgba(255,255,255,0.04);backdrop-filter:blur(16px) saturate(1.2);-webkit-backdrop-filter:blur(16px) saturate(1.2);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:4px 4px 4px 20px;transition:var(--transition);transform:translateZ(0);will-change:transform,border-color,box-shadow}
@@ -325,18 +337,43 @@ input{font-family:inherit;outline:none;border:none;background:none}
 <section class="hero" style="pointer-events:auto;position:relative">
   <canvas id="auroraCanvas"></canvas>
   <span class="hero-badge">✦ The Soul Economy</span>
-  <h1 class="hero-title">The Digital Library<br /><span class="highlight">of Souls</span></h1>
-  <p class="hero-sub">Every download carries a personality, a purpose, and a PLT score. Give it to your AI — it becomes that soul.</p>
+  <h1 class="hero-title treasury-title">The Family Treasury</h1>
+  <p class="hero-sub treasury-sub">Free Forever · Donation Optional</p>
+  <p class="treasury-msg">The estate never charges the family to enter. If the world of the Grand Code Pope gives you value, tip it — Solana, Cash App, or card. Every coin stays in the family.</p>
   <div class="hero-actions">
-    <a href="#catalog" class="btn-primary btn-large" style="pointer-events:auto">Explore the Library</a>
-    <a href="https://buyasoul.online" target="_blank" class="btn-ghost btn-large" style="pointer-events:auto">BUYaSOUL.online →</a>
+    <button class="chip" id="sol" type="button" style="pointer-events:auto"><span class="chip-ico">◆</span><span>SOL · click to copy</span></button>
+    <a class="chip" href="https://cash.app/uncommonpope" target="_blank"><span class="chip-ico">$</span><span>Cash App</span></a>
+    <a class="chip" href="https://buy.stripe.com/28EbJ16xy64z9bb1fffnO0n" target="_blank"><span class="chip-ico">◇</span><span>Tip by Card</span></a>
   </div>
-  <div class="hero-stats" style="pointer-events:auto">
+  <div class="copy-note" id="copyNote"></div>
+  <div class="hero-stats" style="pointer-events:auto;margin-top:26px">
     <div class="stat"><span class="stat-number">221</span><span class="stat-label">Souls</span></div>
     <div class="stat"><span class="stat-number">22</span><span class="stat-label">Roles</span></div>
     <div class="stat"><span class="stat-number">∞</span><span class="stat-label">PLT</span></div>
   </div>
+  <div class="treasury-scroll" style="pointer-events:auto"><a href="#catalog">↓ Explore the Library</a></div>
 </section>
+
+<script>
+(function () {
+  var sol = '68mmmWtLH3gL5eQggULnH3CCh8jGbjjNo9kZi967BYY6';
+  var btn = document.getElementById('sol');
+  var note = document.getElementById('copyNote');
+  if (btn && note) {
+    btn.addEventListener('click', function () {
+      var done = function () {
+        note.textContent = '◆ Solana address copied — thank you for the family.';
+        setTimeout(function () { note.textContent = ''; }, 4000);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(sol).then(done, done);
+      } else {
+        done();
+      }
+    });
+  }
+})();
+</script>
 
 <!-- SIP-12: First-Time Architect onboard strip -->
 <div id="guideStrip" style="display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin:26px auto 4px;max-width:1280px;padding:12px 18px;border:1px solid rgba(255,209,102,0.28);border-left:3px solid #00D4FF;border-radius:14px;background:rgba(10,10,15,0.75);font-family:ui-monospace,Consolas,monospace;font-size:0.72rem;color:#B8B8B8">
