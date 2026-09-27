@@ -299,6 +299,10 @@ input{font-family:inherit;outline:none;border:none;background:none}
   .footer{flex-direction:column;text-align:center}
   .navbar{padding:10px 18px;backdrop-filter:blur(12px)}
 }
+@media(max-width:820px){
+  .nav-links{display:flex;gap:10px;align-items:center}
+  .nav-links li:not(:first-child){display:none}
+}
 @media(max-width:520px){
   .resource-grid{grid-template-columns:1fr}
   .hero-title{font-size:2rem}
