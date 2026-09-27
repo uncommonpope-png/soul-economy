@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://uncommonpope-png.github.io/soul-economy/sitemap.xml
