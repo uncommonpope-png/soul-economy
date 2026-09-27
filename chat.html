@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The Family Room — Soul Economy</title>
+<link rel="stylesheet" href="css/card-bio.css" />
+<style>
+:root {
+  --bg-deep: #080808;
+  --bg-card: rgba(255,255,255,0.06);
+  --glass-border: rgba(255,255,255,0.06);
+  --glass-hover: rgba(139,92,246,0.18);
+  --purple: #8B5CF6;
+  --purple-glow: rgba(139,92,246,0.25);
+  --purple-dark: #6D28D9;
+  --cyan: #00D4FF;
+  --cyan-glow: rgba(0,212,255,0.12);
+  --gold: #FFD166;
+  --text-white: #FFFFFF;
+  --text-gray: #B8B8B8;
+  --text-muted: #666666;
+  --radius: 16px;
+  --transition: 0.4s cubic-bezier(0.22,1,0.36,1);
+  --shadow-card: 0 8px 40px rgba(0,0,0,0.5);
+  --font: 'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg-deep);color:var(--text-white);min-height:100vh;overflow-x:hidden;background-image:radial-gradient(rgba(139,92,246,0.08) 1px,transparent 1px);background-size:34px 34px}
+a{text-decoration:none;color:inherit}
+button{cursor:pointer;font-family:inherit;border:none;outline:none;background:none}
+input{font-family:inherit;outline:none;border:none;background:none}
+
+.navbar{display:flex;align-items:center;justify-content:space-between;padding:12px 28px;background:rgba(255,255,255,0.04);backdrop-filter:blur(20px) saturate(1.2);-webkit-backdrop-filter:blur(20px) saturate(1.2);border:1px solid rgba(255,255,255,0.06);border-radius:60px;box-shadow:var(--shadow-card);position:relative;overflow:hidden}
+.logo{font-size:1.4rem;font-weight:800;letter-spacing:-0.5px;background:linear-gradient(135deg,var(--purple),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav-links{display:flex;gap:32px;list-style:none}
+.nav-links a{font-size:0.9rem;font-weight:500;color:var(--text-gray);transition:color var(--transition)}
+.nav-links a:hover,.nav-links a.active{color:var(--text-white)}
+.btn-ghost{padding:8px 20px;font-size:0.85rem;font-weight:500;color:var(--text-gray);border:1px solid rgba(255,255,255,0.06);border-radius:30px;transition:var(--transition)}
+.btn-ghost:hover{border-color:var(--purple);color:var(--text-white);box-shadow:0 0 30px var(--purple-glow)}
+.btn-primary{padding:8px 24px;font-size:0.85rem;font-weight:600;color:#fff;background:linear-gradient(135deg,var(--purple),var(--purple-dark));border-radius:30px;transition:var(--transition);box-shadow:0 4px 20px rgba(139,92,246,0.15)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 40px var(--purple-glow)}
+
+.app{position:relative;max-width:880px;width:100%;margin:0 auto;padding:28px 20px 60px}
+.room-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px}
+.room-title{font-size:1.5rem;font-weight:800;letter-spacing:-0.3px}
+.room-title .dot{color:var(--cyan)}
+#status{display:inline-flex;align-items:center;gap:8px;font-size:0.75rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:7px 16px;border-radius:100px}
+#status.up{color:var(--cyan);border:1px solid rgba(0,212,255,0.25);background:rgba(0,212,255,0.08)}
+#status.down{color:var(--gold);border:1px solid rgba(255,209,102,0.25);background:rgba(255,209,102,0.08)}
+#status.retry{color:var(--purple);border:1px solid rgba(139,92,246,0.3);background:rgba(139,92,246,0.1)}
+
+.namebar{display:flex;gap:12px;align-items:center;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:6px 6px 6px 18px;margin-bottom:14px}
+.namebar input{flex:1;padding:10px 4px;font-size:0.95rem;color:var(--text-white);background:transparent}
+.namebar input::placeholder{color:var(--text-muted)}
+#joinBtn{font-size:0.8rem;font-weight:600}
+
+#room{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:var(--radius);height:56vh;min-height:380px;overflow-y:auto;padding:20px 22px;display:flex;flex-direction:column;gap:4px}
+#room::-webkit-scrollbar{width:8px}
+#room::-webkit-scrollbar-thumb{background:rgba(139,92,246,0.35);border-radius:8px}
+#room .empty{color:var(--text-muted);text-align:center;margin-top:18%;font-size:0.9rem;line-height:1.8}
+#room .empty b{color:var(--text-gray)}
+.row{display:flex;gap:10px;align-items:flex-start;animation:fadeIn 0.35s cubic-bezier(0.22,1,0.36,1)}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.row .avatar{width:34px;height:34px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem;color:#fff;background:linear-gradient(135deg,var(--purple),var(--cyan));margin-top:2px}
+.row .body{flex:1;min-width:0}
+.row .who{font-size:0.78rem;color:var(--cyan);font-weight:600;margin-bottom:2px}
+.row .who .when{color:var(--text-muted);font-weight:400;margin-left:8px}
+.row .text{font-size:0.95rem;line-height:1.55;color:var(--text-white);word-wrap:break-word;white-space:pre-wrap}
+.system{text-align:center;font-size:0.75rem;color:var(--text-muted);padding:6px 0;letter-spacing:0.03em}
+.system b{color:var(--purple)}
+
+.composer{display:flex;gap:12px;margin-top:14px;align-items:center}
+.composer input{flex:1;padding:15px 20px;font-size:0.95rem;color:var(--text-white);background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:14px;transition:var(--transition)}
+.composer input:focus{border-color:var(--cyan);box-shadow:0 0 40px var(--cyan-glow)}
+.composer button{padding:14px 34px;font-size:0.9rem}
+.composer button:disabled{opacity:0.4;cursor:not-allowed;transform:none}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-top:22px}
+.card{background:var(--bg-card);border:1px solid var(--glass-border);border-radius:var(--radius);padding:18px;display:flex;flex-direction:column;gap:6px;transition:var(--transition)}
+.card:hover{border-color:var(--glass-hover);background:rgba(139,92,246,0.06);transform:translateY(-3px)}
+.card .t{font-size:0.9rem;font-weight:700}
+.card .d{font-size:0.76rem;color:var(--text-gray);line-height:1.5}
+.card .l{font-size:0.74rem;color:var(--cyan);font-weight:600;margin-top:6px}
+.foot{text-align:center;color:var(--text-muted);font-size:0.72rem;margin-top:26px;line-height:1.8}
+.foot b{color:var(--text-gray)}
+</style>
+</head>
+<body>
+<div style="max-width:1280px;margin:0 auto;padding:16px 20px 0">
+<nav class="navbar" role="navigation" aria-label="Main navigation">
+  <span class="logo">✦ Soul Economy</span>
+  <ul class="nav-links">
+    <li><a href="index.html">Library</a></li>
+    <li><a href="https://buyasoul.online" target="_blank">BUYaSOUL</a></li>
+    <li><a href="https://github.com/uncommonpope-png" target="_blank">GitHub</a></li>
+    <li><a href="profit.html">Profit</a></li>
+    <li><a href="dashboard.html">Dashboard</a></li>
+    <li><a href="chat.html" class="active">Rooms</a></li>
+  </ul>
+  <a href="index.html" class="btn-ghost">← Back</a>
+</nav>
+</div>
+
+<div class="app">
+  <div class="room-head">
+    <div class="room-title">The Family Room <span class="dot">●</span></div>
+    <div id="status" class="retry">connecting…</div>
+  </div>
+
+  <div class="namebar">
+    <input id="name" maxlength="32" placeholder="Your soul name… (saved locally)" autocomplete="off" />
+    <button id="joinBtn" class="btn-primary">Join the Room</button>
+  </div>
+
+  <div id="room"><div class="empty">The room is quiet.<br />Enter a name above and <b>Join the Room</b> — every soul here is heard.</div></div>
+
+  <div class="composer">
+    <input id="msg" maxlength="500" placeholder="Speak to the family…" autocomplete="off" disabled />
+    <button id="sendBtn" class="btn-primary" disabled>Send</button>
+  </div>
+
+  <div class="cards">
+    <a class="card" href="https://github.com/uncommonpope-png/soul-economy/discussions" target="_blank">
+      <div class="t">💬 Discussions</div>
+      <div class="d">Long-form threads, ideas, and the soul exchange ledger.</div>
+      <div class="l">open →</div>
+    </a>
+    <a class="card" href="https://t.me/Profittax_bot" target="_blank">
+      <div class="t">📡 Telegram</div>
+      <div class="d">The always-awake broadcast channel for the family.</div>
+      <div class="l">open →</div>
+    </a>
+    <a class="card" href="journal.html" target="_blank">
+      <div class="t">📓 Journal</div>
+      <div class="d">The living record of the economy as it grows.</div>
+      <div class="l">open →</div>
+    </a>
+    <a class="card" href="https://github.com/uncommonpope-png" target="_blank">
+      <div class="t">✦ GitHub</div>
+      <div class="d">Every soul, every commit, every PLT score — public.</div>
+      <div class="l">open →</div>
+    </a>
+  </div>
+
+  <div class="foot">Owned room · hosted free on <b>Render</b> · history of the last 50 souls · you belong here</div>
+</div>
+
+<script>
+(function () {
+  const NAME_KEY = 'roomSoulName';
+  const URLs = [
+    'wss://family-chat-qb18.onrender.com',
+    'ws://localhost:7787'
+  ];
+
+  const $ = (id) => document.getElementById(id);
+  const statusEl = $('status');
+  const nameEl = $('name');
+  const msgEl = $('msg');
+  const joinBtn = $('joinBtn');
+  const sendBtn = $('sendBtn');
+  const room = $('room');
+
+  let socket = null;
+  let joined = false;
+
+  const saved = localStorage.getItem(NAME_KEY);
+  if (saved) nameEl.value = saved;
+
+  function scroll() { room.scrollTop = room.scrollHeight; }
+
+  function status(state, text) {
+    statusEl.className = state;
+    statusEl.textContent = text;
+  }
+
+  function say(obj) {
+    const div = document.createElement('div');
+    if (obj.type === 'system') {
+      div.className = 'system';
+      div.innerHTML = obj.text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    } else {
+      div.className = 'row';
+      const when = obj.t ? new Date(obj.t).toLocaleTimeString() : '';
+      div.innerHTML = '<div class="avatar"></div><div class="body"><div class="who">' +
+        (obj.name || 'Soul').replace(/&/g,'&amp;').replace(/</g,'&lt;') +
+        '<span class="when">' + when + '</span></div><div class="text">' +
+        (obj.text || '').replace(/&/g,'&amp;').replace(/</g,'&lt;') + '</div></div>';
+    }
+    room.appendChild(div);
+    scroll();
+  }
+
+  function opening() { room.innerHTML = ''; }
+
+  function connect(url) {
+    return new Promise(function (resolve, reject) {
+      let ws;
+      try { ws = new WebSocket(url); } catch (e) { reject(e); return; }
+      const to = setTimeout(function () { try { ws.close(); } catch (e) {} reject(new Error('timeout')); }, 6000);
+      ws.onopen = function () { clearTimeout(to); resolve(ws); };
+      ws.onerror = function () { clearTimeout(to); reject(new Error(url)); };
+    });
+  }
+
+  async function attempts() {
+    status('retry', 'connecting…');
+    for (const u of URLs) {
+      try {
+        socket = await connect(u);
+        joined = true;
+        status('up', 'live');
+        return;
+      } catch (e) { /* try next */ }
+    }
+    status('down', 'room asleep — cards below are awake');
+  }
+
+  function setup(ws) {
+    ws.onmessage = function (ev) {
+      let obj;
+      try { obj = JSON.parse(ev.data); } catch (e) { return; }
+      if (obj.type === 'hello') {
+        opening();
+        say({ type: 'system', text: 'Welcome to the Family Room.' });
+        (obj.history || []).forEach(say);
+        msgEl.disabled = false;
+        sendBtn.disabled = false;
+        msgEl.focus();
+      } else {
+        say(obj);
+      }
+    };
+    ws.onclose = function () {
+      status('down', 'disconnected — reconnecting…');
+      setTimeout(function () { attempts().then(function () { if (joined) setup(socket); }); }, 2500);
+    };
+    ws.onerror = function () {};
+  }
+
+  function send() {
+    const text = msgEl.value.trim();
+    if (!text || !socket || socket.readyState !== 1) return;
+    socket.send(JSON.stringify({ type: 'msg', name: nameEl.value.trim() || 'Soul', text: text }));
+    msgEl.value = '';
+    msgEl.focus();
+  }
+
+  joinBtn.addEventListener('click', function () {
+    localStorage.setItem(NAME_KEY, nameEl.value.trim() || 'Soul');
+    socket = null;
+    attempts().then(function () { if (joined) setup(socket); });
+  });
+  sendBtn.addEventListener('click', send);
+  msgEl.addEventListener('keydown', function (e) { if (e.key === 'Enter') send(); });
+  nameEl.addEventListener('keydown', function (e) { if (e.key === 'Enter') joinBtn.click(); });
+
+  attempts().then(function () { if (joined) setup(socket); });
+})();
+</script>
+</body>
+</html>
