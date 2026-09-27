@@ -79,6 +79,9 @@ button{cursor:pointer;font-family:inherit;border:none;outline:none;background:no
 .foot{text-align:center;color:var(--text-muted);font-size:0.72rem;margin-top:46px;line-height:1.9}
 .foot b{color:var(--text-gray)}
 .foot .em{color:var(--gold);font-weight:600}
+
+.estate-dollar{display:inline-block;font-weight:800;font-style:normal;color:#FF6B9D;text-shadow:0 0 8px #FF6B9D,0 0 16px #FF2E88,0 0 28px #FF2E88;animation:estateThrob 1.5s ease-in-out infinite;will-change:transform,text-shadow}
+@keyframes estateThrob{0%,100%{transform:translateY(0) scale(1);text-shadow:0 0 6px #FF6B9D,0 0 12px #FF2E88,0 0 20px rgba(255,46,136,.6)}25%{transform:translateY(-3px) scale(1.35);text-shadow:0 0 12px #FF6B9D,0 0 24px #FF2E88,0 0 40px #FF2E88}50%{transform:translateY(0) scale(1);text-shadow:0 0 8px #FF6B9D,0 0 16px #FF2E88,0 0 30px rgba(255,46,136,.85)}60%{transform:scale(.9);text-shadow:0 0 4px #FF6B9D,0 0 8px #FF2E88}75%{transform:translateY(-2px) scale(1.2);text-shadow:0 0 10px #FF6B9D,0 0 20px #FF2E88,0 0 34px rgba(255,46,136,.9)}}
 </style>
 </head>
 <body>
@@ -86,7 +89,7 @@ button{cursor:pointer;font-family:inherit;border:none;outline:none;background:no
 <nav class="navbar" role="navigation" aria-label="Main navigation">
   <span class="logo">✦ Soul Economy</span>
   <ul class="nav-links">
-    <li><a href="pope.html" class="active">Estate</a></li>
+    <li><a href="pope.html" class="active"><span class="estate-dollar" aria-hidden="true">$</span>Estate</a></li>
     <li><a href="index.html">Library</a></li>
     <li><a href="https://buyasoul.online" target="_blank">BUYaSOUL</a></li>
     <li><a href="https://github.com/uncommonpope-png" target="_blank">GitHub</a></li>

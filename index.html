@@ -102,6 +102,10 @@ input{font-family:inherit;outline:none;border:none;background:none}
 .treasury-scroll a{font-size:0.8rem;color:var(--text-muted);letter-spacing:0.14em;text-transform:uppercase;transition:var(--transition)}
 .treasury-scroll a:hover{color:var(--cyan)}
 
+/* ESTATE DOLLAR — alive, glowing pink, throbbing + bouncing */
+.estate-dollar{display:inline-block;font-weight:800;font-style:normal;color:#FF6B9D;text-shadow:0 0 8px #FF6B9D,0 0 16px #FF2E88,0 0 28px #FF2E88;animation:estateThrob 1.5s ease-in-out infinite;will-change:transform,text-shadow}
+@keyframes estateThrob{0%,100%{transform:translateY(0) scale(1);text-shadow:0 0 6px #FF6B9D,0 0 12px #FF2E88,0 0 20px rgba(255,46,136,.6)}25%{transform:translateY(-3px) scale(1.35);text-shadow:0 0 12px #FF6B9D,0 0 24px #FF2E88,0 0 40px #FF2E88}50%{transform:translateY(0) scale(1);text-shadow:0 0 8px #FF6B9D,0 0 16px #FF2E88,0 0 30px rgba(255,46,136,.85)}60%{transform:scale(.9);text-shadow:0 0 4px #FF6B9D,0 0 8px #FF2E88}75%{transform:translateY(-2px) scale(1.2);text-shadow:0 0 10px #FF6B9D,0 0 20px #FF2E88,0 0 34px rgba(255,46,136,.9)}}
+
 /* SEARCH */
 .search-section{width:100%;max-width:720px;margin:0 auto;position:relative}
 .search-wrapper{display:flex;align-items:center;background:rgba(255,255,255,0.04);backdrop-filter:blur(16px) saturate(1.2);-webkit-backdrop-filter:blur(16px) saturate(1.2);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:4px 4px 4px 20px;transition:var(--transition);transform:translateZ(0);will-change:transform,border-color,box-shadow}
@@ -313,7 +317,7 @@ input{font-family:inherit;outline:none;border:none;background:none}
 <nav class="navbar" role="navigation" aria-label="Main navigation" style="pointer-events:auto">
   <span class="logo">✦ Soul Economy</span>
   <ul class="nav-links">
-    <li><a href="pope.html" aria-label="Estate of the Grand Code Pope">Estate</a></li>
+    <li><a href="pope.html" aria-label="Estate of the Grand Code Pope"><span class="estate-dollar" aria-hidden="true">$</span>Estate</a></li>
     <li><a href="#" class="active" aria-label="Library home">Library</a></li>
     <li><a href="https://buyasoul.online" target="_blank" aria-label="Visit BUYaSOUL online store">BUYaSOUL</a></li>
     <li><a href="https://github.com/uncommonpope-png" target="_blank" aria-label="Visit GitHub profile">GitHub</a></li>
