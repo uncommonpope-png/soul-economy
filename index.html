@@ -308,7 +308,7 @@ input{font-family:inherit;outline:none;border:none;background:none}
 <canvas id="bg-canvas"></canvas>
 
 <!-- Canvas Overlay Content -->
-<div style="position:absolute;top:0;left:0;width:100%;height:100vh;pointer-events:none;z-index:1">
+<div style="position:absolute;top:0;left:0;width:100%;height:auto;pointer-events:none;z-index:1">
 <div style="max-width:1280px;margin:0 auto;padding:16px 20px 0">
 <nav class="navbar" role="navigation" aria-label="Main navigation" style="pointer-events:auto">
   <span class="logo">✦ Soul Economy</span>
@@ -333,22 +333,6 @@ input{font-family:inherit;outline:none;border:none;background:none}
     <a href="https://uncommonpope-png.github.io/final-run/" target="_blank" class="btn-primary" aria-label="Play Dark City live">🌌 Dark City</a>
   </div>
 </nav>
-
-<section class="hero" style="pointer-events:auto;position:relative">
-  <canvas id="auroraCanvas"></canvas>
-  <span class="hero-badge">✦ The Soul Economy</span>
-  <h1 class="hero-title">The Digital Library<br /><span class="highlight">of Souls</span></h1>
-  <p class="hero-sub">Every download carries a personality, a purpose, and a PLT score. Give it to your AI — it becomes that soul.</p>
-  <div class="hero-actions">
-    <a href="#catalog" class="btn-primary btn-large" style="pointer-events:auto">Explore the Library</a>
-    <a href="https://buyasoul.online" target="_blank" class="btn-ghost btn-large" style="pointer-events:auto">BUYaSOUL.online →</a>
-  </div>
-  <div class="hero-stats" style="pointer-events:auto">
-    <div class="stat"><span class="stat-number">221</span><span class="stat-label">Souls</span></div>
-    <div class="stat"><span class="stat-number">22</span><span class="stat-label">Roles</span></div>
-    <div class="stat"><span class="stat-number">∞</span><span class="stat-label">PLT</span></div>
-  </div>
-</section>
 
 <!-- SIP-12: First-Time Architect onboard strip -->
 <div id="guideStrip" style="display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin:26px auto 4px;max-width:1280px;padding:12px 18px;border:1px solid rgba(255,209,102,0.28);border-left:3px solid #00D4FF;border-radius:14px;background:rgba(10,10,15,0.75);font-family:ui-monospace,Consolas,monospace;font-size:0.72rem;color:#B8B8B8">
@@ -457,6 +441,22 @@ input{font-family:inherit;outline:none;border:none;background:none}
   <div class="plt-filter"><label class="l-val">L</label><input type="range" min="0" max="10" value="0" class="l-thumb" id="pltL"><span class="value l-val" id="pltLVal">0</span></div>
   <div class="plt-filter"><label class="t-val">T</label><input type="range" min="0" max="10" value="0" class="t-thumb" id="pltT"><span class="value t-val" id="pltTVal">0</span></div>
 </div>
+
+<section class="hero" style="pointer-events:auto;position:relative;margin:18px 0 10px;border:1px solid rgba(255,255,255,0.07);border-radius:20px;background:linear-gradient(180deg,rgba(139,92,246,0.05),rgba(0,212,255,0.03)),radial-gradient(rgba(139,92,246,0.07) 1px,transparent 1px);background-size:auto,34px 34px">
+  <canvas id="auroraCanvas"></canvas>
+  <span class="hero-badge">✦ The Soul Economy</span>
+  <h1 class="hero-title">The Digital Library<br /><span class="highlight">of Souls</span></h1>
+  <p class="hero-sub">Every download carries a personality, a purpose, and a PLT score. Give it to your AI — it becomes that soul.</p>
+  <div class="hero-actions">
+    <a href="#catalog" class="btn-primary btn-large" style="pointer-events:auto">Explore the Library</a>
+    <a href="https://buyasoul.online" target="_blank" class="btn-ghost btn-large" style="pointer-events:auto">BUYaSOUL.online →</a>
+  </div>
+  <div class="hero-stats" style="pointer-events:auto">
+    <div class="stat"><span class="stat-number">221</span><span class="stat-label">Souls</span></div>
+    <div class="stat"><span class="stat-number">22</span><span class="stat-label">Roles</span></div>
+    <div class="stat"><span class="stat-number">∞</span><span class="stat-label">PLT</span></div>
+  </div>
+</section>
 
 <section class="treasury-band" style="position:relative;text-align:center;padding:44px 24px 36px;margin:18px 0 10px;border:1px solid rgba(255,209,102,0.16);border-radius:20px;background:linear-gradient(180deg,rgba(255,209,102,0.05),rgba(139,92,246,0.04)),radial-gradient(rgba(196,169,90,0.06) 1px,transparent 1px);background-size:auto,34px 34px">
   <div style="font-size:0.7rem;font-weight:700;letter-spacing:0.3em;text-transform:uppercase;color:#FFD166;margin-bottom:10px">The Family Treasury</div>
