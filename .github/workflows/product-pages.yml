@@ -1,0 +1,29 @@
+name: Generate Product Pages
+
+on:
+  push:
+    paths:
+      - 'data/catalog.json'
+      - 'scripts/gen-product-pages.mjs'
+  schedule:
+    - cron: '15 4 * * *'
+  workflow_dispatch:
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Generate p/ product pages + sitemap
+        run: node scripts/gen-product-pages.mjs
+
+      - name: Commit and push (p/ + sitemap only; paths filter prevents loops)
+        run: |
+          git config --global user.name "buyasoul-ai"
+          git config --global user.email "buyasoul.ai@gmail.com"
+          git add p sitemap.xml
+          git diff --quiet && git diff --staged --quiet || (git commit -m "build(product-pages): regenerate p/<slug>.html + sitemap [skip ci]" && git push)
