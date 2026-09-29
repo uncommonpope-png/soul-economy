@@ -8,7 +8,9 @@
     "db:local": "wrangler d1 execute soul-economy --local --file=./schema.sql"
   },
   "dependencies": {
-    "nostr-tools": "^2.10.4"
+    "@supabase/supabase-js": "^2.117.2",
+    "nostr-tools": "^2.10.4",
+    "stripe": "^22.6.2"
   },
   "devDependencies": {
     "wrangler": "^4.0.0"

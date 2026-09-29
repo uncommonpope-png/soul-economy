@@ -6,11 +6,19 @@ compatibility_date = "2026-09-01"
 [assets]
 directory = "./"
 binding = "ASSETS"
-run_worker_first = ["/api/*"]
+run_worker_first = ["/api/*", "/ws", "/healthz"]
 
 [[kv_namespaces]]
 binding = "KV"
 id = "859601a647334e7d91f4cd59f32b61fa"
+
+[[durable_objects.bindings]]
+name = "ROOM"
+class_name = "FamilyRoom"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["FamilyRoom"]
 
 [[d1_databases]]
 binding = "DB"

@@ -1,4 +1,8 @@
 import { verifyEvent } from 'nostr-tools';
+import { FamilyRoom } from './chat.mjs';
+import { handleShop } from './shop.mjs';
+
+export { FamilyRoom };
 
 // ─── Soul Economy API ────────────────────────────────────────────────────────
 // Stateless Nostr-native backend. Every write is a signed Nostr event;
@@ -549,6 +553,20 @@ export default {
     const url = new URL(request.url);
     if (request.method === 'OPTIONS') return new Response(null, { headers: CORS, status: 204 });
     try {
+      // FamilyChat — chat room (Durable Object) + compat healthz
+      if (url.pathname === '/healthz')
+        return new Response('FamilyChat room alive', {
+          headers: { ...CORS, 'Content-Type': 'text/plain; charset=utf-8' },
+        });
+      if (url.pathname === '/ws') {
+        if ((request.headers.get('Upgrade') || '').toLowerCase() !== 'websocket')
+          return new Response('WebSocket upgrade required', { status: 426, headers: CORS });
+        const stub = env.ROOM.idFromName('family');
+        return env.ROOM.get(stub).fetch(request);
+      }
+      // Shop API (port of chat/api.mjs)
+      if (url.pathname.startsWith('/api/v1/')) return await handleShop(request, env, url);
+
       if (url.pathname === '/api/health') return json({ ok: true, at: Date.now() });
       if (url.pathname === '/api/events' && request.method === 'POST')
         return await handleEvent(request, env);
