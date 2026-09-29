@@ -35,6 +35,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: 25b6606adb037d75556166f348bf48b8
+          package: wrangler@^4
           command: deploy
 
       - name: Token not set yet
