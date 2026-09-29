@@ -221,7 +221,10 @@ async function runSearch(q) {
       const a = document.createElement('a');
       a.className = 'sq-search-card';
       a.href = 'p/' + encodeURIComponent(s.slug) + '.html';
-      a.innerHTML = '<strong>' + esc(s.name) + '</strong><span>' + esc(s.type || 'soul') + '</span>';
+      const d = s.description ? String(s.description) : '';
+      a.innerHTML =
+        '<strong>' + esc(s.name) + '</strong><span>' + esc(s.type || 'soul') + '</span>' +
+        (d ? '<em>' + esc(d.slice(0, 140)) + (d.length > 140 ? '…' : '') + '</em>' : '');
       grid.appendChild(a);
     }
     feed.appendChild(grid);

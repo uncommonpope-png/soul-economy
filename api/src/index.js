@@ -480,9 +480,66 @@ function ftsQuery(q) {
     .join(' ');
 }
 
+const EMBED_MODEL = '@cf/baai/bge-base-en-v1.5';
+let vecCache = { at: 0, rows: [] };
+
+async function loadSoulsVectors(env) {
+  const now = Date.now();
+  if (vecCache.rows.length && now - vecCache.at < 300000) return vecCache.rows;
+  const res = await env.DB.prepare('SELECT slug, name, type, description, embedding FROM soul_vec').all();
+  const rows = [];
+  for (const r of res.results || []) {
+    try {
+      const v = JSON.parse(r.embedding);
+      let n = 0;
+      for (const x of v) n += x * x;
+      rows.push({ slug: r.slug, name: r.name, type: r.type, description: r.description, v, n: Math.sqrt(n) || 1 });
+    } catch (e) {}
+  }
+  vecCache = { at: now, rows };
+  return rows;
+}
+
+function rrfMerge(fts, sem, cap = 12, k = 60) {
+  const m = new Map();
+  const put = (s, rank, src) => {
+    const cur = m.get(s.slug) || { slug: s.slug, name: s.name, type: s.type, description: s.description || '', rrf: 0, via: [] };
+    cur.rrf += 1 / (k + rank + 1);
+    cur.via.push(src);
+    m.set(s.slug, cur);
+  };
+  fts.forEach((s, i) => put(s, i, 'fts'));
+  sem.forEach((s, i) => put(s, i, 'sem'));
+  return [...m.values()]
+    .sort((a, b) => b.rrf - a.rrf)
+    .slice(0, cap)
+    .map((e) => ({ slug: e.slug, name: e.name, type: e.type, description: e.description, via: e.via.join('+') }));
+}
+
+async function semanticSouls(q, env) {
+  if (!env.AI) return [];
+  const [qr, rows] = await Promise.all([env.AI.run(EMBED_MODEL, { text: q }), loadSoulsVectors(env)]);
+  const qv = qr && qr.data && qr.data[0];
+  if (!Array.isArray(qv) || !rows.length) return [];
+  let qn = 0;
+  for (const x of qv) qn += x * x;
+  qn = Math.sqrt(qn) || 1;
+  const scored = [];
+  for (const r of rows) {
+    let d = 0;
+    const len = Math.min(qv.length, r.v.length);
+    for (let i = 0; i < len; i++) d += qv[i] * r.v[i];
+    const cos = d / (qn * r.n);
+    if (cos > 0.35) scored.push({ slug: r.slug, name: r.name, type: r.type, description: r.description, cos });
+  }
+  scored.sort((a, b) => b.cos - a.cos);
+  return scored.slice(0, 12);
+}
+
 async function handleSearch(url, env) {
   const q = (url.searchParams.get('q') || '').trim().slice(0, 100);
   if (!q) return json({ posts: [], souls: [] });
+  const semPromise = semanticSouls(q, env).catch(() => []);
   let posts = [];
   let souls = [];
   try {
@@ -501,18 +558,23 @@ async function handleSearch(url, env) {
     posts = [];
   }
   if (!posts.length) {
-    const like = `%${q.replace(/[%_]/g, ' ')}%`;
-    const res = await env.DB.prepare(
-      `${POST_SELECT} WHERE p.deleted = 0 AND p.parent_id IS NULL AND p.content LIKE ?
-       ORDER BY p.created_at DESC LIMIT 30`
-    )
-      .bind(like)
-      .all();
-    posts = res.results || [];
+    try {
+      // instr() instead of LIKE: D1 rejects LIKE patterns above a tiny length
+      // ("LIKE or GLOB pattern too complex" ~55 chars) — instr has no pattern limit.
+      const res = await env.DB.prepare(
+        `${POST_SELECT} WHERE p.deleted = 0 AND p.parent_id IS NULL AND instr(lower(p.content), lower(?)) > 0
+         ORDER BY p.created_at DESC LIMIT 30`
+      )
+        .bind(q)
+        .all();
+      posts = res.results || [];
+    } catch (e) {
+      posts = [];
+    }
   }
   try {
     const sr = await env.DB.prepare(
-      `SELECT slug, name, type FROM souls_fts WHERE souls_fts MATCH ? ORDER BY rank LIMIT 12`
+      `SELECT slug, name, type, description FROM souls_fts WHERE souls_fts MATCH ? ORDER BY rank LIMIT 12`
     )
       .bind(ftsQuery(q))
       .all();
@@ -520,7 +582,9 @@ async function handleSearch(url, env) {
   } catch (e) {
     souls = [];
   }
-  return json({ posts, souls });
+  const sem = await semPromise;
+  if (sem.length) souls = rrfMerge(souls, sem);
+  return json({ posts, souls, hybrid: sem.length > 0 });
 }
 
 async function handleHit(request, env) {
