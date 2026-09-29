@@ -3,6 +3,9 @@ main = "api/src/index.js"
 compatibility_date = "2026-09-01"
 
 # One origin: static site (free & unlimited) + /api/* (Square API) on the same worker.
+[ai]
+binding = "AI"
+
 [assets]
 directory = "./"
 binding = "ASSETS"

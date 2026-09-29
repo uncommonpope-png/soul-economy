@@ -81,6 +81,17 @@ h1{font-size:2rem;line-height:1.15;margin-bottom:10px}
 .meta .row b{color:var(--text);font-weight:600}
 .meta ul{margin:6px 0 10px 18px;color:var(--gray);font-size:.84rem;line-height:1.8}
 .meta pre{font-family:ui-monospace,Consolas,monospace;font-size:.78rem;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:12px;margin-top:6px;white-space:pre-wrap;color:#9be8ff;line-height:1.7}
+.ask-log{max-height:230px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;margin:12px 0;padding:12px;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.06);border-radius:12px;scroll-behavior:smooth}
+.ask-msg{font-size:.88rem;line-height:1.6;padding:8px 13px;border-radius:13px;max-width:92%;white-space:pre-wrap}
+.ask-msg.you{align-self:flex-end;background:rgba(139,92,246,.18);border:1px solid rgba(139,92,246,.32);color:#d9ccff}
+.ask-msg.soul{align-self:flex-start;background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.22);color:#c8f4ff}
+.ask-msg.think{align-self:flex-start;color:var(--muted);font-style:italic;border-color:transparent;background:transparent;padding-left:2px}
+.ask-form{display:flex;gap:8px}
+.ask-form input{flex:1;padding:12px 16px;border-radius:30px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:#fff;font-size:.9rem;outline:none;font-family:inherit}
+.ask-form input:focus{border-color:var(--cyan);box-shadow:0 0 14px rgba(0,212,255,.15)}
+.ask-form .btn{padding:12px 22px;cursor:pointer}
+.ask-form .btn:disabled{opacity:.5;cursor:wait}
+.ask-note{font-size:.7rem;color:var(--muted);margin-top:10px}
 @media(max-width:640px){.hero .img,.hero .imgph{width:100%;height:auto;aspect-ratio:1/1}h1{font-size:1.5rem}}
 </style>
 </head>
@@ -116,7 +127,65 @@ h1{font-size:2rem;line-height:1.15;margin-bottom:10px}
     <div class="row"><b>Install:</b><pre>Load downloads/soul-gun-open-design.md</pre></div>
     <div class="row"><b>Author:</b> sugarforever · <b>License:</b> MIT · <b>Version:</b> v1.0.0 · <b>Size:</b> 9 KB</div>
   </div>
+  <div class="meta" id="askBox">
+    <h2>✦ ASK THIS SOUL</h2>
+    <div class="row">Speak with Open Design — answers come from the edge, in its own voice.</div>
+    <div class="ask-log" id="askLog"><div class="ask-msg soul">I am Open Design. Ask me anything — who you are, what I hold, where we go.</div></div>
+    <form class="ask-form" id="askForm">
+      <input id="askQ" maxlength="400" placeholder="Ask Open Design…" autocomplete="off" />
+      <button class="btn btn-buy" id="askBtn" type="submit">Ask</button>
+    </form>
+    <div class="ask-note" id="askNote">Workers AI at the edge · Open Design keeps its voice · 30 asks / hour</div>
+  </div>
 </div>
 <script defer src="../js/shop.js"></script>
+<script>
+(function(){
+  var SOUL = {"name":"Open Design","slug":"open-design","desc":"Branded DESIGN.md + templates + functional skills for AI workflows"};
+  var EDGE = 'https://soul-economy.uncommonpope.workers.dev';
+  var form = document.getElementById('askForm'), q = document.getElementById('askQ'),
+      log = document.getElementById('askLog'), btn = document.getElementById('askBtn'),
+      note = document.getElementById('askNote');
+  if (!form) return;
+  function add(text, who){
+    var d = document.createElement('div');
+    d.className = 'ask-msg ' + who;
+    d.textContent = text;
+    log.appendChild(d);
+    log.scrollTop = log.scrollHeight;
+    return d;
+  }
+  form.addEventListener('submit', async function(e){
+    e.preventDefault();
+    var question = (q.value || '').trim();
+    if (!question || btn.disabled) return;
+    add(question, 'you');
+    q.value = '';
+    btn.disabled = true;
+    var think = add('the soul is thinking…', 'think');
+    note.textContent = 'asking ' + SOUL.name + ' at the edge…';
+    var res = null;
+    for (var i = 0; i < 2 && !res; i++) {
+      try {
+        var r = await fetch(i === 0 ? '/api/ask' : EDGE + '/api/ask', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ slug: SOUL.slug, name: SOUL.name, desc: SOUL.desc, q: question })
+        });
+        if (r.ok) res = await r.json();
+      } catch (e2) { /* try next origin */ }
+    }
+    think.remove();
+    btn.disabled = false;
+    if (res && res.ok && res.answer) {
+      add(res.answer, 'soul');
+      note.textContent = 'Workers AI at the edge · ' + SOUL.name + ' keeps its voice · 30 asks / hour';
+    } else {
+      add('The edge is quiet right now — breathe, then ask again.', 'soul');
+      note.textContent = res && res.error ? 'status: ' + res.error : 'edge unreachable';
+    }
+  });
+})();
+</script>
 </body>
 </html>

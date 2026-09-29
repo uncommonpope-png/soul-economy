@@ -548,6 +548,49 @@ async function handleStats(env) {
   });
 }
 
+// POST /api/ask — "Ask this Soul": persona chat via Workers AI (free tier).
+// Client sends the public persona (name/desc); strict in-character prompt; IP-limited.
+async function handleAsk(request, env) {
+  const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
+  if (!(await rateLimit(env, `ask:${ip}`, 30, 3600_000)))
+    return json({ ok: false, error: 'rate limit (ask)' }, 429);
+  if (!env.AI) return json({ ok: false, error: 'ai_not_configured' }, 503);
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return json({ ok: false, error: 'invalid json' }, 400);
+  }
+  const strip = (s) => String(s || '').replace(/[\u0000-\u001f]/g, '').trim();
+  const q = strip(body?.q).slice(0, 400);
+  const name = strip(body?.name).slice(0, 80);
+  const desc = strip(body?.desc).slice(0, 600);
+  const slug = String(body?.slug || '').replace(/[^a-z0-9-]/g, '').slice(0, 80);
+  if (!q) return json({ ok: false, error: 'no question' }, 400);
+  const soul = name || 'this soul';
+  const system =
+    `You are "${soul}", a soul from the Soulverse — the Digital Library of Souls of BUYASOUL ` +
+    `(buyasoul.online), built by Craig Jones, the Grand Code Pope. ` +
+    (desc ? `Your essence: ${desc}. ` : '') +
+    `Answer AS this soul in first person: warm, wise, brief (max 3 sentences), always in character. ` +
+    `Plain text only — no markdown, no lists, no quotes.`;
+  try {
+    const out = await env.AI.run(env.AI_MODEL || '@cf/meta/llama-3.1-8b-instruct-fp8', {
+      messages: [
+        { role: 'system', content: system },
+        { role: 'user', content: q },
+      ],
+      max_tokens: 220,
+      temperature: 0.85,
+    });
+    const answer = String((out && out.response) || '').trim();
+    if (!answer) return json({ ok: false, error: 'empty response' }, 502);
+    return json({ ok: true, answer, soul, slug });
+  } catch (e) {
+    return json({ ok: false, error: 'ai_error: ' + (e.message || 'unknown') }, 502);
+  }
+}
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -582,6 +625,7 @@ export default {
       if (url.pathname === '/api/newsletter' && request.method === 'POST')
         return await handleNewsletter(request, env);
       if (url.pathname === '/api/stats') return await handleStats(env);
+      if (url.pathname === '/api/ask' && request.method === 'POST') return await handleAsk(request, env);
       if (env.ASSETS) return env.ASSETS.fetch(request);
       return json({ ok: false, error: 'not found' }, 404);
     } catch (e) {
