@@ -1,0 +1,42 @@
+name: Deploy to Cloudflare Edge
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: api/package-lock.json
+
+      - name: Install API deps
+        run: npm ci
+        working-directory: api
+
+      - name: Check for Cloudflare token
+        id: check
+        env:
+          CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: echo "present=$([ -n \"$CF_TOKEN\" ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+
+      - name: Deploy (site + API on one origin)
+        if: steps.check.outputs.present == 'true'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: 25b6606adb037d75556166f348bf48b8
+          command: deploy
+
+      - name: Token not set yet
+        if: steps.check.outputs.present != 'true'
+        run: echo "::notice::CLOUDFLARE_API_TOKEN repo secret not set — deploy skipped. Add it in Settings → Secrets → Actions to enable edge deploys."

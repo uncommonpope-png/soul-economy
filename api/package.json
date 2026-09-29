@@ -1,0 +1,16 @@
+{
+  "name": "soul-economy-api",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "db:apply": "wrangler d1 execute soul-economy --remote --file=./schema.sql",
+    "db:local": "wrangler d1 execute soul-economy --local --file=./schema.sql"
+  },
+  "dependencies": {
+    "nostr-tools": "^2.10.4"
+  },
+  "devDependencies": {
+    "wrangler": "^4.0.0"
+  }
+}

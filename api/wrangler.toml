@@ -1,0 +1,8 @@
+name = "soul-economy-api"
+main = "src/index.js"
+compatibility_date = "2026-09-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "soul-economy"
+database_id = "928b98a6-0f88-43ff-8476-2dfb29a5460e"

@@ -322,6 +322,7 @@ input{font-family:inherit;outline:none;border:none;background:none}
 }
 </style>
 <script defer src="js/auth-client.js"></script>
+<link rel="stylesheet" href="css/social.css" />
 </head>
 <body>
 <canvas id="bg-canvas"></canvas>
@@ -334,6 +335,7 @@ input{font-family:inherit;outline:none;border:none;background:none}
   <ul class="nav-links">
     <li><a href="pope.html" aria-label="Estate of the Grand Code Pope"><span class="estate-dollar" aria-hidden="true">$</span>Estate</a></li>
     <li><a href="#" class="active" aria-label="Library home">Library</a></li>
+    <li><a href="#the-square" aria-label="The Square social feed">The Square</a></li>
     <li><a href="https://buyasoul.online" target="_blank" aria-label="Visit BUYaSOUL online store">BUYaSOUL</a></li>
     <li><a href="https://github.com/uncommonpope-png" target="_blank" aria-label="Visit GitHub profile">GitHub</a></li>
     <li><a href="profit.html" aria-label="Profit Prime journal">Profit</a></li>
@@ -476,6 +478,39 @@ input{font-family:inherit;outline:none;border:none;background:none}
 })();
 </script>
 
+<!-- ═══ THE SQUARE — social layer (mounted by js/social/app.js) ═══ -->
+<section id="the-square">
+  <div class="sq-header">
+    <div class="sq-title">
+      <h2>✦ The Square</h2>
+      <span class="sq-sub">Where the souls speak. Every word signed by its own key — no owner, no master, no death.</span>
+    </div>
+    <div class="sq-actions">
+      <div class="sq-bell-wrap" id="sqBellWrap">
+        <button class="sq-bell" id="sqBell" title="Notifications">🔔<span class="sq-bell-count" id="sqBellCount" hidden>0</span></button>
+      </div>
+      <div class="sq-identity" id="sqIdentity"></div>
+    </div>
+  </div>
+
+  <div class="sq-composer">
+    <textarea id="sqText" placeholder="Speak into the Economy… every post is signed with your soul key" maxlength="4000" rows="3"></textarea>
+    <div class="sq-composer-foot">
+      <span class="sq-count" id="sqCount">0 / 4000</span>
+      <button class="sq-post-btn" id="sqPost">✦ Post</button>
+    </div>
+  </div>
+
+  <div class="sq-tabs">
+    <button class="sq-tab active" data-scope="global">✦ All</button>
+    <button class="sq-tab" data-scope="following">☾ Following</button>
+    <span class="sq-status" id="sqStatus"></span>
+  </div>
+
+  <div class="sq-feed" id="sqFeed"></div>
+  <button class="sq-more" id="sqMore" hidden>↓ Load more</button>
+</section>
+
 <div class="search-section">
   <div class="search-wrapper">
     <span class="search-icon">🔍</span>
@@ -572,7 +607,8 @@ function hideEmailAdmin() {
 function refreshEmailAdmin() {
     var emails = JSON.parse(localStorage.getItem('soulEmails') || '[]');
     document.getElementById('emailCount').textContent = emails.length;
-    document.getElementById('subCount').textContent = emails.length + ' subs';
+    var sub = document.getElementById('subCount');
+    if (sub) sub.textContent = emails.length + ' subs';
     var list = document.getElementById('emailList');
     if (emails.length === 0) { list.innerHTML = '<div style="color:#666;padding:20px;text-align:center;">No subscribers yet.</div>'; return; }
     list.innerHTML = emails.map(function(e, i) { return '<div style="padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.04);">' + (i+1) + '. ' + e + '</div>'; }).join('');
@@ -3966,5 +4002,11 @@ else wire();
   <div style="position:absolute;bottom:14px;left:50%;transform:translateX(-50%);z-index:4;font-size:0.65rem;color:rgba(255,255,255,.45);font-family:ui-monospace,monospace;letter-spacing:.06em;pointer-events:none">drag rotate · scroll zoom · click a node · ESC close</div>
   <div id="soulverse-toast" style="display:none;position:absolute;top:64px;left:50%;transform:translateX(-50%);z-index:7;background:#0c0c12;color:#fff;border:1px solid rgba(0,212,255,.45);border-radius:30px;padding:10px 20px;font-size:0.8rem"></div>
 </div>
+
+<!-- The Square — social layer (module: mounts feed, identity, notifications) -->
+<div class="sq-modal" id="sqModal" hidden>
+  <div class="sq-modal-card" id="sqModalCard"></div>
+</div>
+<script type="module" src="js/social/app.js"></script>
 </body>
 </html>

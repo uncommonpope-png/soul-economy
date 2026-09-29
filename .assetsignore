@@ -1,0 +1,9 @@
+.git
+.github
+.wrangler
+node_modules
+api/node_modules
+.dev.vars
+.env*
+# 33.5MB exceeds the 25MiB per-asset limit — served via _redirects to the GH Pages mirror (moves to R2 in Phase 2)
+downloads/soul-scribe-v1.4.0.zip
