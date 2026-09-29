@@ -31,10 +31,22 @@ const outDir = path.join(ROOT, 'p');
 fs.mkdirSync(outDir, { recursive: true });
 
 const seen = new Set();
+const existing = fs.readdirSync(outDir).filter((f) => f.endsWith('.html'));
 let pages = 0;
 for (const item of catalog) {
   let slug = slugify(item.name || item.file || 'soul');
-  while (seen.has(slug)) slug += '-' + Math.random().toString(36).slice(2, 6);
+  // Dedup — MUST mirror gen-fts-import.mjs so slugs match souls_fts (feed links):
+  // prefer an existing collision-suffixed page (stable across runs), else
+  // deterministic -2, -3… Never random — random suffixes orphans a file per run.
+  if (seen.has(slug) || !existing.includes(slug + '.html')) {
+    const alt = existing.find((f) => f.startsWith(slug + '-') && !seen.has(f.replace(/\.html$/, '')));
+    if (alt) slug = alt.replace(/\.html$/, '');
+    else {
+      let n = 2;
+      while (seen.has(slug + '-' + n) || existing.includes(slug + '-' + n + '.html')) n++;
+      slug = slug + '-' + n;
+    }
+  }
   seen.add(slug);
 
   const suggested = item.suggested || (item.type === 'pack' || item.type === 'soul' ? 199 : 99);
