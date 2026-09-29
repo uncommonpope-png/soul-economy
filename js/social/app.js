@@ -6,7 +6,7 @@ import { getPubkey, exportNsec } from './auth.js';
 import { nip19, hexToBytes } from './nostr.js';
 import {
   state, loadFeed, submitPost, updateCount, setSession, renderIdentity,
-  openModal, closeModal, toggleNotifyPop, pollNotifications, requireSignIn, esc, shortPk,
+  openModal, closeModal, toggleNotifyPop, pollNotifications, requireSignIn, esc, shortPk, postCard,
 } from './feed.js';
 
 const $ = (id) => document.getElementById(id);
@@ -190,8 +190,61 @@ function signOut() {
 }
 
 // ─── wire the page ──────────────────────────────────────────────────────────
+async function runSearch(q) {
+  const feed = $('sqFeed');
+  if (!feed) return;
+  feed.innerHTML = '<div class="sq-empty">searching the Economy…</div>';
+  let data;
+  try {
+    data = await api.search(q);
+  } catch (e) {
+    feed.innerHTML = '<div class="sq-empty">search failed — try again</div>';
+    return;
+  }
+  const souls = data.souls || [];
+  const posts = data.posts || [];
+  $('sqMore').hidden = true;
+  if (!souls.length && !posts.length) {
+    feed.innerHTML = '<div class="sq-empty">no souls answered “' + esc(q) + '”</div>';
+    return;
+  }
+  feed.innerHTML = '';
+  if (souls.length) {
+    const h = document.createElement('div');
+    h.className = 'sq-search-head';
+    h.textContent = '◈ SOULS';
+    feed.appendChild(h);
+    const grid = document.createElement('div');
+    grid.className = 'sq-search-grid';
+    for (const s of souls) {
+      const a = document.createElement('a');
+      a.className = 'sq-search-card';
+      a.href = 'p/' + encodeURIComponent(s.slug) + '.html';
+      a.innerHTML = '<strong>' + esc(s.name) + '</strong><span>' + esc(s.type || 'soul') + '</span>';
+      grid.appendChild(a);
+    }
+    feed.appendChild(grid);
+  }
+  if (posts.length) {
+    const h = document.createElement('div');
+    h.className = 'sq-search-head';
+    h.textContent = '◈ WORDS';
+    feed.appendChild(h);
+    posts.forEach((p, i) => feed.appendChild(postCard(p, i)));
+  }
+}
+
 async function wire() {
   await initBase();
+
+  try {
+    fetch('/api/hit', {
+      method: 'POST',
+      keepalive: true,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ path: location.pathname }),
+    }).catch(() => {});
+  } catch (e) { /* non-fatal */ }
   // legacy nav Sign In / Sign Out → real soul identity
   window.loginWithGitHub = () => (state.me ? openProfileSelf() : signInModal());
   window.__soulSignIn = signInModal;
@@ -217,9 +270,28 @@ async function wire() {
       document.querySelectorAll('.sq-tab').forEach((x) => x.classList.remove('active'));
       t.classList.add('active');
       state.scope = t.dataset.scope || 'global';
+      const sq = $('sqSearch');
+      if (sq) sq.value = '';
       loadFeed();
     };
   });
+
+  // square search (D1 FTS over souls + posts)
+  const sq = $('sqSearch');
+  if (sq) {
+    let debounce = 0;
+    sq.addEventListener('input', () => {
+      clearTimeout(debounce);
+      const q = sq.value.trim();
+      debounce = setTimeout(() => {
+        if (!q) { loadFeed(); return; }
+        runSearch(q);
+      }, 300);
+    });
+    sq.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') { sq.value = ''; loadFeed(); }
+    });
+  }
 
   // load more
   const more = $('sqMore');

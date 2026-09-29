@@ -504,6 +504,7 @@ input{font-family:inherit;outline:none;border:none;background:none}
   <div class="sq-tabs">
     <button class="sq-tab active" data-scope="global">✦ All</button>
     <button class="sq-tab" data-scope="following">☾ Following</button>
+    <input id="sqSearch" class="sq-search" type="search" placeholder="Search souls & posts…" maxlength="80" />
     <span class="sq-status" id="sqStatus"></span>
   </div>
 
@@ -1281,7 +1282,7 @@ function subscribeEmail(e) {
     document.getElementById('emailStatus').innerHTML = '<span class="success">✦ Subscribed, ' + email.split('@')[0] + '! You\'re in the Collective. <span style="color:#888;font-size:0.75rem;">(' + emails.length + ' souls)</span></span>';
     document.getElementById('emailInput').value = '';
     // Forward to Telegram if bot is active
-    try { fetch('https://api.telegram.org/bot/sendMessage?chat_id=@Profittax_bot&text=' + encodeURIComponent('New subscriber: ' + email)); } catch(e) {}
+    try { fetch('/api/newsletter', { method: 'POST', keepalive: true, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: email, source: 'site' }) }); } catch(e) {}
     return false;
 }
 

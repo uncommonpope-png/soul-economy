@@ -8,6 +8,10 @@ directory = "./"
 binding = "ASSETS"
 run_worker_first = ["/api/*"]
 
+[[kv_namespaces]]
+binding = "KV"
+id = "859601a647334e7d91f4cd59f32b61fa"
+
 [[d1_databases]]
 binding = "DB"
 database_name = "soul-economy"

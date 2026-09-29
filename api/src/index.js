@@ -175,6 +175,10 @@ async function handleEvent(request, env) {
       .run();
 
     if (res.meta?.changes > 0) {
+      await env.DB.prepare('INSERT INTO posts_fts (doc_id, content, author) VALUES (?,?,?)')
+        .bind(ev.id, (ev.content || '').slice(0, 8000), ev.pubkey)
+        .run()
+        .catch(() => {});
       let parentAuthor = null;
       if (parent) {
         await env.DB.prepare('UPDATE posts SET reply_count = reply_count + 1 WHERE id = ?')
@@ -444,17 +448,100 @@ async function handleFollows(url, env) {
   return json({ followees: (res.results || []).map((r) => r.followee) });
 }
 
+function ftsQuery(q) {
+  return q
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((t) => '"' + t.replace(/"/g, '""') + '"*')
+    .join(' ');
+}
+
 async function handleSearch(url, env) {
   const q = (url.searchParams.get('q') || '').trim().slice(0, 100);
-  if (!q) return json({ posts: [] });
-  const like = `%${q.replace(/[%_]/g, ' ')}%`;
-  const res = await env.DB.prepare(
-    `${POST_SELECT} WHERE p.deleted = 0 AND p.parent_id IS NULL AND p.content LIKE ?
-     ORDER BY p.created_at DESC LIMIT 30`
+  if (!q) return json({ posts: [], souls: [] });
+  let posts = [];
+  let souls = [];
+  try {
+    const pr = await env.DB.prepare(
+      `SELECT p.id, p.pubkey, p.content, p.created_at, p.soul_slug, p.reply_count, p.like_count, u.name, u.display_name, u.picture
+       FROM posts_fts f
+       JOIN posts p ON p.id = f.doc_id
+       LEFT JOIN users u ON u.pubkey = p.pubkey
+       WHERE f MATCH ? AND p.deleted = 0 AND p.parent_id IS NULL
+       ORDER BY f.rank LIMIT 30`
+    )
+      .bind(ftsQuery(q))
+      .all();
+    posts = pr.results || [];
+  } catch (e) {
+    posts = [];
+  }
+  if (!posts.length) {
+    const like = `%${q.replace(/[%_]/g, ' ')}%`;
+    const res = await env.DB.prepare(
+      `${POST_SELECT} WHERE p.deleted = 0 AND p.parent_id IS NULL AND p.content LIKE ?
+       ORDER BY p.created_at DESC LIMIT 30`
+    )
+      .bind(like)
+      .all();
+    posts = res.results || [];
+  }
+  try {
+    const sr = await env.DB.prepare(
+      `SELECT slug, name, type FROM souls_fts WHERE souls_fts MATCH ? ORDER BY rank LIMIT 12`
+    )
+      .bind(ftsQuery(q))
+      .all();
+    souls = sr.results || [];
+  } catch (e) {
+    souls = [];
+  }
+  return json({ posts, souls });
+}
+
+async function handleHit(request, env) {
+  let path = '/';
+  try {
+    path = String((await request.json()).path || '/').slice(0, 200);
+  } catch (e) {}
+  if (!path.startsWith('/')) path = '/' + path;
+  const day = new Date().toISOString().slice(0, 10);
+  await env.DB.prepare(
+    'INSERT INTO page_views (day, path, hits) VALUES (?,?,1) ON CONFLICT(day,path) DO UPDATE SET hits = hits + 1'
   )
-    .bind(like)
-    .all();
-  return json({ posts: res.results || [] });
+    .bind(day, path)
+    .run();
+  return json({ ok: true });
+}
+
+async function handleNewsletter(request, env) {
+  let email = '';
+  try {
+    email = String((await request.json()).email || '').trim().toLowerCase();
+  } catch (e) {}
+  if (email.length > 120 || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email))
+    return json({ ok: false, error: 'invalid email' }, 400);
+  const res = await env.DB.prepare(
+    'INSERT OR IGNORE INTO subscribers (email, created_at, source) VALUES (?,?,?)'
+  )
+    .bind(email, Date.now(), 'site')
+    .run();
+  return json({ ok: true, dup: !(res.meta?.changes > 0) });
+}
+
+async function handleStats(env) {
+  const byDay = await env.DB.prepare(
+    'SELECT day, SUM(hits) AS hits FROM page_views GROUP BY day ORDER BY day DESC LIMIT 30'
+  ).all();
+  const total = await env.DB.prepare('SELECT COALESCE(SUM(hits),0) AS hits FROM page_views').first();
+  const subs = await env.DB.prepare('SELECT COUNT(*) AS n FROM subscribers').first();
+  const posts = await env.DB.prepare('SELECT COUNT(*) AS n FROM posts WHERE deleted = 0').first();
+  return json({
+    totalViews: (total && total.hits) || 0,
+    subscribers: (subs && subs.n) || 0,
+    posts: (posts && posts.n) || 0,
+    byDay: byDay.results || [],
+  });
 }
 
 export default {
@@ -473,6 +560,10 @@ export default {
       if (url.pathname === '/api/notify/read' && request.method === 'POST')
         return await handleNotifyRead(request, env, url);
       if (url.pathname === '/api/search') return await handleSearch(url, env);
+      if (url.pathname === '/api/hit' && request.method === 'POST') return await handleHit(request, env);
+      if (url.pathname === '/api/newsletter' && request.method === 'POST')
+        return await handleNewsletter(request, env);
+      if (url.pathname === '/api/stats') return await handleStats(env);
       if (env.ASSETS) return env.ASSETS.fetch(request);
       return json({ ok: false, error: 'not found' }, 404);
     } catch (e) {
