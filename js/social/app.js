@@ -7,6 +7,7 @@ import { nip19, hexToBytes } from './nostr.js';
 import {
   state, loadFeed, submitPost, updateCount, setSession, renderIdentity,
   openModal, closeModal, toggleNotifyPop, pollNotifications, requireSignIn, esc, shortPk, postCard,
+  startFeedLive,
 } from './feed.js';
 
 const $ = (id) => document.getElementById(id);
@@ -322,6 +323,7 @@ async function wire() {
   }
 
   loadFeed();
+  startFeedLive();
   if (state.me) pollNotifications();
 }
 

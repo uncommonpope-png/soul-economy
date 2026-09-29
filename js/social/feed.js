@@ -143,6 +143,66 @@ function renderEmpty(msg) {
   feedEl.appendChild(d);
 }
 
+// ─── realtime (edge only) ───────────────────────────────────────────────────
+// Open feed tabs listen on the FeedRoom DO; a new post shows a refresh pill.
+// Local static / GH Pages origins skip it (no backend there) — zero console noise.
+let liveStarted = false;
+let liveTries = 0;
+export function startFeedLive() {
+  if (liveStarted) return;
+  if (typeof location === 'undefined' || !location.hostname.endsWith('.workers.dev')) return;
+  liveStarted = true;
+  const connect = () => {
+    let ws;
+    try {
+      ws = new WebSocket((location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host + '/api/feed/ws');
+    } catch (e) {
+      return;
+    }
+    ws.onopen = () => {
+      liveTries = 0;
+    };
+    ws.onmessage = (ev) => {
+      let m;
+      try {
+        m = JSON.parse(ev.data);
+      } catch (e) {
+        return;
+      }
+      if (m && m.type === 'feed' && m.action === 'new') {
+        if (m.pubkey && m.pubkey === state.me) return; // own post already refreshed
+        showNewPill();
+      }
+    };
+    ws.onerror = () => {
+      try {
+        ws.close();
+      } catch (e) {}
+    };
+    ws.onclose = () => {
+      if (liveTries++ < 5) setTimeout(connect, 2000 + liveTries * 1500);
+    };
+  };
+  connect();
+}
+
+function showNewPill() {
+  const feedEl = $('sqFeed');
+  if (!feedEl || $('sqNewPill')) return;
+  const pill = document.createElement('button');
+  pill.id = 'sqNewPill';
+  pill.type = 'button';
+  pill.textContent = '✦ a soul just spoke — tap to refresh';
+  pill.style.cssText =
+    'display:block;width:100%;margin:8px 0;padding:10px;font:700 .8rem inherit;letter-spacing:.04em;' +
+    'color:#00D4FF;background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.35);border-radius:30px;cursor:pointer';
+  pill.onclick = () => {
+    pill.remove();
+    loadFeed();
+  };
+  feedEl.prepend(pill);
+}
+
 // ─── post card ──────────────────────────────────────────────────────────────
 export function postCard(p, index = 0) {
   const art = document.createElement('article');

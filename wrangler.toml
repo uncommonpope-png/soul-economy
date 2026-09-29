@@ -19,9 +19,17 @@ id = "859601a647334e7d91f4cd59f32b61fa"
 name = "ROOM"
 class_name = "FamilyRoom"
 
+[[durable_objects.bindings]]
+name = "FEEDROOM"
+class_name = "FeedRoom"
+
 [[migrations]]
 tag = "v1"
 new_sqlite_classes = ["FamilyRoom"]
+
+[[migrations]]
+tag = "v2"
+new_sqlite_classes = ["FeedRoom"]
 
 [[d1_databases]]
 binding = "DB"

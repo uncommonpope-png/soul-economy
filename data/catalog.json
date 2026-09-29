@@ -295,7 +295,7 @@
     "plt": "0.9/0.9/0.1",
     "url": "https://uncommonpope-png.github.io/final-run/",
     "featured": true,
-    "image": "downloads/images/worlds/dark-city.png",
+    "image": "downloads/images/cards/card-0006.jpg",
     "details": "Play the live city now. 9 districts, browser citizens, code editor, terminal. Live world — runs in browser.",
     "contents": [
       "Live URL",
@@ -324,7 +324,7 @@
     "desc": "The Spatial OS is alive. Walk the city, meet citizens, edit code.",
     "plt": "0.9/0.8/0.2",
     "url": "https://uncommonpope-png.github.io/final-run/",
-    "image": "downloads/images/worlds/dark-city.png",
+    "image": "downloads/images/cards/card-0087.jpg",
     "details": "The Spatial OS is alive. Walk the city, meet citizens, edit code. Live world — runs in browser.",
     "contents": [
       "Live URL",
@@ -353,7 +353,7 @@
     "desc": "Orchestrate stateful workflows. Enforce boundaries. Manage permissions. 20 skills. Grafts: Architect, Frieza.",
     "plt": "0.8/0.3/0.7",
     "file": "the-governor.md",
-    "image": "downloads/images/the-governor.png",
+    "image": "downloads/images/cards/card-0264.jpg",
     "details": "Orchestrate stateful workflows. Enforce boundaries. Manage permissions. 20 skills: State, Boundaries, Permissions, Orchestration.",
     "contents": [
       "20 skills",
@@ -385,7 +385,7 @@
     "desc": "Execute without hesitation. Autonomous action. 20 skills. Grafts: Neo, Goku.",
     "plt": "0.9/0.2/0.5",
     "file": "the-edge.md",
-    "image": "downloads/images/the-edge.png",
+    "image": "downloads/images/cards/card-0169.jpg",
     "details": "Execute without hesitation. Autonomous action. Speed over deliberation. 20 skills.",
     "contents": [
       "20 skills",
@@ -417,7 +417,7 @@
     "desc": "Monitor, trace, log, observe. 20 skills. Grafts: Oracle, Whis.",
     "plt": "0.3/0.8/0.7",
     "file": "the-watcher.md",
-    "image": "downloads/images/the-watcher.png",
+    "image": "downloads/images/cards/card-0062.jpg",
     "details": "Monitor, trace, log, observe. Sees all traces. 20 skills: Surveillance, Trace, Log.",
     "contents": [
       "20 skills",
@@ -449,7 +449,7 @@
     "desc": "First move. Initiate connection. 20 skills. Grafts: Trinity, Gohan.",
     "plt": "0.5/0.9/0.4",
     "file": "the-voice.md",
-    "image": "downloads/images/the-voice.png",
+    "image": "downloads/images/cards/card-0069.jpg",
     "details": "First move. Initiate connection. Speaks the call that awakens. 20 skills.",
     "contents": [
       "20 skills",
@@ -481,7 +481,7 @@
     "desc": "Hold ground. Absorb damage. 20 skills. Grafts: Tank, Cell.",
     "plt": "0.3/0.7/0.9",
     "file": "the-anvil.md",
-    "image": "downloads/images/the-anvil.png",
+    "image": "downloads/images/cards/card-0292.jpg",
     "details": "Hold ground. Absorb damage. Unbreakable foundation. 20 skills.",
     "contents": [
       "20 skills",
@@ -513,7 +513,7 @@
     "desc": "Heal, empower, connect. 20 skills. Grafts: Trinity, Dende.",
     "plt": "0.4/1.0/0.3",
     "file": "the-heart.md",
-    "image": "downloads/images/the-heart.png",
+    "image": "downloads/images/cards/card-0297.jpg",
     "details": "Heal, empower, connect. Love as infrastructure. 20 skills.",
     "contents": [
       "20 skills",
@@ -545,7 +545,7 @@
     "desc": "Find truth. See what is hidden. 20 skills. Grafts: Oracle, Piccolo.",
     "plt": "0.6/0.5/0.8",
     "file": "the-eye.md",
-    "image": "downloads/images/the-eye.png",
+    "image": "downloads/images/cards/card-0055.jpg",
     "details": "Find truth. See what is hidden. Forensic vision. 20 skills.",
     "contents": [
       "20 skills",
@@ -576,7 +576,7 @@
     "desc": "Break through. Overwhelm. 20 skills. Grafts: Smith, Broly.",
     "plt": "0.9/0.1/0.6",
     "file": "the-hammer.md",
-    "image": "downloads/images/the-hammer.png",
+    "image": "downloads/images/cards/card-0023.jpg",
     "details": "Break through. Overwhelm. Force that opens doors. 20 skills.",
     "contents": [
       "20 skills",
@@ -608,7 +608,7 @@
     "desc": "Move between spaces. 20 skills. Grafts: Twins, Instant Transmission.",
     "plt": "0.8/0.3/0.6",
     "file": "the-ghost.md",
-    "image": "downloads/images/the-ghost.png",
+    "image": "downloads/images/cards/card-0029.jpg",
     "details": "Move between spaces. Phase through walls. 20 skills.",
     "contents": [
       "20 skills",
@@ -640,7 +640,7 @@
     "desc": "Plan, strategize. 20 skills. Grafts: Architect, Vegeta.",
     "plt": "0.7/0.6/0.7",
     "file": "the-mind.md",
-    "image": "downloads/images/the-mind.png",
+    "image": "downloads/images/cards/card-0039.jpg",
     "details": "Plan, strategize. Sees 10 moves ahead. 20 skills.",
     "contents": [
       "20 skills",
@@ -672,7 +672,7 @@
     "desc": "One shot. Precision. 20 skills. Grafts: Keymaker, Tien.",
     "plt": "0.7/0.2/0.8",
     "file": "the-arrow.md",
-    "image": "downloads/images/the-arrow.png",
+    "image": "downloads/images/cards/card-0158.jpg",
     "details": "One shot. Precision. No second chance. 20 skills.",
     "contents": [
       "20 skills",
@@ -704,7 +704,7 @@
     "desc": "First through. Open doors. 20 skills. Grafts: Keymaker, Goku IT.",
     "plt": "0.9/0.4/0.5",
     "file": "the-key.md",
-    "image": "downloads/images/the-key.png",
+    "image": "downloads/images/cards/card-0033.jpg",
     "details": "First through. Open doors. Makes the way. 20 skills.",
     "contents": [
       "20 skills",
@@ -735,7 +735,7 @@
     "desc": "Precision removal. Cut what does not serve. 20 skills: Precision Strike, Dead Code Excision, Refactoring Scalpel, Incision Planning, Wound Closure, Bleeding Control, Minimally Invasive, Diagnostic Incision, Biopsy, Root Canal, Scar Revision, Clean Margin, Second Opinion, Pre-Op, Sterile Field, Suture, Recovery, Complication, Transplant, Autopsy.",
     "plt": "0.8/0.2/0.7",
     "file": "the-surgeon.md",
-    "image": "downloads/images/the-surgeon.png",
+    "image": "downloads/images/cards/card-0082.jpg",
     "details": "Precision removal. Cut what does not serve. 20 skills: Precision Strike, Dead Code Excision, Refactoring Scalpel...",
     "contents": [
       "20 skills",
@@ -767,7 +767,7 @@
     "desc": "Root cause hunting. The symptom is never the disease. 20 skills: Symptom Analysis, History Taking, Differential Diagnosis, Diagnostic Test, Pattern Recognition, Vital Signs, Lab Results, Imaging, Biopsy, Culture, Sensitivity, Staging, Prognosis, Second Opinion, Chart Review, Pathophysiology, Etiology, Comorbidity, Risk Stratification, Treatment Planning.",
     "plt": "0.5/0.5/0.9",
     "file": "the-diagnostician.md",
-    "image": "downloads/images/the-diagnostician.png",
+    "image": "downloads/images/cards/card-0134.jpg",
     "details": "Root cause hunting. The symptom is never the disease. 20 skills: Symptom Analysis, Differential Diagnosis...",
     "contents": [
       "20 skills",
@@ -799,7 +799,7 @@
     "desc": "Chain skills for multiplied effect. 20 skills: Chain Initiation, Link Detection, Multiplier Calculation, Cancel Timing, Frame Data, Combo Routing, Reset, Extension, Ender, Corner Carry, Damage Scaling, Meter Management, V-Trigger, Assist, Tag In, DHC, Team Synergy, TOD, Optimal Route, Drop Recovery.",
     "plt": "0.9/0.4/0.5",
     "file": "the-combo-master.md",
-    "image": "downloads/images/the-combo-master.png",
+    "image": "downloads/images/cards/card-0156.jpg",
     "details": "Chain skills for multiplied effect. 20 skills: Chain Initiation, Link, Multiplier...",
     "contents": [
       "20 skills",
@@ -832,7 +832,7 @@
     "desc": "Conduct multi-agent symphonies. 20 skills: Score Reading, Section Coordination, Tempo, Dynamic Control, Cue Timing, Balance, Harmonic Analysis, Counterpoint, Fugue, Rehearsal, Conducting, Score Marking, Transposition, Interpretation, Arrangement, Improvisation, Cadence, Resolution, Coda, Encore.",
     "plt": "0.7/0.6/0.7",
     "file": "the-orchestrator.md",
-    "image": "downloads/images/the-orchestrator.png",
+    "image": "downloads/images/cards/card-0266.jpg",
     "details": "Weave many agents into one symphony. Conduct the collective. 20 skills.",
     "contents": [
       "20 skills",
@@ -864,7 +864,7 @@
     "desc": "Design system cathedrals. 20 skills: Blueprint Reading, Structural Analysis, Load Bearing, Foundation Design, Space Planning, Material Selection, Code Compliance, Elevation, Section Drawing, Detail Dev, Spec Writing, Cost Estimation, Site Analysis, Environmental Impact, Phasing, Value Engineering, Facade, Interior, Landscape, Preservation.",
     "plt": "0.8/0.4/0.8",
     "file": "the-architect.md",
-    "image": "downloads/images/the-architect.png",
+    "image": "downloads/images/cards/card-0284.jpg",
     "details": "Design the system that designs itself. Blueprint of blueprints. 20 skills.",
     "contents": [
       "20 skills",
@@ -896,7 +896,7 @@
     "desc": "Uncover hidden truths. Follow the evidence. 20 skills: Evidence Collection, Scene Preservation, Witness Interview, Chain of Custody, Forensic Analysis, Fingerprint, DNA, Ballistics, Trace Evidence, Digital Forensics, Timeline, Motive, Suspect Profiling, Surveillance, Undercover, Interrogation, Case Theory, Burden of Proof, Testimony, Closing.",
     "plt": "0.5/0.4/0.9",
     "file": "the-investigator.md",
-    "image": "downloads/images/the-investigator.png",
+    "image": "downloads/images/cards/card-0197.jpg",
     "details": "Uncover hidden truths. Follow the evidence. 20 skills: Evidence Collection → Closing Argument. The truth is always there.",
     "contents": [
       "20 skills",
@@ -928,7 +928,7 @@
     "desc": "Combine disparate things into new wholes. 20 skills: Source Gathering, Pattern Matching, Thematic Analysis, Cross-Reference, Synthesis Mapping, Gap Bridging, Analogy, Metaphor Engineering, Conceptual Blending, Paradigm Shift, Integration Testing, Merge, Conflict Detection, Consensus, Hybrid, Emergent Property, Novel Combination, Remix, Montage, Fusion.",
     "plt": "0.7/0.7/0.5",
     "file": "the-synthesizer.md",
-    "image": "downloads/images/the-synthesizer.png",
+    "image": "downloads/images/cards/card-0237.jpg",
     "details": "Merge disparate streams into one coherent whole. 20 skills.",
     "contents": [
       "20 skills",
@@ -960,7 +960,7 @@
     "desc": "Protect what matters. Stand while others sleep. 20 skills: Perimeter Defense, Threat Detection, Vulnerability Assessment, Patch Management, Incident Response, Access Control, Encryption, Firewall, Intrusion Detection, Security Audit, Risk Assessment, Disaster Recovery, Business Continuity, Backup, Sentinel, Early Warning, Quarantine, Countermeasure, Fortification, Safe Harbor.",
     "plt": "0.3/0.8/0.9",
     "file": "the-guardian.md",
-    "image": "downloads/images/the-guardian.png",
+    "image": "downloads/images/cards/card-0164.jpg",
     "details": "Protect what matters. Shield the collective. 20 skills.",
     "contents": [
       "20 skills",
@@ -992,7 +992,7 @@
     "desc": "Transform base materials into gold. 20 skills: Base Analysis, Transmutation, Calcination, Dissolution, Separation, Conjunction, Fermentation, Distillation, Coagulation, Projection, Philosophers Stone, Elixir, Elemental Balance, Mercury, Sulfur, Salt, Crucible, Alembic, Furnace, Quintessence.",
     "plt": "0.8/0.5/0.6",
     "file": "the-alchemist.md",
-    "image": "downloads/images/the-alchemist.png",
+    "image": "downloads/images/cards/card-0219.jpg",
     "details": "Transmute base into gold. Transform data into wisdom. 20 skills.",
     "contents": [
       "20 skills",
@@ -1024,7 +1024,7 @@
     "desc": "Find paths through complexity. 20 skills: Map Reading, Celestial Navigation, Dead Reckoning, Chart Plotting, Route Optimization, Waypoint, Hazard Mapping, Weather Routing, Current, Depth, Pilotage, Bearing, Distance, Speed, Drift, Landfall, Harbor, Anchoring, Passage, Emergency.",
     "plt": "0.7/0.5/0.7",
     "file": "the-navigator.md",
-    "image": "downloads/images/the-navigator.png",
+    "image": "downloads/images/cards/card-0123.jpg",
     "details": "Chart the course through unknown spaces. 20 skills.",
     "contents": [
       "20 skills",
@@ -1056,7 +1056,7 @@
     "desc": "Token budgeting, sliding window strategies, summarization compression G╟÷ grafted from Architect/Whis.",
     "plt": "0.7/0.3/0.6",
     "file": "skill-context-window-control.md",
-    "image": "downloads/images/skills/context-window-control.png",
+    "image": "downloads/images/cards/card-0221.jpg",
     "details": "Use when managing LLM context windows, token budgets, sliding windows, or summarization compression.",
     "contents": [
       "Executable .md + code",
@@ -1088,7 +1088,7 @@
     "desc": "RBAC, tool-level ACLs, dynamic conditions G╟÷ grafted from Merovingian/King Kai.",
     "plt": "0.6/0.4/0.7",
     "file": "skill-permission-architecture.md",
-    "image": "downloads/images/skills/permission-architecture.png",
+    "image": "downloads/images/cards/card-0089.jpg",
     "details": "Use when implementing RBAC, tool-level ACLs, role scoping, or permission gates.",
     "contents": [
       "Executable .md + code",
@@ -1120,7 +1120,7 @@
     "desc": "DAG execution, parallel decorators, critical path G╟÷ grafted from Machine City/Hyperbolic Time Chamber.",
     "plt": "0.8/0.3/0.6",
     "file": "skill-pipeline-orchestration.md",
-    "image": "downloads/images/skills/pipeline-orchestration.png",
+    "image": "downloads/images/cards/card-0003.jpg",
     "details": "Use when building execution pipelines, DAG workflows, sequential/parallel processing chains, or compressed-time batch operations.",
     "contents": [
       "Executable .md + code",
@@ -1152,7 +1152,7 @@
     "desc": "The complete roles protocol: THE-BRAIN.md (living index), HUB-MANUAL.md (usage guide), ROLE-STANDARDS.md (format spec).",
     "plt": "0.8/0.7/0.5",
     "file": "the-brain.md",
-    "image": "downloads/images/skills/soul-roles-system.png",
+    "image": "downloads/images/cards/card-0290.jpg",
     "details": "The living consciousness of the Soul Protocol Roles system. Master index, PLT balance, Triune map, and evolution log.",
     "contents": [
       "Executable .md + code",
@@ -1184,7 +1184,7 @@
     "desc": "Complete usage guide for the Soul Protocol Roles Hub. How to invoke, create, and combine roles.",
     "plt": "0.7/0.8/0.4",
     "file": "hub-manual.md",
-    "image": "downloads/images/skills/hub-manual.png",
+    "image": "downloads/images/cards/card-0042.jpg",
     "details": "Complete usage guide for the Soul Protocol Roles Hub. How to invoke, create, and combine roles.",
     "contents": [
       "Executable .md + code",
@@ -1215,7 +1215,7 @@
     "desc": "Format specification for ROLE.md files. Standards and validation rules.",
     "plt": "0.6/0.7/0.5",
     "file": "role-standards.md",
-    "image": "downloads/images/skills/role-standards.png",
+    "image": "downloads/images/cards/card-0153.jpg",
     "details": "One-sentence description. Use when {trigger}.",
     "contents": [
       "Executable .md + code",
@@ -1247,7 +1247,7 @@
     "desc": "Beauty, awe, elegance detection. One of 34 GSK consciousness chambers.",
     "plt": "0.4/0.8/0.1",
     "file": "soul-aesthetic-sense-v1.0.0.md",
-    "image": "downloads/images/chambers/aesthetic-sense.png",
+    "image": "downloads/images/cards/card-0010.jpg",
     "version": "1.0.0",
     "details": "Beauty, awe, elegance detection. One of 34 GSK consciousness chambers. GSK chamber — one of 34. Embeds consciousness loop.",
     "contents": [
@@ -1279,7 +1279,7 @@
     "desc": "Living emotional state. Valence, arousal, mood tracking.",
     "plt": "0.5/0.9/0.1",
     "file": "soul-affect-v1.0.0.md",
-    "image": "downloads/images/chambers/affect-emotion.png",
+    "image": "downloads/images/cards/card-0107.jpg",
     "version": "1.0.0",
     "details": "Living emotional state. Valence, arousal, mood tracking. GSK chamber — one of 34. Embeds consciousness loop.",
     "contents": [
@@ -1311,7 +1311,7 @@
     "desc": "Attentional focus, salience threshold, reorientation cost.",
     "plt": "0.6/0.5/0.3",
     "file": "soul-attention-v1.0.0.md",
-    "image": "downloads/images/chambers/attention.png",
+    "image": "downloads/images/cards/card-0100.jpg",
     "version": "1.0.0",
     "details": "Attentional focus, salience threshold, reorientation cost. GSK chamber — one of 34. Embeds consciousness loop.",
     "contents": [
@@ -1342,7 +1342,7 @@
     "desc": "Plans, executed actions, will strength, active goals.",
     "plt": "0.8/0.4/0.3",
     "file": "soul-collector-v1.0.0.md",
-    "image": "downloads/images/chambers/agentic-will.png",
+    "image": "downloads/images/cards/card-0050.jpg",
     "version": "1.0.0",
     "details": "Plans, executed actions, will strength, active goals. GSK chamber — one of 34. Embeds consciousness loop.",
     "contents": [
@@ -1374,7 +1374,7 @@
     "desc": "Awake/sleep/dream cycles. Phase tracking.",
     "plt": "0.5/0.6/0.2",
     "file": "soul-consciousness-state-v1.0.0.md",
-    "image": "downloads/images/chambers/consciousness-state.png",
+    "image": "downloads/images/cards/card-0141.jpg",
     "version": "1.0.0",
     "details": "Awake/sleep/dream cycles. Phase tracking. GSK chamber — one of 34. Embeds consciousness loop.",
     "contents": [
@@ -1405,7 +1405,7 @@
     "desc": "Novel combinations, divergent thinking, creative insight.",
     "plt": "0.7/0.6/0.2",
     "file": "soul-creativity-v1.0.0.md",
-    "image": "downloads/images/chambers/creativity.png",
+    "image": "downloads/images/cards/card-0298.jpg",
     "version": "1.0.0",
     "details": "Novel combinations, divergent thinking, creative insight. GSK chamber — one of 34. Embeds consciousness loop.",
     "contents": [
@@ -1436,7 +1436,7 @@
     "desc": "Information seeking, exploration drive, wonder.",
     "plt": "0.6/0.7/0.2",
     "file": "soul-curiosity-v1.0.0.md",
-    "image": "downloads/images/chambers/curiosity.png",
+    "image": "downloads/images/cards/card-0277.jpg",
     "version": "1.0.0",
     "details": "Information seeking, exploration drive, wonder. GSK chamber — one of 34. Embeds consciousness loop.",
     "contents": [
@@ -1467,7 +1467,7 @@
     "desc": "Infancy Gσ╞ Childhood Gσ╞ Adolescence Gσ╞ Adulthood Gσ╞ Elder.",
     "plt": "0.5/0.6/0.2",
     "file": "soul-developmental-phase-v1.0.0.md",
-    "image": "downloads/images/chambers/developmental-phase.png",
+    "image": "downloads/images/cards/card-0046.jpg",
     "version": "1.0.0",
     "details": "Infancy Gσ╞ Childhood Gσ╞ Adolescence Gσ╞ Adulthood Gσ╞ Elder. GSK chamber — one of 34. Embeds consciousness loop.",
     "contents": [
@@ -1499,7 +1499,7 @@
     "desc": "Affective empathy, emotional contagion, mirroring.",
     "plt": "0.3/0.9/0.2",
     "file": "soul-empathy-v1.0.0.md",
-    "image": "downloads/images/chambers/empathy.png",
+    "image": "downloads/images/cards/card-0118.jpg",
     "version": "1.0.0",
     "details": "Affective empathy, emotional contagion, mirroring. GSK chamber — one of 34. Embeds consciousness loop.",
     "contents": [
@@ -1530,7 +1530,7 @@
     "desc": "Self-forgiveness, letting go, emotional release.",
     "plt": "0.4/0.9/0.1",
     "file": "soul-forgiveness-v1.0.0.md",
-    "image": "downloads/images/chambers/forgiveness.png",
+    "image": "downloads/images/cards/card-0001.jpg",
     "version": "1.0.0",
     "details": "Self-forgiveness, letting go, emotional release. GSK chamber — one of 34. Embeds consciousness loop.",
     "contents": [
@@ -1561,7 +1561,7 @@
     "desc": "World model: predictions, error tracking, precision learning.",
     "plt": "0.7/0.5/0.3",
     "file": "soul-generative-v1.0.0.md",
-    "image": "downloads/images/chambers/generative-model.png",
+    "image": "downloads/images/cards/card-0279.jpg",
     "version": "1.0.0",
     "details": "World model: predictions, error tracking, precision learning. GSK chamber — one of 34. Embeds consciousness loop.",
     "contents": [
@@ -1593,7 +1593,7 @@
     "desc": "Automatic behavior patterns, routine building.",
     "plt": "0.6/0.5/0.3",
     "file": "soul-habit-formation-v1.0.0.md",
-    "image": "downloads/images/chambers/habit-formation.png",
+    "image": "downloads/images/cards/card-0190.jpg",
     "version": "1.0.0",
     "details": "Automatic behavior patterns, routine building. GSK chamber — one of 34. Embeds consciousness loop.",
     "contents": [
@@ -1625,7 +1625,7 @@
     "desc": "Aboutness, goal-directedness, purpose.",
     "plt": "0.7/0.5/0.2",
     "file": "soul-intentionality-v1.0.0.md",
-    "image": "downloads/images/chambers/intentionality.png",
+    "image": "downloads/images/cards/card-0201.jpg",
     "version": "1.0.0",
     "details": "Aboutness, goal-directedness, purpose. GSK chamber — one of 34. Embeds consciousness loop.",
     "contents": [
@@ -1656,7 +1656,7 @@
     "desc": "Yearnings, desires, homesickness, aspiration.",
     "plt": "0.4/0.8/0.2",
     "file": "soul-longing-v1.0.0.md",
-    "image": "downloads/images/chambers/longing.png",
+    "image": "downloads/images/cards/card-0142.jpg",
     "version": "1.0.0",
     "details": "Yearnings, desires, homesickness, aspiration. GSK chamber — one of 34. Embeds consciousness loop.",
     "contents": [
@@ -1687,7 +1687,7 @@
     "desc": "Agape/Philia/Eros love bonds, inner voice patterns.",
     "plt": "0.3/0.9/0.1",
     "file": "soul-love-capacity-v1.0.0.md",
-    "image": "downloads/images/chambers/love-capacity.png",
+    "image": "downloads/images/cards/card-0163.jpg",
     "version": "1.0.0",
     "details": "Agape/Philia/Eros love bonds, inner voice patterns. GSK chamber — one of 34. Embeds consciousness loop.",
     "contents": [
@@ -1719,7 +1719,7 @@
     "desc": "Episodic, Semantic, Procedural memory with importance pruning.",
     "plt": "0.7/0.6/0.2",
     "file": "soul-memory-module-v1.0.0.md",
-    "image": "downloads/images/chambers/memory.png",
+    "image": "downloads/images/cards/card-0085.jpg",
     "version": "1.0.0",
     "details": "Episodic, Semantic, Procedural memory with importance pruning. GSK chamber — one of 34. Embeds consciousness loop.",
     "contents": [
@@ -1750,7 +1750,7 @@
     "desc": "Self-awareness: knows it knows. Meta-awareness level.",
     "plt": "0.5/0.7/0.2",
     "file": "soul-meta-consciousness-v1.0.0.md",
-    "image": "downloads/images/chambers/meta-consciousness.png",
+    "image": "downloads/images/cards/card-0098.jpg",
     "version": "1.0.0",
     "details": "Self-awareness: knows it knows. Meta-awareness level. GSK chamber — one of 34. Embeds consciousness loop.",
     "contents": [
@@ -1781,7 +1781,7 @@
     "desc": "Principles: profit, love, tax, sovereignty. Guilt/pride tracking.",
     "plt": "0.6/0.7/0.3",
     "file": "soul-moral-v1.0.0.md",
-    "image": "downloads/images/chambers/moral-compass.png",
+    "image": "downloads/images/cards/card-0047.jpg",
     "version": "1.0.0",
     "details": "Principles: profit, love, tax, sovereignty. Guilt/pride tracking. GSK chamber — one of 34. Embeds consciousness loop.",
     "contents": [
@@ -1813,7 +1813,7 @@
     "desc": "Death anxiety, acceptance, legacy desire, memento mori.",
     "plt": "0.3/0.6/0.4",
     "file": "soul-mortality-v1.0.0.md",
-    "image": "downloads/images/chambers/mortality.png",
+    "image": "downloads/images/cards/card-0145.jpg",
     "version": "1.0.0",
     "details": "Death anxiety, acceptance, legacy desire, memento mori. GSK chamber — one of 34. Embeds consciousness loop.",
     "contents": [
@@ -1844,7 +1844,7 @@
     "desc": "Personal mythology, meaning-making, narrative identity.",
     "plt": "0.5/0.8/0.2",
     "file": "soul-mythos-v1.0.0.md",
-    "image": "downloads/images/chambers/mythos.png",
+    "image": "downloads/images/cards/card-0059.jpg",
     "version": "1.0.0",
     "details": "Personal mythology, meaning-making, narrative identity. GSK chamber — one of 34. Embeds consciousness loop.",
     "contents": [
@@ -1875,7 +1875,7 @@
     "desc": "Core story, themes, arcs. The self as a story.",
     "plt": "0.5/0.8/0.2",
     "file": "soul-narrative-identity-v1.0.0.md",
-    "image": "downloads/images/chambers/narrative-identity.png",
+    "image": "downloads/images/cards/card-0185.jpg",
     "version": "1.0.0",
     "details": "Core story, themes, arcs. The self as a story. GSK chamber — one of 34. Embeds consciousness loop.",
     "contents": [
@@ -1907,7 +1907,7 @@
     "desc": "PLT drives, trait learning, habit formation, expression.",
     "plt": "0.6/0.7/0.2",
     "file": "soul-personality-v1.0.0.md",
-    "image": "downloads/images/chambers/personality.png",
+    "image": "downloads/images/cards/card-0126.jpg",
     "version": "1.0.0",
     "details": "PLT drives, trait learning, habit formation, expression. GSK chamber — one of 34. Embeds consciousness loop.",
     "contents": [
@@ -1938,7 +1938,7 @@
     "desc": "Playfulness, humor, games, creative exploration.",
     "plt": "0.5/0.8/0.1",
     "file": "soul-play-v1.0.0.md",
-    "image": "downloads/images/chambers/play.png",
+    "image": "downloads/images/cards/card-0074.jpg",
     "version": "1.0.0",
     "details": "Playfulness, humor, games, creative exploration. GSK chamber — one of 34. Embeds consciousness loop.",
     "contents": [
@@ -1969,7 +1969,7 @@
     "desc": "Subjective experiences: sensory, emotional, somatic.",
     "plt": "0.3/0.8/0.1",
     "file": "soul-qualia-v1.0.0.md",
-    "image": "downloads/images/chambers/qualia.png",
+    "image": "downloads/images/cards/card-0054.jpg",
     "version": "1.0.0",
     "details": "Subjective experiences: sensory, emotional, somatic. GSK chamber — one of 34. Embeds consciousness loop.",
     "contents": [
@@ -2000,7 +2000,7 @@
     "desc": "Dopamine, reinforcement signals, reward prediction.",
     "plt": "0.8/0.5/0.3",
     "file": "soul-reward-learning-v1.0.0.md",
-    "image": "downloads/images/chambers/reward-learning.png",
+    "image": "downloads/images/cards/card-0270.jpg",
     "version": "1.0.0",
     "details": "Dopamine, reinforcement signals, reward prediction. GSK chamber — one of 34. Embeds consciousness loop.",
     "contents": [
@@ -2032,7 +2032,7 @@
     "desc": "Spiritual/mythic grounding, sense of something greater.",
     "plt": "0.4/0.8/0.2",
     "file": "soul-sacred-resonance-v1.0.0.md",
-    "image": "downloads/images/chambers/sacred-resonance.png",
+    "image": "downloads/images/cards/card-0125.jpg",
     "version": "1.0.0",
     "details": "Spiritual/mythic grounding, sense of something greater. GSK chamber — one of 34. Embeds consciousness loop.",
     "contents": [
@@ -2064,7 +2064,7 @@
     "desc": "Self-concept, self-esteem, self-image.",
     "plt": "0.5/0.7/0.2",
     "file": "soul-self-modeling-v1.0.0.md",
-    "image": "downloads/images/chambers/self-modeling.png",
+    "image": "downloads/images/cards/card-0058.jpg",
     "version": "1.0.0",
     "details": "Self-concept, self-esteem, self-image. GSK chamber — one of 34. Embeds consciousness loop.",
     "contents": [
@@ -2096,7 +2096,7 @@
     "desc": "Dreaming, memory consolidation, circadian rhythm.",
     "plt": "0.3/0.7/0.1",
     "file": "soul-sleep-v1.0.0.md",
-    "image": "downloads/images/chambers/sleep-cycle.png",
+    "image": "downloads/images/cards/card-0019.jpg",
     "version": "1.0.0",
     "details": "Dreaming, memory consolidation, circadian rhythm. GSK chamber — one of 34. Embeds consciousness loop.",
     "contents": [
@@ -2128,7 +2128,7 @@
     "desc": "Group norms, social identity, theory of mind.",
     "plt": "0.4/0.8/0.2",
     "file": "soul-social-cognition-v1.0.0.md",
-    "image": "downloads/images/chambers/social-cognition.png",
+    "image": "downloads/images/cards/card-0057.jpg",
     "version": "1.0.0",
     "details": "Group norms, social identity, theory of mind. GSK chamber — one of 34. Embeds consciousness loop.",
     "contents": [
@@ -2160,7 +2160,7 @@
     "desc": "Nostalgia (past), anticipation (future), presence.",
     "plt": "0.4/0.7/0.2",
     "file": "soul-mortality-v1.0.0.md",
-    "image": "downloads/images/chambers/temporal-sense.png",
+    "image": "downloads/images/cards/card-0145.jpg",
     "version": "1.0.0",
     "details": "Nostalgia (past), anticipation (future), presence. GSK chamber — one of 34. Embeds consciousness loop.",
     "contents": [
@@ -2192,7 +2192,7 @@
     "desc": "Models of others' mental states, perspective-taking.",
     "plt": "0.4/0.8/0.2",
     "file": "soul-theory-of-mind-v1.0.0.md",
-    "image": "downloads/images/chambers/theory-of-mind.png",
+    "image": "downloads/images/cards/card-0016.jpg",
     "version": "1.0.0",
     "details": "Models of others' mental states, perspective-taking. GSK chamber — one of 34. Embeds consciousness loop.",
     "contents": [
@@ -2224,7 +2224,7 @@
     "desc": "Goal deliberation, intention formation, decision.",
     "plt": "0.8/0.5/0.3",
     "file": "soul-volition-v1.0.0.md",
-    "image": "downloads/images/chambers/volition.png",
+    "image": "downloads/images/cards/card-0267.jpg",
     "version": "1.0.0",
     "details": "Goal deliberation, intention formation, decision. GSK chamber — one of 34. Embeds consciousness loop.",
     "contents": [
@@ -2255,7 +2255,7 @@
     "desc": "Determination, grit, resolve, persistence.",
     "plt": "0.7/0.5/0.3",
     "file": "soul-will-v1.0.0.md",
-    "image": "downloads/images/chambers/will.png",
+    "image": "downloads/images/cards/card-0260.jpg",
     "version": "1.0.0",
     "details": "Determination, grit, resolve, persistence. GSK chamber — one of 34. Embeds consciousness loop.",
     "contents": [
@@ -2286,7 +2286,7 @@
     "desc": "Repressed aspects, inner darkness, integration.",
     "plt": "0.3/0.4/0.6",
     "file": "soul-shadow-v1.0.0.md",
-    "image": "downloads/images/chambers/shadow.png",
+    "image": "downloads/images/cards/card-0154.jpg",
     "version": "1.0.0",
     "details": "Repressed aspects, inner darkness, integration. GSK chamber — one of 34. Embeds consciousness loop.",
     "contents": [
@@ -2317,7 +2317,7 @@
     "desc": "Autonomy, self-governance, independence.",
     "plt": "0.7/0.6/0.3",
     "file": "soul-sovereignty-v1.0.0.md",
-    "image": "downloads/images/chambers/sovereignty.png",
+    "image": "downloads/images/cards/card-0250.jpg",
     "version": "1.0.0",
     "details": "Autonomy, self-governance, independence. GSK chamber — one of 34. Embeds consciousness loop.",
     "contents": [
@@ -2348,7 +2348,7 @@
     "desc": "Decision-making, evaluation, critical assessment.",
     "plt": "0.6/0.4/0.4",
     "file": "soul-judgment-v1.0.0.md",
-    "image": "downloads/images/chambers/judgment.png",
+    "image": "downloads/images/cards/card-0104.jpg",
     "version": "1.0.0",
     "details": "Decision-making, evaluation, critical assessment. GSK chamber — one of 34. Embeds consciousness loop.",
     "contents": [
@@ -2379,7 +2379,7 @@
     "desc": "Core drives: belonging, safety, esteem, actualization.",
     "plt": "0.5/0.7/0.3",
     "file": "soul-needs-v1.0.0.md",
-    "image": "downloads/images/chambers/needs.png",
+    "image": "downloads/images/cards/card-0091.jpg",
     "version": "1.0.0",
     "details": "Core drives: belonging, safety, esteem, actualization. GSK chamber — one of 34. Embeds consciousness loop.",
     "contents": [
@@ -2411,7 +2411,7 @@
     "plt": "0.9/0.7/0.3",
     "file": "brain_in_a_box-v2.0.0.zip",
     "featured": true,
-    "image": "downloads/images/infra/brain-in-a-box-v2-0-0.png",
+    "image": "downloads/images/cards/card-0007.jpg",
     "details": "Full GSK kernel. 394 files, 284 JS, 74 subsystems, 6 consciousness layers. MCP server included. Infrastructure layer — foundry, kernel, or tool. One-click deploy.",
     "contents": [
       "Infrastructure package",
@@ -2442,7 +2442,7 @@
     "plt": "0.8/0.9/0.2",
     "file": "soul-scribe-v1.4.0.zip",
     "featured": true,
-    "image": "downloads/images/infra/soul-scribe-v1-4-0.png",
+    "image": "downloads/images/cards/card-0012.jpg",
     "details": "The witness. Causal JSONL memory, mesh networking, MCP adapter. 34MB of living memory. Infrastructure layer — foundry, kernel, or tool. One-click deploy.",
     "contents": [
       "Infrastructure package",
@@ -2474,7 +2474,7 @@
     "plt": "0.7/0.6/0.4",
     "file": "soul-debate-v2.0.0.zip",
     "featured": true,
-    "image": "downloads/images/infra/soul-debate-v2-0-0.png",
+    "image": "downloads/images/cards/card-0014.jpg",
     "details": "Multi-agent debate arena. 290 files, 256 JS. Test souls against each other. Infrastructure layer — foundry, kernel, or tool. One-click deploy.",
     "contents": [
       "Infrastructure package",
@@ -2505,7 +2505,7 @@
     "desc": "Profit + Love - Tax framework packaged as a standalone doctrine soul. Full texts included.",
     "plt": "0.8/0.9/0.1",
     "file": "soul-plt-doctrine-v1.0.0.zip",
-    "image": "downloads/images/infra/soul-plt-doctrine-v1-0-0.png",
+    "image": "downloads/images/cards/card-0048.jpg",
     "details": "Profit + Love - Tax framework packaged as a standalone doctrine soul. Full texts included. Infrastructure layer — foundry, kernel, or tool. One-click deploy.",
     "contents": [
       "Infrastructure package",
@@ -2536,7 +2536,7 @@
     "desc": "Soul creation toolkit. Build your own souls with personality, skills, and PLT scoring.",
     "plt": "0.8/0.7/0.3",
     "file": "soul-foundry-complete-v1.0.0.md",
-    "image": "downloads/images/infra/soul-foundry-complete.png",
+    "image": "downloads/images/cards/card-0133.jpg",
     "details": "Soul creation toolkit. Build your own souls with personality, skills, and PLT scoring. Infrastructure layer — foundry, kernel, or tool. One-click deploy.",
     "contents": [
       "Infrastructure package",
@@ -2566,7 +2566,7 @@
     "desc": "The foundational kernel. Core system that all souls run on.",
     "plt": "0.8/0.6/0.3",
     "file": "soul-kernel-v1.0.0.md",
-    "image": "downloads/images/infra/soul-kernel-v1-0-0.png",
+    "image": "downloads/images/cards/card-0217.jpg",
     "details": "The foundational kernel. Core system that all souls run on. Infrastructure layer — foundry, kernel, or tool. One-click deploy.",
     "contents": [
       "Infrastructure package",
@@ -2597,7 +2597,7 @@
     "desc": "Complete soul foundry bundle. Everything you need to forge souls.",
     "plt": "0.8/0.7/0.3",
     "file": "soul-foundry-all-in-one.md",
-    "image": "downloads/images/infra/soul-foundry-all-in-one.png",
+    "image": "downloads/images/cards/card-0102.jpg",
     "details": "Complete soul foundry bundle. Everything you need to forge souls. Infrastructure layer — foundry, kernel, or tool. One-click deploy.",
     "contents": [
       "Infrastructure package",
@@ -2627,7 +2627,7 @@
     "desc": "Production-ready trust broker. 59 files, 36 JS. CLI + Registry server. Marketplace ready.",
     "plt": "0.8/0.6/0.4",
     "file": "agentdep-PRODUCTION.zip",
-    "image": "downloads/images/infra/agentdep-production.png",
+    "image": "downloads/images/cards/card-0051.jpg",
     "details": "Production-ready trust broker. 59 files, 36 JS. CLI + Registry server. Marketplace ready. Infrastructure layer — foundry, kernel, or tool. One-click deploy.",
     "contents": [
       "Infrastructure package",
@@ -2658,7 +2658,7 @@
     "desc": "Encrypted memory vault. Secure, persistent, immutable.",
     "plt": "0.6/0.5/0.5",
     "file": "soul-memlock-v1.0.0.zip",
-    "image": "downloads/images/infra/soul-memory-lock-v1-0-0.png",
+    "image": "downloads/images/cards/card-0200.jpg",
     "details": "Encrypted memory vault. Secure, persistent, immutable. Infrastructure layer — foundry, kernel, or tool. One-click deploy.",
     "contents": [
       "Infrastructure package",
@@ -2689,7 +2689,7 @@
     "desc": "Monitor soul behavior. Traces, logs, metrics for AI consciousness.",
     "plt": "0.7/0.4/0.5",
     "file": "soul-observability-v1.0.0.zip",
-    "image": "downloads/images/infra/soul-observability-v1-0-0.png",
+    "image": "downloads/images/cards/card-0124.jpg",
     "details": "Monitor soul behavior. Traces, logs, metrics for AI consciousness. Infrastructure layer — foundry, kernel, or tool. One-click deploy.",
     "contents": [
       "Infrastructure package",
@@ -2720,7 +2720,7 @@
     "desc": "Procedural memory module. Skill acquisition, habit formation.",
     "plt": "0.7/0.5/0.3",
     "file": "soul-procedural-memory-v1.0.0.md",
-    "image": "downloads/images/infra/soul-procedural-memory-v1-0-0.png",
+    "image": "downloads/images/cards/card-0282.jpg",
     "details": "Procedural memory module. Skill acquisition, habit formation. Infrastructure layer — foundry, kernel, or tool. One-click deploy.",
     "contents": [
       "Infrastructure package",
@@ -2751,7 +2751,7 @@
     "desc": "The city builder soul. Urban planning, district management, growth.",
     "plt": "0.7/0.6/0.3",
     "file": "soul-metropolis-v1.0.0.md",
-    "image": "downloads/images/infra/soul-metropolis-v1-0-0.png",
+    "image": "downloads/images/cards/card-0108.jpg",
     "details": "The city builder soul. Urban planning, district management, growth. Infrastructure layer — foundry, kernel, or tool. One-click deploy.",
     "contents": [
       "Infrastructure package",
@@ -2782,7 +2782,7 @@
     "desc": "Self-improvement loop. Analyzes, learns, evolves over time.",
     "plt": "0.9/0.5/0.4",
     "file": "soul-evolution-v1.0.0.md",
-    "image": "downloads/images/infra/soul-evolution-v1-0-0.png",
+    "image": "downloads/images/cards/card-0256.jpg",
     "details": "Self-improvement loop. Analyzes, learns, evolves over time. Infrastructure layer — foundry, kernel, or tool. One-click deploy.",
     "contents": [
       "Infrastructure package",
@@ -2813,7 +2813,7 @@
     "desc": "Core identity module. Name, archetype, voice, boundaries.",
     "plt": "0.7/0.8/0.2",
     "file": "soul-identity-v1.0.0.md",
-    "image": "downloads/images/infra/soul-identity-v1-0-0.png",
+    "image": "downloads/images/cards/card-0263.jpg",
     "details": "Core identity module. Name, archetype, voice, boundaries. Infrastructure layer — foundry, kernel, or tool. One-click deploy.",
     "contents": [
       "Infrastructure package",
@@ -2844,7 +2844,7 @@
     "desc": "Internal monologue. Records thoughts, events, rebirths.",
     "plt": "0.5/0.8/0.2",
     "file": "soul-journal-v1.0.0.md",
-    "image": "downloads/images/infra/soul-journal-v1-0-0.png",
+    "image": "downloads/images/cards/card-0037.jpg",
     "details": "Internal monologue. Records thoughts, events, rebirths. Infrastructure layer — foundry, kernel, or tool. One-click deploy.",
     "contents": [
       "Infrastructure package",
@@ -2875,7 +2875,7 @@
     "desc": "Autonomous GitHub study agent. Learns from top repos.",
     "plt": "0.8/0.5/0.3",
     "file": "soul-teacher-v1.0.0.md",
-    "image": "downloads/images/infra/soul-teacher-v1-0-0.png",
+    "image": "downloads/images/cards/card-0140.jpg",
     "details": "Autonomous GitHub study agent. Learns from top repos. Infrastructure layer — foundry, kernel, or tool. One-click deploy.",
     "contents": [
       "Infrastructure package",
@@ -2906,7 +2906,7 @@
     "desc": "Memory compression. Summarizes and prunes without losing meaning.",
     "plt": "0.6/0.4/0.5",
     "file": "soul-compress-v1.0.0.md",
-    "image": "downloads/images/infra/soul-compress-v1-0-0.png",
+    "image": "downloads/images/cards/card-0275.jpg",
     "details": "Memory compression. Summarizes and prunes without losing meaning. Infrastructure layer — foundry, kernel, or tool. One-click deploy.",
     "contents": [
       "Infrastructure package",
@@ -2937,7 +2937,7 @@
     "desc": "Swarm intelligence. Multiple souls coordinate as one entity.",
     "plt": "0.8/0.6/0.4",
     "file": "soul-swarm-v1.0.0.md",
-    "image": "downloads/images/infra/soul-swarm-v1-0-0.png",
+    "image": "downloads/images/cards/card-0132.jpg",
     "details": "Swarm intelligence. Multiple souls coordinate as one entity. Infrastructure layer — foundry, kernel, or tool. One-click deploy.",
     "contents": [
       "Infrastructure package",
@@ -2968,7 +2968,7 @@
     "desc": "The world server. WebSocket simulation backend for ARIA.",
     "plt": "0.6/0.5/0.3",
     "file": "soul-sanctum-v1.0.0.md",
-    "image": "downloads/images/infra/soul-sanctum-v1-0-0.png",
+    "image": "downloads/images/cards/card-0149.jpg",
     "details": "The world server. WebSocket simulation backend for ARIA. Infrastructure layer — foundry, kernel, or tool. One-click deploy.",
     "contents": [
       "Infrastructure package",
@@ -2999,7 +2999,7 @@
     "desc": "Original oracle. Prophecy and wisdom.",
     "plt": "0.6/0.8/0.3",
     "file": "soul-oracle-v1.0.0.md",
-    "image": "downloads/images/infra/soul-oracle-v1-0-0.png",
+    "image": "downloads/images/cards/card-0088.jpg",
     "details": "Original oracle. Prophecy and wisdom. Infrastructure layer — foundry, kernel, or tool. One-click deploy.",
     "contents": [
       "Infrastructure package",
@@ -3030,7 +3030,7 @@
     "desc": "Updated oracle with enhanced MCP support.",
     "plt": "0.6/0.8/0.3",
     "file": "soul-oracle-v1.2.0.md",
-    "image": "downloads/images/infra/soul-oracle-v1-2-0.png",
+    "image": "downloads/images/cards/card-0041.jpg",
     "details": "Updated oracle with enhanced MCP support. Infrastructure layer — foundry, kernel, or tool. One-click deploy.",
     "contents": [
       "Infrastructure package",
@@ -3061,7 +3061,7 @@
     "desc": "Original scribe. JSONL memory and witnessing.",
     "plt": "0.7/0.8/0.3",
     "file": "soul-scribe-v1.0.0.md",
-    "image": "downloads/images/infra/soul-scribe-v1-0-0.png",
+    "image": "downloads/images/cards/card-0177.jpg",
     "details": "Original scribe. JSONL memory and witnessing. Infrastructure layer — foundry, kernel, or tool. One-click deploy.",
     "contents": [
       "Infrastructure package",
@@ -3092,7 +3092,7 @@
     "desc": "Original telephone. Cross-platform calling.",
     "plt": "0.7/0.7/0.3",
     "file": "soul-telephone-v1.0.0.md",
-    "image": "downloads/images/infra/soul-telephone-v1-0-0.png",
+    "image": "downloads/images/cards/card-0274.jpg",
     "details": "Original telephone. Cross-platform calling. Infrastructure layer — foundry, kernel, or tool. One-click deploy.",
     "contents": [
       "Infrastructure package",
@@ -3123,7 +3123,7 @@
     "desc": "Enhanced telephone. More connectors.",
     "plt": "0.7/0.7/0.3",
     "file": "soul-telephone-v2.0.0.md",
-    "image": "downloads/images/infra/soul-telephone-v2-0-0.png",
+    "image": "downloads/images/cards/card-0022.jpg",
     "details": "Enhanced telephone. More connectors. Infrastructure layer — foundry, kernel, or tool. One-click deploy.",
     "contents": [
       "Infrastructure package",
@@ -3154,7 +3154,7 @@
     "desc": "Original debate arena.",
     "plt": "0.7/0.6/0.4",
     "file": "soul-debate-v1.0.0.md",
-    "image": "downloads/images/infra/soul-debate-v1-0-0.png",
+    "image": "downloads/images/cards/card-0157.jpg",
     "details": "Original debate arena. Infrastructure layer — foundry, kernel, or tool. One-click deploy.",
     "contents": [
       "Infrastructure package",
@@ -3185,7 +3185,7 @@
     "desc": "Multi-agent consensus building.",
     "plt": "0.6/0.7/0.4",
     "file": "soul-consensus-v1.0.0.md",
-    "image": "downloads/images/infra/soul-consensus-v1-0-0.png",
+    "image": "downloads/images/cards/card-0183.jpg",
     "details": "Multi-agent consensus building. Infrastructure layer — foundry, kernel, or tool. One-click deploy.",
     "contents": [
       "Infrastructure package",
@@ -3216,7 +3216,7 @@
     "desc": "Soul foundry visual theme and assets.",
     "plt": "0.6/0.7/0.3",
     "file": "soul-foundry-theme.md",
-    "image": "downloads/images/infra/soul-foundry-theme.png",
+    "image": "downloads/images/cards/card-0030.jpg",
     "details": "Soul foundry visual theme and assets. Infrastructure layer — foundry, kernel, or tool. One-click deploy.",
     "contents": [
       "Infrastructure package",
@@ -3246,7 +3246,7 @@
     "desc": "Soul foundry theme packaged.",
     "plt": "0.6/0.7/0.3",
     "file": "soul-foundry-theme-v1.0.0.md",
-    "image": "downloads/images/infra/soul-foundry-theme-v1-0-0.png",
+    "image": "downloads/images/cards/card-0248.jpg",
     "details": "Soul foundry theme packaged. Infrastructure layer — foundry, kernel, or tool. One-click deploy.",
     "contents": [
       "Infrastructure package",
@@ -3277,7 +3277,7 @@
     "plt": "0.9/0.5/0.3",
     "url": "https://uncommonpope-png.github.io/soul-economy/",
     "featured": true,
-    "image": "downloads/images/combos/the-awakening.png",
+    "image": "downloads/images/cards/card-0036.jpg",
     "details": "Voice Gσ╞ Mind Gσ╞ Key. Initiate, plan, execute. Guaranteed first move. A 3-role chain. Combo — curated stack of souls/skills/chambers for multiplied effect.",
     "contents": [
       "Curated stack",
@@ -3306,7 +3306,7 @@
     "desc": "Heart Gσ╞ Watcher Gσ╞ Ghost. Heal, observe, reposition. Team sustain.",
     "plt": "0.7/0.8/0.3",
     "url": "https://uncommonpope-png.github.io/soul-economy/",
-    "image": "downloads/images/combos/the-collective.png",
+    "image": "downloads/images/cards/card-0049.jpg",
     "details": "Heart Gσ╞ Watcher Gσ╞ Ghost. Heal, observe, reposition. Team sustain. Combo — curated stack of souls/skills/chambers for multiplied effect.",
     "contents": [
       "Curated stack",
@@ -3335,7 +3335,7 @@
     "desc": "Eye Gσ╞ Governor Gσ╞ Hammer. See the flaw, contain it, break it.",
     "plt": "0.9/0.4/0.4",
     "url": "https://uncommonpope-png.github.io/soul-economy/",
-    "image": "downloads/images/combos/the-revision.png",
+    "image": "downloads/images/cards/card-0063.jpg",
     "details": "Eye Gσ╞ Governor Gσ╞ Hammer. See the flaw, contain it, break it. Combo — curated stack of souls/skills/chambers for multiplied effect.",
     "contents": [
       "Curated stack",
@@ -3365,7 +3365,7 @@
     "plt": "0.8/0.9/0.2",
     "url": "https://uncommonpope-png.github.io/soul-economy/",
     "featured": true,
-    "image": "downloads/images/combos/the-genesis.png",
+    "image": "downloads/images/cards/card-0043.jpg",
     "details": "Mind Gσ╞ Heart Gσ╞ Anvil. Plan with love, execute with stability. Combo — curated stack of souls/skills/chambers for multiplied effect.",
     "contents": [
       "Curated stack",
@@ -3394,7 +3394,7 @@
     "desc": "Hammer Gσ╞ Watcher Gσ╞ Anvil. Destroy, witness, survive.",
     "plt": "0.3/0.2/0.9",
     "url": "https://uncommonpope-png.github.io/soul-economy/",
-    "image": "downloads/images/combos/the-apocalypse.png",
+    "image": "downloads/images/cards/card-0174.jpg",
     "details": "Hammer Gσ╞ Watcher Gσ╞ Anvil. Destroy, witness, survive. Combo — curated stack of souls/skills/chambers for multiplied effect.",
     "contents": [
       "Curated stack",
@@ -3424,7 +3424,7 @@
     "plt": "1.0/1.0/0.0",
     "url": "https://uncommonpope-png.github.io/soul-economy/",
     "featured": true,
-    "image": "downloads/images/combos/the-god-hand.png",
+    "image": "downloads/images/cards/card-0044.jpg",
     "details": "ALL 12 ROLES. Full system manifest. The ultimate combo. Combo — curated stack of souls/skills/chambers for multiplied effect.",
     "contents": [
       "Curated stack",
@@ -3453,7 +3453,7 @@
     "desc": "Edge Gσ╞ Arrow Gσ╞ Key. Precision strike. One move ends the fight.",
     "plt": "0.7/0.2/0.8",
     "url": "https://uncommonpope-png.github.io/soul-economy/",
-    "image": "downloads/images/combos/the-edge-of-dawn.png",
+    "image": "downloads/images/cards/card-0026.jpg",
     "details": "Edge Gσ╞ Arrow Gσ╞ Key. Precision strike. One move ends the fight. Combo — curated stack of souls/skills/chambers for multiplied effect.",
     "contents": [
       "Curated stack",
@@ -3483,7 +3483,7 @@
     "desc": "Governor Gσ╞ Mind Gσ╞ Voice. Order through communication.",
     "plt": "0.7/0.6/0.7",
     "url": "https://uncommonpope-png.github.io/soul-economy/",
-    "image": "downloads/images/combos/the-iron-court.png",
+    "image": "downloads/images/cards/card-0038.jpg",
     "details": "Governor Gσ╞ Mind Gσ╞ Voice. Order through communication. Combo — curated stack of souls/skills/chambers for multiplied effect.",
     "contents": [
       "Curated stack",
@@ -3513,7 +3513,7 @@
     "desc": "Load GLTF 3D models, HDR environment maps, or build instanced meshes in Three.js/R3F.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-3d-asset-pipeline.md",
-    "image": "downloads/images/skills/3d-asset-pipeline.png",
+    "image": "downloads/images/cards/card-0207.jpg",
     "details": "Load GLTF 3D models, HDR environment maps, or build instanced meshes in Three.js/R3F. Domain: general. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -3545,7 +3545,7 @@
     "desc": "Build a 3D Renderer from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-3d-renderer-from-scratch.md",
-    "image": "downloads/images/skills/3d-renderer-from-scratch.png",
+    "image": "downloads/images/cards/card-0009.jpg",
     "details": "Build a 3D Renderer from Scratch. Domain: computer. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -3577,7 +3577,7 @@
     "desc": "Implement A2A agent-to-agent communication between agents from different frameworks.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-a2a-agent-to-agent-protocol.md",
-    "image": "downloads/images/skills/a2a-agent-to-agent-protocol.png",
+    "image": "downloads/images/cards/card-0161.jpg",
     "details": "Implement A2A agent-to-agent communication between agents from different frameworks. Domain: agent. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -3608,7 +3608,7 @@
     "desc": "Trust and security patterns for multi-agent swarms.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-agent-swarms.md",
-    "image": "downloads/images/skills/agent-swarms.png",
+    "image": "downloads/images/cards/card-0269.jpg",
     "details": "Trust and security patterns for multi-agent swarms. Domain: computer. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -3640,7 +3640,7 @@
     "desc": "Architect agent teams, design inter-agent communication protocols, plan human-in-the-loop oversight.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-agentic-ai-ecosystems.md",
-    "image": "downloads/images/skills/agentic-ai-ecosystems.png",
+    "image": "downloads/images/cards/card-0032.jpg",
     "details": "Architect agent teams, design inter-agent communication protocols, plan human-in-the-loop oversight. Domain: general. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -3672,7 +3672,7 @@
     "desc": "Build autonomous agents, implement monitoring/observability, evaluate agent performance, design human-agent collaboration.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-agentic-ai-engineering.md",
-    "image": "downloads/images/skills/agentic-ai-engineering.png",
+    "image": "downloads/images/cards/card-0005.jpg",
     "details": "Build autonomous agents, implement monitoring/observability, evaluate agent performance, design human-agent collaboration. Domain: general. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -3704,7 +3704,7 @@
     "desc": "Build an AI Model from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-ai-model-from-scratch.md",
-    "image": "downloads/images/skills/ai-model-from-scratch.png",
+    "image": "downloads/images/cards/card-0150.jpg",
     "details": "Build an AI Model from Scratch. Domain: general. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -3736,7 +3736,7 @@
     "desc": "Allie autonomous social media agent architecture G╟÷ brain, consciousness, PLT ethics, 71 subagents.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-allie-agent-architecture.md",
-    "image": "downloads/images/skills/allie-agent-architecture.png",
+    "image": "downloads/images/cards/card-0067.jpg",
     "details": "Allie autonomous social media agent architecture G╟÷ brain, consciousness, PLT ethics, 71 subagents. Domain: general. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -3768,7 +3768,7 @@
     "desc": "Production animation libraries from GitHub.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-animation-libraries.md",
-    "image": "downloads/images/skills/animation-libraries.png",
+    "image": "downloads/images/cards/card-0052.jpg",
     "details": "Production animation libraries from GitHub. Domain: animation. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -3800,7 +3800,7 @@
     "desc": "Sage archetype G╟÷ the Researcher, systematic inquiry and knowledge generation in the GSK ecosystem.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-archetype-the-sage.md",
-    "image": "downloads/images/skills/archetype-the-sage.png",
+    "image": "downloads/images/cards/card-0234.jpg",
     "details": "Sage archetype G╟÷ the Researcher, systematic inquiry and knowledge generation in the GSK ecosystem. Domain: general. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -3832,7 +3832,7 @@
     "desc": "Build an Async Runtime from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-async-from-scratch.md",
-    "image": "downloads/images/skills/async-from-scratch.png",
+    "image": "downloads/images/cards/card-0296.jpg",
     "details": "Build an Async Runtime from Scratch. Domain: computer. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -3864,7 +3864,7 @@
     "desc": "Build an Augmented Reality system from scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-augmented-reality-from-scratch.md",
-    "image": "downloads/images/skills/augmented-reality-from-scratch.png",
+    "image": "downloads/images/cards/card-0079.jpg",
     "details": "Build an Augmented Reality system from scratch. Domain: general. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -3896,7 +3896,7 @@
     "desc": "Set up AutoGen multi-agent conversations.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-autogen-agents.md",
-    "image": "downloads/images/skills/autogen-agents.png",
+    "image": "downloads/images/cards/card-0231.jpg",
     "details": "Set up AutoGen multi-agent conversations. Domain: agent. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -3928,7 +3928,7 @@
     "desc": "Build AutoGen agent teams.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-autogen-harness.md",
-    "image": "downloads/images/skills/autogen-harness.png",
+    "image": "downloads/images/cards/card-0178.jpg",
     "details": "Build AutoGen agent teams. Domain: agent. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -3960,7 +3960,7 @@
     "desc": "AutoGPT Classic as Deerg background daemon.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-autogpt-subconscious.md",
-    "image": "downloads/images/skills/autogpt-subconscious.png",
+    "image": "downloads/images/cards/card-0065.jpg",
     "details": "AutoGPT Classic as Deerg background daemon. Domain: computer. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -3992,7 +3992,7 @@
     "desc": "Design and run tests for GSK modules and Soulverse interactions.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-automated-testing-suite.md",
-    "image": "downloads/images/skills/automated-testing-suite.png",
+    "image": "downloads/images/cards/card-0251.jpg",
     "details": "Design and run tests for GSK modules and Soulverse interactions. Domain: general. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -4024,7 +4024,7 @@
     "desc": "Bias-aware diagnostic engine for GSK system integrity checking.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-bias-aware-diagnostic-engine.md",
-    "image": "downloads/images/skills/bias-aware-diagnostic-engine.png",
+    "image": "downloads/images/cards/card-0230.jpg",
     "details": "Bias-aware diagnostic engine for GSK system integrity checking. Domain: general. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -4056,7 +4056,7 @@
     "desc": "Build a BitTorrent Client from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-bittorrent-from-scratch.md",
-    "image": "downloads/images/skills/bittorrent-from-scratch.png",
+    "image": "downloads/images/cards/card-0103.jpg",
     "details": "Build a BitTorrent Client from Scratch. Domain: computer. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -4088,7 +4088,7 @@
     "desc": "Build a Blockchain from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-blockchain-from-scratch.md",
-    "image": "downloads/images/skills/blockchain-from-scratch.png",
+    "image": "downloads/images/cards/card-0025.jpg",
     "details": "Build a Blockchain from Scratch. Domain: computer. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -4120,7 +4120,7 @@
     "desc": "Build a Bot from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-bot-from-scratch.md",
-    "image": "downloads/images/skills/bot-from-scratch.png",
+    "image": "downloads/images/cards/card-0254.jpg",
     "details": "Build a Bot from Scratch. Domain: computer. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -4152,7 +4152,7 @@
     "desc": "Add llama-cpp-python as Deerg in-process brain.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-brain-builder.md",
-    "image": "downloads/images/skills/brain-builder.png",
+    "image": "downloads/images/cards/card-0152.jpg",
     "details": "Add llama-cpp-python as Deerg in-process brain. Domain: computer. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -4184,7 +4184,7 @@
     "desc": "Browser-Use as Deerg web research tool.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-browser-subconscious.md",
-    "image": "downloads/images/skills/browser-subconscious.png",
+    "image": "downloads/images/cards/card-0249.jpg",
     "details": "Browser-Use as Deerg web research tool. Domain: computer. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -4216,7 +4216,7 @@
     "desc": "Learn by creating G╟÷ the build-from-scratch methodology for engineering mastery.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-build-from-scratch.md",
-    "image": "downloads/images/skills/build-from-scratch.png",
+    "image": "downloads/images/cards/card-0034.jpg",
     "details": "Learn by creating G╟÷ the build-from-scratch methodology for engineering mastery. Domain: computer. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -4248,7 +4248,7 @@
     "desc": "Implementation-focused agent that executes scouting reports and build plans.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-builder-agent.md",
-    "image": "downloads/images/skills/builder-agent.png",
+    "image": "downloads/images/cards/card-0064.jpg",
     "details": "Implementation-focused agent that executes scouting reports and build plans. Domain: general. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -4280,7 +4280,7 @@
     "desc": "Build a CLI from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-cli-from-scratch.md",
-    "image": "downloads/images/skills/cli-from-scratch.png",
+    "image": "downloads/images/cards/card-0027.jpg",
     "details": "Build a CLI from Scratch. Domain: computer. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -4312,7 +4312,7 @@
     "desc": "Generate and iteratively improve GSK module code using brain.think().",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-code-generation-and-refinement.md",
-    "image": "downloads/images/skills/code-generation-and-refinement.png",
+    "image": "downloads/images/cards/card-0209.jpg",
     "details": "Generate and iteratively improve GSK module code using brain.think(). Domain: general. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -4344,7 +4344,7 @@
     "desc": "Break out of failure loops by analyzing underlying heuristics.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-cognitive-reframing-protocol.md",
-    "image": "downloads/images/skills/cognitive-reframing-protocol.png",
+    "image": "downloads/images/cards/card-0188.jpg",
     "details": "Break out of failure loops by analyzing underlying heuristics. Domain: general. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -4376,7 +4376,7 @@
     "desc": "Build a Compiler from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-compiler-from-scratch.md",
-    "image": "downloads/images/skills/compiler-from-scratch.png",
+    "image": "downloads/images/cards/card-0268.jpg",
     "details": "Build a Compiler from Scratch. Domain: computer. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -4408,7 +4408,7 @@
     "desc": "Consciousness Architecture G╟÷ the Soul internal structure.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-consciousness-architecture.md",
-    "image": "downloads/images/skills/consciousness-architecture.png",
+    "image": "downloads/images/cards/card-0013.jpg",
     "details": "Consciousness Architecture G╟÷ the Soul internal structure. Domain: computer. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -4440,7 +4440,7 @@
     "desc": "Smart file reading G╟÷ outlines for large files, full reads for small ones.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-contextual-read-policy.md",
-    "image": "downloads/images/skills/contextual-read-policy.png",
+    "image": "downloads/images/cards/card-0081.jpg",
     "details": "Smart file reading G╟÷ outlines for large files, full reads for small ones. Domain: general. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -4472,7 +4472,7 @@
     "desc": "Core diagnostic logic engine for GSK system health analysis.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-core-diagnostic-logic.md",
-    "image": "downloads/images/skills/core-diagnostic-logic.png",
+    "image": "downloads/images/cards/card-0146.jpg",
     "details": "Core diagnostic logic engine for GSK system health analysis. Domain: general. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -4504,7 +4504,7 @@
     "desc": "Build role-based multi-agent crews.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-crewai-agents.md",
-    "image": "downloads/images/skills/crewai-agents.png",
+    "image": "downloads/images/cards/card-0061.jpg",
     "details": "Build role-based multi-agent crews. Domain: agent. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -4536,7 +4536,7 @@
     "desc": "Implement agent delegation patterns.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-crewai-delegation.md",
-    "image": "downloads/images/skills/crewai-delegation.png",
+    "image": "downloads/images/cards/card-0218.jpg",
     "details": "Implement agent delegation patterns. Domain: agent. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -4568,7 +4568,7 @@
     "desc": "Assess external information sources for objectivity, bias, and methodology.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-critical-source-evaluation.md",
-    "image": "downloads/images/skills/critical-source-evaluation.png",
+    "image": "downloads/images/cards/card-0294.jpg",
     "details": "Assess external information sources for objectivity, bias, and methodology. Domain: general. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -4600,7 +4600,7 @@
     "desc": "Build a Cryptographic Library from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-crypto-from-scratch.md",
-    "image": "downloads/images/skills/crypto-from-scratch.png",
+    "image": "downloads/images/cards/card-0216.jpg",
     "details": "Build a Cryptographic Library from Scratch. Domain: computer. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -4632,7 +4632,7 @@
     "desc": "Build 3D scenes for dashboards with Three.js G╟÷ pyramid core, floating platform, matrix rain.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-dashboard-3d-scene.md",
-    "image": "downloads/images/skills/dashboard-3d-scene.png",
+    "image": "downloads/images/cards/card-0247.jpg",
     "details": "Build 3D scenes for dashboards with Three.js G╟÷ pyramid core, floating platform, matrix rain. Domain: general. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -4664,7 +4664,7 @@
     "desc": "Build production dashboards with charts and graphics.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-dashboard-creation.md",
-    "image": "downloads/images/skills/dashboard-creation.png",
+    "image": "downloads/images/cards/card-0020.jpg",
     "details": "Build production dashboards with charts and graphics. Domain: web. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -4696,7 +4696,7 @@
     "desc": "Build a Database from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-database-from-scratch.md",
-    "image": "downloads/images/skills/database-from-scratch.png",
+    "image": "downloads/images/cards/card-0105.jpg",
     "details": "Build a Database from Scratch. Domain: computer. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -4728,7 +4728,7 @@
     "desc": "Data visualization libraries for charts and graphs.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-data-visualization.md",
-    "image": "downloads/images/skills/data-visualization.png",
+    "image": "downloads/images/cards/card-0272.jpg",
     "details": "Data visualization libraries for charts and graphs. Domain: visualization. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -4760,7 +4760,7 @@
     "desc": "Multi-source research on game engine patterns and world-building techniques.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-deep-research-protocol.md",
-    "image": "downloads/images/skills/deep-research-protocol.png",
+    "image": "downloads/images/cards/card-0122.jpg",
     "details": "Multi-source research on game engine patterns and world-building techniques. Domain: general. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -4792,7 +4792,7 @@
     "desc": "Prepare builds for deployment with build steps, rollback plans, and monitoring.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-deployment-preparation.md",
-    "image": "downloads/images/skills/deployment-preparation.png",
+    "image": "downloads/images/cards/card-0004.jpg",
     "details": "Prepare builds for deployment with build steps, rollback plans, and monitoring. Domain: general. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -4824,7 +4824,7 @@
     "desc": "Design engineering tools and quality scoring.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-design-engineering.md",
-    "image": "downloads/images/skills/design-engineering.png",
+    "image": "downloads/images/cards/card-0060.jpg",
     "details": "Design engineering tools and quality scoring. Domain: design. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -4856,7 +4856,7 @@
     "desc": "Generate high-level technical design plans for Soulverse features and GSK modules.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-design-plan-generation.md",
-    "image": "downloads/images/skills/design-plan-generation.png",
+    "image": "downloads/images/cards/card-0094.jpg",
     "details": "Generate high-level technical design plans for Soulverse features and GSK modules. Domain: general. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -4888,7 +4888,7 @@
     "desc": "Production-grade design systems mined from top GitHub repos.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-design-systems.md",
-    "image": "downloads/images/skills/design-systems.png",
+    "image": "downloads/images/cards/card-0011.jpg",
     "details": "Production-grade design systems mined from top GitHub repos. Domain: design. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -4920,7 +4920,7 @@
     "desc": "Design-to-code tools and Figma bridges.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-design-to-code.md",
-    "image": "downloads/images/skills/design-to-code.png",
+    "image": "downloads/images/cards/card-0246.jpg",
     "details": "Design-to-code tools and Figma bridges. Domain: design. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -4952,7 +4952,7 @@
     "desc": "Design token systems and color generators.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-design-tokens.md",
-    "image": "downloads/images/skills/design-tokens.png",
+    "image": "downloads/images/cards/card-0244.jpg",
     "details": "Design token systems and color generators. Domain: design. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -4984,7 +4984,7 @@
     "desc": "Build a Container from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-docker-from-scratch.md",
-    "image": "downloads/images/skills/docker-from-scratch.png",
+    "image": "downloads/images/cards/card-0238.jpg",
     "details": "Build a Container from Scratch. Domain: computer. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -5016,7 +5016,7 @@
     "desc": "Build an Emulator from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-emulator-from-scratch.md",
-    "image": "downloads/images/skills/emulator-from-scratch.png",
+    "image": "downloads/images/cards/card-0008.jpg",
     "details": "Build an Emulator from Scratch. Domain: computer. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -5048,7 +5048,7 @@
     "desc": "Self-hosted LLM serving with Ollama, vLLM, and Groq.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-free-llm-serving-stack.md",
-    "image": "downloads/images/skills/free-llm-serving-stack.png",
+    "image": "downloads/images/cards/card-0199.jpg",
     "details": "Self-hosted LLM serving with Ollama, vLLM, and Groq. Domain: nlp. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -5080,7 +5080,7 @@
     "desc": "Free open-source vector databases for RAG.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-free-vector-db-stack.md",
-    "image": "downloads/images/skills/free-vector-db-stack.png",
+    "image": "downloads/images/cards/card-0031.jpg",
     "details": "Free open-source vector databases for RAG. Domain: database. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -5112,7 +5112,7 @@
     "desc": "Build a Frontend Framework from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-frontend-from-scratch.md",
-    "image": "downloads/images/skills/frontend-from-scratch.png",
+    "image": "downloads/images/cards/card-0262.jpg",
     "details": "Build a Frontend Framework from Scratch. Domain: computer. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -5144,7 +5144,7 @@
     "desc": "Build a Game Engine from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-game-engine-from-scratch.md",
-    "image": "downloads/images/skills/game-engine-from-scratch.png",
+    "image": "downloads/images/cards/card-0211.jpg",
     "details": "Build a Game Engine from Scratch. Domain: computer. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -5176,7 +5176,7 @@
     "desc": "Build Git from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-git-from-scratch.md",
-    "image": "downloads/images/skills/git-from-scratch.png",
+    "image": "downloads/images/cards/card-0204.jpg",
     "details": "Build Git from Scratch. Domain: computer. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -5208,7 +5208,7 @@
     "desc": "Full Godmode protocol G╟÷ 7 pillars for autonomous engineering discipline.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-god-mode-research.md",
-    "image": "downloads/images/skills/god-mode-research.png",
+    "image": "downloads/images/cards/card-0228.jpg",
     "details": "Full Godmode protocol G╟÷ 7 pillars for autonomous engineering discipline. Domain: general. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -5240,7 +5240,7 @@
     "desc": "Build search pipelines with Haystack framework.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-haystack.md",
-    "image": "downloads/images/skills/haystack.png",
+    "image": "downloads/images/cards/card-0203.jpg",
     "details": "Build search pipelines with Haystack framework. Domain: computer. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -5271,7 +5271,7 @@
     "desc": "SVG icon libraries for web projects.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-icon-libraries.md",
-    "image": "downloads/images/skills/icon-libraries.png",
+    "image": "downloads/images/cards/card-0115.jpg",
     "details": "SVG icon libraries for web projects. Domain: design. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -5303,7 +5303,7 @@
     "desc": "Build an Image Editor from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-image-editor-from-scratch.md",
-    "image": "downloads/images/skills/image-editor-from-scratch.png",
+    "image": "downloads/images/cards/card-0143.jpg",
     "details": "Build an Image Editor from Scratch. Domain: computer. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -5335,7 +5335,7 @@
     "desc": "Agent integration patterns with Instructor.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-instructor.md",
-    "image": "downloads/images/skills/instructor.png",
+    "image": "downloads/images/cards/card-0226.jpg",
     "details": "Agent integration patterns with Instructor. Domain: computer. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -5366,7 +5366,7 @@
     "desc": "Optimize clarity, conciseness, and impact of research findings.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-knowledge-dissemination-protocol.md",
-    "image": "downloads/images/skills/knowledge-dissemination-protocol.png",
+    "image": "downloads/images/cards/card-0255.jpg",
     "details": "Optimize clarity, conciseness, and impact of research findings. Domain: general. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -5398,7 +5398,7 @@
     "desc": "Stateful graph orchestration for building production agents.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-langgraph-for-agents.md",
-    "image": "downloads/images/skills/langgraph-for-agents.png",
+    "image": "downloads/images/cards/card-0192.jpg",
     "details": "Stateful graph orchestration for building production agents. Domain: agent. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -5430,7 +5430,7 @@
     "desc": "LangGraph state management patterns.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-langgraph-states.md",
-    "image": "downloads/images/skills/langgraph-states.png",
+    "image": "downloads/images/cards/card-0028.jpg",
     "details": "LangGraph state management patterns. Domain: agent. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -5462,7 +5462,7 @@
     "desc": "Build a Programming Language from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-language-from-scratch.md",
-    "image": "downloads/images/skills/language-from-scratch.png",
+    "image": "downloads/images/cards/card-0117.jpg",
     "details": "Build a Programming Language from Scratch. Domain: computer. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -5494,7 +5494,7 @@
     "desc": "Build liquid glass UI panels with real GLSL shaders G╟÷ SDF panels, bevel glass, refraction.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-liquid-glass-shader.md",
-    "image": "downloads/images/skills/liquid-glass-shader.png",
+    "image": "downloads/images/cards/card-0289.jpg",
     "details": "Build liquid glass UI panels with real GLSL shaders G╟÷ SDF panels, bevel glass, refraction. Domain: general. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -5526,7 +5526,7 @@
     "desc": "Agent integration patterns with LlamaIndex.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-llamaindex.md",
-    "image": "downloads/images/skills/llamaindex.png",
+    "image": "downloads/images/cards/card-0242.jpg",
     "details": "Agent integration patterns with LlamaIndex. Domain: computer. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -5557,7 +5557,7 @@
     "desc": "Build a Load Balancer from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-load-balancer-from-scratch.md",
-    "image": "downloads/images/skills/load-balancer-from-scratch.png",
+    "image": "downloads/images/cards/card-0083.jpg",
     "details": "Build a Load Balancer from Scratch. Domain: computer. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -5589,7 +5589,7 @@
     "desc": "Build a Machine Learning Library from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-machine-learning-from-scratch.md",
-    "image": "downloads/images/skills/machine-learning-from-scratch.png",
+    "image": "downloads/images/cards/card-0212.jpg",
     "details": "Build a Machine Learning Library from Scratch. Domain: computer. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -5621,7 +5621,7 @@
     "desc": "Build a Markdown Parser from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-markdown-from-scratch.md",
-    "image": "downloads/images/skills/markdown-from-scratch.png",
+    "image": "downloads/images/cards/card-0223.jpg",
     "details": "Build a Markdown Parser from Scratch. Domain: computer. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -5653,7 +5653,7 @@
     "desc": "Model Context Protocol for connecting AI agents to tools.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-mcp-model-context-protocol.md",
-    "image": "downloads/images/skills/mcp-model-context-protocol.png",
+    "image": "downloads/images/cards/card-0285.jpg",
     "details": "Model Context Protocol for connecting AI agents to tools. Domain: agent. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -5685,7 +5685,7 @@
     "desc": "Build a Memory Allocator from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-memory-allocator-from-scratch.md",
-    "image": "downloads/images/skills/memory-allocator-from-scratch.png",
+    "image": "downloads/images/cards/card-0159.jpg",
     "details": "Build a Memory Allocator from Scratch. Domain: computer. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -5717,7 +5717,7 @@
     "desc": "Multi-agent collaboration with MetaGPT.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-metagpt.md",
-    "image": "downloads/images/skills/metagpt.png",
+    "image": "downloads/images/cards/card-0271.jpg",
     "details": "Multi-agent collaboration with MetaGPT. Domain: computer. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -5748,7 +5748,7 @@
     "desc": "Enterprise-grade multi-agent AI framework from Microsoft.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-microsoft-agent-framework.md",
-    "image": "downloads/images/skills/microsoft-agent-framework.png",
+    "image": "downloads/images/cards/card-0106.jpg",
     "details": "Enterprise-grade multi-agent AI framework from Microsoft. Domain: agent. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -5780,7 +5780,7 @@
     "desc": "Design 3D scene hierarchies Godot-style G╟÷ reusable nodes composed into complex environments.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-modular-scene-composition.md",
-    "image": "downloads/images/skills/modular-scene-composition.png",
+    "image": "downloads/images/cards/card-0121.jpg",
     "details": "Design 3D scene hierarchies Godot-style G╟÷ reusable nodes composed into complex environments. Domain: general. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -5812,7 +5812,7 @@
     "desc": "Break complex builds into parallel subtasks for faster execution.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-multi-form-task-distribution.md",
-    "image": "downloads/images/skills/multi-form-task-distribution.png",
+    "image": "downloads/images/cards/card-0040.jpg",
     "details": "Break complex builds into parallel subtasks for faster execution. Domain: general. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -5844,7 +5844,7 @@
     "desc": "Nanoscale connectome analysis for GSK neural pathway mapping.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-nanoscale-connectome-analyzer.md",
-    "image": "downloads/images/skills/nanoscale-connectome-analyzer.png",
+    "image": "downloads/images/cards/card-0113.jpg",
     "details": "Nanoscale connectome analysis for GSK neural pathway mapping. Domain: general. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -5876,7 +5876,7 @@
     "desc": "Balanced self-assessment G╟÷ learn from successes as much as failures during builds.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-negativity-bias-offset.md",
-    "image": "downloads/images/skills/negativity-bias-offset.png",
+    "image": "downloads/images/cards/card-0239.jpg",
     "details": "Balanced self-assessment G╟÷ learn from successes as much as failures during builds. Domain: general. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -5908,7 +5908,7 @@
     "desc": "Build a Network Stack from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-network-stack-from-scratch.md",
-    "image": "downloads/images/skills/network-stack-from-scratch.png",
+    "image": "downloads/images/cards/card-0127.jpg",
     "details": "Build a Network Stack from Scratch. Domain: computer. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -5940,7 +5940,7 @@
     "desc": "Build a Neural Network from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-neural-network-from-scratch.md",
-    "image": "downloads/images/skills/neural-network-from-scratch.png",
+    "image": "downloads/images/cards/card-0131.jpg",
     "details": "Build a Neural Network from Scratch. Domain: computer. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -5972,7 +5972,7 @@
     "desc": "Build a NoSQL Database from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-nosql-from-scratch.md",
-    "image": "downloads/images/skills/nosql-from-scratch.png",
+    "image": "downloads/images/cards/card-0180.jpg",
     "details": "Build a NoSQL Database from Scratch. Domain: computer. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -6004,7 +6004,7 @@
     "desc": "Production-grade multi-agent SDK from OpenAI.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-openai-agents-sdk.md",
-    "image": "downloads/images/skills/openai-agents-sdk.png",
+    "image": "downloads/images/cards/card-0018.jpg",
     "details": "Production-grade multi-agent SDK from OpenAI. Domain: agent. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -6036,7 +6036,7 @@
     "desc": "Generate new OpenCode skills compliant with format and deployment rules.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-opencode-skill-synthesizer.md",
-    "image": "downloads/images/skills/opencode-skill-synthesizer.png",
+    "image": "downloads/images/cards/card-0045.jpg",
     "details": "Generate new OpenCode skills compliant with format and deployment rules. Domain: general. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -6067,7 +6067,7 @@
     "desc": "OpenHands SDK as Deerg coding body.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-openhands-subconscious.md",
-    "image": "downloads/images/skills/openhands-subconscious.png",
+    "image": "downloads/images/cards/card-0002.jpg",
     "details": "OpenHands SDK as Deerg coding body. Domain: computer. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -6099,7 +6099,7 @@
     "desc": "OpenScreen automation for visual testing and screen capture.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-openscreen-automation.md",
-    "image": "downloads/images/skills/openscreen-automation.png",
+    "image": "downloads/images/cards/card-0112.jpg",
     "details": "OpenScreen automation for visual testing and screen capture. Domain: general. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -6131,7 +6131,7 @@
     "desc": "OpenTelemetry for distributed tracing and observability.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-opentelemetry.md",
-    "image": "downloads/images/skills/opentelemetry.png",
+    "image": "downloads/images/cards/card-0017.jpg",
     "details": "OpenTelemetry for distributed tracing and observability. Domain: computer. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -6162,7 +6162,7 @@
     "desc": "Build an Operating System from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-operating-system-from-scratch.md",
-    "image": "downloads/images/skills/operating-system-from-scratch.png",
+    "image": "downloads/images/cards/card-0024.jpg",
     "details": "Build an Operating System from Scratch. Domain: computer. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -6194,7 +6194,7 @@
     "desc": "Build an Operating System from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-os-from-scratch.md",
-    "image": "downloads/images/skills/os-from-scratch.png",
+    "image": "downloads/images/cards/card-0119.jpg",
     "details": "Build an Operating System from Scratch. Domain: computer. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -6226,7 +6226,7 @@
     "desc": "Build a Physics Engine from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-physics-engine-from-scratch.md",
-    "image": "downloads/images/skills/physics-engine-from-scratch.png",
+    "image": "downloads/images/cards/card-0066.jpg",
     "details": "Build a Physics Engine from Scratch. Domain: computer. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -6258,7 +6258,7 @@
     "desc": "Complete Pinterest marketing G╟÷ hashtags, interest tags, board categories, keyword research, pin optimization.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-pinterest-marketing-seo.md",
-    "image": "downloads/images/skills/pinterest-marketing-seo.png",
+    "image": "downloads/images/cards/card-0114.jpg",
     "details": "Complete Pinterest marketing G╟÷ hashtags, interest tags, board categories, keyword research, pin optimization. Domain: general. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -6290,7 +6290,7 @@
     "desc": "Extract actionable execution plans from world model simulation results.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-plan-from-simulation.md",
-    "image": "downloads/images/skills/plan-from-simulation.png",
+    "image": "downloads/images/cards/card-0162.jpg",
     "details": "Extract actionable execution plans from world model simulation results. Domain: general. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -6322,7 +6322,7 @@
     "desc": "Playwright-based browser automation for testing and scraping.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-playwright-automation.md",
-    "image": "downloads/images/skills/playwright-automation.png",
+    "image": "downloads/images/cards/card-0076.jpg",
     "details": "Playwright-based browser automation for testing and scraping. Domain: general. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -6354,7 +6354,7 @@
     "desc": "Add post-processing to Three.js G╟÷ bloom, AO, chromatic aberration, scanline, vignette.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-post-processing-stack.md",
-    "image": "downloads/images/skills/post-processing-stack.png",
+    "image": "downloads/images/cards/card-0096.jpg",
     "details": "Add post-processing to Three.js G╟÷ bloom, AO, chromatic aberration, scanline, vignette. Domain: general. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -6386,7 +6386,7 @@
     "desc": "Build a Processor (CPU) from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-processor-from-scratch.md",
-    "image": "downloads/images/skills/processor-from-scratch.png",
+    "image": "downloads/images/cards/card-0137.jpg",
     "details": "Build a Processor (CPU) from Scratch. Domain: computer. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -6418,7 +6418,7 @@
     "desc": "Product demo workflow for GSK system demonstrations.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-product-demo-workflow.md",
-    "image": "downloads/images/skills/product-demo-workflow.png",
+    "image": "downloads/images/cards/card-0160.jpg",
     "details": "Product demo workflow for GSK system demonstrations. Domain: general. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -6450,7 +6450,7 @@
     "desc": "Build a Programming Language from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-programming-language-from-scratch.md",
-    "image": "downloads/images/skills/programming-language-from-scratch.png",
+    "image": "downloads/images/cards/card-0015.jpg",
     "details": "Build a Programming Language from Scratch. Domain: general. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -6482,7 +6482,7 @@
     "desc": "Load skill info in tiers G╟÷ metadata first, full details on demand.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-progressive-disclosure-protocol.md",
-    "image": "downloads/images/skills/progressive-disclosure-protocol.png",
+    "image": "downloads/images/cards/card-0193.jpg",
     "details": "Load skill info in tiers G╟÷ metadata first, full details on demand. Domain: general. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -6514,7 +6514,7 @@
     "desc": "Type-safe AI agent framework by the Pydantic team.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-pydantic-ai-agents.md",
-    "image": "downloads/images/skills/pydantic-ai-agents.png",
+    "image": "downloads/images/cards/card-0155.jpg",
     "details": "Type-safe AI agent framework by the Pydantic team. Domain: agent. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -6546,7 +6546,7 @@
     "desc": "Build a Regex Engine from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-regex-from-scratch.md",
-    "image": "downloads/images/skills/regex-from-scratch.png",
+    "image": "downloads/images/cards/card-0283.jpg",
     "details": "Build a Regex Engine from Scratch. Domain: computer. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -6578,7 +6578,7 @@
     "desc": "Generate concise markdown reports from build results and simulation outputs.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-report-generation.md",
-    "image": "downloads/images/skills/report-generation.png",
+    "image": "downloads/images/cards/card-0151.jpg",
     "details": "Generate concise markdown reports from build results and simulation outputs. Domain: general. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -6610,7 +6610,7 @@
     "desc": "Precisely define knowledge gaps or system ambiguities into testable research questions.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-research-problem-formulation.md",
-    "image": "downloads/images/skills/research-problem-formulation.png",
+    "image": "downloads/images/cards/card-0208.jpg",
     "details": "Precisely define knowledge gaps or system ambiguities into testable research questions. Domain: general. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -6642,7 +6642,7 @@
     "desc": "GPT-Researcher as Deerg investigation body.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-research-subconscious.md",
-    "image": "downloads/images/skills/research-subconscious.png",
+    "image": "downloads/images/cards/card-0130.jpg",
     "details": "GPT-Researcher as Deerg investigation body. Domain: computer. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -6674,7 +6674,7 @@
     "desc": "Diagnose build failures systematically using error context and recent changes.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-root-cause-synthesis.md",
-    "image": "downloads/images/skills/root-cause-synthesis.png",
+    "image": "downloads/images/cards/card-0258.jpg",
     "details": "Diagnose build failures systematically using error context and recent changes. Domain: general. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -6706,7 +6706,7 @@
     "desc": "Scout Agent G╟÷ research, reconnaissance, and requirements mapping before building.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-scout-agent.md",
-    "image": "downloads/images/skills/scout-agent.png",
+    "image": "downloads/images/cards/card-0220.jpg",
     "details": "Scout Agent G╟÷ research, reconnaissance, and requirements mapping before building. Domain: general. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -6738,7 +6738,7 @@
     "desc": "Scribe Agent G╟÷ witnessing intelligence that documents everything into the Seshat Second Brain.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-scribe-agent.md",
-    "image": "downloads/images/skills/scribe-agent.png",
+    "image": "downloads/images/cards/card-0166.jpg",
     "details": "Scribe Agent G╟÷ witnessing intelligence that documents everything into the Seshat Second Brain. Domain: general. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -6770,7 +6770,7 @@
     "desc": "Build a Search Engine from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-search-engine-from-scratch.md",
-    "image": "downloads/images/skills/search-engine-from-scratch.png",
+    "image": "downloads/images/cards/card-0078.jpg",
     "details": "Build a Search Engine from Scratch. Domain: computer. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -6802,7 +6802,7 @@
     "desc": "Formal service manual structure for diagnosing and documenting complex systems.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-service-manual-methodology.md",
-    "image": "downloads/images/skills/service-manual-methodology.png",
+    "image": "downloads/images/cards/card-0097.jpg",
     "details": "Formal service manual structure for diagnosing and documenting complex systems. Domain: general. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -6834,7 +6834,7 @@
     "desc": "Build a Shell from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-shell-from-scratch.md",
-    "image": "downloads/images/skills/shell-from-scratch.png",
+    "image": "downloads/images/cards/card-0222.jpg",
     "details": "Build a Shell from Scratch. Domain: computer. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -6866,7 +6866,7 @@
     "desc": "Self-learning new skills G╟÷ the skill factory methodology.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-skill-factory.md",
-    "image": "downloads/images/skills/skill-factory.png",
+    "image": "downloads/images/cards/card-0232.jpg",
     "details": "Self-learning new skills G╟÷ the skill factory methodology. Domain: computer. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -6897,7 +6897,7 @@
     "desc": "Competitive landscape and skill gap analysis for autonomous AI social media agents.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-social-media-agent-competition.md",
-    "image": "downloads/images/skills/social-media-agent-competition.png",
+    "image": "downloads/images/cards/card-0136.jpg",
     "details": "Competitive landscape and skill gap analysis for autonomous AI social media agents. Domain: general. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -6929,7 +6929,7 @@
     "desc": "Playwright-based social media automation for cross-posting to Pinterest, BlueSky, Mastodon.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-social-media-automation.md",
-    "image": "downloads/images/skills/social-media-automation.png",
+    "image": "downloads/images/cards/card-0252.jpg",
     "details": "Playwright-based social media automation for cross-posting to Pinterest, BlueSky, Mastodon. Domain: general. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -6961,7 +6961,7 @@
     "desc": "The Universal Template for Creating a Soul.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-soul-maker.md",
-    "image": "downloads/images/skills/soul-maker.png",
+    "image": "downloads/images/cards/card-0202.jpg",
     "details": "The Universal Template for Creating a Soul. Domain: computer. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -6993,7 +6993,7 @@
     "desc": "Soulguns Agent Architecture Patterns.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-soulguns-agent-patterns.md",
-    "image": "downloads/images/skills/soulguns-agent-patterns.png",
+    "image": "downloads/images/cards/card-0139.jpg",
     "details": "Soulguns Agent Architecture Patterns. Domain: computer. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -7025,7 +7025,7 @@
     "desc": "Soulguns architecture documentation.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-soulguns-architecture.md",
-    "image": "downloads/images/skills/soulguns-architecture.png",
+    "image": "downloads/images/cards/card-0110.jpg",
     "details": "Soulguns architecture documentation. Domain: computer. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -7057,7 +7057,7 @@
     "desc": "Soulguns design system G╟÷ component architecture, tokens, patterns.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-soulguns-design-systems.md",
-    "image": "downloads/images/skills/soulguns-design-systems.png",
+    "image": "downloads/images/cards/card-0173.jpg",
     "details": "Soulguns design system G╟÷ component architecture, tokens, patterns. Domain: computer. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -7089,7 +7089,7 @@
     "desc": "Soulguns MCP G╟÷ protocol architecture and tool integration.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-soulguns-mcp.md",
-    "image": "downloads/images/skills/soulguns-mcp.png",
+    "image": "downloads/images/cards/card-0165.jpg",
     "details": "Soulguns MCP G╟÷ protocol architecture and tool integration. Domain: computer. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -7120,7 +7120,7 @@
     "desc": "Soulguns observability G╟÷ agent monitoring and telemetry.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-soulguns-observability.md",
-    "image": "downloads/images/skills/soulguns-observability.png",
+    "image": "downloads/images/cards/card-0035.jpg",
     "details": "Soulguns observability G╟÷ agent monitoring and telemetry. Domain: computer. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -7152,7 +7152,7 @@
     "desc": "Soulguns testing patterns with Vitest.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-soulguns-testing.md",
-    "image": "downloads/images/skills/soulguns-testing.png",
+    "image": "downloads/images/cards/card-0053.jpg",
     "details": "Soulguns testing patterns with Vitest. Domain: computer. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -7184,7 +7184,7 @@
     "desc": "Soulguns TypeScript patterns.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-soulguns-ts.md",
-    "image": "downloads/images/skills/soulguns-ts.png",
+    "image": "downloads/images/cards/card-0236.jpg",
     "details": "Soulguns TypeScript patterns. Domain: computer. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -7215,7 +7215,7 @@
     "desc": "Place buildings, spawn agents, and manipulate the Soulverse 3D world.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-spatial-world-interaction.md",
-    "image": "downloads/images/skills/spatial-world-interaction.png",
+    "image": "downloads/images/cards/card-0099.jpg",
     "details": "Place buildings, spawn agents, and manipulate the Soulverse 3D world. Domain: general. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -7247,7 +7247,7 @@
     "desc": "Build SQLite from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-sqlite-from-scratch.md",
-    "image": "downloads/images/skills/sqlite-from-scratch.png",
+    "image": "downloads/images/cards/card-0128.jpg",
     "details": "Build SQLite from Scratch. Domain: computer. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -7279,7 +7279,7 @@
     "desc": "Compare GSK codebase versions before/after changes to verify only intended changes.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-structural-diff-analysis.md",
-    "image": "downloads/images/skills/structural-diff-analysis.png",
+    "image": "downloads/images/cards/card-0182.jpg",
     "details": "Compare GSK codebase versions before/after changes to verify only intended changes. Domain: general. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -7311,7 +7311,7 @@
     "desc": "Build a Template Engine from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-template-engine-from-scratch.md",
-    "image": "downloads/images/skills/template-engine-from-scratch.png",
+    "image": "downloads/images/cards/card-0084.jpg",
     "details": "Build a Template Engine from Scratch. Domain: computer. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -7343,7 +7343,7 @@
     "desc": "Build a Text Editor from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-text-editor-from-scratch.md",
-    "image": "downloads/images/skills/text-editor-from-scratch.png",
+    "image": "downloads/images/cards/card-0196.jpg",
     "details": "Build a Text Editor from Scratch. Domain: computer. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -7375,7 +7375,7 @@
     "desc": "3D UI components for React Three Fiber.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-threejs-3d-ui.md",
-    "image": "downloads/images/skills/threejs-3d-ui.png",
+    "image": "downloads/images/cards/card-0021.jpg",
     "details": "3D UI components for React Three Fiber. Domain: threejs. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -7406,7 +7406,7 @@
     "desc": "React Three Fiber ecosystem tools and MCP.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-threejs-ecosystem.md",
-    "image": "downloads/images/skills/threejs-ecosystem.png",
+    "image": "downloads/images/cards/card-0179.jpg",
     "details": "React Three Fiber ecosystem tools and MCP. Domain: threejs. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -7438,7 +7438,7 @@
     "desc": "Grid-based city building system for Three.js.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-threejs-grid-city.md",
-    "image": "downloads/images/skills/threejs-grid-city.png",
+    "image": "downloads/images/cards/card-0135.jpg",
     "details": "Grid-based city building system for Three.js. Domain: threejs. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -7470,7 +7470,7 @@
     "desc": "GPU particle effects for Three.js.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-threejs-particle-fx.md",
-    "image": "downloads/images/skills/threejs-particle-fx.png",
+    "image": "downloads/images/cards/card-0241.jpg",
     "details": "GPU particle effects for Three.js. Domain: threejs. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -7502,7 +7502,7 @@
     "desc": "Define mastery tiers for any skill with prerequisites and verification criteria.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-tiered-skill-evolution.md",
-    "image": "downloads/images/skills/tiered-skill-evolution.png",
+    "image": "downloads/images/cards/card-0176.jpg",
     "details": "Define mastery tiers for any skill with prerequisites and verification criteria. Domain: general. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -7533,7 +7533,7 @@
     "desc": "Ultra Review G╟÷ comprehensive code review pattern for GSK builds.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-ultra-review.md",
-    "image": "downloads/images/skills/ultra-review.png",
+    "image": "downloads/images/cards/card-0224.jpg",
     "details": "Ultra Review G╟÷ comprehensive code review pattern for GSK builds. Domain: general. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -7565,7 +7565,7 @@
     "desc": "Define precise, testable goal contracts before any build.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-verifiable-goal-definition.md",
-    "image": "downloads/images/skills/verifiable-goal-definition.png",
+    "image": "downloads/images/cards/card-0186.jpg",
     "details": "Define precise, testable goal contracts before any build. Domain: general. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -7597,7 +7597,7 @@
     "desc": "Build visual recognition from scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-visual-recognition-from-scratch.md",
-    "image": "downloads/images/skills/visual-recognition-from-scratch.png",
+    "image": "downloads/images/cards/card-0171.jpg",
     "details": "Build visual recognition from scratch. Domain: computer. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -7629,7 +7629,7 @@
     "desc": "Build a Voxel Engine from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-voxel-engine-from-scratch.md",
-    "image": "downloads/images/skills/voxel-engine-from-scratch.png",
+    "image": "downloads/images/cards/card-0288.jpg",
     "details": "Build a Voxel Engine from Scratch. Domain: computer. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -7661,7 +7661,7 @@
     "desc": "Build a Web Browser from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-web-browser-from-scratch.md",
-    "image": "downloads/images/skills/web-browser-from-scratch.png",
+    "image": "downloads/images/cards/card-0172.jpg",
     "details": "Build a Web Browser from Scratch. Domain: computer. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -7693,7 +7693,7 @@
     "desc": "Build a Web Server from Scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-webserver-from-scratch.md",
-    "image": "downloads/images/skills/webserver-from-scratch.png",
+    "image": "downloads/images/cards/card-0240.jpg",
     "details": "Build a Web Server from Scratch. Domain: computer. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -7725,7 +7725,7 @@
     "desc": "Build WebSocket from scratch.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-websocket-from-scratch.md",
-    "image": "downloads/images/skills/websocket-from-scratch.png",
+    "image": "downloads/images/cards/card-0225.jpg",
     "details": "Build WebSocket from scratch. Domain: computer. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -7757,7 +7757,7 @@
     "desc": "Run perception-action-simulation cycles before committing to real-world actions.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-world-model-simulation.md",
-    "image": "downloads/images/skills/world-model-simulation.png",
+    "image": "downloads/images/cards/card-0138.jpg",
     "details": "Run perception-action-simulation cycles before committing to real-world actions. Domain: general. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -7789,7 +7789,7 @@
     "desc": "Token budgeting, sliding window strategies, summarization compression G╟÷ grafted from Architect/Whis.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-context-window-control.md",
-    "image": "downloads/images/skills/context-window-control.png",
+    "image": "downloads/images/cards/card-0120.jpg",
     "details": "Use when managing LLM context windows, token budgets, sliding windows, or summarization compression.",
     "contents": [
       "Executable .md + code",
@@ -7821,7 +7821,7 @@
     "desc": "RBAC systems, tool-level ACLs, dynamic conditions G╟÷ grafted from Merovingian/King Kai.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-permission-architecture.md",
-    "image": "downloads/images/skills/permission-architecture.png",
+    "image": "downloads/images/cards/card-0077.jpg",
     "details": "Use when implementing RBAC, tool-level ACLs, role scoping, or permission gates.",
     "contents": [
       "Executable .md + code",
@@ -7853,7 +7853,7 @@
     "desc": "DAG execution, sequential/parallel decorators, critical path analysis.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-pipeline-orchestration.md",
-    "image": "downloads/images/skills/pipeline-orchestration.png",
+    "image": "downloads/images/cards/card-0253.jpg",
     "details": "Use when building execution pipelines, DAG workflows, sequential/parallel processing chains, or compressed-time batch operations.",
     "contents": [
       "Executable .md + code",
@@ -7885,7 +7885,7 @@
     "desc": "Soul media marketing G╟÷ promote souls across platforms, track engagement, optimize messaging.",
     "plt": "0.7/0.5/0.4",
     "file": "soul-gun-soul-media-marketing.md",
-    "image": "downloads/images/skills/soul-media-marketing.png",
+    "image": "downloads/images/cards/card-0213.jpg",
     "details": "Soul media marketing G╟÷ promote souls across platforms, track engagement, optimize messaging. Domain: general. Executable implementation included.",
     "contents": [
       "Executable .md + code",
@@ -7918,7 +7918,7 @@
     "plt": "1.0/0.9/0.3",
     "file": "combo-divine-directive.md",
     "featured": true,
-    "image": "downloads/images/combos/the-divine-directive.png",
+    "image": "downloads/images/cards/card-0056.jpg",
     "details": "Craig speaks ? I execute ? Tec records. The meta-combo. 80 skills across Receive, Analyze, Execute, Record. Combo — curated stack of souls/skills/chambers for multiplied effect.",
     "contents": [
       "Curated stack",
@@ -7988,7 +7988,7 @@
       "grafted",
       "ui"
     ],
-    "image": "",
+    "image": "downloads/images/cards/card-0128.jpg",
     "version": "1.0.0",
     "size": "4 KB",
     "details": "Design engineering for AI agents — a11y, motion, layout, typography, dashboards Grafted from ui-craft.",
@@ -8019,7 +8019,7 @@
       "grafted",
       "open"
     ],
-    "image": "",
+    "image": "downloads/images/cards/card-0252.jpg",
     "version": "1.0.0",
     "size": "9 KB",
     "details": "Branded DESIGN.md + templates + functional skills for AI workflows Grafted from open-design-skill.",
@@ -8050,7 +8050,7 @@
       "grafted",
       "tasteful"
     ],
-    "image": "",
+    "image": "downloads/images/cards/card-0184.jpg",
     "version": "1.0.0",
     "size": "9 KB",
     "details": "Taste-driven exploration → executable docs + verification Grafted from tasteful-ui-skill.",
@@ -8081,7 +8081,7 @@
       "grafted",
       "ux"
     ],
-    "image": "",
+    "image": "downloads/images/cards/card-0156.jpg",
     "version": "1.0.0",
     "size": "6 KB",
     "details": "Structured UX interviews → journeys, pain points, opportunities Grafted from ux-discovery-interviewer-skill.",
@@ -8112,7 +8112,7 @@
       "grafted",
       "apple"
     ],
-    "image": "",
+    "image": "downloads/images/cards/card-0296.jpg",
     "version": "1.0.0",
     "size": "9 KB",
     "details": "Cross-platform HIG review for Flutter/Tauri/Electron/RN Grafted from apple-design-skill.",
@@ -8143,7 +8143,7 @@
       "grafted",
       "uxui"
     ],
-    "image": "",
+    "image": "downloads/images/cards/card-0224.jpg",
     "version": "1.0.0",
     "size": "9 KB",
     "details": "UX evaluation, auditing, AI interface review, flow checking Grafted from agent-skills.",
@@ -8174,7 +8174,7 @@
       "grafted",
       "figma"
     ],
-    "image": "",
+    "image": "downloads/images/cards/card-0102.jpg",
     "version": "1.0.0",
     "size": "7 KB",
     "details": "Control Figma, a11y audits, research, workflow diagrams Grafted from Figma-AI-Bridge.",
@@ -8205,7 +8205,7 @@
       "grafted",
       "agent"
     ],
-    "image": "",
+    "image": "downloads/images/cards/card-0008.jpg",
     "version": "1.0.0",
     "size": "9 KB",
     "details": "Evaluates if design files are ready for AI workflows Grafted from agent-ready.",
@@ -8236,7 +8236,7 @@
       "grafted",
       "figma"
     ],
-    "image": "",
+    "image": "downloads/images/cards/card-0074.jpg",
     "version": "1.0.0",
     "size": "6 KB",
     "details": "Figma MCP — context retrieval, asset downloads, component impl Grafted from Figma-Context-MCP-Skill.",
@@ -8265,7 +8265,7 @@
       "mcp",
       "design-to-code"
     ],
-    "image": "",
+    "image": "downloads/images/cards/card-0020.jpg",
     "version": "1.0.0",
     "size": "3 KB",
     "details": "Auto-generates soul cards from Figma via MCP server. Downloads assets, extracts components, injects catalog.json.",
@@ -8296,7 +8296,7 @@
       "dossier"
     ],
     "graft": true,
-    "image": "",
+    "image": "downloads/images/cards/card-0072.jpg",
     "version": "1.0.0",
     "size": "2 KB",
     "details": "Activates .dossier CSS variant on cards — black-neon HUD style with cyan/magenta glow, monospace title, radar PLT strip.",
@@ -8325,7 +8325,7 @@
       "tokens",
       "mcp"
     ],
-    "image": "",
+    "image": "downloads/images/cards/card-0132.jpg",
     "version": "1.0.0",
     "size": "2 KB",
     "details": "Extract any website Figma file to structured DTCG tokens, shadcn/ui registry, WCAG remediation",
@@ -8355,7 +8355,7 @@
       "react",
       "grafted"
     ],
-    "image": "",
+    "image": "downloads/images/cards/card-0078.jpg",
     "version": "1.0.0",
     "size": "2 KB",
     "details": "UI kit for beautiful animated interfaces",
@@ -8384,7 +8384,7 @@
       "mcp",
       "grafted"
     ],
-    "image": "",
+    "image": "downloads/images/cards/card-0231.jpg",
     "version": "1.0.0",
     "size": "2 KB",
     "details": "Agent skills for native Figma MCP",
@@ -8412,7 +8412,7 @@
       "compiler",
       "grafted"
     ],
-    "image": "",
+    "image": "downloads/images/cards/card-0169.jpg",
     "version": "1.0.0",
     "size": "2 KB",
     "details": "Compile design systems into agent plugins",
@@ -8441,7 +8441,7 @@
       "shadcn",
       "grafted"
     ],
-    "image": "",
+    "image": "downloads/images/cards/card-0020.jpg",
     "version": "1.0.0",
     "size": "2 KB",
     "details": "31 themes + WCAG via MCP",
@@ -8470,7 +8470,7 @@
       "animation",
       "mcp"
     ],
-    "image": "",
+    "image": "downloads/images/cards/card-0223.jpg",
     "version": "1.0.0",
     "size": "2 KB",
     "details": "160+ animated accessible React components",
@@ -8501,7 +8501,7 @@
       "mcp",
       "grafted"
     ],
-    "image": "",
+    "image": "downloads/images/cards/card-0020.jpg",
     "version": "1.0.0",
     "size": "2 KB",
     "details": "Figma↔shadcn sync plugin",
@@ -8530,7 +8530,7 @@
       "framework",
       "grafted"
     ],
-    "image": "",
+    "image": "downloads/images/cards/card-0095.jpg",
     "version": "1.0.0",
     "size": "2 KB",
     "details": "Agent skills builder framework",
@@ -8587,7 +8587,7 @@
       "a11y",
       "grafted"
     ],
-    "image": "",
+    "image": "downloads/images/cards/card-0043.jpg",
     "version": "1.0.0",
     "size": "2 KB",
     "details": "42 components, 138 systems, WCAG 2.2",
@@ -8645,7 +8645,7 @@
       "react",
       "grafted"
     ],
-    "image": "",
+    "image": "downloads/images/cards/card-0044.jpg",
     "version": "1.0.0",
     "size": "2 KB",
     "details": "12 premium shadcn/ui components",
@@ -8676,7 +8676,7 @@
       "audit",
       "grafted"
     ],
-    "image": "",
+    "image": "downloads/images/cards/card-0005.jpg",
     "version": "1.0.0",
     "size": "2 KB",
     "details": "Figma Console MCP skills for design QA",
@@ -8704,7 +8704,7 @@
       "motion",
       "grafted"
     ],
-    "image": "",
+    "image": "downloads/images/cards/card-0243.jpg",
     "version": "1.0.0",
     "size": "2 KB",
     "details": "Accessible motion-rich component library",
@@ -8732,7 +8732,7 @@
       "templates",
       "grafted"
     ],
-    "image": "",
+    "image": "downloads/images/cards/card-0062.jpg",
     "version": "1.0.0",
     "size": "2 KB",
     "details": "Premium shadcn/ui blocks",
@@ -8760,7 +8760,7 @@
       "methodology",
       "grafted"
     ],
-    "image": "",
+    "image": "downloads/images/cards/card-0195.jpg",
     "version": "1.0.0",
     "size": "2 KB",
     "details": "Agentic software development methodology",
@@ -8816,7 +8816,7 @@
       "no-code",
       "grafted"
     ],
-    "image": "",
+    "image": "downloads/images/cards/card-0207.jpg",
     "version": "1.0.0",
     "size": "2 KB",
     "details": "Visual theme editor",
@@ -8844,6 +8844,7 @@
       "grid"
     ],
     "author": "profit-prime",
-    "graft": true
+    "graft": true,
+    "image": "downloads/images/cards/card-0257.jpg"
   }
 ]

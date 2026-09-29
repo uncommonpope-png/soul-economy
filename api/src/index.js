@@ -1,8 +1,9 @@
 import { verifyEvent } from 'nostr-tools';
 import { FamilyRoom } from './chat.mjs';
+import { FeedRoom } from './feed.mjs';
 import { handleShop } from './shop.mjs';
 
-export { FamilyRoom };
+export { FamilyRoom, FeedRoom };
 
 // ─── Soul Economy API ────────────────────────────────────────────────────────
 // Stateless Nostr-native backend. Every write is a signed Nostr event;
@@ -82,6 +83,24 @@ async function authorExists(env, pubkey) {
   return !!(await env.DB.prepare('SELECT 1 FROM users WHERE pubkey = ?')
     .bind(pubkey)
     .first());
+}
+
+// Tell open feed tabs a new post landed (FeedRoom DO).
+// MUST be awaited by the write path: fire-and-forget work after the response
+// can be evicted before the DO subrequest completes (verified: poke works,
+// un-awaited call lost the broadcast).
+async function broadcastFeed(env, payload) {
+  try {
+    const stub = env.FEEDROOM.idFromName('square');
+    await env.FEEDROOM.get(stub).fetch('https://feed.internal/api/feed/ws', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+  } catch (e) {
+    console.log('[feed] broadcast failed', e && e.message);
+    /* realtime is best-effort — never fail the write over it */
+  }
 }
 
 async function ensureUser(env, pubkey) {
@@ -183,6 +202,7 @@ async function handleEvent(request, env) {
         .bind(ev.id, (ev.content || '').slice(0, 8000), ev.pubkey)
         .run()
         .catch(() => {});
+      await broadcastFeed(env, { type: 'feed', action: 'new', id: ev.id, reply: isReply, pubkey: ev.pubkey });
       let parentAuthor = null;
       if (parent) {
         await env.DB.prepare('UPDATE posts SET reply_count = reply_count + 1 WHERE id = ?')
@@ -613,6 +633,12 @@ export default {
       if (url.pathname === '/api/health') return json({ ok: true, at: Date.now() });
       if (url.pathname === '/api/events' && request.method === 'POST')
         return await handleEvent(request, env);
+      if (url.pathname === '/api/feed/ws') {
+        if ((request.headers.get('Upgrade') || '').toLowerCase() !== 'websocket')
+          return new Response('WebSocket upgrade required', { status: 426, headers: CORS });
+        const stub = env.FEEDROOM.idFromName('square');
+        return env.FEEDROOM.get(stub).fetch(request);
+      }
       if (url.pathname === '/api/feed') return await handleFeed(url, env);
       if (url.pathname === '/api/thread') return await handleThread(url, env);
       if (url.pathname === '/api/profile') return await handleProfile(url, env);
