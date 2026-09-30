@@ -1,4 +1,4 @@
-/* Soul Economy Shop — pay-what-you-want + free option.
+/* Soul Economy Shop — buy a soul, or collect it free.
    Additive module. Owns: per-card Buy buttons, cart, Stripe checkout,
    free minting, license delivery, `?shop=thanks&order=` polling. */
 (function () {
@@ -136,9 +136,9 @@
       const buy = document.createElement('button');
       buy.type = 'button';
       buy.className = 'shop-buy';
-      buy.textContent = '🛒 Add';
+      buy.textContent = '🛒 Buy';
       buy.setAttribute('data-slug', slug);
-      buy.setAttribute('aria-label', 'Add ' + nm + ' to cart');
+      buy.setAttribute('aria-label', 'Buy ' + nm);
       buy.addEventListener('click', (e) => {
         e.stopPropagation();
         addToCart(slug, nm);
@@ -146,9 +146,9 @@
       const fr = document.createElement('button');
       fr.type = 'button';
       fr.className = 'shop-free';
-      fr.textContent = 'Free';
+      fr.textContent = '✦ Collect';
       fr.setAttribute('data-slug', slug);
-      fr.setAttribute('aria-label', 'Get ' + nm + ' free');
+      fr.setAttribute('aria-label', 'Collect ' + nm + ' free');
       fr.addEventListener('click', (e) => {
         e.stopPropagation();
         mintFree([slug]);
@@ -199,7 +199,7 @@
   }
 
   function openCart() {
-    const m = modalShell('Your Souls', 'Pay-what-you-want. Free is welcome — paying keeps the blood flowing.');
+    const m = modalShell('Your Souls', 'Buy a soul — or collect it free. Paying keeps the blood flowing.');
     const body = m.body;
     const render = () => {
       body.innerHTML = '';
@@ -236,7 +236,7 @@
       body.appendChild(t);
       const acts = document.createElement('div');
       acts.className = 'shop-actions';
-      acts.innerHTML = `<button id="payBtn">Pay ${money(total)} with Card</button><button id="freeBtn">Get All Free</button>`;
+      acts.innerHTML = `<button id="payBtn">Buy Soul · ${money(total)}</button><button id="freeBtn">✦ Collect Soul</button>`;
       const payBtn = acts.querySelector('#payBtn');
       const freeBtn = acts.querySelector('#freeBtn');
       payBtn.addEventListener('click', () => checkoutCard(cart.items));

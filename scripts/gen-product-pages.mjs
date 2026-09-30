@@ -67,7 +67,7 @@ for (const item of catalog) {
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>${esc(item.name)} — Soul Economy</title>
-<meta name="description" content="${esc((item.desc || '').slice(0, 160))}. Pay-what-you-want, or take it free — a portable AI soul from the Digital Library of Souls." />
+<meta name="description" content="${esc((item.desc || '').slice(0, 160))}. Buy the soul, or collect it free — a portable AI soul from the Digital Library of Souls." />
 <meta name="robots" content="index, follow" />
 <link rel="canonical" href="${SITE}/p/${slug}.html" />
 <meta property="og:type" content="product" />
@@ -97,7 +97,7 @@ ${item.image ? `<meta name="twitter:image" content="${abs(item.image)}" />` : ''
     "priceCurrency": "USD",
     "price": ${(suggested / 100).toFixed(2)},
     "availability": "https://schema.org/InStock",
-    "description": "Pay-what-you-want — or take this soul free."
+    "description": "Buy the soul — or collect it free."
   },
   "additionalProperty": [
     { "@type": "PropertyValue", "name": "Profit", "value": "${p[0].v}" },
@@ -176,10 +176,10 @@ h1{font-size:2rem;line-height:1.15;margin-bottom:10px}
       ${(item.tags || []).length ? `<div class="tags">${item.tags.map(t => `<span>${esc(t)}</span>`).join('')}</div>` : ''}
       <div class="act">
         ${dl ? `<a class="btn btn-dl" href="${esc(dl)}" download>⬇ Download</a>` : (play ? `<a class="btn btn-dl" href="${esc(play)}" target="_blank" rel="noopener">▶ Play</a>` : '')}
-        <button class="btn btn-buy" data-shop-slug="${esc(slug)}" data-name="${esc(item.name)}">🛒 Add · PWYW</button>
-        <button class="btn btn-free" data-shop-free="${esc(slug)}" data-name="${esc(item.name)}">Free</button>
+        <button class="btn btn-buy" data-shop-slug="${esc(slug)}" data-name="${esc(item.name)}">🛒 Buy Soul</button>
+        <button class="btn btn-free" data-shop-free="${esc(slug)}" data-name="${esc(item.name)}">✦ Collect Soul</button>
       </div>
-      <div class="note">Pay-what-you-want · or take this soul free. Prices keep the blood flowing.</div>
+      <div class="note">Buy a soul · or collect it free. Paying keeps the blood flowing.</div>
     </div>
   </div>
   <div class="meta">
