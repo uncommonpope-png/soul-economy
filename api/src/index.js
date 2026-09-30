@@ -675,6 +675,54 @@ async function handleAsk(request, env) {
   }
 }
 
+const MEDIA_TYPES = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp', 'image/gif': 'gif' };
+const MEDIA_MAX = 4 * 1024 * 1024;
+
+async function handleMedia(request, env) {
+  try {
+    const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
+    if (!(await rateLimit(env, `media:${ip}`, 40, 3600_000)))
+      return json({ ok: false, error: 'rate limited' }, 429);
+    const body = await request.json().catch(() => null);
+    if (!body || !body.data || !body.type) return json({ ok: false, error: 'bad request' }, 400);
+    const ext = MEDIA_TYPES[body.type];
+    if (!ext) return json({ ok: false, error: 'unsupported type' }, 415);
+    if (typeof body.data !== 'string' || body.data.length > Math.ceil((MEDIA_MAX * 4) / 3) + 1024)
+      return json({ ok: false, error: 'too large' }, 413);
+    const b64 = body.data.replace(/^data:[^,]+,/, '');
+    const bytes = Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
+    if (bytes.length > MEDIA_MAX) return json({ ok: false, error: 'too large' }, 413);
+    const key = `m/${new Date().toISOString().slice(0, 10)}/${crypto.randomUUID()}.${ext}`;
+    await env.MEDIA.put(key, bytes, { httpMetadata: { contentType: body.type } });
+    const origin = env.MEDIA_ORIGIN || 'https://soul-economy.uncommonpope.workers.dev';
+    return json({ ok: true, url: `${origin}/media/${key}`, key });
+  } catch (e) {
+    return json({ ok: false, error: String((e && e.message) || e) }, 500);
+  }
+}
+
+async function handleMediaGet(request, url, env) {
+  try {
+    const key = decodeURIComponent(url.pathname.slice('/media/'.length));
+    if (!/^m\/\d{4}-\d{2}-\d{2}\/[0-9a-f-]{36}\.[a-z]+$/.test(key))
+      return json({ ok: false, error: 'bad key' }, 400);
+    const obj = await env.MEDIA.get(key);
+    if (!obj) return json({ ok: false, error: 'not found' }, 404);
+    const etag = obj.httpEtag;
+    const headers = {
+      'Content-Type': (obj.httpMetadata && obj.httpMetadata.contentType) || 'application/octet-stream',
+      'Cache-Control': 'public, max-age=31536000, immutable',
+      ETag: etag,
+      'Access-Control-Allow-Origin': '*',
+    };
+    if (request.headers.get('If-None-Match') === etag)
+      return new Response(null, { status: 304, headers: { ETag: etag } });
+    return new Response(obj.body, { headers });
+  } catch (e) {
+    return json({ ok: false, error: String((e && e.message) || e) }, 500);
+  }
+}
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -716,6 +764,8 @@ export default {
         return await handleNewsletter(request, env);
       if (url.pathname === '/api/stats') return await handleStats(env);
       if (url.pathname === '/api/ask' && request.method === 'POST') return await handleAsk(request, env);
+      if (url.pathname === '/api/feed/media' && request.method === 'POST') return await handleMedia(request, env);
+      if (url.pathname.startsWith('/media/')) return await handleMediaGet(request, url, env);
       if (env.ASSETS) return env.ASSETS.fetch(request);
       return json({ ok: false, error: 'not found' }, 404);
     } catch (e) {

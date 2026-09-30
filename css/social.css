@@ -219,3 +219,15 @@
   .sq-avatar { flex-basis: 36px; width: 36px; height: 36px; font-size: 0.78rem; }
   .sq-notify-pop { width: min(320px, calc(100vw - 32px)); }
 }
+
+.sq-foot-actions { display: flex; align-items: center; gap: 10px; }
+.sq-attach {
+  font-size: 0.78rem; padding: 7px 11px; border-radius: 30px; color: var(--text-gray);
+  border: 1px solid var(--glass-edge); background: var(--glass-bg); transition: var(--transition);
+}
+.sq-attach:hover { color: #fff; border-color: var(--purple); }
+.sq-attach:disabled { opacity: 0.45; cursor: wait; }
+.sq-post-body img {
+  display: block; max-width: 100%; max-height: 420px; margin-top: 8px; border-radius: 12px;
+  border: 1px solid var(--glass-edge); cursor: zoom-in; object-fit: cover;
+}

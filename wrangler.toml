@@ -9,7 +9,11 @@ binding = "AI"
 [assets]
 directory = "./"
 binding = "ASSETS"
-run_worker_first = ["/api/*", "/ws", "/healthz"]
+run_worker_first = ["/api/*", "/ws", "/healthz", "/media/*"]
+
+[[r2_buckets]]
+binding = "MEDIA"
+bucket_name = "soul-economy-media"
 
 [[kv_namespaces]]
 binding = "KV"

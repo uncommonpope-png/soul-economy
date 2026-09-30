@@ -8,6 +8,7 @@ import {
   state, loadFeed, submitPost, updateCount, setSession, renderIdentity,
   openModal, closeModal, toggleNotifyPop, pollNotifications, requireSignIn, esc, shortPk, postCard,
   startFeedLive,
+  status,
 } from './feed.js';
 
 const $ = (id) => document.getElementById(id);
@@ -263,10 +264,52 @@ async function wire() {
   }
 
   // composer
-  const ta = $('sqText');
-  if (ta) ta.addEventListener('input', updateCount);
-  const post = $('sqPost');
-  if (post) post.onclick = submitPost;
+const ta = $('sqText');
+if (ta) ta.addEventListener('input', updateCount);
+const post = $('sqPost');
+if (post) post.onclick = submitPost;
+
+const attach = $('sqAttach');
+const file = $('sqFile');
+if (attach && file) {
+  attach.onclick = () => file.click();
+  file.onchange = async () => {
+    const f = file.files && file.files[0];
+    file.value = '';
+    if (!f) return;
+    if (!f.type || !f.type.startsWith('image/')) return status('images only');
+    if (f.size > 4 * 1024 * 1024) return status('image too big — 4MB max');
+    attach.disabled = true;
+    attach.textContent = '⏳';
+    status('uploading…');
+    try {
+      const data = await new Promise((res, rej) => {
+        const r = new FileReader();
+        r.onload = () => res(String(r.result).split(',')[1] || '');
+        r.onerror = rej;
+        r.readAsDataURL(f);
+      });
+      const res = await fetch('https://soul-economy.uncommonpope.workers.dev/api/feed/media', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: f.type, name: String(f.name || '').slice(0, 80), data }),
+      });
+      const j = await res.json().catch(() => ({}));
+      if (!j.ok) throw new Error(j.error || 'HTTP ' + res.status);
+      const box = $('sqText');
+      const md = `![${String(f.name || 'image').replace(/[[\]()]/g, '')}](${j.url})`;
+      const cur = box.value || '';
+      box.value = (cur ? cur + (cur.endsWith('\n') ? '' : '\n') + md : md).slice(0, 4000);
+      updateCount();
+      status('image attached ✓');
+    } catch (e) {
+      status('upload failed — ' + (e.message || ''));
+    } finally {
+      attach.disabled = false;
+      attach.textContent = '🖼';
+    }
+  };
+}
 
   // tabs
   document.querySelectorAll('.sq-tab').forEach((t) => {

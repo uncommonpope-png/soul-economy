@@ -79,7 +79,7 @@ function saveReaction(id, content) {
   localStorage.setItem('sqReactions', JSON.stringify(m));
 }
 
-function status(msg) {
+export function status(msg) {
   const el = $('sqStatus');
   if (el) el.textContent = msg || '';
 }
@@ -231,7 +231,7 @@ export function postCard(p, index = 0) {
 
   const body = document.createElement('div');
   body.className = 'sq-post-body';
-  body.textContent = p.content || '';
+  fillBody(body, p.content || '');
   if (p.soul_slug) {
     const chip = document.createElement('span');
     chip.className = 'sq-soul-chip';
@@ -271,6 +271,30 @@ function pltOf(p) {
   } catch {
     return { p: 0, l: 0, t: 0 };
   }
+}
+
+const MEDIA_RE = /!\[([^\]]*)\]\((https:\/\/soul-economy\.uncommonpope\.workers\.dev\/media\/[^)\s]+)\)/g;
+function fillBody(el, content) {
+  const text = String(content || '');
+  const frag = document.createDocumentFragment();
+  let last = 0;
+  let m;
+  let n = 0;
+  MEDIA_RE.lastIndex = 0;
+  while ((m = MEDIA_RE.exec(text)) && n < 6) {
+    if (m.index > last) frag.appendChild(document.createTextNode(text.slice(last, m.index)));
+    const img = document.createElement('img');
+    img.src = m[2];
+    img.alt = m[1] || 'image';
+    img.loading = 'lazy';
+    img.onclick = () => window.open(m[2], '_blank', 'noopener');
+    frag.appendChild(img);
+    last = m.index + m[0].length;
+    n++;
+  }
+  if (last < text.length) frag.appendChild(document.createTextNode(text.slice(last)));
+  el.textContent = '';
+  el.appendChild(frag);
 }
 
 function actionBtn(kind, icon, count, handler) {

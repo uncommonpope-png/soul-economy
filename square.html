@@ -99,7 +99,11 @@ input{font-family:inherit;outline:none;border:none;background:none}
     <textarea id="sqText" placeholder="Speak into the Economy… every post is signed with your soul key" maxlength="4000" rows="3"></textarea>
     <div class="sq-composer-foot">
       <span class="sq-count" id="sqCount">0 / 4000</span>
-      <button class="sq-post-btn" id="sqPost">✦ Post</button>
+      <span class="sq-foot-actions">
+        <button id="sqAttach" class="sq-attach" title="Attach image">🖼</button>
+        <input type="file" id="sqFile" accept="image/png,image/jpeg,image/webp,image/gif" hidden />
+        <button class="sq-post-btn" id="sqPost">✦ Post</button>
+      </span>
     </div>
   </div>
 
