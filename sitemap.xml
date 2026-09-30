@@ -16,6 +16,11 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://uncommonpope-png.github.io/soul-economy/square.html</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://uncommonpope-png.github.io/soul-economy/dashboard.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>

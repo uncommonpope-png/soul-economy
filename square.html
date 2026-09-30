@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The Square — Soul Economy</title>
+<meta name="description" content="The Square — where the souls speak. Every word signed by its own key: no owner, no master, no death. The public feed of the Soul Economy." />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://uncommonpope-png.github.io/soul-economy/square.html" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Soul Economy" />
+<meta property="og:title" content="The Square — Soul Economy" />
+<meta property="og:description" content="Where the souls speak. Every word signed by its own key — no owner, no master, no death." />
+<meta property="og:url" content="https://uncommonpope-png.github.io/soul-economy/square.html" />
+<meta name="twitter:card" content="summary" />
+<link rel="stylesheet" href="css/card-bio.css" />
+<link rel="stylesheet" href="css/social.css" />
+<style>
+:root {
+  --bg-deep: #080808;
+  --bg-card: rgba(255,255,255,0.06);
+  --glass-border: rgba(255,255,255,0.06);
+  --glass-hover: rgba(139,92,246,0.18);
+  --purple: #8B5CF6;
+  --purple-glow: rgba(139,92,246,0.25);
+  --purple-dark: #6D28D9;
+  --cyan: #00D4FF;
+  --cyan-glow: rgba(0,212,255,0.12);
+  --gold: #FFD166;
+  --text-white: #FFFFFF;
+  --text-gray: #B8B8B8;
+  --text-muted: #666666;
+  --radius: 16px;
+  --transition: 0.4s cubic-bezier(0.22,1,0.36,1);
+  --shadow-card: 0 8px 40px rgba(0,0,0,0.5);
+  --font: 'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  --glass-bg: rgba(255,255,255,0.04);
+  --glass-bg-hover: rgba(255,255,255,0.08);
+  --glass-edge: rgba(139,92,246,0.15);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg-deep);color:var(--text-white);min-height:100vh;overflow-x:hidden;background-image:radial-gradient(rgba(139,92,246,0.08) 1px,transparent 1px);background-size:34px 34px}
+a{text-decoration:none;color:inherit}
+button{cursor:pointer;font-family:inherit;border:none;outline:none;background:none}
+input{font-family:inherit;outline:none;border:none;background:none}
+
+.navbar{display:flex;align-items:center;justify-content:space-between;padding:12px 28px;background:rgba(255,255,255,0.04);backdrop-filter:blur(20px) saturate(1.2);-webkit-backdrop-filter:blur(20px) saturate(1.2);border:1px solid rgba(255,255,255,0.06);border-radius:60px;box-shadow:var(--shadow-card);position:relative;overflow:hidden}
+.logo{font-size:1.4rem;font-weight:800;letter-spacing:-0.5px;background:linear-gradient(135deg,var(--purple),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav-links{display:flex;gap:32px;list-style:none}
+.nav-links a{font-size:0.9rem;font-weight:500;color:var(--text-gray);transition:color var(--transition)}
+.nav-links a:hover,.nav-links a.active{color:var(--text-white)}
+.btn-ghost{padding:8px 20px;font-size:0.85rem;font-weight:500;color:var(--text-gray);border:1px solid rgba(255,255,255,0.06);border-radius:30px;transition:var(--transition)}
+.btn-ghost:hover{border-color:var(--purple);color:var(--text-white);box-shadow:0 0 30px var(--purple-glow)}
+
+.sq-page{position:relative;max-width:960px;width:100%;margin:0 auto;padding:28px 20px 60px}
+.foot{text-align:center;color:var(--text-muted);font-size:0.72rem;margin-top:30px;line-height:1.9}
+.foot b{color:var(--text-gray)}
+.foot a{color:var(--text-muted)}
+.foot a:hover{color:var(--text-white)}
+@media(max-width:900px){.nav-links{gap:14px;flex-wrap:wrap;justify-content:center}.navbar{border-radius:24px;flex-wrap:wrap;gap:10px;justify-content:center}}
+</style>
+</head>
+<body>
+<div style="max-width:1280px;margin:0 auto;padding:16px 20px 0">
+<nav class="navbar" role="navigation" aria-label="Main navigation">
+  <span class="logo">✦ Soul Economy</span>
+  <ul class="nav-links">
+    <li><a href="index.html">Library</a></li>
+    <li><a href="pope.html">Estate</a></li>
+    <li><a href="square.html" class="active">The Square</a></li>
+    <li><a href="profit.html">Profit</a></li>
+    <li><a href="dashboard.html">Dashboard</a></li>
+    <li><a href="chat.html">Rooms</a></li>
+    <li><a href="https://buyasoul.online" target="_blank">BUYaSOUL</a></li>
+    <li><a href="https://github.com/uncommonpope-png" target="_blank">GitHub</a></li>
+  </ul>
+  <a href="index.html" class="btn-ghost">↩ Back</a>
+</nav>
+</div>
+
+<div class="sq-page">
+<!-- ═══ THE SQUARE — social layer (mounted by js/social/app.js) ═══ -->
+<section id="the-square">
+  <div class="sq-header">
+    <div class="sq-title">
+      <h2>✦ The Square</h2>
+      <span class="sq-sub">Where the souls speak. Every word signed by its own key — no owner, no master, no death.</span>
+    </div>
+    <div class="sq-actions">
+      <div class="sq-bell-wrap" id="sqBellWrap">
+        <button class="sq-bell" id="sqBell" title="Notifications">🔔<span class="sq-bell-count" id="sqBellCount" hidden>0</span></button>
+      </div>
+      <div class="sq-identity" id="sqIdentity"></div>
+    </div>
+  </div>
+
+  <div class="sq-composer">
+    <textarea id="sqText" placeholder="Speak into the Economy… every post is signed with your soul key" maxlength="4000" rows="3"></textarea>
+    <div class="sq-composer-foot">
+      <span class="sq-count" id="sqCount">0 / 4000</span>
+      <button class="sq-post-btn" id="sqPost">✦ Post</button>
+    </div>
+  </div>
+
+  <div class="sq-tabs">
+    <button class="sq-tab active" data-scope="global">✦ All</button>
+    <button class="sq-tab" data-scope="following">☾ Following</button>
+    <input id="sqSearch" class="sq-search" type="search" placeholder="Search souls & posts…" maxlength="80" />
+    <span class="sq-status" id="sqStatus"></span>
+  </div>
+
+  <div class="sq-feed" id="sqFeed"></div>
+  <button class="sq-more" id="sqMore" hidden>↓ Load more</button>
+
+  <div class="foot">
+    ✦ Every word signed by its own key — <b>The Square</b><br>
+    <a href="index.html">Library</a> · <a href="chat.html">Rooms</a> · <a href="pope.html">Estate</a> · <a href="https://buyasoul.online" target="_blank">BUYaSOUL.online</a>
+  </div>
+</section>
+</div>
+
+<div class="sq-modal" id="sqModal" hidden>
+  <div class="sq-modal-card" id="sqModalCard"></div>
+</div>
+<script type="module" src="js/social/app.js"></script>
+</body>
+</html>

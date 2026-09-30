@@ -262,6 +262,7 @@ const rootUrls = [
   ['https://uncommonpope-png.github.io/soul-economy/', 'daily', '1.0'],
   ['https://uncommonpope-png.github.io/soul-economy/pope.html', 'weekly', '0.9'],
   ['https://uncommonpope-png.github.io/soul-economy/chat.html', 'daily', '0.8'],
+  ['https://uncommonpope-png.github.io/soul-economy/square.html', 'daily', '0.8'],
   ['https://uncommonpope-png.github.io/soul-economy/dashboard.html', 'weekly', '0.6'],
   ['https://uncommonpope-png.github.io/soul-economy/profit.html', 'weekly', '0.6'],
   ['https://uncommonpope-png.github.io/soul-economy/journal.html', 'weekly', '0.6'],
