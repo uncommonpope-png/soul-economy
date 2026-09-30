@@ -3,7 +3,10 @@
    free minting, license delivery, `?shop=thanks&order=` polling. */
 (function () {
   'use strict';
-  const API_BASE = 'https://family-chat-qb18.onrender.com';
+  const API_BASE =
+    location.hostname === 'soul-economy.uncommonpope.workers.dev'
+      ? ''
+      : 'https://soul-economy.uncommonpope.workers.dev';
   const CART_KEY = 'soulCartV1';
   const HOME =
     location.origin + location.pathname.replace(/\/p\/[^/]+\.html$/, '/index.html').replace(/\/$/, '/index.html');
