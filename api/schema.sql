@@ -1,91 +1,144 @@
--- Soul Economy social schema (Cloudflare D1 / SQLite)
+-- Soul Economy backend schema — run in Supabase SQL Editor (or `psql`).
+-- Idempotent-ish: safe to run once on an empty project.
 
-CREATE TABLE IF NOT EXISTS users (
-  pubkey       TEXT PRIMARY KEY,
-  name         TEXT DEFAULT '',
-  display_name TEXT DEFAULT '',
-  about        TEXT DEFAULT '',
-  picture      TEXT DEFAULT '',
-  npub         TEXT DEFAULT '',
-  plt          TEXT DEFAULT '{"p":0,"l":0,"t":0}',
-  created_at   INTEGER DEFAULT 0,
-  updated_at   INTEGER DEFAULT 0
+create extension if not exists pgcrypto;
+
+-- ---------------------------------------------------------------------------
+-- Identity (auth.users comes with Supabase Auth)
+-- ---------------------------------------------------------------------------
+create table if not exists public.profiles (
+  id         uuid primary key references auth.users (id) on delete cascade,
+  handle     text unique not null,
+  avatar     text,
+  bio        text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
 );
 
-CREATE TABLE IF NOT EXISTS posts (
-  id           TEXT PRIMARY KEY,
-  pubkey       TEXT NOT NULL,
-  created_at   INTEGER NOT NULL,
-  content      TEXT NOT NULL DEFAULT '',
-  kind         INTEGER NOT NULL DEFAULT 1,
-  root_id      TEXT,
-  parent_id    TEXT,
-  soul_slug    TEXT,
-  realm        TEXT,
-  reply_count  INTEGER NOT NULL DEFAULT 0,
-  like_count   INTEGER NOT NULL DEFAULT 0,
-  repost_count INTEGER NOT NULL DEFAULT 0,
-  plt          TEXT DEFAULT '{}',
-  deleted      INTEGER NOT NULL DEFAULT 0,
-  hidden       INTEGER NOT NULL DEFAULT 0
-);
-CREATE INDEX IF NOT EXISTS idx_posts_created   ON posts(created_at DESC);
-CREATE INDEX IF NOT EXISTS idx_posts_pubkey    ON posts(pubkey, created_at DESC);
-CREATE INDEX IF NOT EXISTS idx_posts_root      ON posts(root_id, created_at);
-CREATE INDEX IF NOT EXISTS idx_posts_parent    ON posts(parent_id, created_at);
-CREATE INDEX IF NOT EXISTS idx_posts_soul      ON posts(soul_slug, created_at DESC);
-CREATE INDEX IF NOT EXISTS idx_posts_toplevel  ON posts(deleted, hidden, parent_id, created_at DESC);
-
-CREATE TABLE IF NOT EXISTS reactions (
-  event_id   TEXT PRIMARY KEY,
-  pubkey     TEXT NOT NULL,
-  target_id  TEXT NOT NULL,
-  content    TEXT DEFAULT '+',
-  created_at INTEGER NOT NULL
-);
-CREATE INDEX IF NOT EXISTS idx_reactions_target  ON reactions(target_id);
-CREATE INDEX IF NOT EXISTS idx_reactions_pubkey  ON reactions(pubkey, target_id);
-
-CREATE TABLE IF NOT EXISTS follows (
-  follower   TEXT NOT NULL,
-  followee   TEXT NOT NULL,
-  created_at INTEGER NOT NULL,
-  PRIMARY KEY (follower, followee)
-);
-CREATE INDEX IF NOT EXISTS idx_follows_followee ON follows(followee);
-
-CREATE TABLE IF NOT EXISTS notifications (
-  id         INTEGER PRIMARY KEY AUTOINCREMENT,
-  owner      TEXT NOT NULL,
-  type       TEXT NOT NULL,
-  actor      TEXT NOT NULL,
-  target_id  TEXT,
-  snippet    TEXT DEFAULT '',
-  created_at INTEGER NOT NULL,
-  is_read    INTEGER NOT NULL DEFAULT 0
-);
-CREATE INDEX IF NOT EXISTS idx_notify_owner ON notifications(owner, is_read, created_at DESC);
-
-CREATE TABLE IF NOT EXISTS mutes (
-  owner      TEXT NOT NULL,
-  muted      TEXT NOT NULL,
-  created_at INTEGER DEFAULT 0,
-  PRIMARY KEY (owner, muted)
+-- ---------------------------------------------------------------------------
+-- Catalog (seeded from data/catalog.json by seed.mjs)
+-- ---------------------------------------------------------------------------
+create table if not exists public.products (
+  slug            text primary key,
+  name            text not null,
+  type            text,
+  icon            text,
+  image           text,
+  "desc"          text,
+  details         text,
+  mode            text not null default 'pwyp',          -- pwyp | fixed | free
+  price_cents     int,                                   -- fixed mode only
+  suggested_cents int,                                   -- PWYP suggestion
+  min_cents       int not null default 0,                -- PWYP floor
+  license         text,
+  payout_pct      numeric not null default 60,           -- Oracle's share of each sale
+  featured        boolean not null default false,
+  tags            text[] not null default '{}',
+  contents        text[] not null default '{}',
+  requirements    text,
+  install         text,
+  version         text,
+  size            text,
+  download        text,
+  sort            int not null default 0,
+  active          boolean not null default true,
+  created_at      timestamptz not null default now(),
+  updated_at      timestamptz not null default now()
 );
 
-CREATE TABLE IF NOT EXISTS rate_limits (
-  key          TEXT PRIMARY KEY,
-  window_start INTEGER NOT NULL,
-  count        INTEGER NOT NULL DEFAULT 0
+-- ---------------------------------------------------------------------------
+-- Orders + licenses (money path)
+-- ---------------------------------------------------------------------------
+create table if not exists public.orders (
+  id                 uuid primary key default gen_random_uuid(),
+  items              jsonb not null default '[]',         -- [{slug, qty, cents}]
+  amount_cents       int not null default 0,
+  currency           text not null default 'usd',
+  status             text not null default 'created',     -- created | paid
+  stripe_payment_id  text,
+  solana_tx          text,
+  licenses           jsonb not null default '[]',         -- [{slug, key, created_at}]
+  created_at         timestamptz not null default now(),
+  paid_at            timestamptz
 );
 
-CREATE TABLE IF NOT EXISTS souls (
-  slug          TEXT PRIMARY KEY,
-  name          TEXT DEFAULT '',
-  type          TEXT DEFAULT '',
-  plt           TEXT DEFAULT '',
-  file          TEXT DEFAULT '',
-  anchor_id     TEXT DEFAULT '',
-  comment_count INTEGER NOT NULL DEFAULT 0,
-  updated_at    INTEGER DEFAULT 0
+-- ---------------------------------------------------------------------------
+-- Social (Phase 3 — auth-required endpoints)
+-- ---------------------------------------------------------------------------
+create table if not exists public.posts (
+  id         uuid primary key default gen_random_uuid(),
+  author     uuid not null references public.profiles (id) on delete cascade,
+  soul       text,
+  kind       text not null default 'text',                -- text | link | image | video | poll
+  body       text not null,
+  url        text,
+  vis        text not null default 'public',              -- public | followers | private
+  created_at timestamptz not null default now(),
+  edited_at  timestamptz
 );
+
+create table if not exists public.likes (
+  post_id    uuid not null references public.posts (id) on delete cascade,
+  user_id    uuid not null references public.profiles (id) on delete cascade,
+  created_at timestamptz not null default now(),
+  primary key (post_id, user_id)
+);
+
+create table if not exists public.follows (
+  follower   uuid not null references public.profiles (id) on delete cascade,
+  target     uuid not null references public.profiles (id) on delete cascade,
+  kind       text not null default 'person',              -- person | soul | agent | group
+  created_at timestamptz not null default now(),
+  primary key (follower, target, kind)
+);
+
+-- ---------------------------------------------------------------------------
+-- Indexes
+-- ---------------------------------------------------------------------------
+create index if not exists products_active_sort_idx on public.products (active, sort);
+create index if not exists products_type_idx      on public.products (type);
+create index if not exists orders_status_idx      on public.orders (status);
+create index if not exists posts_author_idx       on public.posts (author);
+create index if not exists posts_created_idx      on public.posts (created_at desc);
+create index if not exists likes_post_idx         on public.likes (post_id);
+
+-- ---------------------------------------------------------------------------
+-- RLS
+-- ---------------------------------------------------------------------------
+alter table public.products enable row level security;
+alter table public.profiles enable row level security;
+alter table public.orders enable row level security;
+alter table public.posts enable row level security;
+alter table public.likes enable row level security;
+alter table public.follows enable row level security;
+
+drop policy if exists "products public read" on public.products;
+create policy "products public read" on public.products
+  for select using (active = true);
+
+drop policy if exists "profiles public read" on public.profiles;
+create policy "profiles public read" on public.profiles
+  for select using (true);
+
+drop policy if exists "profiles update own" on public.profiles;
+create policy "profiles update own" on public.profiles
+  for update using (auth.uid() = id);
+
+drop policy if exists "posts public read" on public.posts;
+create policy "posts public read" on public.posts
+  for select using (vis = 'public');
+
+drop policy if exists "posts auth write" on public.posts;
+create policy "posts auth write" on public.posts
+  for insert with check (auth.uid() = author);
+
+drop policy if exists "likes auth write" on public.likes;
+create policy "likes auth write" on public.likes
+  for insert with check (auth.uid() = user_id);
+
+drop policy if exists "follows auth write" on public.follows;
+create policy "follows auth write" on public.follows
+  for insert with check (auth.uid() = follower);
+
+-- Orders: no anon/authenticated access (the API service reads/writes them).
+-- The REST order-status endpoint is served by the app with the service key.
