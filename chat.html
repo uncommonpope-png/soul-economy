@@ -95,6 +95,23 @@ input{font-family:inherit;outline:none;border:none;background:none}
 .foot{text-align:center;color:var(--text-muted);font-size:0.72rem;margin-top:26px;line-height:1.8}
 .foot b{color:var(--text-gray)}
 </style>
+<style id="mobile-repair-css">
+/* === MOBILE REPAIR (additive, 2026-10-21) — chat.html had zero @media
+   rules: the 8-link navbar overflowed off-screen, and the name/composer
+   inputs (flex:1 without min-width:0) squeezed their buttons. === */
+@media (max-width:640px){
+  .navbar{flex-wrap:wrap;row-gap:6px;padding:10px 14px;border-radius:28px}
+  .logo{font-size:1.1rem}
+  .nav-links{flex-wrap:wrap;gap:2px 14px}
+  .nav-links a{display:inline-flex;align-items:center;min-height:40px}
+  .room-head{flex-wrap:wrap}
+  .namebar input{min-width:0;min-height:44px}
+  #name{min-height:44px}
+  #joinBtn{white-space:nowrap;min-height:44px}
+  .composer input{min-width:0;min-height:44px}
+  .composer button{flex:none}
+}
+</style>
 </head>
 <body>
 <div style="max-width:1280px;margin:0 auto;padding:16px 20px 0">
@@ -160,7 +177,7 @@ input{font-family:inherit;outline:none;border:none;background:none}
 (function () {
   const NAME_KEY = 'roomSoulName';
   const URLs = [
-    'wss://soul-economy.uncommonpope.workers.dev',
+    'wss://soul-economy.uncommonpope.workers.dev/ws',
     'wss://family-chat-qb18.onrender.com',
     'ws://localhost:7787'
   ];

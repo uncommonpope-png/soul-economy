@@ -57,6 +57,10 @@ for (const item of catalog) {
       : item.file
         ? (item.file.startsWith('downloads/') || item.file.startsWith('https:') ? item.file : (item.file.startsWith('<') ? null : `downloads/${item.file}`))
         : null;
+  // Product pages live under /p/, so root-relative downloads/ paths must step
+  // up one level or they 404 (mobile repair, 2026-10-21).
+  const relDl = (u) => (typeof u === 'string' && u.startsWith('downloads/') ? `../${u}` : u);
+  const dlPage = relDl(dl);
   const play = item.url ? item.url : null;
   const plt = String(item.plt || '0.7/0.6/0.4').split('/');
   const p = ['P', 'L', 'T'].map((k, i) => ({ k, v: plt[i] || '0.5' }));
@@ -165,7 +169,7 @@ h1{font-size:2rem;line-height:1.15;margin-bottom:10px}
     <span class="est">SOUL ECONOMY · BUYASOUL</span>
   </div>
   <div class="hero">
-    ${item.image ? `<img class="img" src="${item.image}" alt="${esc(item.name)}" loading="lazy" />` : `<div class="imgph">${item.icon || '✦'}</div>`}
+    ${item.image ? `<img class="img" src="${relDl(item.image)}" alt="${esc(item.name)}" loading="lazy" />` : `<div class="imgph">${item.icon || '✦'}</div>`}
     <div class="info">
       <div class="type">${esc(item.type || 'soul')} ${item.featured ? '· Featured' : ''}</div>
       <h1>${item.icon ? item.icon + ' ' : ''}${esc(item.name)}</h1>
@@ -175,7 +179,7 @@ h1{font-size:2rem;line-height:1.15;margin-bottom:10px}
       <div class="desc">${esc(item.desc || '')}</div>
       ${(item.tags || []).length ? `<div class="tags">${item.tags.map(t => `<span>${esc(t)}</span>`).join('')}</div>` : ''}
       <div class="act">
-        ${dl ? `<a class="btn btn-dl" href="${esc(dl)}" download>⬇ Download</a>` : (play ? `<a class="btn btn-dl" href="${esc(play)}" target="_blank" rel="noopener">▶ Play</a>` : '')}
+        ${dl ? `<a class="btn btn-dl" href="${esc(dlPage)}" download>⬇ Download</a>` : (play ? `<a class="btn btn-dl" href="${esc(play)}" target="_blank" rel="noopener">▶ Play</a>` : '')}
         <button class="btn btn-buy" data-shop-slug="${esc(slug)}" data-name="${esc(item.name)}">🛒 Buy Soul</button>
         <button class="btn btn-free" data-shop-free="${esc(slug)}" data-name="${esc(item.name)}">✦ Collect Soul</button>
       </div>
