@@ -21,6 +21,6 @@
 window.PORTAL_CONFIG = {
   vesselLive: false,
   vesselDownloadUrl: 'downloads/vessel.zip',
-  stripePaymentLink: '',
+  stripePaymentLink: 'https://buy.stripe.com/test_4gMcN5dX09Za7Wh0eO4c80i',
   vesselMinDonation: '$4'
 };
