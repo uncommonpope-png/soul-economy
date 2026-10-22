@@ -20,7 +20,7 @@
    ============================================================ */
 window.PORTAL_CONFIG = {
   vesselLive: true, // flipped 2026-10-22: wake test 4/4 (both flip conditions met)
-  vesselDownloadUrl: 'downloads/vessel.zip',
+  vesselDownloadUrl: 'https://uncommonpope-png.github.io/soul-economy/downloads/vessel.zip',
   stripePaymentLink: 'https://buy.stripe.com/test_4gMcN5dX09Za7Wh0eO4c80i',
   vesselMinDonation: '$4'
 };

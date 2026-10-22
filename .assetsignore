@@ -7,3 +7,5 @@ api/node_modules
 .env*
 # 33.5MB exceeds the 25MiB per-asset limit — served via _redirects to the GH Pages mirror (moves to R2 in Phase 2)
 downloads/soul-scribe-v1.4.0.zip
+# 61MB exceeds the 25MiB per-asset limit — broke the Worker deploy (run 39863988557, "Asset too large"); served from the GH Pages mirror, portal-config points there
+downloads/vessel.zip
