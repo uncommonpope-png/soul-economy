@@ -29,6 +29,18 @@ export class FamilyRoom {
     );
   }
 
+  loadHistory() {
+    try {
+      const rows = this.sql()
+        .exec('SELECT id, name, text, t FROM history ORDER BY id DESC LIMIT ?', HISTORY_LIMIT)
+        .toArray()
+        .reverse();
+      return rows.map((r) => ({ type: 'msg', id: r.id, name: r.name, text: r.text, t: r.t }));
+    } catch (e) {
+      return [];
+    }
+  }
+
   async fetch(request) {
     const url = new URL(request.url);
     if (url.pathname !== '/ws') return new Response('not found', { status: 404 });
@@ -40,6 +52,17 @@ export class FamilyRoom {
     }
     const pair = new WebSocketPair();
     this.ctx.acceptWebSocket(pair[1]);
+    // The Hibernation API has no webSocketOpen callback — the runtime only
+    // invokes webSocketMessage / webSocketClose / webSocketError. The hello
+    // (with history) and the enter announcement must be sent here, in fetch,
+    // on the just-accepted socket. (Previously they sat in a webSocketOpen
+    // method that never fired: clients could chat live but never received
+    // history — verified live Oct 21, 2026.)
+    this.init();
+    try {
+      pair[1].send(JSON.stringify({ type: 'hello', id: 0, history: this.loadHistory() }));
+    } catch (e) {}
+    this.broadcast({ type: 'system', text: 'A soul has entered the room.' });
     return new Response(null, { status: 101, webSocket: pair[0] });
   }
 
@@ -54,23 +77,9 @@ export class FamilyRoom {
     }
   }
 
-  async webSocketOpen(ws) {
-    this.init();
-    let history = [];
-    try {
-      const rows = this.sql()
-        .exec('SELECT id, name, text, t FROM history ORDER BY id DESC LIMIT ?', HISTORY_LIMIT)
-        .toArray()
-        .reverse();
-      history = rows.map((r) => ({ type: 'msg', id: r.id, name: r.name, text: r.text, t: r.t }));
-    } catch (e) {
-      history = [];
-    }
-    try {
-      ws.send(JSON.stringify({ type: 'hello', id: 0, history }));
-    } catch (e) {}
-    this.broadcast({ type: 'system', text: 'A soul has entered the room.' });
-  }
+  // No webSocketOpen handler: under the Hibernation API the runtime never
+  // calls one. Join-time work (hello + history + enter broadcast) lives in
+  // fetch() above, immediately after acceptWebSocket.
 
   async webSocketClose() {
     this.broadcast({ type: 'system', text: 'A soul has left the room.' });
