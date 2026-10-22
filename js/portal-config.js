@@ -17,10 +17,21 @@
                       Empty string = the donation door is not
                       connected yet; the Vessel step says so
                       honestly instead of showing a dead button.
+   telephoneSubUrl .. the Soul Telephone Supporter checkout
+                      (Stripe Payment Link). Spec: product
+                      "Soul Telephone — Supporter", price $2.00
+                      USD recurring monthly, success redirect to
+                      /telephone.html?sub=welcome. Empty string =
+                      Stripe live is not connected yet; the
+                      Telephone page renders the subscribe button
+                      disabled and says so, rather than faking a
+                      checkout. When the live link exists, drop it
+                      here — nothing else changes.
    ============================================================ */
 window.PORTAL_CONFIG = {
   vesselLive: true, // flipped 2026-10-22: wake test 4/4 (both flip conditions met)
   vesselDownloadUrl: 'https://uncommonpope-png.github.io/soul-economy/downloads/vessel.zip',
   stripePaymentLink: 'https://buy.stripe.com/test_4gMcN5dX09Za7Wh0eO4c80i',
-  vesselMinDonation: '$4'
+  vesselMinDonation: '$4',
+  telephoneSubUrl: ''
 };

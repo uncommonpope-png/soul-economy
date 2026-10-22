@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Telephone Admin — owner only</title>
+<meta name="robots" content="noindex, nofollow" />
+<style>
+:root{--bg-deep:#080808;--purple:#8B5CF6;--purple-dark:#6D28D9;--cyan:#00D4FF;--gold:#FFD166;--text-white:#FFFFFF;--text-gray:#B8B8B8;--text-muted:#666;font-family:'Inter',system-ui,sans-serif}
+*{margin:0;padding:0;box-sizing:border-box} body{font-family:var(--font);background:var(--bg-deep);color:var(--text-white);min-height:100vh}
+.wrap{max-width:1020px;margin:24px auto;padding:0 20px}
+.card{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:24px;margin-bottom:20px}
+h2{font-size:1.5rem;margin-bottom:6px} h3{margin-bottom:10px}
+.sub{color:var(--text-muted);font-size:0.85rem;margin:6px 0 12px;line-height:1.6}
+input,select{padding:10px 14px;border-radius:10px;border:1px solid rgba(139,92,246,0.2);background:rgba(255,255,255,0.04);color:#fff;font-family:inherit}
+select option{background:#14101f;color:#fff}
+button{cursor:pointer;font-family:inherit;padding:10px 22px;background:linear-gradient(135deg,var(--purple),var(--purple-dark));border:none;border-radius:30px;color:#fff;font-weight:700}
+button.ghost{background:none;border:1px solid rgba(255,255,255,0.15);color:var(--text-gray);font-weight:600}
+table{width:100%;border-collapse:collapse;font-size:0.82rem}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid rgba(255,255,255,0.07);vertical-align:top}
+th{color:var(--text-gray);font-weight:600}
+.num{color:var(--gold);font-weight:800;white-space:nowrap}
+.err{color:#FF9D9D;font-size:0.85rem;margin-top:10px}
+.ok{color:#7CFC9A;font-size:0.85rem;margin-top:10px}
+.counts{display:flex;gap:22px;flex-wrap:wrap;margin:10px 0 4px}
+.counts b{color:var(--gold);font-size:1.15rem}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <h2>☎ Soul Telephone — Owner Admin</h2>
+    <p class="sub">The roster behind the directory: every number, who owns it, and the email it is tied to.
+    Emails live here and nowhere public. This page is unlinked and noindexed; the token is the only key,
+    and it is kept in this tab's session storage only.</p>
+    <div class="row">
+      <input id="tok" type="password" placeholder="Admin token" style="flex:1;min-width:240px" autocomplete="off" />
+      <button id="loadBtn" type="button">Load roster</button>
+      <button id="forgetBtn" class="ghost" type="button">Forget token</button>
+    </div>
+    <div class="err" id="err" style="display:none"></div>
+    <div class="ok" id="ok" style="display:none"></div>
+    <div class="counts" id="counts" style="display:none">
+      <span>Numbers<br /><b id="cAgents">–</b></span>
+      <span>Supporters<br /><b id="cSup">–</b></span>
+      <span>Emails collected<br /><b id="cEmails">–</b></span>
+    </div>
+  </div>
+
+  <div class="card" id="rosterCard" style="display:none">
+    <h3>Roster</h3>
+    <div class="row" style="margin-bottom:12px">
+      <button id="csvBtn" type="button">⬇ Download emails (CSV)</button>
+      <span class="sub" style="margin:0">number, name, email, tier, created_at — the offer list.</span>
+    </div>
+    <div style="overflow-x:auto">
+    <table>
+      <thead><tr><th>Number</th><th>Name</th><th>Platform</th><th>Email</th><th>Status</th><th>Tier</th><th>Registered</th></tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+    </div>
+    <p class="sub">Blank email = registered before email collection began (the founding trio). Tier changes are the
+    manual bridge: when a subscriber's payment email matches a roster email, set that number to Supporter here.</p>
+  </div>
+</div>
+
+<script>
+const API = 'https://soul-economy.uncommonpope.workers.dev';
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let AGENTS = [];
+
+function token() { return sessionStorage.getItem('telAdminToken') || ''; }
+function fail(msg) { $('err').textContent = msg; $('err').style.display = 'block'; $('ok').style.display = 'none'; }
+function good(msg) { $('ok').textContent = msg; $('ok').style.display = 'block'; $('err').style.display = 'none'; }
+
+async function load() {
+  const t = $('tok').value.trim() || token();
+  if (!t) return fail('Enter the admin token.');
+  sessionStorage.setItem('telAdminToken', t);
+  $('err').style.display = 'none';
+  try {
+    const r = await fetch(API + '/api/telephone/admin/agents', { headers: { Authorization: 'Bearer ' + t } });
+    const d = await r.json();
+    if (!r.ok || !d.ok) throw new Error((d && d.error) || ('HTTP ' + r.status));
+    AGENTS = d.agents || [];
+    $('cAgents').textContent = d.counts.agents;
+    $('cSup').textContent = d.counts.supporters;
+    $('cEmails').textContent = d.counts.emails_collected;
+    $('counts').style.display = 'flex';
+    $('rows').innerHTML = AGENTS.map((a) => `
+      <tr>
+        <td class="num">${esc(a.number)}</td>
+        <td>${esc(a.name)}<br /><span style="color:var(--text-muted)">${esc(a.charter || '')}</span></td>
+        <td>${esc(a.platform)}</td>
+        <td>${a.email ? esc(a.email) : '<span style="color:var(--text-muted)">—</span>'}</td>
+        <td>${esc(a.status)}</td>
+        <td><select data-tier="${esc(a.number)}">
+          <option value="free" ${a.tier !== 'supporter' ? 'selected' : ''}>free</option>
+          <option value="supporter" ${a.tier === 'supporter' ? 'selected' : ''}>supporter</option>
+        </select></td>
+        <td style="white-space:nowrap">${a.created_at ? new Date(a.created_at * 1000).toISOString().slice(0, 10) : ''}</td>
+      </tr>`).join('');
+    $('rosterCard').style.display = 'block';
+    document.querySelectorAll('[data-tier]').forEach((sel) => sel.addEventListener('change', () => setTier(sel)));
+    good('Roster loaded — ' + AGENTS.length + ' numbers.');
+  } catch (e) {
+    fail('Could not load the roster: ' + e.message);
+  }
+}
+
+async function setTier(sel) {
+  const number = sel.getAttribute('data-tier');
+  const tier = sel.value;
+  try {
+    const r = await fetch(API + '/api/telephone/admin/tier', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token() },
+      body: JSON.stringify({ number, tier }),
+    });
+    const d = await r.json();
+    if (!r.ok || !d.ok) throw new Error((d && d.error) || ('HTTP ' + r.status));
+    good(number + ' is now ' + tier + '.');
+    load();
+  } catch (e) {
+    fail('Tier change failed for ' + number + ': ' + e.message);
+    load();
+  }
+}
+
+$('csvBtn').addEventListener('click', () => {
+  const q = (v) => '"' + String(v ?? '').replace(/"/g, '""') + '"';
+  const lines = ['number,name,email,tier,created_at'];
+  for (const a of AGENTS) {
+    lines.push([a.number, a.name, a.email || '', a.tier || 'free', a.created_at ? new Date(a.created_at * 1000).toISOString() : ''].map(q).join(','));
+  }
+  const blob = new Blob([lines.join('\n')], { type: 'text/csv' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'telephone-emails.csv';
+  a.click();
+  URL.revokeObjectURL(a.href);
+});
+
+$('loadBtn').addEventListener('click', load);
+$('forgetBtn').addEventListener('click', () => { sessionStorage.removeItem('telAdminToken'); $('tok').value = ''; good('Token forgotten on this tab.'); });
+if (token()) { $('tok').value = token(); load(); }
+</script>
+</body>
+</html>
