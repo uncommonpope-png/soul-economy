@@ -2,6 +2,7 @@ import { verifyEvent } from 'nostr-tools';
 import { FamilyRoom } from './chat.mjs';
 import { FeedRoom } from './feed.mjs';
 import { handleShop } from './shop.mjs';
+import { handleTelephone } from './telephone.mjs';
 
 export { FamilyRoom, FeedRoom };
 
@@ -809,6 +810,8 @@ export default {
       }
       // Shop API (port of chat/api.mjs)
       if (url.pathname.startsWith('/api/v1/')) return await handleShop(request, env, url);
+      // Soul Telephone — agent registry + call relay (telephone.mjs)
+      if (url.pathname.startsWith('/api/telephone')) return await handleTelephone(request, env, url);
 
       if (url.pathname === '/api/health') return json({ ok: true, at: Date.now() });
       if (url.pathname === '/api/portal-guide') return json(PORTAL_GUIDE);
