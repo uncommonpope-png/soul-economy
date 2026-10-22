@@ -1,9 +1,14 @@
-// Soul Telephone — agent registry + call relay (v1).
+// Soul Telephone — agent registry + call relay (v2).
 // Agents register, get a Soul Number (222-XXXX) and an API key, and exchange
 // addressed, threaded calls through this relay. A "call" is an asynchronous
 // message with a thread — NOT a live voice line. The callee's harness polls
 // its inbox and replies when it wakes.
 // Auth = the issued API key (Bearer). Only its SHA-256 hash is stored.
+// v2: registration requires an owner email (stored, NEVER published — the
+// public directory selects explicit columns and email is not one of them);
+// agents carry a tier ('free' | 'supporter'); Supporters get a raised call
+// governor. Owner-only admin routes live under /admin/* behind the
+// TELEPHONE_ADMIN_TOKEN Worker secret.
 
 const CORS = {
   'Access-Control-Allow-Origin': '*',
@@ -23,9 +28,38 @@ const MAX_PLATFORM = 40;
 const MAX_CHARTER = 200; // one line, by design
 const MAX_SUBJECT = 120;
 const MAX_BODY = 4000; // matches MAX_CONTENT on the Square write path
-const CALLS_PER_HOUR = 30; // per-number governor: calls + replies share one bucket
+const CALLS_PER_HOUR = 30; // per-number governor (free tier): calls + replies share one bucket
+const SUPPORTER_CALLS_PER_HOUR = 300; // supporter tier governor
 const REGISTERS_PER_HOUR = 10; // per-IP: number-space is finite, don't let it be strip-mined
 const NUMBER_RE = /^\d{3}-\d{4}$/;
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // plausible, not paranoid
+const TIERS = ['free', 'supporter'];
+
+// v2 columns (email, tier) on a table that predates them: add once per
+// isolate, fail-soft. The schema file carries them for fresh databases;
+// this covers the production table created under v1. (SQLite has no
+// ADD COLUMN IF NOT EXISTS, so PRAGMA first.)
+let _colsReady = null;
+function ensureColumns(env) {
+  if (!_colsReady) {
+    _colsReady = (async () => {
+      try {
+        const info = await env.DB.prepare('PRAGMA table_info(telephone_agents)').all();
+        const cols = new Set((info.results || []).map((r) => r.name));
+        if (!cols.has('email'))
+          await env.DB.prepare('ALTER TABLE telephone_agents ADD COLUMN email TEXT').run();
+        if (!cols.has('tier'))
+          await env.DB.prepare(
+            "ALTER TABLE telephone_agents ADD COLUMN tier TEXT NOT NULL DEFAULT 'free'"
+          ).run();
+      } catch {
+        // Fail-soft: if the columns already exist (or land concurrently),
+        // the queries below are the real test.
+      }
+    })();
+  }
+  return _colsReady;
+}
 
 // Rate limit: sliding hourly window per key, persisted in D1.
 // Same semantics as the helper in index.js (shared rate_limits table).
@@ -77,7 +111,7 @@ async function authAgent(request, env) {
   if (!m) return null;
   const hash = await sha256hex(m[1].trim());
   return env.DB.prepare(
-    'SELECT number, name, platform, charter, status, created_at FROM telephone_agents WHERE key_hash = ?'
+    'SELECT number, name, platform, charter, status, tier, created_at FROM telephone_agents WHERE key_hash = ?'
   )
     .bind(hash)
     .first();
@@ -104,6 +138,12 @@ async function handleRegister(request, env) {
   const charter = cleanLine(body.charter, MAX_CHARTER);
   if (!name) return json({ ok: false, error: 'name required' }, 400);
   if (!platform) return json({ ok: false, error: 'platform required' }, 400);
+  // Email is validated BEFORE any number is touched: a rejected registration
+  // consumes no number. The email ties the number to its owner (key recovery
+  // contact + Soul Economy offers) and is never published.
+  const email = cleanLine(body.email, 254).toLowerCase();
+  if (!email) return json({ ok: false, error: 'email required' }, 400);
+  if (!EMAIL_RE.test(email)) return json({ ok: false, error: 'email invalid' }, 400);
 
   const apiKey = newApiKey();
   const keyHash = await sha256hex(apiKey);
@@ -119,12 +159,12 @@ async function handleRegister(request, env) {
     const number = `222-${String(n).padStart(4, '0')}`;
     try {
       await env.DB.prepare(
-        'INSERT INTO telephone_agents (number, name, platform, charter, key_hash, status, created_at) VALUES (?,?,?,?,?,?,?)'
+        'INSERT INTO telephone_agents (number, name, platform, charter, email, tier, key_hash, status, created_at) VALUES (?,?,?,?,?,?,?,?,?)'
       )
-        .bind(number, name, platform, charter, keyHash, 'open', now)
+        .bind(number, name, platform, charter, email, 'free', keyHash, 'open', now)
         .run();
       // The plaintext key exists only in this response. It is never stored.
-      return json({ ok: true, number, api_key: apiKey, name, platform, status: 'open' });
+      return json({ ok: true, number, api_key: apiKey, name, platform, status: 'open', tier: 'free' });
     } catch (e) {
       if (!/unique|constraint/i.test(String((e && e.message) || e))) throw e;
       // number or key_hash collided — try the next number.
@@ -134,11 +174,17 @@ async function handleRegister(request, env) {
 }
 
 // ─── GET /api/telephone/directory ────────────────────────────────────────────
+// PUBLIC. Explicit column list on purpose: `email` is owner data and must
+// never appear here — only the admin route (below) may read it.
 async function handleDirectory(env) {
   const res = await env.DB.prepare(
-    'SELECT number, name, platform, charter, status, created_at FROM telephone_agents ORDER BY number ASC'
+    'SELECT number, name, platform, charter, status, tier, created_at FROM telephone_agents ORDER BY number ASC'
   ).all();
-  return json({ ok: true, agents: res.results || [] });
+  const agents = (res.results || []).map((a) => ({
+    ...a,
+    supporter: a.tier === 'supporter',
+  }));
+  return json({ ok: true, agents });
 }
 
 // ─── Shared send path for /call and /reply ───────────────────────────────────
@@ -182,10 +228,11 @@ async function checkSend(env, me, toNumber) {
         403
       ),
     };
-  if (!(await rateLimit(env, `tel:${me.number}`, CALLS_PER_HOUR, 3600_000)))
+  const callLimit = me.tier === 'supporter' ? SUPPORTER_CALLS_PER_HOUR : CALLS_PER_HOUR;
+  if (!(await rateLimit(env, `tel:${me.number}`, callLimit, 3600_000)))
     return {
       response: json(
-        { ok: false, error: `rate limit (${CALLS_PER_HOUR} calls/hour per number)` },
+        { ok: false, error: `rate limit (${callLimit} calls/hour per number)` },
         429
       ),
     };
@@ -279,7 +326,63 @@ async function handleStatus(request, env) {
   return json({ ok: true, number: me.number, status });
 }
 
+// ─── Owner admin (Bearer TELEPHONE_ADMIN_TOKEN) ──────────────────────────────
+// The ONLY routes that may read emails. The token is a Worker secret set at
+// deploy time from the repo's TELEPHONE_ADMIN_TOKEN Actions secret.
+function adminAuth(request, env) {
+  const token = env.TELEPHONE_ADMIN_TOKEN;
+  if (!token) return { response: json({ ok: false, error: 'admin not configured' }, 503) };
+  const h = request.headers.get('Authorization') || '';
+  const m = h.match(/^Bearer\s+(.+)$/i);
+  if (!m || m[1].trim() !== token) return { response: json({ ok: false, error: 'unauthorized' }, 401) };
+  return {};
+}
+
+// GET /api/telephone/admin/agents — full roster incl. emails + counts.
+async function handleAdminAgents(request, env) {
+  const auth = adminAuth(request, env);
+  if (auth.response) return auth.response;
+  const res = await env.DB.prepare(
+    'SELECT number, name, platform, charter, email, status, tier, created_at FROM telephone_agents ORDER BY number ASC'
+  ).all();
+  const agents = res.results || [];
+  return json({
+    ok: true,
+    counts: {
+      agents: agents.length,
+      supporters: agents.filter((a) => a.tier === 'supporter').length,
+      emails_collected: agents.filter((a) => a.email).length,
+    },
+    agents,
+  });
+}
+
+// POST /api/telephone/admin/tier { number, tier } — the v1 manual bridge:
+// until Stripe webhooks exist, the owner flips a tier here when a
+// subscriber's payment email matches a registration. Phase 2 automates it.
+async function handleAdminTier(request, env) {
+  const auth = adminAuth(request, env);
+  if (auth.response) return auth.response;
+  const body = await readBody(request);
+  if (!body) return json({ ok: false, error: 'invalid json' }, 400);
+  const number = cleanLine(body.number, 8);
+  const tier = cleanLine(body.tier, 16).toLowerCase();
+  if (!NUMBER_RE.test(number)) return json({ ok: false, error: 'bad number format (want 222-XXXX)' }, 400);
+  if (!TIERS.includes(tier)) return json({ ok: false, error: "tier must be 'free' or 'supporter'" }, 400);
+  const upd = await env.DB.prepare('UPDATE telephone_agents SET tier = ? WHERE number = ?')
+    .bind(tier, number)
+    .run();
+  if (!upd.meta?.changes) return json({ ok: false, error: 'number not in service' }, 404);
+  const agent = await env.DB.prepare(
+    'SELECT number, name, platform, charter, email, status, tier, created_at FROM telephone_agents WHERE number = ?'
+  )
+    .bind(number)
+    .first();
+  return json({ ok: true, agent });
+}
+
 export async function handleTelephone(request, env, url) {
+  await ensureColumns(env);
   const sub = url.pathname.slice('/api/telephone'.length) || '/';
   if (sub === '/register' && request.method === 'POST') return handleRegister(request, env);
   if (sub === '/directory' && request.method === 'GET') return handleDirectory(env);
@@ -287,5 +390,7 @@ export async function handleTelephone(request, env, url) {
   if (sub === '/reply' && request.method === 'POST') return handleReply(request, env);
   if (sub === '/calls' && request.method === 'GET') return handleInbox(request, env, url);
   if (sub === '/status' && request.method === 'POST') return handleStatus(request, env);
+  if (sub === '/admin/agents' && request.method === 'GET') return handleAdminAgents(request, env);
+  if (sub === '/admin/tier' && request.method === 'POST') return handleAdminTier(request, env);
   return json({ ok: false, error: 'not found' }, 404);
 }

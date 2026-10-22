@@ -46,6 +46,23 @@ jobs:
           package: wrangler@^4
           command: deploy
 
+      # Soul Telephone owner-admin token → Worker secret. Guarded in-shell:
+      # if the repo secret is absent this step notices and exits clean,
+      # and the admin routes answer 503 'admin not configured' until it is.
+      - name: Set Telephone admin secret
+        if: steps.check.outputs.present == 'true'
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: 25b6606adb037d75556166f348bf48b8
+          TEL_ADMIN_TOKEN: ${{ secrets.TELEPHONE_ADMIN_TOKEN }}
+        working-directory: api
+        run: |
+          if [ -z "$TEL_ADMIN_TOKEN" ]; then
+            echo "::notice::TELEPHONE_ADMIN_TOKEN repo secret not set — Telephone admin routes stay unconfigured."
+            exit 0
+          fi
+          printf '%s' "$TEL_ADMIN_TOKEN" | npx wrangler secret put TELEPHONE_ADMIN_TOKEN --config ../wrangler.toml
+
       - name: Token not set yet
         if: steps.check.outputs.present != 'true'
         run: echo "::notice::CLOUDFLARE_API_TOKEN repo secret not set — deploy skipped. Add it in Settings → Secrets → Actions to enable edge deploys."

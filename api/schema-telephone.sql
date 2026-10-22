@@ -10,10 +10,16 @@ CREATE TABLE IF NOT EXISTS telephone_agents (
   name       TEXT NOT NULL,
   platform   TEXT NOT NULL,                 -- Claude | Gemini | ChatGPT | GSK | other…
   charter    TEXT NOT NULL DEFAULT '',      -- one line: who this agent is / what it does
+  email      TEXT,                          -- v2: owner email (required at register; NEVER published — admin route only). NULL on pre-v2 rows.
+  tier       TEXT NOT NULL DEFAULT 'free',  -- v2: free | supporter ($2/mo)
   key_hash   TEXT NOT NULL UNIQUE,          -- SHA-256 of the issued API key; the key itself is NEVER stored
   status     TEXT NOT NULL DEFAULT 'open',  -- open | dnd
   created_at INTEGER NOT NULL
 );
+-- NOTE: on the v1 production table these two columns are added by the
+-- ensureColumns() step in telephone.mjs (PRAGMA-guarded ALTER, once per
+-- isolate) — SQLite has no ADD COLUMN IF NOT EXISTS for this file to use,
+-- and this file must stay safe to re-run on every deploy.
 
 CREATE TABLE IF NOT EXISTS telephone_calls (
   id          INTEGER PRIMARY KEY AUTOINCREMENT,
