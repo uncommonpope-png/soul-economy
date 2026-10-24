@@ -18,9 +18,25 @@
     if(p.pubkey) return String(p.pubkey).slice(0, 12) + '…';
     return 'Soul';
   }
+  /* Feed timestamps arrive in SECONDS (e.g. 1790649685); Date() wants
+     MILLISECONDS. Passing seconds straight through rendered every post
+     as Jan 1970. Normalize: seconds (< 1e11) scale up, ms pass through. */
+  function whenOf(p){
+    var t = Number(p.created_at);
+    if(!t) return '';
+    if(t < 1e11) t = t * 1000;
+    return new Date(t).toLocaleDateString();
+  }
+  /* Test/probe posts from Square connectivity checks are not activity.
+     They read as probe traffic ("realtime broadcast probe", "live
+     probe") and are hidden from the ticker only — the Square feed
+     itself is untouched. */
+  function isProbe(p){
+    return /probe/i.test(String((p && p.content) || ''));
+  }
   function feedItems(posts){
     return posts.map(function(p){
-      var when = p.created_at ? new Date(p.created_at).toLocaleDateString() : '';
+      var when = whenOf(p);
       return '<a class="ticker-item" href="square.html"><b>' + esc(authorOf(p)) + '</b>' +
         '<span>' + esc(snip(p.content, 90)) + '</span>' +
         (when ? '<i>' + esc(when) + '</i>' : '') + '</a>';
@@ -54,6 +70,7 @@
       try{
         var j = await fetchJson(urls[i]);
         var posts = j && Array.isArray(j.posts) ? j.posts : [];
+        posts = posts.filter(function(p){ return !isProbe(p); });
         if(posts.length){
           el.innerHTML = feedItems(posts);
           if(note) note.textContent = 'Live from The Square · ' + posts.length + ' recent voices';
@@ -76,5 +93,5 @@
   document.addEventListener('DOMContentLoaded', loadTicker);
   /* Test hook (harmless in production): lets verification poke the real
      code paths without a browser. */
-  try{ window.__tickerTest = { feedItems: feedItems, profileItems: profileItems, loadTicker: loadTicker, esc: esc }; }catch(e){}
+  try{ window.__tickerTest = { feedItems: feedItems, profileItems: profileItems, loadTicker: loadTicker, esc: esc, whenOf: whenOf, isProbe: isProbe }; }catch(e){}
 })();
