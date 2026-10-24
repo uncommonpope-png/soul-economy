@@ -35,6 +35,28 @@ an honest fallback, never a fake thread:
    thread loads. If either shows a giscus error, the IDs or the
    category are wrong — re-copy them from giscus.app, never guess.
 
+## Soul cards — already wired, no third paste (bridge list, Rank 4)
+
+Soul-card threads need **no separate IDs and no new code**. The
+`index.html` `window.GISCUS={...}` block from Step 4 already covers
+them:
+
+- `mountGiscus(card)` runs when a catalog card is expanded, with
+  `data-term` = the card's name (`data-id` on the card element).
+  It injects `client.js` only when both IDs are present, otherwise
+  it renders the same "Start / View Discussion" fallback link.
+- So the moment Steps 1–4 are done, every soul card's thread loads
+  on expand — the same two IDs, no third paste anywhere.
+- Profile threads are the only second surface: they use
+  `window.GISCUS_PROFILE` (Step 4, second bullet) with
+  `data-term` = `profile:<handle>`.
+
+Verification after the taps: expand any soul card → its thread loads
+under the card details; open a profile → its `profile:<handle>`
+thread loads. If a card shows only the fallback link while a profile
+thread loads, the card's `data-id` is missing — that is a code bug,
+not a missing tap.
+
 ## What is already built (no tap needed)
 
 - `index.html` `mountGiscus(card)`: one thread per soul, mapped by
