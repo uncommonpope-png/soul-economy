@@ -1,9 +1,12 @@
-# Giscus setup — Soul Economy comments (Rank 3, ready-but-blocked)
+# Giscus setup — Soul Economy comments (Rank 3, LIVE since Oct 24, 2026)
 
-Status as of 2026-10-24 (verified via GitHub API): the repo
-`uncommonpope-png/soul-economy` is public on `master`, but **Discussions
-is DISABLED**. Until the taps below are done, every giscus surface shows
-an honest fallback, never a fake thread:
+Status as of 2026-10-24: **LIVE.** Discussions enabled on
+`uncommonpope-png/soul-economy`, the giscus app installed on that repo
+only, category `General`, IDs wired into `index.html` (`window.GISCUS`)
+and `profile.html` (`window.GISCUS_PROFILE`):
+`repoId='R_kgDOTP5SIA'`, `categoryId='DIC_kwDOTP5SIA4DJh8C'`.
+The taps below are the record of how it was done; the fallback note
+applies only if the IDs are ever removed:
 
 - Soul cards (`index.html`, `mountGiscus`): a "Start / View Discussion"
   link. That link itself 404s until Step 1 is done.
@@ -11,14 +14,14 @@ an honest fallback, never a fake thread:
   "Threads unlock…" note.
 - `chat.html`'s Discussions card links to the same disabled tab.
 
-## The owner's taps (in order)
+## How it was done (record — all steps complete Oct 24, 2026)
 
 1. **Enable Discussions.** Repo → Settings → General → Features →
    check **Discussions**. (No code change; the fallback links start
    working the moment this is on.)
 2. **Install the giscus app.** Open https://github.com/apps/giscus →
-   Install → select `uncommonpope-png/soul-economy` only. This is the
-   tap no agent can do for you.
+   Install → select `uncommonpope-png/soul-economy` only. (Done via
+   browser session + the owner's email-code sudo confirmation.)
 3. **Pick a category.** On https://giscus.app, enter repo
    `uncommonpope-png/soul-economy`, choose a discussion category
    (create `General` if none exists), and copy the two values the page
