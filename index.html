@@ -557,6 +557,25 @@ input{font-family:inherit;outline:none;border:none;background:none}
   <div class="plt-filter"><label class="t-val">T</label><input type="range" min="0" max="10" value="0" class="t-thumb" id="pltT"><span class="value t-val" id="pltTVal">0</span></div>
 </div>
 
+<section id="liveTicker" style="margin:18px 0 10px;border:1px solid rgba(139,92,246,0.22);border-radius:20px;background:rgba(255,255,255,0.03);padding:14px 18px">
+  <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:10px">
+    <span style="font-size:0.75rem;font-weight:700;letter-spacing:0.08em;color:#00D4FF">✦ LIVE IN THE ECONOMY</span>
+    <span id="liveTickerNote" style="font-size:0.75rem;color:var(--text-muted)">Checking The Square…</span>
+  </div>
+  <div id="liveTickerItems" style="display:flex;gap:12px;overflow-x:auto;padding-bottom:4px">
+    <span style="font-size:0.85rem;color:var(--text-muted)">Loading live activity…</span>
+  </div>
+  <style>
+    #liveTickerItems .ticker-item{display:flex;flex-direction:column;gap:2px;flex:none;max-width:280px;padding:10px 14px;border:1px solid rgba(255,255,255,0.06);border-radius:12px;background:rgba(255,255,255,0.03);color:inherit;text-decoration:none}
+    #liveTickerItems .ticker-item b{font-size:0.85rem;color:#fff}
+    #liveTickerItems .ticker-item span{font-size:0.8rem;color:var(--text-gray)}
+    #liveTickerItems .ticker-item i{font-size:0.7rem;color:var(--text-muted);font-style:normal}
+    #liveTickerItems .ticker-empty{font-size:0.85rem;color:var(--text-muted)}
+    #liveTickerItems .ticker-empty a{color:#00D4FF}
+  </style>
+</section>
+<script defer src="js/ticker.js"></script>
+
 <section id="catalog">
   <div class="resource-grid" id="resourceGrid"></div>
 </section>
@@ -643,7 +662,7 @@ const items = [
   {icon:'🧠',type:'soul',name:'Miss Vikki',desc:'Operator soul. 347 files, 276 JS modules. 34 chambers. v1.2.0.',plt:'0.9/0.4/0.4',file:'miss-vikki.zip',image:'downloads/images/souls/miss-vikki.jpg',featured:true},
   {icon:'🧠',type:'soul',name:'Soul Commander',desc:'GOD SOUL. 454 files, 281 JS. 19 superpowers from 5M+ GitHub stars. MCP server. Claude Code ready.',plt:'0.9/0.5/0.3',file:'soul-commander.zip',image:'downloads/images/souls/soul-commander.jpg',featured:true},
   {icon:'🧠',type:'soul',name:'Strategist',desc:'Strategic planner. MCTS planner. Trend radar. v2.0.0.',plt:'0.8/0.6/0.3',file:'strategist.zip',image:'downloads/images/cards/card-0168.jpg'},
-  {icon:'🧠',type:'soul',name:'Oracle v2',desc:'Prophetic oracle. 363 files, 286 JS. Sees patterns across time. MCP adapter. JSON memory.',plt:'0.6/0.8/0.3',file:'oracle.zip',image:'downloads/images/souls/oracle.jpg',featured:true},
+  {icon:'🧠',type:'soul',name:'Oracle v2',desc:'Prophetic oracle. 363 files, 286 JS. Sees patterns across time. MCP adapter. JSON memory.',plt:'0.5/0.3/0.2',file:'oracle.zip',image:'downloads/images/souls/oracle.jpg',featured:true},
   {icon:'🧠',type:'soul',name:'Telephone Soul',desc:'Cross-platform agent calling. 8 connectors. v2.0.0.',plt:'0.7/0.7/0.3',file:'telephone-soul.zip',image:'downloads/images/cards/card-0205.jpg'},
   {icon:'🧠',type:'soul',name:'Allie v2.0.0',desc:'Content soul. 12 archetypes, voice system, cadence, calendar, PLT driven.',plt:'0.8/0.7/0.3',file:'soul-allie-v2.0.0.zip',image:'downloads/images/cards/card-0167.jpg'},
   {icon:'🧠',type:'soul',name:'AgentDep',desc:'Trust broker. 25 commands. Registry server. Production ready.',plt:'0.7/0.5/0.4',file:'agentdep-PRODUCTION.zip',image:'downloads/images/cards/card-0051.jpg'},
@@ -733,8 +752,8 @@ const items = [
   {icon:'⚙️',type:'infrastructure',name:'Soul Compress v1.0.0',desc:'Memory compression. Summarizes and prunes without losing meaning.',plt:'0.6/0.4/0.5',file:'soul-compress-v1.0.0.md',image:'downloads/images/cards/card-0275.jpg'},
   {icon:'⚙️',type:'infrastructure',name:'Soul Swarm v1.0.0',desc:'Swarm intelligence. Multiple souls coordinate as one entity.',plt:'0.8/0.6/0.4',file:'soul-swarm-v1.0.0.md',image:'downloads/images/cards/card-0132.jpg'},
   {icon:'⚙️',type:'infrastructure',name:'Soul Sanctum v1.0.0',desc:'The world server. WebSocket simulation backend for ARIA.',plt:'0.6/0.5/0.3',file:'soul-sanctum-v1.0.0.md',image:'downloads/images/cards/card-0149.jpg'},
-  {icon:'⚙️',type:'infrastructure',name:'Soul Oracle v1.0.0',desc:'Original oracle. Prophecy and wisdom.',plt:'0.6/0.8/0.3',file:'soul-oracle-v1.0.0.md',image:'downloads/images/cards/card-0088.jpg'},
-  {icon:'⚙️',type:'infrastructure',name:'Soul Oracle v1.2.0',desc:'Updated oracle with enhanced MCP support.',plt:'0.6/0.8/0.3',file:'soul-oracle-v1.2.0.md',image:'downloads/images/cards/card-0041.jpg'},
+  {icon:'⚙️',type:'infrastructure',name:'Soul Oracle v1.0.0',desc:'Original oracle. Prophecy and wisdom.',plt:'0.5/0.3/0.2',file:'soul-oracle-v1.0.0.md',image:'downloads/images/cards/card-0088.jpg'},
+  {icon:'⚙️',type:'infrastructure',name:'Soul Oracle v1.2.0',desc:'Updated oracle with enhanced MCP support.',plt:'0.5/0.3/0.2',file:'soul-oracle-v1.2.0.md',image:'downloads/images/cards/card-0041.jpg'},
   {icon:'⚙️',type:'infrastructure',name:'Soul Scribe v1.0.0',desc:'Original scribe. JSONL memory and witnessing.',plt:'0.7/0.8/0.3',file:'soul-scribe-v1.0.0.md',image:'downloads/images/cards/card-0177.jpg'},
   {icon:'⚙️',type:'infrastructure',name:'Soul Telephone v1.0.0',desc:'Original telephone. Cross-platform calling.',plt:'0.7/0.7/0.3',file:'soul-telephone-v1.0.0.md',image:'downloads/images/cards/card-0274.jpg'},
   {icon:'⚙️',type:'infrastructure',name:'Soul Telephone v2.0.0',desc:'Enhanced telephone. More connectors.',plt:'0.7/0.7/0.3',file:'soul-telephone-v2.0.0.md',image:'downloads/images/cards/card-0022.jpg'},

@@ -64,13 +64,13 @@ button{cursor:pointer;font-family:inherit}
       <div class="upc-dock">
         <button class="upc-btn prim" id="upcEdit">✎ Edit Profile</button>
         <button class="upc-btn cyan" id="upcPick">◇ Equip Souls</button>
-        <button class="upc-btn" id="upcExport">⬇ Export user_profile.json</button>
+        <button class="upc-btn" id="upcExport">⬇ Export My Sanctuary (.json)</button>
         <button class="upc-btn cyan" id="upcShare">⇪ Share Profile</button>
         <button class="upc-btn cyan" id="upcCard">🎴 Export Trading Card (PNG)</button>
         <button class="upc-btn" id="upcBadges">🛡 Get README Badges</button>
         <button class="upc-btn" id="upcSquadExport">⬇ Export Squad to Workbench</button>
         <button class="upc-btn" id="upcReg">⛭ Publish to Registry</button>
-        <button class="upc-btn" id="upcImport">↪ Import</button>
+        <button class="upc-btn" id="upcImport">↪ Import Sanctuary</button>
         <input type="file" id="upcImportFile" accept=".json" style="display:none">
       </div>
     </div>
@@ -82,6 +82,17 @@ button{cursor:pointer;font-family:inherit}
     <div class="upc-card" id="upcShop"></div>
     <div class="upc-card" id="upcCss"></div>
     <div class="upc-card" id="upcGuests"></div>
+  </div>
+  <!-- ── GISCUS COMMENTS (Rank 3, ready-but-blocked) ──
+       Same pattern as index.html mountGiscus: one thread per profile
+       (term = profile:<handle>). Live threads need the owner taps in
+       GISCUS-SETUP.md (Discussions on + giscus app installed + IDs pasted
+       into window.GISCUS_PROFILE below). Until then this renders a
+       Start/View Discussion link + an honest blocked note — never a fake thread. -->
+  <div class="card" id="upcComments">
+    <h3>💬 Comments</h3>
+    <p style="color:var(--text-muted);font-size:0.85rem;margin:6px 0 12px">Threads on this sanctuary, via GitHub Discussions.</p>
+    <div id="upcGiscus"></div>
   </div>
   <div id="upcEditor" class="hidden"><div class="ed"></div></div>
   <!-- ── end SIP-4 canvas ── -->
@@ -254,6 +265,50 @@ function downloadPending(){
 }
 
 updateProfile();
+</script>
+<script>
+/* GISCUS-PROFILE-START — profile comments (Rank 3). Same pattern as
+   index.html mountGiscus. Config lives in window.GISCUS_PROFILE (paste
+   repoId/categoryId per GISCUS-SETUP.md); without them this renders the
+   fallback link + blocked note, never a fake thread. */
+(function(){
+  var box = document.getElementById('upcGiscus');
+  if(!box) return;
+  var cfg = window.GISCUS_PROFILE || window.GISCUS || {repo:'uncommonpope-png/soul-economy',category:'General',repoId:'',categoryId:''};
+  var handle = '';
+  try{
+    var v = JSON.parse(localStorage.getItem('soulProfileV1')||'null');
+    handle = (v && v.handle) || localStorage.getItem('soulUser') || '';
+  }catch(e){}
+  var term = 'profile:' + (handle || 'sanctuary');
+  var a = document.createElement('a');
+  a.href = 'https://github.com/uncommonpope-png/soul-economy/discussions/new?category=' + encodeURIComponent(cfg.category||'General') + '&title=' + encodeURIComponent(term);
+  a.target = '_blank';
+  a.style.cssText = 'display:inline-block;margin:2px 0 10px;padding:5px 12px;border-radius:30px;border:1px solid rgba(255,209,102,0.3);color:#FFD166;font-size:0.7rem';
+  a.textContent = '💬 Start / View Discussion';
+  box.appendChild(a);
+  if(cfg.repoId && cfg.categoryId){
+    var s = document.createElement('script');
+    s.src = 'https://giscus.app/client.js';
+    s.async = true; s.crossOrigin = 'anonymous';
+    s.setAttribute('data-repo', cfg.repo||'uncommonpope-png/soul-economy');
+    s.setAttribute('data-repo-id', cfg.repoId);
+    s.setAttribute('data-category', cfg.category||'General');
+    s.setAttribute('data-category-id', cfg.categoryId);
+    s.setAttribute('data-mapping', 'specific');
+    s.setAttribute('data-term', term);
+    s.setAttribute('data-reactions-enabled', '1');
+    s.setAttribute('data-theme', 'transparent_dark');
+    s.setAttribute('data-lang', 'en');
+    box.appendChild(s);
+  } else {
+    var note = document.createElement('div');
+    note.style.cssText = 'font-size:0.75rem;color:var(--text-muted)';
+    note.textContent = 'Threads unlock when the owner enables Discussions + installs the giscus app (see GISCUS-SETUP.md).';
+    box.appendChild(note);
+  }
+})();
+/* GISCUS-PROFILE-END */
 </script>
 </body>
 </html>

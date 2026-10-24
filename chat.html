@@ -112,6 +112,16 @@ input{font-family:inherit;outline:none;border:none;background:none}
   .composer button{flex:none}
 }
 </style>
+<style>
+/* === FAMILYROOM RICH TEXT (Rank 2, additive) === */
+.row .who-name{cursor:pointer;color:var(--cyan)}
+.row .who-name:hover{text-decoration:underline}
+.row .mention{color:var(--cyan);font-weight:600;cursor:pointer}
+.row .mention:hover{text-decoration:underline}
+.row .text code{background:rgba(255,255,255,0.09);padding:1px 6px;border-radius:6px;font-size:0.85em}
+.row .text strong{font-weight:700}
+.row .text em{font-style:italic}
+</style>
 </head>
 <body>
 <div style="max-width:1280px;margin:0 auto;padding:16px 20px 0">
@@ -203,6 +213,40 @@ input{font-family:inherit;outline:none;border:none;background:none}
     statusEl.textContent = text;
   }
 
+  /* RENDER-RICH-START — FamilyRoom rich text (Rank 2). Escape FIRST, then
+     formatting. Code spans are placeholder-protected so **, * and @ inside
+     code are never transformed. Mentions are regex-constrained to safe
+     characters; author names use escAttr for the data-name attribute. */
+  function escHtml(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function escAttr(s){ return escHtml(s).replace(/"/g,'&quot;'); }
+  function renderRich(text){
+    let out = escHtml(text);
+    const codeSpans = [];
+    out = out.replace(/`([^`\n]+)`/g, function(m, code){
+      codeSpans.push(code);
+      return '\u0000CODE' + (codeSpans.length - 1) + '\u0000';
+    });
+    out = out.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    out = out.replace(/(^|[\s(])\*([^*\n]+)\*/g, '$1<em>$2</em>');
+    out = out.replace(/@([A-Za-z0-9_.\-]{1,32})/g, '<span class="mention" data-name="$1" title="Reply to @$1">@$1</span>');
+    out = out.replace(/\u0000CODE(\d+)\u0000/g, function(m, i){
+      return '<code>' + codeSpans[+i] + '</code>';
+    });
+    return out;
+  }
+  function replyTo(name){
+    const clean = String(name||'').replace(/^@/,'').trim();
+    if(!clean) return;
+    const tag = '@' + clean + ' ';
+    if(msgEl.value.indexOf(tag) !== 0) msgEl.value = tag + msgEl.value;
+    try{ msgEl.focus(); }catch(e){}
+  }
+  room.addEventListener('click', function(ev){
+    const t = ev.target && ev.target.closest ? ev.target.closest('.mention, .who-name') : null;
+    if(t && t.dataset && t.dataset.name) replyTo(t.dataset.name);
+  });
+  /* RENDER-RICH-END */
+
   function say(obj) {
     const div = document.createElement('div');
     if (obj.type === 'system') {
@@ -211,10 +255,11 @@ input{font-family:inherit;outline:none;border:none;background:none}
     } else {
       div.className = 'row';
       const when = obj.t ? new Date(obj.t).toLocaleTimeString() : '';
+      const author = obj.name || 'Soul';
       div.innerHTML = '<div class="avatar"></div><div class="body"><div class="who">' +
-        (obj.name || 'Soul').replace(/&/g,'&amp;').replace(/</g,'&lt;') +
+        '<span class="who-name" data-name="' + escAttr(author) + '" title="Reply to ' + escAttr(author) + '">' + escHtml(author) + '</span>' +
         '<span class="when">' + when + '</span></div><div class="text">' +
-        (obj.text || '').replace(/&/g,'&amp;').replace(/</g,'&lt;') + '</div></div>';
+        renderRich(obj.text || '') + '</div></div>';
     }
     room.appendChild(div);
     scroll();

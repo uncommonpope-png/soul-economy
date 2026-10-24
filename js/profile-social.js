@@ -1041,6 +1041,14 @@ function openPicker(){
 /* ---- export / import user_profile.json ---- */
 function exportJson(){
   var payload={schema:'user_profile.json/1.0',profile:{handle:state.handle,displayName:state.displayName||'',bio:state.bio,mood:state.mood,audio:state.audio,themeCSS:state.themeCSS,location:state.location||'',website:state.website||'',joined:state.joined||0,mySoul:state.mySoul||'',public:state.public,shop:(state.shop&&typeof state.shop==='object'?state.shop:{}),companion:{name:((state.companion&&state.companion.name)||'').slice(0,40),tone:((state.companion&&state.companion.tone)||'').slice(0,80)}},equippedSouls:state.top8.slice(),guestbook:state.guests.slice(),portfolio:cleanPortfolio(state.portfolio),followers:cleanStrArr(state.followers),following:cleanStrArr(state.following)};
+  /* SANCTUARY ROUND-TRIP (Rank 1): the canvas state above is only half the
+     profile. The legacy Library keys — starred souls (mySouls) and
+     pending publications (pendingSouls) — live in separate localStorage
+     keys, so an export that omits them loses them on import. Include them
+     (and the legacy identity) so one file carries the whole Sanctuary. */
+  try{ payload.starredSouls=cleanStrArr(JSON.parse(localStorage.getItem('mySouls')||'[]')).slice(0,500); }catch(e){ payload.starredSouls=[]; }
+  try{ var pend=JSON.parse(localStorage.getItem('pendingSouls')||'[]'); payload.pendingSouls=(Array.isArray(pend)?pend.filter(function(x){ return x&&typeof x==='object'; }):[]).slice(0,200); }catch(e){ payload.pendingSouls=[]; }
+  try{ payload.legacyIdentity={soulUser:localStorage.getItem('soulUser')||'',soulEmail:localStorage.getItem('soulEmail')||''}; }catch(e){ payload.legacyIdentity={soulUser:'',soulEmail:''}; }
   var blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
   var a=document.createElement('a');
   a.href=URL.createObjectURL(blob);
@@ -1072,6 +1080,15 @@ function importJson(file){
       if(j.following) state.following=cleanStrArr(j.following);
       if(p.shop&&typeof p.shop==='object') state.shop=p.shop;
       if(p.companion) state.companion={name:String(p.companion.name||'').slice(0,40),tone:String(p.companion.tone||'').slice(0,80)};
+      /* SANCTUARY ROUND-TRIP (Rank 1): restore the legacy Library keys that
+         exportJson now carries. Old exports without these keys import exactly
+         as before — nothing here overwrites state when a key is absent. */
+      if(j.starredSouls) try{ localStorage.setItem('mySouls',JSON.stringify(cleanStrArr(j.starredSouls).slice(0,500))); }catch(e){}
+      if(j.pendingSouls) try{ var pend2=Array.isArray(j.pendingSouls)?j.pendingSouls.filter(function(x){ return x&&typeof x==='object'; }):[]; localStorage.setItem('pendingSouls',JSON.stringify(pend2.slice(0,200))); }catch(e){}
+      if(j.legacyIdentity&&typeof j.legacyIdentity==='object') try{
+        if(j.legacyIdentity.soulUser) localStorage.setItem('soulUser',String(j.legacyIdentity.soulUser));
+        if(j.legacyIdentity.soulEmail) localStorage.setItem('soulEmail',String(j.legacyIdentity.soulEmail));
+      }catch(e){}
       if(!state.shop||typeof state.shop!=='object') state.shop={};
       if(!Array.isArray(state.top8)) state.top8=[];
       if(!Array.isArray(state.guests)) state.guests=[];
