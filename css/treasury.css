@@ -1,0 +1,71 @@
+/* Family Treasury header module — DRAFT, not deployed.
+   Design tokens copied from the live Soul Economy index.html (:root):
+   --bg-deep, --purple, --cyan, --gold, --text-white, --text-gray.
+   Self-contained: no external assets, no network, no framework. */
+.family-treasury{
+  --bg-deep:#080808;
+  --purple:#8B5CF6;
+  --cyan:#00D4FF;
+  --gold:#FFD166;
+  --text-white:#FFFFFF;
+  --text-gray:#B8B8B8;
+  --text-muted:#8A8A8A;
+  position:relative;
+  text-align:center;
+  padding:44px 24px 36px;
+  margin:18px 0 10px;
+  border:1px solid rgba(255,209,102,0.16);
+  border-radius:20px;
+  background:linear-gradient(180deg,rgba(255,209,102,0.05),rgba(139,92,246,0.04)),
+    radial-gradient(rgba(196,169,90,0.06) 1px,transparent 1px);
+  background-size:auto,34px 34px;
+  color:var(--text-gray);
+  font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+.family-treasury .treasury-kicker{
+  font-size:0.7rem;font-weight:700;letter-spacing:0.3em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:10px;
+}
+.family-treasury .treasury-title{
+  font-family:Georgia,'Times New Roman',serif;font-weight:700;
+  font-size:clamp(1.9rem,4.4vw,3.1rem);line-height:1.05;margin:0 0 8px;
+  background:linear-gradient(135deg,#FFD166,#E8C96A,#C4A95A);
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;color:transparent;
+}
+.family-treasury .treasury-msg{
+  font-family:Georgia,'Times New Roman',serif;font-size:1.05rem;line-height:1.9;
+  max-width:640px;margin:0 auto 24px;color:var(--text-gray);
+}
+.family-treasury .treasury-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:14px;
+  max-width:860px;margin:0 auto;text-align:left;
+}
+@media(max-width:640px){.family-treasury .treasury-grid{grid-template-columns:1fr}}
+.family-treasury .treasury-group{
+  border:1px solid rgba(255,255,255,0.06);border-radius:16px;
+  background:rgba(255,255,255,0.04);padding:18px 20px;
+}
+.family-treasury .treasury-group h3{
+  font-family:Georgia,'Times New Roman',serif;color:var(--text-white);
+  font-size:1.15rem;margin:0 0 6px;
+}
+.family-treasury .treasury-group p{
+  font-size:0.92rem;line-height:1.6;margin:0 0 14px;color:var(--text-gray);
+}
+.family-treasury .treasury-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.family-treasury .chip{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:9px 16px;border-radius:999px;cursor:pointer;
+  border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.05);
+  color:var(--text-white);font-size:0.9rem;font-weight:500;text-decoration:none;
+  transition:background 0.2s,color 0.2s;
+}
+.family-treasury a.chip:hover,.family-treasury button.chip:hover{background:rgba(139,92,246,0.18)}
+.family-treasury .chip.gold{border-color:rgba(255,209,102,0.45);color:var(--gold)}
+.family-treasury .chip[aria-disabled="true"]{opacity:0.45;cursor:not-allowed}
+.family-treasury .chip-note{font-size:0.8rem;color:var(--text-muted)}
+.family-treasury .copy-note{min-height:1.2em;font-size:0.85rem;color:var(--gold);margin-top:10px}
+.family-treasury .treasury-foot{
+  margin-top:22px;font-size:0.8rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-muted);
+}
