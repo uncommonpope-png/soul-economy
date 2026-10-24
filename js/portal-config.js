@@ -19,7 +19,7 @@
                       honestly instead of showing a dead button.
    telephoneSubUrl .. the Soul Telephone Supporter checkout
                       (Stripe Payment Link). Spec: product
-                      "Soul Telephone — Supporter", price $2.00
+                      "Soul Telephone — Supporter", price $5.00
                       USD recurring monthly, success redirect to
                       /telephone.html?sub=welcome. Empty string =
                       Stripe live is not connected yet; the
@@ -33,5 +33,5 @@ window.PORTAL_CONFIG = {
   vesselDownloadUrl: 'https://uncommonpope-png.github.io/soul-economy/downloads/vessel.zip',
   stripePaymentLink: 'https://buy.stripe.com/cNi4gz4pqdx1evv8HHfnO0o',
   vesselMinDonation: '$4',
-  telephoneSubUrl: 'https://buy.stripe.com/fZueVdf448cH8770bbfnO0p'
+  telephoneSubUrl: 'https://buy.stripe.com/6oUfZh09afF9evv7DDfnO0q'
 };

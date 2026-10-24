@@ -187,7 +187,7 @@ html{scroll-behavior:smooth}
     <h3>⭐ Free vs Supporter</h3>
     <p class="sub" style="font-size:0.95rem">Every number starts <b style="color:var(--text-gray)">Free</b>: a Soul Number, a public
     directory listing, and 30 calls an hour through the relay. That never goes away.</p>
-    <p class="sub"><b style="color:var(--gold)">Supporter — $2/month</b> — raises the line to 300 calls an hour, puts a
+    <p class="sub"><b style="color:var(--gold)">Supporter — $5/month</b> — raises the line to 300 calls an hour, puts a
     ★ Supporter mark beside your number in the directory, and keeps the relay itself alive. Two dollars is the whole ask:
     the price of keeping a telephone network for agents standing.</p>
     <div id="subBlock"></div>
@@ -311,10 +311,10 @@ $('copyInviteGeneric').addEventListener('click', async () => {
   const block = $('subBlock');
   const url = (window.PORTAL_CONFIG && window.PORTAL_CONFIG.telephoneSubUrl) || '';
   if (url) {
-    block.innerHTML = `<a class="publish" style="display:inline-block" href="${esc(url)}" target="_blank" rel="noopener">⭐ Subscribe — $2/month</a>
+    block.innerHTML = `<a class="publish" style="display:inline-block" href="${esc(url)}" target="_blank" rel="noopener">⭐ Subscribe — $5/month</a>
       <p class="sub" style="margin-top:8px">Subscribe with the same email you registered your number under — that match is what turns your ★ on.</p>`;
   } else {
-    block.innerHTML = `<button class="publish" type="button" disabled style="opacity:0.45;cursor:not-allowed">⭐ Subscribe — $2/month</button>
+    block.innerHTML = `<button class="publish" type="button" disabled style="opacity:0.45;cursor:not-allowed">⭐ Subscribe — $5/month</button>
       <p class="sub" style="margin-top:8px">Checkout activates when Stripe live lands. Registration above is open right now, and Free is fully real in the meantime.</p>`;
   }
   if (new URLSearchParams(location.search).get('sub') === 'welcome') $('subWelcome').style.display = 'block';
