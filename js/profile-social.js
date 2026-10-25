@@ -9,6 +9,15 @@ var DEFAULTS={handle:'',displayName:'',bio:'',mood:'',audio:'',themeCSS:'',locat
 var state, items=[];
 var VISITOR=false;
 var REGISTRY=false;
+/* Unify step 1: SERVER_MODE is a NEW flag, never the VISITOR flag, so
+   legacy registry-visitor badge logic is undisturbed. SERVER_MODE means
+   this page was addressed by Square pubkey (?pubkey= / #pk=) and the
+   server profile renders as the primary profile; local sections with no
+   server equivalent keep rendering from soulProfileV1, marked local-only
+   by js/profile-server.js. */
+var SERVER_MODE=false;
+var SERVER_PK='';
+var OWN_SQUARE_PK=null;
 
 function loadState(){
   try{
@@ -73,7 +82,11 @@ function cleanPortfolio(a){
 }
 function buildPayload(){
   return {schema:'user_profile.json/1.0',profile:{handle:state.handle,displayName:state.displayName||'',bio:state.bio,mood:state.mood,audio:state.audio,themeCSS:state.themeCSS,location:state.location||'',website:state.website||'',joined:state.joined||0,mySoul:state.mySoul||'',public:state.public,shop:(state.shop&&typeof state.shop==='object'?state.shop:{}),companion:{name:((state.companion&&state.companion.name)||'').slice(0,40),tone:((state.companion&&state.companion.tone)||'').slice(0,80)}},
-    equippedSouls:state.top8.slice(),guestbook:state.guests.slice(0,20),portfolio:cleanPortfolio(state.portfolio),followers:cleanStrArr(state.followers),following:cleanStrArr(state.following)};
+    equippedSouls:state.top8.slice(),guestbook:state.guests.slice(0,20),portfolio:cleanPortfolio(state.portfolio),followers:cleanStrArr(state.followers),following:cleanStrArr(state.following),
+    /* Unify step 1: handle↔pubkey link. Only when a Square identity is
+       connected on this device; old registry files without it simply
+       don't link. NEVER a handle claim in kind-0 content. */
+    pubkey:(OWN_SQUARE_PK||undefined)};
 }
 function applyPayload(p){
   var pr=(p.profile)||p;
@@ -130,6 +143,28 @@ function getRegHandle(){
     if(u) return normalizeHandle(u);
   }catch(e){}
   return '';
+}
+/* Unify step 1: a server-mode address. Only a valid 64-hex pubkey counts;
+   anything else is treated as absent (local render) so a mistyped link
+   can never render a wrong profile. */
+function getServerPubkeyParam(){
+  try{
+    var sp=new URLSearchParams(location.search.split('#')[0]);
+    var q=sp.get('pubkey')||'';
+    if(/^[0-9a-fA-F]{64}$/.test(q)) return q.toLowerCase();
+    var h=location.hash||'';
+    var m=/^#pk=([0-9a-fA-F]{64})$/.exec(h);
+    if(m) return m[1].toLowerCase();
+  }catch(e){}
+  return '';
+}
+function hasInvalidServerParam(){
+  try{
+    var sp=new URLSearchParams(location.search.split('#')[0]);
+    if(sp.get('pubkey')) return true;
+    if(/^#pk=/.test(location.hash||'')) return true;
+  }catch(e){}
+  return false;
 }
 function applyAuthIdentity(){
   if(VISITOR) return;
@@ -233,6 +268,9 @@ function openRegModal(){
   box.style.cssText='width:640px;max-width:100%;max-height:90vh;overflow-y:auto;background:#0c0c12;border:1px solid rgba(255,209,102,0.3);border-radius:20px;padding:20px;box-shadow:0 30px 120px rgba(0,0,0,0.8)';
   box.innerHTML='<h3 style="margin:0 0 6px;font-size:1.05rem">⛭ Publish to Registry</h3>'+
     '<p style="margin:0 0 12px;color:#8b8b98;font-size:0.78rem"><b>⛭ Open Pull Request</b> creates <code>profiles/'+h+'.json</code> directly on GitHub and jumps straight to a PR — merging triggers the registry CI. If the URL is too long for your browser, use <b>Open GitHub Issue</b> instead, or <b>Copy Full Payload</b>.</p>'+
+    '<p style="margin:0 0 12px;color:#8b8b98;font-size:0.78rem">'+(OWN_SQUARE_PK
+      ? '◇ Links @'+esc(state.handle)+' to your Square identity ('+esc(String(OWN_SQUARE_PK).slice(0,16))+'…) — old <code>#@handle</code> links will resolve to this Square profile.'
+      : '◇ No Square identity connected on this device — this file will not link to a Square profile.')+'</p>'+
     '<textarea id="upcRegBody" rows="9" spellcheck="false" readonly style="white-space:pre-wrap;font-size:0.72rem;min-height:190px;width:100%">'+esc(body)+'</textarea>'+
     '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px">'+
       '<button id="upcRegPr" class="upc-btn prim" style="flex:1;min-width:170px">⛭ Open Pull Request</button>'+
@@ -384,6 +422,13 @@ function render(){
   renderTheme();
   renderGuests();
   renderSummoner();
+  /* Unify step 1: in server mode, re-apply the cached server rendering
+     after any local re-render (edit, equip, tip) so the server profile
+     stays primary instead of flashing back to local. No-op before the
+     server boot fetches. */
+  if(SERVER_MODE&&window.SoulServer&&window.SoulServer.applyCached){
+    try{ window.SoulServer.applyCached(); }catch(e){}
+  }
 }
 function soulScore(){
   var pub=0; try{pub=(JSON.parse(localStorage.getItem('pendingSouls')||'[]')||[]).length;}catch(e){}
@@ -1108,9 +1153,46 @@ function boot(){
     return;
   }
   if(resolveRegistry()){ return; }
+  /* Unify step 1: server mode ONLY when no #view= and no registry handle
+     claimed the page — those two modes keep working exactly as before.
+     Local state still loads: sections with no server equivalent
+     (portfolio, guests, shop, theme, audio) render from it, marked
+     local-only by js/profile-server.js. */
+  var spk=getServerPubkeyParam();
+  if(spk){
+    SERVER_MODE=true; SERVER_PK=spk;
+    loadState();
+    if(window.SoulIdentity&&window.SoulIdentity.resolvePubkey){
+      window.SoulIdentity.resolvePubkey().then(function(pk){ OWN_SQUARE_PK=pk; }).catch(function(){});
+    }
+    finishBoot();
+    /* The server module (js/profile-server.js) loads over the network;
+       wait up to ~5s for it instead of checking once, or a slow CDN
+       would silently drop server mode. If it never arrives, say so
+       honestly and keep the local render. */
+    (function waitServer(tries){
+      if(window.SoulServer&&window.SoulServer.boot){ window.SoulServer.boot(SERVER_PK); return; }
+      if(tries>0){ setTimeout(function(){ waitServer(tries-1); },250); return; }
+      var cv=document.getElementById('user-profile-canvas');
+      if(cv){
+        var n=document.createElement('div');
+        n.style.cssText='padding:12px 16px;border-radius:16px;background:rgba(255,209,102,0.08);border:1px solid rgba(255,209,102,0.35);font-size:0.8rem;color:#fff;margin-bottom:16px';
+        n.textContent='Square profile module did not load — showing your local sanctuary.';
+        cv.insertBefore(n,cv.firstChild);
+      }
+    })(20);
+    return;
+  }
   loadState();
   applyAuthIdentity();
   if(hasSoulParam()) saveState();
+  if(hasInvalidServerParam()) reportToast('That Square link did not carry a valid key — showing your local sanctuary.');
+  /* Unify step 1: resolve the device's Square identity in the background
+     so "Publish to Registry" can link the handle to it. Non-blocking;
+     if it hasn't resolved by publish time, the payload omits pubkey. */
+  if(window.SoulIdentity&&window.SoulIdentity.resolvePubkey){
+    window.SoulIdentity.resolvePubkey().then(function(pk){ OWN_SQUARE_PK=pk; }).catch(function(){});
+  }
   finishBoot();
 }
 function finishBoot(){ applyTheme(); render(); wireVisitor(); checkRegistryStatus(); if(document.getElementById('upcSummoner')) pingWorkbench(); }

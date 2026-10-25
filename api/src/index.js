@@ -462,6 +462,77 @@ async function handleNotifyRead(request, env, url) {
   return json({ ok: true });
 }
 
+// Unify step 1 — equipped shelves. A shelf is an ordered catalog-slug
+// list, max 8, owned by one pubkey. Stored in the `shelves` table
+// (migration: api/migrations/001-shelves.sql). Catalog membership is NOT
+// enforced server-side — the Worker holds no catalog copy — so
+// unknown-but-well-formed slugs store fine and render as plain tiles.
+// If the table does not exist yet (migration not applied), GET degrades
+// to {ok:true, shelf:[], unavailable:true} and POST to 503
+// shelves_unavailable — the profile UI falls back to the local shelf and
+// never crashes.
+function validateShelfSlugs(slugs) {
+  if (!Array.isArray(slugs)) return { ok: false, error: 'shelf must be an array' };
+  if (slugs.length > 8) return { ok: false, error: 'shelf holds at most 8 souls' };
+  const seen = new Set();
+  const out = [];
+  for (const raw of slugs) {
+    const s = String(raw || '').trim().toLowerCase();
+    if (!s || s.length > 80 || !/^[a-z0-9][a-z0-9-]*$/.test(s)) {
+      return { ok: false, error: 'bad slug: ' + String(raw || '').slice(0, 40) };
+    }
+    if (!seen.has(s)) { seen.add(s); out.push(s); }
+  }
+  return { ok: true, slugs: out };
+}
+
+async function handleShelfGet(url, env) {
+  const pubkey = url.searchParams.get('pubkey');
+  if (!pubkey) return json({ error: 'pubkey required' }, 400);
+  let row;
+  try {
+    row = await env.DB.prepare('SELECT shelf, updated_at FROM shelves WHERE pubkey = ?')
+      .bind(pubkey)
+      .first();
+  } catch {
+    return json({ ok: true, pubkey, shelf: [], unavailable: true });
+  }
+  if (!row) return json({ ok: true, pubkey, shelf: [] });
+  let shelf = [];
+  try { shelf = JSON.parse(row.shelf || '[]'); } catch { shelf = []; }
+  if (!Array.isArray(shelf)) shelf = [];
+  return json({ ok: true, pubkey, shelf, updated_at: row.updated_at || 0 });
+}
+
+async function handleShelfPost(request, env, url) {
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return json({ ok: false, error: 'invalid json' }, 400);
+  }
+  const pubkey = await verifyNostrAuth(body, url.toString(), 'POST');
+  if (!pubkey) return json({ ok: false, error: 'auth failed' }, 401);
+  if (body.pubkey && body.pubkey !== pubkey) return json({ ok: false, error: 'pubkey mismatch' }, 403);
+  const v = validateShelfSlugs(body.shelf);
+  if (!v.ok) return json({ ok: false, error: v.error }, 400);
+  if (!(await rateLimit(env, 'shelf:' + pubkey, 60, 60 * 60 * 1000))) {
+    return json({ ok: false, error: 'rate limited' }, 429);
+  }
+  const now = Date.now();
+  try {
+    await env.DB.prepare(
+      'INSERT INTO shelves (pubkey, shelf, updated_at) VALUES (?, ?, ?) ' +
+        'ON CONFLICT(pubkey) DO UPDATE SET shelf = ?, updated_at = ?'
+    )
+      .bind(pubkey, JSON.stringify(v.slugs), now, JSON.stringify(v.slugs), now)
+      .run();
+  } catch {
+    return json({ ok: false, error: 'shelves_unavailable' }, 503);
+  }
+  return json({ ok: true, pubkey, shelf: v.slugs, updated_at: now });
+}
+
 async function handleFollows(url, env) {
   const pubkey = url.searchParams.get('pubkey');
   if (!pubkey) return json({ error: 'pubkey required' }, 400);
@@ -830,6 +901,10 @@ export default {
       if (url.pathname === '/api/follows') return await handleFollows(url, env);
       if (url.pathname === '/api/notify/read' && request.method === 'POST')
         return await handleNotifyRead(request, env, url);
+      if (url.pathname === '/api/shelf' && request.method === 'GET')
+        return await handleShelfGet(url, env);
+      if (url.pathname === '/api/shelf' && request.method === 'POST')
+        return await handleShelfPost(request, env, url);
       if (url.pathname === '/api/search') return await handleSearch(url, env);
       if (url.pathname === '/api/hit' && request.method === 'POST') return await handleHit(request, env);
       if (url.pathname === '/api/newsletter' && request.method === 'POST')

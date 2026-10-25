@@ -2,8 +2,10 @@
    Reads the Square/FeedRoom server identity (GET /api/profile, no auth
    needed for reads) and renders it on profile.html, so a feed user shows
    up on their profile WITHOUT a GitHub PR.
-   - Pubkey resolution, in order: NIP-07 extension (window.nostr) →
-     localStorage:soulPubkey cached by js/square-bridge-module.js.
+   - Pubkey resolution, in order (unify step 1): the shared resolver
+     window.SoulIdentity (local soulKey first, then NIP-07, then cached
+     soulPubkey); legacy NIP-07 → cached path below runs only if that
+     script failed to load.
    - API base: same-origin first (Worker origin), then the Worker origin
      directly (so the GitHub Pages mirror works) — the same pattern as
      js/ticker.js.
@@ -30,12 +32,26 @@
       if ((location.hash || '').indexOf('#@') === 0) return true;
       var sp = new URLSearchParams(location.search.split('#')[0]);
       if (sp.get('user')) return true;
+      // Unify step 1: a server-mode profile (?pubkey= / #pk=) supersedes
+      // this side card — the server identity renders as the primary
+      // profile, so the card hides itself there too.
+      if (sp.get('pubkey')) return true;
+      if (/^#pk=[0-9a-fA-F]{64}$/.test(location.hash || '')) return true;
     } catch (e) { /* keep going: not a visitor */ }
     return false;
   }
   function sleep(ms) { return new Promise(function (res) { setTimeout(res, ms); }); }
 
   async function resolvePubkey() {
+    // Unify step 1: the shared resolver (local key first) wins when the
+    // profile page loaded js/soul-identity.js. Legacy path below runs
+    // only if that script failed to load — same behavior as before.
+    try {
+      if (typeof window !== 'undefined' && window.SoulIdentity && window.SoulIdentity.resolvePubkey) {
+        var shared = await window.SoulIdentity.resolvePubkey();
+        if (shared) return shared;
+      }
+    } catch (e) { /* fall through to legacy */ }
     try {
       if (typeof window !== 'undefined' && window.nostr && window.nostr.getPublicKey) {
         var pk = await window.nostr.getPublicKey();
