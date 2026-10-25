@@ -67,6 +67,27 @@ input{font-family:inherit;outline:none;border:none;background:none}
   .nav-links a{display:inline-flex;align-items:center;min-height:40px}
 }
 </style>
+<style>
+/* === SOUL ATTACHMENTS + FOLLOWING STATES (additive, 2026-10-24) ===
+   Rich soul cards, composer picker, soul-filter bar, empty-state buttons.
+   No existing rule is modified. */
+.sq-soul-card{margin-top:10px;border:1px solid rgba(139,92,246,0.25);border-radius:12px;padding:10px 12px;background:rgba(139,92,246,0.07)}
+.sq-soul-card-title{display:block;font-weight:700;color:#fff;font-size:0.9rem}
+.sq-soul-card-meta{font-size:0.72rem;color:#B8B8B8;margin-top:2px}
+.sq-soul-card-desc{font-size:0.8rem;color:#B8B8B8;margin-top:6px;line-height:1.5}
+.sq-soul-card-actions{display:flex;gap:10px;margin-top:8px;flex-wrap:wrap}
+.sq-soul-card-actions a,.sq-soul-card-actions button{font-size:0.72rem;color:#00D4FF;border:1px solid rgba(0,212,255,0.3);border-radius:20px;padding:4px 12px;background:none;cursor:pointer}
+.sq-soul-picker{margin-top:10px;border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:10px 12px}
+.sq-soul-pick-note{font-size:0.72rem;color:#B8B8B8;margin-bottom:8px}
+.sq-soul-search{width:100%;padding:8px 12px;border-radius:10px;border:1px solid rgba(139,92,246,0.25);background:rgba(255,255,255,0.04);color:#fff;font-family:inherit}
+.sq-soul-results{display:flex;flex-direction:column;gap:4px;margin-top:8px}
+.sq-soul-pick-row{text-align:left;padding:7px 10px;border-radius:10px;background:rgba(255,255,255,0.04);color:#fff;font-size:0.82rem;cursor:pointer;border:1px solid transparent}
+.sq-soul-pick-row:hover{border-color:rgba(139,92,246,0.4)}
+.sq-soul-preview{margin-top:8px}
+.sq-soul-filterbar{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 14px;margin-bottom:12px;border:1px solid rgba(0,212,255,0.3);border-radius:12px;background:rgba(0,212,255,0.07);font-size:0.82rem}
+.sq-soul-filterbar button{color:#00D4FF;border:1px solid rgba(0,212,255,0.3);border-radius:20px;padding:4px 12px;background:none;cursor:pointer;font-size:0.72rem}
+.sq-empty-btn{margin-top:14px;padding:8px 20px;border-radius:30px;border:1px solid rgba(139,92,246,0.4);color:#fff;background:linear-gradient(135deg,#8B5CF6,#6D28D9);cursor:pointer;font-size:0.82rem}
+</style>
 </head>
 <body>
 <div style="max-width:1280px;margin:0 auto;padding:16px 20px 0">
@@ -109,8 +130,15 @@ input{font-family:inherit;outline:none;border:none;background:none}
       <span class="sq-foot-actions">
         <button id="sqAttach" class="sq-attach" title="Attach image">🖼</button>
         <input type="file" id="sqFile" accept="image/png,image/jpeg,image/webp,image/gif" hidden />
+        <button id="sqSoulBtn" class="sq-attach" title="Attach a soul">◈</button>
         <button class="sq-post-btn" id="sqPost">✦ Post</button>
       </span>
+    </div>
+    <div class="sq-soul-picker" id="sqSoulPicker" hidden>
+      <div class="sq-soul-pick-note">Attach a soul to your post — one soul per post for now (the Square stores only the first soul tag).</div>
+      <input id="sqSoulSearch" class="sq-soul-search" type="search" placeholder="Search souls by name…" maxlength="80" />
+      <div id="sqSoulResults" class="sq-soul-results"></div>
+      <div id="sqSoulPreview" class="sq-soul-preview"></div>
     </div>
   </div>
 

@@ -14,6 +14,45 @@ export const state = {
 
 const $ = (id) => document.getElementById(id);
 
+// ─── scope + soul pure helpers (harness-tested; no DOM) ────────────────────
+// resolveScope: URL ?scope= wins over stored sqScope; anything else → global.
+export function resolveScope(urlScope, storedScope) {
+  if (urlScope === 'global' || urlScope === 'following') return urlScope;
+  if (storedScope === 'global' || storedScope === 'following') return storedScope;
+  return 'global';
+}
+// followingAuthors: relay-fallback author list for the Following tab.
+// Null when logged out (the caller must show the Connect state instead).
+export function followingAuthors(me, cached) {
+  if (!me) return null;
+  const list = Array.isArray(cached) ? cached.filter(Boolean) : [];
+  return [...new Set([me, ...list])];
+}
+// followingEmptyKind: which honest empty state the Following tab needs.
+export function followingEmptyKind(me, followeeCount) {
+  if (!me) return 'connect';
+  if (followeeCount === 0) return 'follow-someone';
+  return null;
+}
+// slugifyName mirrors js/profile-server.js slugify exactly: lowercase,
+// non-alphanumerics → '-', trim dashes, max 80 chars.
+export function slugifyName(name) {
+  return String(name || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 80);
+}
+export function normalizeSoulSlug(raw) {
+  return slugifyName(raw);
+}
+export function isValidSoulSlug(slug) {
+  return typeof slug === 'string' && slug.length >= 1 && slug.length <= 80 && /^[a-z0-9][a-z0-9-]*$/.test(slug);
+}
+// First ['soul', slug] tag wins (the server keeps only the first one too).
+export function soulSlugFromTags(tags) {
+  const t = (Array.isArray(tags) ? tags : []).find((x) => Array.isArray(x) && x[0] === 'soul' && x[1]);
+  if (!t) return '';
+  const s = normalizeSoulSlug(t[1]);
+  return isValidSoulSlug(s) ? s : '';
+}
+
 // ─── helpers ────────────────────────────────────────────────────────────────
 export function esc(s) {
   return String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({
@@ -84,6 +123,200 @@ export function status(msg) {
   if (el) el.textContent = msg || '';
 }
 
+// ─── soul catalog + attachment rendering ────────────────────────────────
+// The Square does not bundle a catalog copy: it fetches the site's served
+// /data/catalog.json (same-origin first, Worker origin fallback). If the
+// fetch fails, every slug renders as today's plain chip — never a break.
+let catalogPromise = null;
+export async function ensureCatalog() {
+  if (catalogPromise) return catalogPromise;
+  catalogPromise = (async () => {
+    const urls = ['/data/catalog.json', 'https://soul-economy.uncommonpope.workers.dev/data/catalog.json'];
+    for (const u of urls) {
+      try {
+        const r = await fetch(u);
+        if (!r.ok) continue;
+        const d = await r.json();
+        const items = Array.isArray(d) ? d : (d.items || d.souls || []);
+        const map = new Map();
+        for (const it of items) {
+          if (!it || !it.name) continue;
+          const s = it.slug ? normalizeSoulSlug(it.slug) : slugifyName(it.name);
+          if (s && !map.has(s)) map.set(s, it);
+        }
+        return map;
+      } catch { /* try next URL */ }
+    }
+    return null;
+  })();
+  return catalogPromise;
+}
+export async function findSoul(slug) {
+  const s = normalizeSoulSlug(slug);
+  if (!isValidSoulSlug(s)) return null;
+  const map = await ensureCatalog();
+  return (map && map.get(s)) || null;
+}
+export async function searchSouls(q) {
+  const needle = String(q || '').trim().toLowerCase();
+  if (!needle) return [];
+  const map = await ensureCatalog();
+  if (!map) return [];
+  const out = [];
+  for (const [slug, it] of map) {
+    if (String(it.name || '').toLowerCase().includes(needle)) out.push({ slug, item: it });
+    if (out.length >= 8) break;
+  }
+  return out;
+}
+
+// Pending composer attachment (v1: exactly one — the server keeps only the
+// first soul tag, so the picker enforces one and says so).
+let soulAttachment = '';
+export function getSoulAttachment() {
+  return soulAttachment;
+}
+export function setSoulAttachment(slug) {
+  const s = normalizeSoulSlug(slug);
+  if (!isValidSoulSlug(s)) return false;
+  soulAttachment = s;
+  return true;
+}
+export function clearSoulAttachment() {
+  soulAttachment = '';
+}
+export function resetSoulComposer() {
+  clearSoulAttachment();
+  const picker = $('sqSoulPicker');
+  if (picker) picker.hidden = true;
+  const search = $('sqSoulSearch');
+  if (search) search.value = '';
+  const results = $('sqSoulResults');
+  if (results) results.innerHTML = '';
+  const preview = $('sqSoulPreview');
+  if (preview) preview.innerHTML = '';
+}
+
+// Rich catalog card for a cited soul. opts.filterButton (default true)
+// adds the "Words about this soul" feed-filter action; the composer
+// preview passes false — a preview is not a feed card.
+export function buildSoulCardEl(item, slug, opts = {}) {
+  const card = document.createElement('div');
+  card.className = 'sq-soul-card';
+  const title = document.createElement('a');
+  title.className = 'sq-soul-card-title';
+  title.href = 'index.html#catalog';
+  title.textContent = '◈ ' + (item.name || slug);
+  const meta = document.createElement('div');
+  meta.className = 'sq-soul-card-meta';
+  meta.textContent = [(item.type || 'soul'), item.author ? 'by ' + item.author : '', item.plt ? 'PLT ' + item.plt : ''].filter(Boolean).join(' · ');
+  card.append(title, meta);
+  if (item.desc) {
+    const d = document.createElement('div');
+    d.className = 'sq-soul-card-desc';
+    d.textContent = String(item.desc).slice(0, 160);
+    card.appendChild(d);
+  }
+  const acts = document.createElement('div');
+  acts.className = 'sq-soul-card-actions';
+  if (item.download) {
+    const dl = document.createElement('a');
+    dl.href = item.download;
+    dl.target = '_blank';
+    dl.rel = 'noopener';
+    dl.textContent = '⬇ Download';
+    acts.appendChild(dl);
+  }
+  if (opts.filterButton !== false) {
+    const words = document.createElement('button');
+    words.type = 'button';
+    words.textContent = '☾ Words about this soul';
+    words.onclick = () => loadSoulFeed(slug);
+    acts.appendChild(words);
+  }
+  card.appendChild(acts);
+  return card;
+}
+
+// Render a cited soul under a post body: plain chip immediately (today's
+// behavior, synchronous), upgraded to the rich card once the catalog
+// resolves it. Unknown slugs keep the chip forever — never a broken card.
+export function appendSoulAttachment(bodyEl, slug) {
+  const s = normalizeSoulSlug(slug);
+  if (!isValidSoulSlug(s)) return;
+  const chip = document.createElement('span');
+  chip.className = 'sq-soul-chip';
+  chip.textContent = '◈ ' + s;
+  bodyEl.appendChild(document.createElement('br'));
+  bodyEl.appendChild(chip);
+  findSoul(s).then((item) => {
+    if (!item || !chip.isConnected) return;
+    chip.replaceWith(buildSoulCardEl(item, s));
+  }).catch(() => {});
+}
+
+// Feed filtered to one cited soul (?soul=, server-side). The filter bar's
+// clear button restores the active tab's feed.
+export async function loadSoulFeed(slug) {
+  const feedEl = $('sqFeed');
+  if (!feedEl) return;
+  const s = normalizeSoulSlug(slug);
+  if (!isValidSoulSlug(s)) return;
+  feedEl.innerHTML = '';
+  let bar = $('sqSoulFilterBar');
+  if (!bar) {
+    bar = document.createElement('div');
+    bar.id = 'sqSoulFilterBar';
+    bar.className = 'sq-soul-filterbar';
+  }
+  bar.innerHTML = '';
+  const label = document.createElement('span');
+  label.textContent = '☾ Words about ◈ ' + s;
+  const clear = document.createElement('button');
+  clear.type = 'button';
+  clear.textContent = '✕ Show all';
+  clear.onclick = () => {
+    bar.remove();
+    loadFeed();
+  };
+  bar.append(label, clear);
+  feedEl.appendChild(bar);
+  try {
+    const data = await api.feed({ soul: s, limit: 20 });
+    const posts = data.posts || [];
+    if (!posts.length) {
+      const d = document.createElement('div');
+      d.className = 'sq-empty';
+      d.textContent = 'No words about this soul yet.';
+      feedEl.appendChild(d);
+    } else {
+      posts.forEach((p, i) => feedEl.appendChild(postCard(p, i)));
+    }
+    $('sqMore').hidden = true;
+  } catch {
+    const d = document.createElement('div');
+    d.className = 'sq-empty';
+    d.textContent = 'Could not load words about this soul — try again.';
+    feedEl.appendChild(d);
+  }
+}
+
+// Cached follow list for the relay/offline Following view (last known
+// good list; written whenever follows are fetched successfully).
+export function readFollowsCache() {
+  try {
+    const v = JSON.parse(localStorage.getItem('sqFollows') || 'null');
+    return Array.isArray(v) ? v.filter(Boolean) : null;
+  } catch {
+    return null;
+  }
+}
+export function writeFollowsCache(list) {
+  try {
+    localStorage.setItem('sqFollows', JSON.stringify([...new Set((list || []).filter(Boolean))]));
+  } catch {}
+}
+
 // ─── feed loading ───────────────────────────────────────────────────────────
 export async function loadFeed({ append = false } = {}) {
   const feedEl = $('sqFeed');
@@ -91,6 +324,13 @@ export async function loadFeed({ append = false } = {}) {
   if (!append) {
     state.before = 0;
     feedEl.innerHTML = '';
+    // Following tab never shows global posts: logged out → Connect prompt,
+    // before any API call is made.
+    if (state.scope === 'following' && !state.me) {
+      renderFollowingConnect();
+      status('');
+      return;
+    }
     status('pulling…');
   }
   try {
@@ -106,33 +346,78 @@ export async function loadFeed({ append = false } = {}) {
     state.before = data.next_before || 0;
     $('sqMore').hidden = !data.next_before;
     if (!append) feedEl.innerHTML = '';
-    if (!posts.length && !append) renderEmpty();
+    if (!posts.length && !append) {
+      if (state.scope === 'following' && state.me) {
+        // Distinguish 0 follows from follows-with-no-posts (and cache the
+        // list for the offline Following view). A failed fetch stays
+        // generic — never claim 0 follows on an error.
+        let count = null;
+        try {
+          const f = await api.follows(state.me);
+          const list = f.followees || [];
+          writeFollowsCache(list);
+          count = list.length;
+        } catch {}
+        if (count === 0) renderFollowingEmpty();
+        else renderEmpty('No words from the people you follow yet.');
+      } else {
+        renderEmpty();
+      }
+    }
     posts.forEach((p, i) => feedEl.appendChild(postCard(p, i)));
     status(api.API.includes('workers.dev') ? 'live · signed · sovereign' : '');
     return;
   } catch (e) {
     console.warn('[square] API down, falling back to relays', e);
-    status('relays (offline mode)…');
     if (append) return;
+    // Relay/offline fallback — Following must never silently become global.
+    if (state.scope === 'following') {
+      if (!state.me) {
+        feedEl.innerHTML = '';
+        renderFollowingConnect();
+        status('');
+        return;
+      }
+      const cached = readFollowsCache();
+      if (cached && cached.length) {
+        status('Following (offline)…');
+        const events = await relayFeed({ limit: 20, authors: followingAuthors(state.me, cached) });
+        feedEl.innerHTML = '';
+        if (!events.length) {
+          renderEmpty('Nobody you follow has spoken on the relays yet.');
+          $('sqMore').hidden = true;
+          return;
+        }
+        events.forEach((ev, i) => feedEl.appendChild(postCard(relayPost(ev), i)));
+        $('sqMore').hidden = true;
+        return;
+      }
+      feedEl.innerHTML = '';
+      renderFollowingOffline();
+      status('');
+      return;
+    }
+    status('relays (offline mode)…');
     const events = await relayFeed({ limit: 20 });
     feedEl.innerHTML = '';
     if (!events.length) {
       renderEmpty('The Square is unreachable right now. The souls will return.');
       return;
     }
-    events.forEach((ev, i) => {
-      const el = postCard(
-        {
-          id: ev.id, pubkey: ev.pubkey, created_at: ev.created_at, content: ev.content,
-          root_id: null, parent_id: null, reply_count: 0, like_count: 0, plt: '{}',
-          name: '', display_name: '', picture: '', about: '',
-        },
-        i
-      );
-      feedEl.appendChild(el);
-    });
+    events.forEach((ev, i) => feedEl.appendChild(postCard(relayPost(ev), i)));
     $('sqMore').hidden = true;
   }
+}
+
+// Relay event → post-card shape, with the soul tag mapped to soul_slug
+// client-side (the D1 path carries soul_slug on the row already).
+function relayPost(ev) {
+  return {
+    id: ev.id, pubkey: ev.pubkey, created_at: ev.created_at, content: ev.content,
+    root_id: null, parent_id: null, reply_count: 0, like_count: 0, plt: '{}',
+    name: '', display_name: '', picture: '', about: '',
+    soul_slug: soulSlugFromTags(ev.tags), tags: ev.tags || [],
+  };
 }
 
 function renderEmpty(msg) {
@@ -140,6 +425,55 @@ function renderEmpty(msg) {
   const d = document.createElement('div');
   d.className = 'sq-empty';
   d.textContent = msg || 'The Square is silent. Be the first voice.';
+  feedEl.appendChild(d);
+}
+
+// Following tab, logged out: Connect prompt via the existing sign-in path
+// (requireSignIn → sign-in modal). Sign-in reloads the feed, and the scope
+// is still 'following', so the real feed loads next.
+function renderFollowingConnect() {
+  const feedEl = $('sqFeed');
+  const d = document.createElement('div');
+  d.className = 'sq-empty';
+  const t = document.createElement('div');
+  t.textContent = 'Connect your Square identity to see the people you follow.';
+  const b = document.createElement('button');
+  b.type = 'button';
+  b.className = 'sq-empty-btn';
+  b.textContent = '✦ Enter the Economy';
+  b.onclick = () => requireSignIn();
+  d.append(t, b);
+  feedEl.appendChild(d);
+}
+
+// Following tab, connected with 0 followees: point at the fix (follow
+// someone) instead of the generic silence line. The Browse button reuses
+// the All tab's own click handler, so scope persistence + reload stay true.
+function renderFollowingEmpty() {
+  const feedEl = $('sqFeed');
+  const d = document.createElement('div');
+  d.className = 'sq-empty';
+  const t = document.createElement('div');
+  t.textContent = "You're not following anyone yet. Find voices worth following.";
+  const b = document.createElement('button');
+  b.type = 'button';
+  b.className = 'sq-empty-btn';
+  b.textContent = '✦ Browse the Square';
+  b.onclick = () => {
+    const all = document.querySelector('.sq-tab[data-scope="global"]');
+    if (all) all.click();
+  };
+  d.append(t, b);
+  feedEl.appendChild(d);
+}
+
+// Following tab, API down and no cached follow list: honest note, never a
+// relay-global feed under the Following label.
+function renderFollowingOffline() {
+  const feedEl = $('sqFeed');
+  const d = document.createElement('div');
+  d.className = 'sq-empty';
+  d.textContent = 'Following feed needs the Square backend — you appear to be offline.';
   feedEl.appendChild(d);
 }
 
@@ -232,13 +566,8 @@ export function postCard(p, index = 0) {
   const body = document.createElement('div');
   body.className = 'sq-post-body';
   fillBody(body, p.content || '');
-  if (p.soul_slug) {
-    const chip = document.createElement('span');
-    chip.className = 'sq-soul-chip';
-    chip.textContent = '◈ ' + p.soul_slug;
-    body.appendChild(document.createElement('br'));
-    body.appendChild(chip);
-  }
+  const attachedSlug = p.soul_slug || soulSlugFromTags(p.tags);
+  if (attachedSlug) appendSoulAttachment(body, attachedSlug);
 
   const acts = document.createElement('div');
   acts.className = 'sq-post-actions';
@@ -426,6 +755,8 @@ function replyItem(r) {
   body.className = 'sq-post-body';
   body.style.fontSize = '0.85rem';
   body.textContent = r.content || '';
+  const rSlug = r.soul_slug || soulSlugFromTags(r.tags);
+  if (rSlug) appendSoulAttachment(body, rSlug);
   wrap.append(head, body);
   d.appendChild(wrap);
   return d;
@@ -441,11 +772,17 @@ export async function submitPost() {
   btn.disabled = true;
   btn.textContent = '✦ Signing…';
   try {
-    const ev = await signEvent({ kind: 1, tags: [['t', 'soul-economy']], content: text });
+    // v1 attachment: exactly one ['soul', slug] tag (the server keeps only
+    // the first). Realm tag marks the citation as Square-native.
+    const tags = [['t', 'soul-economy']];
+    const attached = getSoulAttachment();
+    if (attached) tags.push(['soul', attached], ['realm', 'soul-economy']);
+    const ev = await signEvent({ kind: 1, tags, content: text });
     await api.postEvent(ev);
     publishToRelays(ev);
     ta.value = '';
     updateCount();
+    resetSoulComposer();
     await loadFeed();
     status('posted ✓');
   } catch (e) {
@@ -545,6 +882,7 @@ export async function toggleFollow(pubkey, btn) {
     else set.add(pubkey);
     const ev = await signEvent({ kind: 3, tags: [...set].map((p) => ['p', p]) });
     await api.postEvent(ev);
+    writeFollowsCache([...set]);
     publishToRelays(ev);
     btn.classList.toggle('following', !wasFollowing);
     btn.textContent = wasFollowing ? '✦ Follow' : 'Following';

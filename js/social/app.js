@@ -9,6 +9,8 @@ import {
   openModal, closeModal, toggleNotifyPop, pollNotifications, requireSignIn, esc, shortPk, postCard,
   startFeedLive,
   status,
+  resolveScope, getSoulAttachment, setSoulAttachment, clearSoulAttachment,
+  findSoul, searchSouls, buildSoulCardEl,
 } from './feed.js';
 
 const $ = (id) => document.getElementById(id);
@@ -170,6 +172,7 @@ async function finishSignIn(name, pk, opts = {}) {
     const st = document.getElementById('sqStatus');
     if (st) st.textContent = 'welcome to the Economy, ' + name;
     loadFeed();
+  loadFeed();
   } catch (e) {
     alert('Sign-in failed: ' + e.message);
   }
@@ -311,12 +314,109 @@ if (attach && file) {
   };
 }
 
-  // tabs
+  // soul attachment picker (v1: one soul per post — the server keeps only
+  // the first soul tag, so picking a new soul replaces the current one;
+  // the picker note says so. Search by catalog name, live card preview.)
+  const soulBtn = $('sqSoulBtn');
+  const soulPicker = $('sqSoulPicker');
+  if (soulBtn && soulPicker) {
+    soulBtn.onclick = () => {
+      soulPicker.hidden = !soulPicker.hidden;
+      if (!soulPicker.hidden) {
+        const s = $('sqSoulSearch');
+        if (s) s.focus();
+      }
+    };
+    const soulSearch = $('sqSoulSearch');
+    const soulResults = $('sqSoulResults');
+    const soulPreview = $('sqSoulPreview');
+    const renderSoulPreview = async () => {
+      if (!soulPreview) return;
+      soulPreview.innerHTML = '';
+      const attached = getSoulAttachment();
+      if (!attached) return;
+      let item = null;
+      try {
+        item = await findSoul(attached);
+      } catch {}
+      if (item) soulPreview.appendChild(buildSoulCardEl(item, attached, { filterButton: false }));
+      else {
+        const note = document.createElement('div');
+        note.className = 'sq-soul-pick-note';
+        note.textContent = 'Attached ◈ ' + attached + ' — one soul per post for now.';
+        soulPreview.appendChild(note);
+      }
+      const rm = document.createElement('button');
+      rm.type = 'button';
+      rm.className = 'sq-empty-btn';
+      rm.textContent = '✕ Remove attachment';
+      rm.onclick = () => {
+        clearSoulAttachment();
+        renderSoulPreview();
+      };
+      soulPreview.appendChild(rm);
+    };
+    if (soulSearch && soulResults) {
+      let deb = 0;
+      soulSearch.addEventListener('input', () => {
+        clearTimeout(deb);
+        deb = setTimeout(async () => {
+          const q = soulSearch.value.trim();
+          soulResults.innerHTML = '';
+          if (!q) return;
+          let hits = [];
+          try {
+            hits = await searchSouls(q);
+          } catch {
+            hits = [];
+          }
+          if (!hits.length) {
+            soulResults.textContent = 'No souls match that name.';
+            return;
+          }
+          for (const { slug, item } of hits) {
+            const row = document.createElement('button');
+            row.type = 'button';
+            row.className = 'sq-soul-pick-row';
+            row.textContent = '◈ ' + item.name + (item.plt ? ' · PLT ' + item.plt : '');
+            row.onclick = () => {
+              if (!setSoulAttachment(slug)) {
+                status('could not attach that soul');
+                return;
+              }
+              soulResults.innerHTML = '';
+              soulSearch.value = '';
+              renderSoulPreview();
+              status('soul attached ✓');
+            };
+            soulResults.appendChild(row);
+          }
+        }, 200);
+      });
+    }
+    renderSoulPreview();
+  }
+
+  // tabs — scope persists: URL ?scope= wins over stored sqScope, and every
+  // click writes both (replaceState, no reload). Click still clears search
+  // and reloads the feed, exactly as before.
+  const applyScope = (scope) => {
+    const next = scope === 'following' ? 'following' : 'global';
+    state.scope = next;
+    document.querySelectorAll('.sq-tab').forEach((x) => x.classList.toggle('active', x.dataset.scope === next));
+    try {
+      localStorage.setItem('sqScope', next);
+    } catch {}
+    try {
+      const u = new URL(location.href);
+      if (next === 'following') u.searchParams.set('scope', 'following');
+      else u.searchParams.delete('scope');
+      history.replaceState(null, '', u);
+    } catch {}
+  };
   document.querySelectorAll('.sq-tab').forEach((t) => {
     t.onclick = () => {
-      document.querySelectorAll('.sq-tab').forEach((x) => x.classList.remove('active'));
-      t.classList.add('active');
-      state.scope = t.dataset.scope || 'global';
+      applyScope(t.dataset.scope || 'global');
       const sq = $('sqSearch');
       if (sq) sq.value = '';
       loadFeed();
@@ -367,6 +467,18 @@ if (attach && file) {
   } else {
     renderIdentity();
   }
+
+  // restore scope before the first load: URL ?scope= wins, else stored
+  // sqScope, else global. The active tab follows the restored scope.
+  let storedScope = null;
+  try {
+    storedScope = localStorage.getItem('sqScope');
+  } catch {}
+  let urlScope = null;
+  try {
+    urlScope = new URLSearchParams(location.search).get('scope');
+  } catch {}
+  applyScope(resolveScope(urlScope, storedScope));
 
   loadFeed();
   startFeedLive();
