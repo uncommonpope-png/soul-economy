@@ -379,6 +379,13 @@ input{font-family:inherit;outline:none;border:none;background:none}
 <!-- Canvas Overlay Content -->
 <div style="position:absolute;top:0;left:0;width:100%;height:auto;pointer-events:none;z-index:1">
 <div style="max-width:1280px;margin:0 auto;padding:16px 20px 0">
+<!-- New-visitor guide banner (Gemini Rank 3): first-visit only, dismissible. -->
+<div id="newHereBanner" style="pointer-events:auto;display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;margin:0 auto 12px;padding:10px 16px;border:1px solid rgba(255,209,102,0.28);border-left:3px solid #FFD166;border-radius:14px;background:rgba(10,10,15,0.85);font-family:ui-monospace,Consolas,monospace;font-size:0.78rem;color:#B8B8B8">
+  <span style="color:#FFD166;letter-spacing:0.12em">NEW HERE?</span>
+  <span>Explore the <a href="#catalog" style="color:#00D4FF">free Library</a>, rescue your chat at the <a href="rescue.html" style="color:#00D4FF">Rescue Door</a>, or <a href="chat.html" style="color:#00D4FF">summon a squad</a>.</span>
+  <button id="newHereDismiss" type="button" aria-label="Dismiss" style="margin-left:auto;background:none;border:1px solid rgba(255,255,255,0.2);color:#B8B8B8;border-radius:999px;width:26px;height:26px;cursor:pointer">×</button>
+</div>
+<script>(function(){try{var b=document.getElementById('newHereBanner');if(!b)return;if(localStorage.getItem('seNewHereDismissed')==='1'){b.style.display='none';return;}var d=document.getElementById('newHereDismiss');if(d)d.addEventListener('click',function(){try{localStorage.setItem('seNewHereDismissed','1')}catch(e){}b.style.display='none';});}catch(e){}})();</script>
 <nav class="navbar" role="navigation" aria-label="Main navigation" style="pointer-events:auto">
   <span class="logo">✦ Soul Economy</span>
   <ul class="nav-links">
@@ -454,7 +461,7 @@ input{font-family:inherit;outline:none;border:none;background:none}
         <a class="chip gold" href="https://buy.stripe.com/14A7sLcVW78D0EFga9fnO0r" target="_blank" rel="noopener">Complete Library (30 books) — $19</a>
         <a class="chip gold" href="https://buy.stripe.com/5kQ4gze0064z8775vvfnO0s" target="_blank" rel="noopener">Pro-Soul Pack: The Scorer — $49</a>
       </div>
-      <p class="chip-note" style="margin:12px 0 0">After payment you land on the download page. No license check in v1 — anyone with the link can download.</p>
+      <p class="chip-note" style="margin:12px 0 0">After payment you land on the download page, and downloads open from your checkout return.</p>
     </div>
   </div>
 

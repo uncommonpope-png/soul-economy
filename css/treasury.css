@@ -69,3 +69,12 @@
 .family-treasury .treasury-foot{
   margin-top:22px;font-size:0.8rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-muted);
 }
+
+/* Mobile accordion (Gemini Rank 2): on small screens the treasury cards
+   collapse to their headers; tap a header to expand. Desktop grid untouched. */
+@media(max-width:640px){
+  .family-treasury.accordion .treasury-group h3{cursor:pointer}
+  .family-treasury.accordion .treasury-group h3::after{content:' ▸';float:right;color:var(--gold)}
+  .family-treasury.accordion .treasury-group.open h3::after{content:' ▾'}
+  .family-treasury.accordion .treasury-group:not(.open) > :not(h3){display:none}
+}

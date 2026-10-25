@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<!-- DOWNLOAD PAGE — DRAFT, not deployed.
-     Deploy target: Soul Economy site, as download-books.html (Worker origin
-     https://soul-economy.uncommonpope.workers.dev/download-books and Pages
-     mirror). ZIPs deploy to the site's downloads/ folder beside vessel.zip.
-     Stripe payment-link success URLs point here (see README.md).
-     GATING NOTICE (v1, stated plainly): this page has NO license check.
-     Anyone who reaches this URL can download both ZIPs. License gating
-     (order-ID check, signed links) is phase 2, not this draft. -->
+<!-- DOWNLOAD PAGE — live on the Soul Economy site as download-books.html
+     (Worker origin https://soul-economy.uncommonpope.workers.dev/download-books
+     and Pages mirror). ZIPs live in the site's downloads/ folder.
+     Stripe payment-link success URLs point here.
+     SOFT CHECK (Gemini Rank 1, live): downloads open when the visitor
+     arrives from a Stripe checkout return, or within 30 days after one
+     (see js/download-gate.js). This keeps casual link-sharing out; it is
+     NOT a license lock — the ZIP files are static and directly fetchable,
+     and the page fails open without JavaScript so no buyer is locked out.
+     A real order check would be a Worker-side gate (later phase). -->
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -32,6 +34,7 @@
   <h1>Your books are ready.</h1>
   <p class="sub">Thank you — every coin stays in the family. Download below.</p>
 
+  <div id="dlVerified">
   <section class="card">
     <h2>The Soul Economy — Complete Library (30 Books) — $19</h2>
     <p>All 30 books by Craig Jones (PLT Press) in the Soul Library JSON text
@@ -51,15 +54,33 @@
     (book JSON + soul.md + WAKE-SCORER.md + README)</p>
     <a class="dl" href="downloads/pro-soul-scorer-bdm.zip" download>Download the Scorer Pack</a>
   </section>
+  </div>
+
+  <div id="dlLocked" style="display:none">
+  <section class="card">
+    <h2>Downloads open right after checkout.</h2>
+    <p>This page opens its downloads when you arrive from a Stripe checkout
+    return. If you landed here directly, pick your pack below and checkout
+    will bring you straight back here with downloads open.</p>
+    <p><a class="dl" href="https://buy.stripe.com/14A7sLcVW78D0EFga9fnO0r">Complete Library (30 books) — $19</a></p>
+    <p><a class="dl" href="https://buy.stripe.com/5kQ4gze0064z8775vvfnO0s">Pro-Soul Pack: The Scorer — $49</a></p>
+    <p class="meta">Already paid and landed here directly? Come back through
+    your Stripe checkout return and downloads will open. This check keeps
+    casual link-sharing out; it is not a license lock.</p>
+  </section>
+  </div>
 
   <section class="note">
-    <strong>Delivery note (v1, honest):</strong> this page has no license
-    check — anyone who reaches it can download. License gating (verifying
-    an order before download) is a later phase, not this page. If you paid
-    and a download fails, write to the Soul Economy and it will be made right.
+    <strong>Delivery note (honest):</strong> downloads open from a Stripe
+    checkout return and stay open on this device for 30 days. The check
+    keeps casual link-sharing out — it is not a license lock, and the page
+    fails open without JavaScript so no buyer is ever locked out. If you
+    paid and a download fails, write to the Soul Economy and it will be
+    made right.
   </section>
 
   <p style="margin-top:28px"><a href="index.html">← Back to the Soul Economy</a></p>
 </main>
+<script src="js/download-gate.js"></script>
 </body>
 </html>
