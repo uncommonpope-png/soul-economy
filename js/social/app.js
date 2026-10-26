@@ -11,9 +11,19 @@ import {
   status,
   resolveScope, getSoulAttachment, setSoulAttachment, clearSoulAttachment,
   findSoul, searchSouls, buildSoulCardEl,
+  getTradeDraft, setTradeDraft, clearTradeDraft, buildTradeCardEl,
 } from './feed.js';
+import * as trade from './trade.js';
 
 const $ = (id) => document.getElementById(id);
+
+// Trade preview UI reset (used by both the soul picker and the trade
+// panel: one attachment per post, so each side clears the other).
+function clearTradePreviewUI() {
+  clearTradeDraft();
+  const preview = $('sqTradePreview');
+  if (preview) preview.innerHTML = '';
+}
 
 // ─── sign-in flow ───────────────────────────────────────────────────────────
 function signInModal() {
@@ -384,6 +394,7 @@ if (attach && file) {
                 status('could not attach that soul');
                 return;
               }
+              clearTradePreviewUI();
               soulResults.innerHTML = '';
               soulSearch.value = '';
               renderSoulPreview();
@@ -395,6 +406,210 @@ if (attach && file) {
       });
     }
     renderSoulPreview();
+  }
+
+  // trade panel (Layer 3 v1: package your own soul as a tradeable
+  // artifact — one attachment per post, so packaging a trade clears a
+  // catalog soul attachment, and picking a soul clears a trade draft).
+  const tradeBtn = $('sqTradeBtn');
+  const tradePanel = $('sqTradePanel');
+  const renderTradePreview = () => {
+    const preview = $('sqTradePreview');
+    if (!preview) return;
+    preview.innerHTML = '';
+    const draft = getTradeDraft();
+    if (!draft) return;
+    const author = {
+      pubkey: state.me || '',
+      display_name: localStorage.getItem('soulUserName') || '',
+      name: '',
+    };
+    preview.appendChild(buildTradeCardEl(draft, author, { filterButton: false, sigState: 'preview' }));
+    const note = document.createElement('div');
+    note.className = 'sq-soul-pick-note';
+    const s = draft.soul || {};
+    const soulMode = s.soul_md !== null && s.soul_md !== undefined
+      ? 'soul included in the post'
+      : draft.soul_md_held
+        ? 'soul too big for the post — held by you, share the full .trade.json'
+        : 'no soul text attached';
+    const memMode = s.seshat_json !== null && s.seshat_json !== undefined
+      ? 'memory included in the post'
+      : draft.seshat_held
+        ? 'memory too big for the post — held by you, share the full .trade.json'
+        : 'no memory state attached';
+    note.textContent = `Trade preview (${soulMode}; ${memMode}). One attachment per post.`;
+    preview.appendChild(note);
+    const dl = document.createElement('button');
+    dl.type = 'button';
+    dl.className = 'sq-empty-btn';
+    dl.textContent = '⬇ Download full .trade.json';
+    dl.onclick = async () => {
+      const soulMd = ($('sqTradeSoulMd') || {}).value || '';
+      let seshatObj = null;
+      const raw = (($('sqTradeSeshat') || {}).value || '').trim();
+      if (raw) {
+        try { seshatObj = JSON.parse(raw); } catch { seshatObj = null; }
+      }
+      const full = await trade.fullContentCopy(draft, soulMd, seshatObj);
+      const blob = new Blob([JSON.stringify(full, null, 2)], { type: 'application/json;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = draft.slug + '.trade.json';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 4000);
+    };
+    preview.appendChild(dl);
+    const rm = document.createElement('button');
+    rm.type = 'button';
+    rm.className = 'sq-empty-btn';
+    rm.textContent = '✕ Remove trade';
+    rm.onclick = () => {
+      clearTradePreviewUI();
+      status('trade removed');
+    };
+    preview.appendChild(rm);
+  };
+  if (tradeBtn && tradePanel) {
+    tradeBtn.onclick = () => {
+      tradePanel.hidden = !tradePanel.hidden;
+      if (!tradePanel.hidden) {
+        const n = $('sqTradeTitle');
+        if (n) n.focus();
+      }
+    };
+    const soulFile = $('sqTradeSoulFile');
+    const soulMdText = $('sqTradeSoulMd');
+    if (soulFile && soulMdText) {
+      soulFile.onchange = async () => {
+        const f = soulFile.files && soulFile.files[0];
+        soulFile.value = '';
+        if (!f) return;
+        const name = (f.name || '').toLowerCase();
+        try {
+          if (name.endsWith('.zip')) {
+            status('that is a zip — unzip it first, then pick the .md or .json inside');
+            return;
+          }
+          if (name.endsWith('.md')) {
+            soulMdText.value = await f.text();
+            status('soul text loaded — package to attach');
+            return;
+          }
+          if (name.endsWith('.json')) {
+            const parsed = JSON.parse(await f.text());
+            if (parsed && parsed.type === trade.TRADE_TYPE && parsed.soul) {
+              const s = parsed.soul;
+              const ps = s.plt_score || {};
+              const setVal = (id, v) => { const el = $(id); if (el) el.value = v; };
+              setVal('sqTradeTitle', s.title || '');
+              setVal('sqTradeAuthor', s.author || '');
+              setVal('sqTradeP', ps.p !== undefined ? ps.p : '');
+              setVal('sqTradeL', ps.l !== undefined ? ps.l : '');
+              setVal('sqTradeT', ps.t !== undefined ? ps.t : '');
+              setVal('sqTradeTip', (parsed.trade || {}).stripe_tip_url || '');
+              soulMdText.value = s.soul_md || '';
+              const st = $('sqTradeSeshat');
+              if (st) st.value = s.seshat_json ? JSON.stringify(s.seshat_json, null, 2) : '';
+              status('trade file loaded — re-package to sign it as yours');
+              return;
+            }
+            const st = $('sqTradeSeshat');
+            if (st) st.value = JSON.stringify(parsed, null, 2);
+            status('memory file loaded — package to attach');
+            return;
+          }
+          status('pick a .md soul file or a .json memory/trade file');
+        } catch {
+          status('could not read that file');
+        }
+      };
+    }
+    const seshatFile = $('sqTradeSeshatFile');
+    const seshatText = $('sqTradeSeshat');
+    if (seshatFile && seshatText) {
+      seshatFile.onchange = async () => {
+        const f = seshatFile.files && seshatFile.files[0];
+        seshatFile.value = '';
+        if (!f) return;
+        try {
+          seshatText.value = await f.text();
+          status('seshat file loaded — package to attach');
+        } catch {
+          status('could not read that file');
+        }
+      };
+    }
+    const pkg = $('sqTradePackage');
+    if (pkg) {
+      pkg.onclick = async () => {
+        if (!state.me) {
+          status('sign in to package a trade — your key signs it');
+          requireSignIn();
+          return;
+        }
+        const title = ($('sqTradeTitle') || {}).value || '';
+        const authorName = ($('sqTradeAuthor') || {}).value || '';
+        const p = ($('sqTradeP') || {}).value;
+        const l = ($('sqTradeL') || {}).value;
+        const t = ($('sqTradeT') || {}).value;
+        const tip = ($('sqTradeTip') || {}).value || '';
+        const soulMd = ($('sqTradeSoulMd') || {}).value || '';
+        const seshatRaw = (($('sqTradeSeshat') || {}).value || '').trim();
+        let seshatObj = null;
+        if (seshatRaw) {
+          try {
+            seshatObj = JSON.parse(seshatRaw);
+            if (typeof seshatObj !== 'object' || seshatObj === null || Array.isArray(seshatObj)) {
+              status('seshat must be a JSON object');
+              return;
+            }
+          } catch {
+            status('seshat is not valid JSON');
+            return;
+          }
+        }
+        pkg.disabled = true;
+        try {
+          const { artifact, modes } = await trade.buildArtifact({
+            title, author: authorName, p, l, t, tip, soulMd, seshatObj,
+            authorPubkey: state.me, createdAt: Math.floor(Date.now() / 1000),
+          });
+          // Detached signature: sign the notarization event (kind 1, tag
+          // trade-sig, content 'TRADE-SIG ' + artifact hash). If the key
+          // cannot sign it (e.g. extension refusal), packaging continues
+          // with sig empty — the post signature still binds the artifact.
+          let signedNote = '';
+          try {
+            const hash = await trade.artifactHash(artifact);
+            const template = trade.notarizationTemplate(state.me, artifact.created_at, hash);
+            const signed = await auth.signEvent(template);
+            artifact.sig = signed.sig;
+            artifact.sig_created_at = signed.created_at;
+          } catch {
+            artifact.sig = '';
+            artifact.sig_created_at = 0;
+            signedNote = ' (artifact proof not signed — post signature still binds it)';
+          }
+          setTradeDraft(artifact);
+          clearSoulAttachment();
+          const soulPreview = $('sqSoulPreview');
+          if (soulPreview) soulPreview.innerHTML = '';
+          renderTradePreview();
+          status(
+            `trade packaged ✓ — soul ${modes.soulMd}, memory ${modes.seshat}${signedNote}`,
+          );
+        } catch (e) {
+          status('trade package failed — ' + (e.message || ''));
+        } finally {
+          pkg.disabled = false;
+        }
+      };
+    }
+    renderTradePreview();
   }
 
   // tabs — scope persists: URL ?scope= wins over stored sqScope, and every

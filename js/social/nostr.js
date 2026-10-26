@@ -3,6 +3,8 @@ import {
   generateSecretKey,
   getPublicKey,
   finalizeEvent,
+  getEventHash,
+  verifyEvent,
   nip19,
   SimplePool,
 } from 'https://esm.sh/nostr-tools@2.10.4';
@@ -29,7 +31,7 @@ export function hexToBytes(hex) {
   return out;
 }
 
-export { generateSecretKey, getPublicKey, finalizeEvent, nip19, SimplePool };
+export { generateSecretKey, getPublicKey, finalizeEvent, getEventHash, verifyEvent, nip19, SimplePool };
 
 export function newIdentity() {
   const sk = generateSecretKey();

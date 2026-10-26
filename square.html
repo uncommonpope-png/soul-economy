@@ -88,6 +88,21 @@ input{font-family:inherit;outline:none;border:none;background:none}
 .sq-soul-filterbar button{color:#00D4FF;border:1px solid rgba(0,212,255,0.3);border-radius:20px;padding:4px 12px;background:none;cursor:pointer;font-size:0.72rem}
 .sq-empty-btn{margin-top:14px;padding:8px 20px;border-radius:30px;border:1px solid rgba(139,92,246,0.4);color:#fff;background:linear-gradient(135deg,#8B5CF6,#6D28D9);cursor:pointer;font-size:0.82rem}
 </style>
+<style>
+/* === SOUL-TRADING v1 (additive, 2026-10-26) — Layer 3 traded-artifact
+   card + composer panel. Gold accent marks traded (user-created) souls
+   apart from purple catalog cards. No existing rule is modified. */
+.sq-trade-card{margin-top:10px;border:1px solid rgba(255,209,102,0.45);border-radius:12px;padding:10px 12px;background:rgba(255,209,102,0.07)}
+.sq-trade-badge{font-size:0.68rem;font-weight:700;letter-spacing:1px;color:#FFD166}
+.sq-trade-title{display:block;font-weight:700;color:#fff;font-size:0.9rem;margin-top:2px}
+.sq-trade-memory{font-size:0.72rem;color:#B8B8B8;margin-top:6px}
+.sq-trade-broken{margin-top:10px;border:1px dashed rgba(255,255,255,0.25);border-radius:12px;padding:10px 12px;font-size:0.8rem;color:#B8B8B8}
+.sq-trade-panel{margin-top:10px;border:1px solid rgba(255,209,102,0.25);border-radius:12px;padding:10px 12px}
+.sq-trade-field{width:100%;padding:8px 12px;border-radius:10px;border:1px solid rgba(255,209,102,0.3);background:rgba(255,255,255,0.04);color:#fff;font-family:inherit;margin-bottom:8px}
+.sq-trade-scores{display:flex;gap:8px}
+.sq-trade-scores label{flex:1;font-size:0.72rem;color:#B8B8B8}
+.sq-trade-scores input{width:100%;padding:8px 10px;border-radius:10px;border:1px solid rgba(255,209,102,0.3);background:rgba(255,255,255,0.04);color:#fff;font-family:inherit;margin-top:4px}
+.sq-trade-btn{padding:8px 20px;border-radius:30px;border:1px solid rgba(255,209,102,0.5);color:#FFD166;background:none;cursor:pointer;font-size:0.82rem}
 </head>
 <body>
 <div style="max-width:1280px;margin:0 auto;padding:16px 20px 0">
@@ -131,6 +146,7 @@ input{font-family:inherit;outline:none;border:none;background:none}
         <button id="sqAttach" class="sq-attach" title="Attach image">🖼</button>
         <input type="file" id="sqFile" accept="image/png,image/jpeg,image/webp,image/gif" hidden />
         <button id="sqSoulBtn" class="sq-attach" title="Attach a soul">◈</button>
+        <button id="sqTradeBtn" class="sq-attach" title="Attach Trade Soul">⇄</button>
         <button class="sq-post-btn" id="sqPost">✦ Post</button>
       </span>
     </div>
@@ -139,6 +155,27 @@ input{font-family:inherit;outline:none;border:none;background:none}
       <input id="sqSoulSearch" class="sq-soul-search" type="search" placeholder="Search souls by name…" maxlength="80" />
       <div id="sqSoulResults" class="sq-soul-results"></div>
       <div id="sqSoulPreview" class="sq-soul-preview"></div>
+    </div>
+    <div class="sq-trade-panel" id="sqTradePanel" hidden>
+      <div class="sq-soul-pick-note">Trade one of your own souls — pick an exported soul file (or paste), enter your tip link and PLT scores, then package. One attachment per post: packaging a trade clears a catalog soul attachment. The tip link is yours to supply; the platform creates no payment link. Your key signs the artifact and the post.</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+        <input type="file" id="sqTradeSoulFile" accept=".md,.json,application/json,text/markdown" />
+      </div>
+      <input id="sqTradeTitle" class="sq-trade-field" type="text" placeholder="Soul title (1–80 chars)" maxlength="80" />
+      <input id="sqTradeAuthor" class="sq-trade-field" type="text" placeholder="Soul author (optional — blank shows your posting name on the card)" maxlength="80" />
+      <div class="sq-trade-scores">
+        <label>Profit (0–1)<input id="sqTradeP" type="number" min="0" max="1" step="0.05" placeholder="0.9" /></label>
+        <label>Love (0–1)<input id="sqTradeL" type="number" min="0" max="1" step="0.05" placeholder="0.9" /></label>
+        <label>Tax (0–1)<input id="sqTradeT" type="number" min="0" max="1" step="0.05" placeholder="0.2" /></label>
+      </div>
+      <input id="sqTradeTip" class="sq-trade-field" type="url" placeholder="Tip link (optional, https only — your own link)" maxlength="500" />
+      <textarea id="sqTradeSoulMd" class="sq-trade-field" rows="4" placeholder="Paste soul.md here (optional — the soul text travels with the trade when it fits; large souls attach by hash)"></textarea>
+      <textarea id="sqTradeSeshat" class="sq-trade-field" rows="3" placeholder="Paste seshat.json here (optional — memory state travels with the trade when it fits; large memories attach by hash)"></textarea>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+        <input type="file" id="sqTradeSeshatFile" accept="application/json,.json" />
+        <button id="sqTradePackage" class="sq-trade-btn" type="button">⇄ Package trade</button>
+      </div>
+      <div id="sqTradePreview" class="sq-soul-preview"></div>
     </div>
   </div>
 

@@ -1,7 +1,8 @@
 // The Square — feed, composer, replies, PLT reactions, profile, notifications.
 import * as api from './api.js';
 import { signEvent, getPubkey } from './auth.js';
-import { publishToRelays, relayFeed, nip19, hexToBytes } from './nostr.js';
+import { publishToRelays, relayFeed, nip19, hexToBytes, getEventHash, verifyEvent } from './nostr.js';
+import * as trade from './trade.js';
 
 export const state = {
   scope: 'global',
@@ -195,6 +196,29 @@ export function resetSoulComposer() {
   if (results) results.innerHTML = '';
   const preview = $('sqSoulPreview');
   if (preview) preview.innerHTML = '';
+  // Trade composer (v1: one attachment per post — reset clears both).
+  clearTradeDraft();
+  const tradePanel = $('sqTradePanel');
+  if (tradePanel) tradePanel.hidden = true;
+  const tradePreview = $('sqTradePreview');
+  if (tradePreview) tradePreview.innerHTML = '';
+  for (const id of ['sqTradeTitle', 'sqTradeAuthor', 'sqTradeP', 'sqTradeL', 'sqTradeT', 'sqTradeTip', 'sqTradeSoulMd', 'sqTradeSeshat']) {
+    const el = $(id);
+    if (el) el.value = '';
+  }
+}
+
+// Pending trade draft (v1: one attachment per post — a trade clears a
+// catalog soul attachment and vice versa; submitPost refuses both).
+let tradeDraft = null;
+export function getTradeDraft() {
+  return tradeDraft;
+}
+export function setTradeDraft(artifact) {
+  tradeDraft = artifact || null;
+}
+export function clearTradeDraft() {
+  tradeDraft = null;
 }
 
 // Rich catalog card for a cited soul. opts.filterButton (default true)
@@ -253,6 +277,213 @@ export function appendSoulAttachment(bodyEl, slug) {
     if (!item || !chip.isConnected) return;
     chip.replaceWith(buildSoulCardEl(item, s));
   }).catch(() => {});
+}
+
+// ─── traded-artifact card (Layer 3 v1, Gemini nested format) ─────────────
+// Distinct gold card, NOT a catalog card: the artifact is user-created,
+// its scores are seller claims, and its tip link is seller-supplied.
+// This builder trusts its input; appendTradeAttachment verifies first.
+// opts.sigState: 'signed' | 'post-bound' | 'preview' (preview never claims
+// a crypto check that has not run).
+export function buildTradeCardEl(artifact, post, opts = {}) {
+  const s = artifact.soul || {};
+  const ps = s.plt_score || {};
+  const tr = artifact.trade || {};
+  const card = document.createElement('div');
+  card.className = 'sq-trade-card';
+  const badge = document.createElement('div');
+  badge.className = 'sq-trade-badge';
+  badge.textContent = '⇄ TRADED SOUL';
+  card.appendChild(badge);
+  const title = document.createElement('div');
+  title.className = 'sq-trade-title';
+  title.textContent = '⇄ ' + s.title;
+  card.appendChild(title);
+  const meta = document.createElement('div');
+  meta.className = 'sq-soul-card-meta';
+  const author = s.author || (post ? nameOf(post) : 'unknown');
+  meta.textContent = `by ${author} · PLT ${trade.formatPlt(ps.p, ps.l, ps.t)} · TV ${tr.plt_valuation}`;
+  card.appendChild(meta);
+  const sigLine = document.createElement('div');
+  sigLine.className = 'sq-trade-memory';
+  sigLine.textContent =
+    opts.sigState === 'signed'
+      ? '✓ Signed by the author key (detached artifact signature)'
+      : opts.sigState === 'preview'
+        ? 'signature binds at post time'
+        : 'bound by the post signature';
+  card.appendChild(sigLine);
+  const soulLine = document.createElement('div');
+  soulLine.className = 'sq-trade-memory';
+  soulLine.textContent =
+    s.soul_md !== null && s.soul_md !== undefined
+      ? `soul included (${s.soul_md.length} chars, sha256 ${(artifact.soul_md_sha256 || '').slice(0, 12)}…)`
+      : artifact.soul_md_held
+        ? 'soul held by seller — claim with the full .trade.json'
+        : 'no soul text';
+  card.appendChild(soulLine);
+  const mem = document.createElement('div');
+  mem.className = 'sq-trade-memory';
+  if (s.seshat_json !== null && s.seshat_json !== undefined) {
+    mem.textContent = `memory included (sha256 ${(artifact.seshat_sha256 || '').slice(0, 12)}…)`;
+  } else if (artifact.seshat_held) {
+    mem.textContent = 'memory held by seller — claim with the full .trade.json';
+  } else {
+    mem.textContent = 'no memory state';
+  }
+  card.appendChild(mem);
+  const acts = document.createElement('div');
+  acts.className = 'sq-soul-card-actions';
+  const claim = document.createElement('button');
+  claim.type = 'button';
+  claim.textContent = tr.stripe_tip_url ? '♥ Tip & Claim Soul' : '⬇ Claim Soul';
+  claim.onclick = () => claimTradeArtifact(artifact, post);
+  acts.appendChild(claim);
+  const dl = document.createElement('button');
+  dl.type = 'button';
+  dl.textContent = '⬇ Artifact (.trade.json)';
+  dl.onclick = async () => {
+    try {
+      const ok = await trade.contentHashesMatch(artifact);
+      if (!ok) status('artifact content hash mismatch — file may differ from the post');
+    } catch {}
+    const blob = new Blob([JSON.stringify(artifact, null, 2)], { type: 'application/json;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = artifact.slug + '.trade.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 4000);
+  };
+  acts.appendChild(dl);
+  if (opts.filterButton !== false) {
+    const words = document.createElement('button');
+    words.type = 'button';
+    words.textContent = '☾ Words about this soul';
+    words.onclick = () => loadSoulFeed(artifact.slug);
+    acts.appendChild(words);
+  }
+  card.appendChild(acts);
+  return card;
+}
+
+// Claim = instant LOCAL import into the buyer's Sanctuary, then the tip
+// URL opens (when one exists). Nothing is bought server-side: v1 has no
+// escrow, no settlement, no DRM — the tip is a seller-supplied link and
+// the import is localStorage only. Held parts need the seller's full
+// .trade.json (hash-checked against the posted artifact before merging).
+// Storage: claimedTradeSouls (full record, deduped, capped 200) plus the
+// soul title appended to mySouls (the starred list Sanctuary export
+// carries), so the claim rides the existing Sanctuary round-trip.
+export async function claimTradeArtifact(artifact, post) {
+  let full = artifact;
+  if (artifact.soul_md_held || artifact.seshat_held) {
+    const file = await pickTradeFile();
+    if (!file) {
+      status('claim cancelled — the full .trade.json is needed for held parts');
+      return;
+    }
+    try {
+      full = JSON.parse(await file.text());
+    } catch {
+      status('that file is not valid JSON');
+      return;
+    }
+    if (full.type !== trade.TRADE_TYPE || full.slug !== artifact.slug || full.author_pubkey !== artifact.author_pubkey) {
+      status('that file is not this trade — slug or author does not match');
+      return;
+    }
+    if (!(await trade.hashesMatch(artifact, full))) {
+      status('that file does not match the posted trade hashes — claim refused');
+      return;
+    }
+  }
+  const record = trade.claimRecord(full, post);
+  try {
+    const list = JSON.parse(localStorage.getItem('claimedTradeSouls') || '[]');
+    const kept = (Array.isArray(list) ? list : []).filter(
+      (r) => !(r && r.slug === record.slug && r.author_pubkey === record.author_pubkey),
+    );
+    kept.unshift(record);
+    localStorage.setItem('claimedTradeSouls', JSON.stringify(kept.slice(0, 200)));
+  } catch {}
+  try {
+    const starred = JSON.parse(localStorage.getItem('mySouls') || '[]');
+    const kept = (Array.isArray(starred) ? starred : []).filter((x) => x !== record.title);
+    kept.unshift(record.title);
+    localStorage.setItem('mySouls', JSON.stringify(kept.slice(0, 500)));
+  } catch {}
+  const tip = (artifact.trade || {}).stripe_tip_url;
+  if (tip) window.open(tip, '_blank', 'noopener');
+  status(tip ? 'claimed ✓ — in your Sanctuary, tip opened' : 'claimed ✓ — in your Sanctuary');
+}
+
+function pickTradeFile() {
+  return new Promise((resolve) => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json,application/json';
+    input.onchange = () => resolve(input.files && input.files[0] ? input.files[0] : null);
+    input.oncancel = () => resolve(null);
+    input.click();
+  });
+}
+
+// Verify-then-render for a marker found in a post: a failing artifact
+// renders as a note, never a card, never a dropped post. The detached
+// signature check is async (hashing), so a signed artifact first renders
+// a checking note that is replaced once the check completes.
+export function appendTradeAttachment(bodyEl, artifact, post) {
+  const v = trade.verifyTradeArtifact(artifact, post ? post.pubkey : '');
+  bodyEl.appendChild(document.createElement('br'));
+  if (!v.ok) {
+    const note = document.createElement('div');
+    note.className = 'sq-trade-broken';
+    note.textContent = 'Trade artifact could not be verified — shown as text only.';
+    note.title = v.errors.join('; ');
+    bodyEl.appendChild(note);
+    return;
+  }
+  if (!artifact.sig) {
+    bodyEl.appendChild(buildTradeCardEl(artifact, post, { sigState: 'post-bound' }));
+    return;
+  }
+  const checking = document.createElement('div');
+  checking.className = 'sq-trade-memory';
+  checking.textContent = 'verifying trade signature…';
+  bodyEl.appendChild(checking);
+  trade
+    .notarizationParts(artifact)
+    .then((parts) => {
+      let ok = false;
+      try {
+        if (parts) {
+          const ev = { ...parts.template, id: getEventHash(parts.template), sig: parts.sig };
+          ok = verifyEvent(ev);
+        }
+      } catch {
+        ok = false;
+      }
+      if (!checking.isConnected) return;
+      if (ok) {
+        checking.replaceWith(buildTradeCardEl(artifact, post, { sigState: 'signed' }));
+      } else {
+        const note = document.createElement('div');
+        note.className = 'sq-trade-broken';
+        note.textContent = 'Trade artifact signature failed — shown as text only.';
+        note.title = 'detached notarization signature does not verify';
+        checking.replaceWith(note);
+      }
+    })
+    .catch(() => {
+      if (!checking.isConnected) return;
+      const note = document.createElement('div');
+      note.className = 'sq-trade-broken';
+      note.textContent = 'Trade artifact signature could not be checked — shown as text only.';
+      checking.replaceWith(note);
+    });
 }
 
 // Feed filtered to one cited soul (?soul=, server-side). The filter bar's
@@ -565,9 +796,15 @@ export function postCard(p, index = 0) {
 
   const body = document.createElement('div');
   body.className = 'sq-post-body';
-  fillBody(body, p.content || '');
-  const attachedSlug = p.soul_slug || soulSlugFromTags(p.tags);
-  if (attachedSlug) appendSoulAttachment(body, attachedSlug);
+  // Trade marker wins over the catalog card: a trade post carries both a
+  // soul tag (for ?soul= filtering) and the marker, and must show one card.
+  const tmk = trade.extractTradeMarker(p.content || '');
+  fillBody(body, tmk.text);
+  if (tmk.markerFound) appendTradeAttachment(body, tmk.artifact, p);
+  else {
+    const attachedSlug = p.soul_slug || soulSlugFromTags(p.tags);
+    if (attachedSlug) appendSoulAttachment(body, attachedSlug);
+  }
 
   const acts = document.createElement('div');
   acts.className = 'sq-post-actions';
@@ -754,9 +991,13 @@ function replyItem(r) {
   const body = document.createElement('div');
   body.className = 'sq-post-body';
   body.style.fontSize = '0.85rem';
-  body.textContent = r.content || '';
-  const rSlug = r.soul_slug || soulSlugFromTags(r.tags);
-  if (rSlug) appendSoulAttachment(body, rSlug);
+  const rtm = trade.extractTradeMarker(r.content || '');
+  body.textContent = rtm.text;
+  if (rtm.markerFound) appendTradeAttachment(body, rtm.artifact, r);
+  else {
+    const rSlug = r.soul_slug || soulSlugFromTags(r.tags);
+    if (rSlug) appendSoulAttachment(body, rSlug);
+  }
   wrap.append(head, body);
   d.appendChild(wrap);
   return d;
@@ -772,12 +1013,41 @@ export async function submitPost() {
   btn.disabled = true;
   btn.textContent = '✦ Signing…';
   try {
-    // v1 attachment: exactly one ['soul', slug] tag (the server keeps only
-    // the first). Realm tag marks the citation as Square-native.
-    const tags = [['t', 'soul-economy']];
+    // Attachments (v1: exactly one per post). A trade draft is FINAL at
+    // package time (author_pubkey + detached signature already bound), so
+    // submit only re-checks identity + validity, appends the marker line,
+    // and also carries the soul tag so the post stays filterable by
+    // ?soul= — plus a ['trade','v1'] tag for relay-side readers. The
+    // Worker needs no change: it already extracts the first soul tag and
+    // ignores the rest.
     const attached = getSoulAttachment();
-    if (attached) tags.push(['soul', attached], ['realm', 'soul-economy']);
-    const ev = await signEvent({ kind: 1, tags, content: text });
+    const draft = getTradeDraft();
+    if (attached && draft) {
+      status('one attachment per post — remove the soul or the trade first');
+      return;
+    }
+    const tags = [['t', 'soul-economy']];
+    let content = text;
+    if (draft) {
+      if (draft.author_pubkey !== state.me) {
+        status('trade was packaged under a different identity — re-package it');
+        return;
+      }
+      if (trade.validateArtifact(draft).length) {
+        status('trade draft is no longer valid — re-package it');
+        return;
+      }
+      const marker = trade.encodeMarker(draft);
+      content = text + '\n' + marker;
+      if (content.length > trade.MAX_CONTENT) {
+        status(`trade post too long by ${content.length - trade.MAX_CONTENT} chars — shorten your text`);
+        return;
+      }
+      tags.push(['soul', draft.slug], ['realm', 'soul-economy'], ['trade', 'v1']);
+    } else if (attached) {
+      tags.push(['soul', attached], ['realm', 'soul-economy']);
+    }
+    const ev = await signEvent({ kind: 1, tags, content });
     await api.postEvent(ev);
     publishToRelays(ev);
     ta.value = '';
@@ -864,7 +1134,7 @@ export async function openProfile(pubkey) {
     recent.slice(0, 5).forEach((r) => {
       const line = document.createElement('div');
       line.className = 'sq-notify-item';
-      line.innerHTML = `<span class="sq-n-type">◈</span><span>${esc((r.content || '').slice(0, 160))}</span>`;
+      line.innerHTML = `<span class="sq-n-type">◈</span><span>${esc(trade.stripTradeMarker(r.content || '').slice(0, 160))}</span>`;
       card.appendChild(line);
     });
   }
