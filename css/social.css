@@ -64,6 +64,12 @@
 }
 .sq-tab.active { color: #fff; background: linear-gradient(135deg, rgba(139,92,246,0.35), rgba(0,212,255,0.18)); border-color: rgba(139,92,246,0.5); }
 .sq-status { font-size: 0.7rem; color: var(--text-muted); font-family: monospace; }
+/* Layer 4 client relay connector indicator — separate from #sqStatus so
+   status messages ("posted ✓", "pulling…") never clobber relay state. */
+.sq-relay-dot { font-size: 0.7rem; font-family: monospace; white-space: nowrap; color: var(--text-muted); }
+.sq-relay-dot[data-state="connected"] { color: #34d399; }
+.sq-relay-dot[data-state="reconnecting"] { color: #fbbf24; }
+.sq-relay-dot[data-state="offline"] { color: var(--text-muted); }
 .sq-search {
   margin-left: auto; width: 230px; max-width: 40vw;
   font-size: 0.78rem; padding: 7px 14px; border-radius: 20px;

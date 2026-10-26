@@ -57,6 +57,44 @@ export function publishToRelays(event) {
   }
 }
 
+// Live subscription (Layer 4, client relay connector). Callback params are
+// the nostr-tools v2 SubscriptionParams shape: { onevent, oneose,
+// onclose }. Returns a close() function, or null when subscribing throws
+// (caller treats null as offline — never a page break). No auth handler is
+// ever supplied: this is an unauthenticated public read; a relay demanding
+// NIP-42 auth closes the sub and the caller's retry/offline path handles
+// it. Reuses this module's shared pool — no second pool, no new sockets
+// beyond the pool's own per-relay connections.
+export function subscribeLiveRelay(filter, handlers = {}) {
+  try {
+    const sub = pool.subscribeMany(RELAYS, [filter], {
+      onevent: (ev) => {
+        try {
+          if (typeof handlers.onevent === 'function') handlers.onevent(ev);
+        } catch {}
+      },
+      oneose: () => {
+        try {
+          if (typeof handlers.oneose === 'function') handlers.oneose();
+        } catch {}
+      },
+      onclose: () => {
+        try {
+          if (typeof handlers.onclose === 'function') handlers.onclose();
+        } catch {}
+      },
+    });
+    return () => {
+      try {
+        if (sub && typeof sub.close === 'function') sub.close();
+      } catch {}
+    };
+  } catch (e) {
+    console.warn('[soul] relay live subscribe failed', e);
+    return null;
+  }
+}
+
 // Fallback read path when the API is unreachable.
 export async function relayFeed({ limit = 20, before = 0, authors = null } = {}) {
   const filter = { kinds: [1], limit };

@@ -16,6 +16,7 @@ import {
 } from './feed.js';
 import * as trade from './trade.js';
 import * as trust from './trust.js';
+import { startRelayLive } from './relay-live.js';
 
 const $ = (id) => document.getElementById(id);
 
@@ -805,6 +806,10 @@ if (attach && file) {
   loadFeed();
   if (restoredTrust !== 'all') applyTrustMode(restoredTrust);
   startFeedLive();
+  // Layer 4: live client-to-public-relay sync, alongside the backend feed.
+  // Fail-open by design (see relay-live.js) — a relay failure never breaks
+  // the feed above. Runs on every origin, unlike startFeedLive (edge only).
+  startRelayLive();
   if (state.me) pollNotifications();
 }
 

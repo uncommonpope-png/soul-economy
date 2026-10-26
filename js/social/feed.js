@@ -3,6 +3,7 @@ import * as api from './api.js';
 import { signEvent, getPubkey } from './auth.js';
 import { publishToRelays, relayFeed, nip19, hexToBytes, getEventHash, verifyEvent } from './nostr.js';
 import * as trade from './trade.js';
+import { liveInsertIndex, MAX_LIVE_PREPENDS } from './relay-live.js';
 import { applyTrustToFeed } from './trust.js';
 import { replyTags, replyToOf, buildThreadTree, MAX_THREAD_DEPTH, isThreadSoulSlug } from './threads.js';
 
@@ -13,6 +14,7 @@ export const state = {
   me: null,
   notifyTimer: null,
   unread: 0,
+  livePrepends: 0,
 };
 
 const $ = (id) => document.getElementById(id);
@@ -590,6 +592,7 @@ export async function loadFeed({ append = false } = {}) {
   if (!feedEl) return;
   if (!append) {
     state.before = 0;
+    state.livePrepends = 0;
     feedEl.innerHTML = '';
     // Following tab never shows global posts: logged out → Connect prompt,
     // before any API call is made.
@@ -721,7 +724,8 @@ if (typeof window !== 'undefined' && window.addEventListener) {
 // Threading for relay events comes from the e tags (see threads.js
 // replyToOf) — previously this hardcoded root/parent to null, which
 // dropped relay-side reply linkage.
-function relayPost(ev) {
+// Exported for the Layer 4 client relay connector (relay-live.js).
+export function relayPost(ev) {
   const link = replyToOf(ev);
   return {
     id: ev.id, pubkey: ev.pubkey, created_at: ev.created_at, content: ev.content,
@@ -729,6 +733,49 @@ function relayPost(ev) {
     name: '', display_name: '', picture: '', about: '',
     soul_slug: soulSlugFromTags(ev.tags), tags: ev.tags || [],
   };
+}
+
+// ─── Layer 4 live prepend (client relay connector) ────────────────────────
+// The ONLY render entry for relay-live posts. Returns 'ok' | 'skipped' |
+// 'duplicate' | 'capped' and never throws — a failure here must never
+// break the feed. Rules (see client-relay-connector-spec.md §2c/§5):
+// global scope only (Following never receives relay-live posts), never
+// into the soul-filter or search views, deduped against state.posts and
+// rendered cards, inserted newest-first by created_at (NOT a blind
+// prepend, so out-of-order relay delivery still orders correctly), and
+// capped at MAX_LIVE_PREPENDS live cards per fresh feed load.
+export function prependLivePost(post) {
+  try {
+    if (!post || post.id == null || String(post.id) === '') return 'skipped';
+    if (state.scope !== 'global') return 'skipped';
+    const feedEl = $('sqFeed');
+    if (!feedEl) return 'skipped';
+    if (document.getElementById('sqSoulFilterBar')) return 'skipped';
+    if (feedEl.querySelector('.sq-search-head')) return 'skipped';
+    if (state.posts.some((p) => p && p.id === post.id)) return 'duplicate';
+    const cards = [...feedEl.querySelectorAll('.sq-post')];
+    if (cards.some((c) => c.dataset.id === String(post.id))) return 'duplicate';
+    if (state.livePrepends >= MAX_LIVE_PREPENDS) return 'capped';
+    const ats = cards.map((c) => Number(c.dataset.createdAt) || 0);
+    const idx = liveInsertIndex(ats, post.created_at);
+    const card = postCard(post, 0);
+    if (!cards.length) {
+      // A live post supersedes a global empty-state note ("silent" /
+      // "unreachable") — never leave both on screen.
+      feedEl.querySelectorAll('.sq-empty').forEach((el) => el.remove());
+      feedEl.appendChild(card);
+    } else {
+      const ref = cards[idx] || null;
+      if (ref) feedEl.insertBefore(card, ref);
+      else feedEl.appendChild(card);
+    }
+    state.posts.unshift(post);
+    state.livePrepends++;
+    applyTrustFilter();
+    return 'ok';
+  } catch {
+    return 'skipped';
+  }
 }
 
 function renderEmpty(msg) {
@@ -853,6 +900,8 @@ export function postCard(p, index = 0) {
   const art = document.createElement('article');
   art.className = 'sq-post';
   art.dataset.id = p.id;
+  // Layer 4 live insertion orders rendered cards by created_at.
+  art.dataset.createdAt = String(p.created_at || 0);
   /* Front-door deep link: the homepage ticker links to square.html#post-<id>.
      The id attribute lets the landing jump find the card directly; the
      dataset.id it already carried stays the source of truth for actions. */
