@@ -34,10 +34,16 @@
   function isProbe(p){
     return /probe/i.test(String((p && p.content) || ''));
   }
+  /* Front-door deep link: a ticker snippet lands on its own Square post.
+     Posts without an id keep the existing generic Square link. */
+  function postHref(p){
+    if(p && p.id != null && String(p.id) !== '') return 'square.html#post-' + encodeURIComponent(String(p.id));
+    return 'square.html';
+  }
   function feedItems(posts){
     return posts.map(function(p){
       var when = whenOf(p);
-      return '<a class="ticker-item" href="square.html"><b>' + esc(authorOf(p)) + '</b>' +
+      return '<a class="ticker-item" href="' + esc(postHref(p)) + '"><b>' + esc(authorOf(p)) + '</b>' +
         '<span>' + esc(snip(p.content, 90)) + '</span>' +
         (when ? '<i>' + esc(when) + '</i>' : '') + '</a>';
     }).join('');
@@ -65,6 +71,10 @@
     var el = document.getElementById('liveTickerItems');
     var note = document.getElementById('liveTickerNote');
     if(!el) return;
+    /* Fail-open outer guard: an unexpected ticker error must never break
+       page render or leave "Loading…" forever — it lands on the same
+       honest empty state as an unreachable feed. */
+    try{
     var urls = ['/api/feed?scope=global&limit=10', WORKER + '/api/feed?scope=global&limit=10'];
     for(var i = 0; i < urls.length; i++){
       try{
@@ -89,9 +99,13 @@
     }catch(e){ /* fall through to empty state */ }
     el.innerHTML = '<span class="ticker-empty">No public activity yet — be the first voice in <a href="square.html">The Square</a>.</span>';
     if(note) note.textContent = 'Live ticker · waiting for its first voice';
+    }catch(e){
+      el.innerHTML = '<span class="ticker-empty">No public activity yet — be the first voice in <a href="square.html">The Square</a>.</span>';
+      if(note) note.textContent = 'Live ticker · waiting for its first voice';
+    }
   }
   document.addEventListener('DOMContentLoaded', loadTicker);
   /* Test hook (harmless in production): lets verification poke the real
      code paths without a browser. */
-  try{ window.__tickerTest = { feedItems: feedItems, profileItems: profileItems, loadTicker: loadTicker, esc: esc, whenOf: whenOf, isProbe: isProbe }; }catch(e){}
+  try{ window.__tickerTest = { feedItems: feedItems, profileItems: profileItems, loadTicker: loadTicker, esc: esc, whenOf: whenOf, isProbe: isProbe, postHref: postHref }; }catch(e){}
 })();

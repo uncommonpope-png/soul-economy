@@ -633,6 +633,7 @@ export async function loadFeed({ append = false } = {}) {
     posts.forEach((p, i) => feedEl.appendChild(postCard(p, i)));
     applyTrustFilter(); // WEB OF TRUST v1: filter the rendered batch (no-op on 'all')
     status(api.API.includes('workers.dev') ? 'live · signed · sovereign' : '');
+    if (!append) jumpToDeepLink();
     return;
   } catch (e) {
     console.warn('[square] API down, falling back to relays', e);
@@ -658,6 +659,7 @@ export async function loadFeed({ append = false } = {}) {
         events.forEach((ev, i) => feedEl.appendChild(postCard(relayPost(ev), i)));
         applyTrustFilter(); // WEB OF TRUST v1 (relay Following path)
         $('sqMore').hidden = true;
+        jumpToDeepLink();
         return;
       }
       feedEl.innerHTML = '';
@@ -675,7 +677,42 @@ export async function loadFeed({ append = false } = {}) {
     events.forEach((ev, i) => feedEl.appendChild(postCard(relayPost(ev), i)));
     applyTrustFilter(); // WEB OF TRUST v1 (relay global path)
     $('sqMore').hidden = true;
+    jumpToDeepLink();
   }
+}
+
+// ─── Front-door deep link ───────────────────────────────────────────────
+// The homepage ticker links to square.html#post-<id>. Feed cards render
+// asynchronously, so the browser's native anchor scroll fires before the
+// card exists — jump after each fresh render, and on hashchange (clicking
+// a ticker link while already on the Square). Never fetches, never changes
+// scope, never touches Following / picker / trade logic. No-ops unless the
+// hash names a rendered post.
+let __deepLinkEl = null;
+let __deepLinkTimer = 0;
+function jumpToDeepLink() {
+  try {
+    const h = (typeof location !== 'undefined' && location.hash) || '';
+    if (!h.startsWith('#post-')) return;
+    let id = h.slice(6);
+    try { id = decodeURIComponent(id); } catch {}
+    if (!id) return;
+    const el = document.getElementById('post-' + id) ||
+      document.querySelector('[data-id="' + CSS.escape(id) + '"]');
+    if (!el) return;
+    if (__deepLinkEl && __deepLinkEl !== el) __deepLinkEl.classList.remove('sq-deep-link');
+    __deepLinkEl = el;
+    el.classList.add('sq-deep-link');
+    if (typeof el.scrollIntoView === 'function') el.scrollIntoView({ block: 'center' });
+    if (__deepLinkTimer) clearTimeout(__deepLinkTimer);
+    __deepLinkTimer = setTimeout(function () {
+      if (__deepLinkEl) __deepLinkEl.classList.remove('sq-deep-link');
+      __deepLinkEl = null;
+    }, 3000);
+  } catch {}
+}
+if (typeof window !== 'undefined' && window.addEventListener) {
+  window.addEventListener('hashchange', jumpToDeepLink);
 }
 
 // Relay event → post-card shape, with the soul tag mapped to soul_slug
