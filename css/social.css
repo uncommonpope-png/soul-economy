@@ -145,6 +145,20 @@
   font-size: 0.75rem; font-weight: 700; color: #fff; padding: 8px 16px; border-radius: 14px;
   background: linear-gradient(135deg, var(--purple), var(--purple-dark));
 }
+/* threaded replies v1: indented children, depth capped at 4 (deeper nodes
+   flatten to depth 4 — never dropped, never collapsed). */
+.sq-reply-children { display: flex; flex-direction: column; gap: 12px; margin-top: 12px; }
+.sq-reply-depth-2 { margin-left: 18px; padding-left: 12px; border-left: 1px solid rgba(139,92,246,0.25); }
+.sq-reply-depth-3 { margin-left: 36px; padding-left: 12px; border-left: 1px solid rgba(139,92,246,0.25); }
+.sq-reply-depth-4 { margin-left: 54px; padding-left: 12px; border-left: 1px solid rgba(139,92,246,0.25); }
+.sq-reply-actions { margin-top: 4px; }
+.sq-reply-act {
+  font-size: 0.7rem; font-weight: 700; color: var(--text-muted); background: transparent;
+  border: none; cursor: pointer; padding: 2px 0;
+}
+.sq-reply-act:hover { color: #fff; }
+.sq-nested-reply-box { flex-wrap: wrap; margin: 8px 0 4px; }
+.sq-nested-reply-box .sq-nested-soul { flex-basis: 140px; flex-grow: 0; }
 
 .sq-more {
   align-self: center; font-size: 0.8rem; color: var(--text-gray); padding: 10px 30px;

@@ -4,6 +4,7 @@ import { signEvent, getPubkey } from './auth.js';
 import { publishToRelays, relayFeed, nip19, hexToBytes, getEventHash, verifyEvent } from './nostr.js';
 import * as trade from './trade.js';
 import { applyTrustToFeed } from './trust.js';
+import { replyTags, replyToOf, buildThreadTree, MAX_THREAD_DEPTH, isThreadSoulSlug } from './threads.js';
 
 export const state = {
   scope: 'global',
@@ -717,10 +718,14 @@ if (typeof window !== 'undefined' && window.addEventListener) {
 
 // Relay event → post-card shape, with the soul tag mapped to soul_slug
 // client-side (the D1 path carries soul_slug on the row already).
+// Threading for relay events comes from the e tags (see threads.js
+// replyToOf) — previously this hardcoded root/parent to null, which
+// dropped relay-side reply linkage.
 function relayPost(ev) {
+  const link = replyToOf(ev);
   return {
     id: ev.id, pubkey: ev.pubkey, created_at: ev.created_at, content: ev.content,
-    root_id: null, parent_id: null, reply_count: 0, like_count: 0, plt: '{}',
+    root_id: link.rootId, parent_id: link.parentId, reply_count: 0, like_count: 0, plt: '{}',
     name: '', display_name: '', picture: '', about: '',
     soul_slug: soulSlugFromTags(ev.tags), tags: ev.tags || [],
   };
@@ -1012,7 +1017,23 @@ async function toggleReplies(p, main) {
     return;
   }
   box.innerHTML = '';
-  replies.forEach((r) => box.appendChild(replyItem(r)));
+  // THREADED REPLIES v1: nest by parent_id, indented, depth-capped.
+  // Any tree-build surprise falls back to the old flat list — never a
+  // broken thread view. Orphans (unknown parent) render at depth 1 via
+  // buildThreadTree, never dropped, never an error state.
+  let nodes;
+  try {
+    nodes = buildThreadTree(root.id, replies);
+  } catch {
+    nodes = replies.map((r) => ({ post: r, children: [], depth: 1 }));
+  }
+  const renderNode = (node) => {
+    const item = replyItem(node.post, { depth: node.depth, root });
+    const kids = item.querySelector('.sq-reply-children');
+    for (const c of node.children) kids.appendChild(renderNode(c));
+    return item;
+  };
+  nodes.forEach((n) => box.appendChild(renderNode(n)));
 
   const rbox = document.createElement('div');
   rbox.className = 'sq-reply-box';
@@ -1026,20 +1047,16 @@ async function toggleReplies(p, main) {
     if (!text) return;
     btn.disabled = true;
     try {
-      const tags = [
-        ['e', root.id, '', 'root'],
-        ['e', p.id, '', 'reply'],
-        ['p', p.pubkey],
-        ['t', 'soul-economy'],
-      ];
+      const tags = replyTags(root.id, p);
       const ev = await signEvent({ kind: 1, tags, content: text });
       await api.postEvent(ev);
       publishToRelays(ev);
       input.value = '';
       const item = replyItem({
         id: ev.id, pubkey: ev.pubkey, created_at: ev.created_at, content: text,
+        root_id: root.id, parent_id: p.id, tags,
         name: localStorage.getItem('soulUserName') || '', display_name: localStorage.getItem('soulUserName') || '', picture: '',
-      });
+      }, { depth: 1, root });
       box.insertBefore(item, rbox);
       const c = main.querySelector('.sq-act.sq-reply span');
       if (c) c.textContent = (Number(c.textContent) || 0) + 1;
@@ -1053,9 +1070,64 @@ async function toggleReplies(p, main) {
   box.appendChild(rbox);
 }
 
-function replyItem(r) {
+// Inline nested composer under one reply item. Root stays the thread root;
+// the parent is the reply being answered, so the Worker stores, counts,
+// and notifies on the direct parent with no server change. An optional
+// soul slug rides the same one-slug validation as the main composer;
+// the rich card renders through the shared appendSoulAttachment path.
+function nestedReplyBox(parentPost, rootPost, itemEl, depth) {
+  const wrap = document.createElement('div');
+  wrap.className = 'sq-reply-box sq-nested-reply-box';
+  const input = document.createElement('input');
+  input.placeholder = state.me ? 'Speak your reply…' : 'Sign in to reply';
+  const soul = document.createElement('input');
+  soul.className = 'sq-nested-soul';
+  soul.placeholder = '◈ soul slug (optional)';
+  soul.maxLength = 80;
+  const btn = document.createElement('button');
+  btn.textContent = 'Reply';
+  btn.onclick = async () => {
+    if (!state.me) return requireSignIn();
+    const text = input.value.trim();
+    if (!text) return;
+    const slug = normalizeSoulSlug(soul.value.trim());
+    if (soul.value.trim() && !isThreadSoulSlug(slug)) {
+      status('that soul slug is not valid — lowercase letters, numbers, dashes only');
+      return;
+    }
+    btn.disabled = true;
+    try {
+      const tags = replyTags(rootPost.id, parentPost, slug || undefined);
+      const ev = await signEvent({ kind: 1, tags, content: text });
+      await api.postEvent(ev);
+      publishToRelays(ev);
+      input.value = '';
+      soul.value = '';
+      const childDepth = Math.min(depth + 1, MAX_THREAD_DEPTH);
+      const kids = itemEl.querySelector('.sq-reply-children');
+      kids.appendChild(replyItem({
+        id: ev.id, pubkey: ev.pubkey, created_at: ev.created_at, content: text,
+        root_id: rootPost.id, parent_id: parentPost.id, tags,
+        soul_slug: slug || '',
+        name: localStorage.getItem('soulUserName') || '', display_name: localStorage.getItem('soulUserName') || '', picture: '',
+      }, { depth: childDepth, root: rootPost }));
+      wrap.remove();
+    } catch (e) {
+      status('reply failed — ' + (e.message || ''));
+    } finally {
+      btn.disabled = false;
+    }
+  };
+  wrap.append(input, soul, btn);
+  return wrap;
+}
+
+function replyItem(r, opts = {}) {
+  const depth = Math.min(Math.max(Number(opts.depth) || 1, 1), MAX_THREAD_DEPTH);
+  const root = opts.root || r;
   const d = document.createElement('div');
-  d.className = 'sq-reply-item';
+  d.className = 'sq-reply-item sq-reply-depth-' + depth;
+  if (r.id != null && String(r.id) !== '') d.dataset.id = r.id;
   d.appendChild(avatarEl(r));
   const wrap = document.createElement('div');
   wrap.style.flex = '1';
@@ -1080,7 +1152,25 @@ function replyItem(r) {
     const rSlug = r.soul_slug || soulSlugFromTags(r.tags);
     if (rSlug) appendSoulAttachment(body, rSlug);
   }
-  wrap.append(head, body);
+  const acts = document.createElement('div');
+  acts.className = 'sq-reply-actions';
+  const rb = document.createElement('button');
+  rb.type = 'button';
+  rb.className = 'sq-reply-act';
+  rb.textContent = '↩ Reply';
+  rb.onclick = () => {
+    const existing = wrap.querySelector('.sq-nested-reply-box');
+    if (existing) {
+      existing.remove();
+      return;
+    }
+    const kids = wrap.querySelector('.sq-reply-children');
+    wrap.insertBefore(nestedReplyBox(r, root, d, depth), kids);
+  };
+  acts.appendChild(rb);
+  const kids = document.createElement('div');
+  kids.className = 'sq-reply-children';
+  wrap.append(head, body, acts, kids);
   d.appendChild(wrap);
   return d;
 }
