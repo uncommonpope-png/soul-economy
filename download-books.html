@@ -8,7 +8,11 @@
      (see js/download-gate.js). This keeps casual link-sharing out; it is
      NOT a license lock — the ZIP files are static and directly fetchable,
      and the page fails open without JavaScript so no buyer is locked out.
-     A real order check would be a Worker-side gate (later phase). -->
+     ORDER CHECK v1 (live with this page): POST /api/order-check validates
+     a Stripe checkout session Worker-side and issues a pack-scoped token
+     ($19 Complete vs $49 Scorer — see platform-program/order-check-spec.md).
+     Every failure falls back to the soft check exactly; the ZIPs are still
+     static, so this is a verified-purchase marker, not a DRM lock. -->
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -35,7 +39,8 @@
   <p class="sub">Thank you — every coin stays in the family. Download below.</p>
 
   <div id="dlVerified">
-  <section class="card">
+  <p id="dlPackNote" class="note" style="display:none"></p>
+  <section class="card" id="pack-complete">
     <h2>The Soul Economy — Complete Library (30 Books) — $19</h2>
     <p>All 30 books by Craig Jones (PLT Press) in the Soul Library JSON text
     edition — non-fiction Books I–VI, fiction Books VII–XIII, the Scorer
@@ -45,7 +50,7 @@
     <a class="dl" href="downloads/complete-library-30-books.zip" download>Download the Complete Library</a>
   </section>
 
-  <section class="card">
+  <section class="card" id="pack-scorer">
     <h2>Pro-Soul Pack: The Scorer (BDM Edition) — $49</h2>
     <p>A downloadable soul pack for sales professionals: the Scorer persona
     (soul.md), the full BDM book as its knowledge base, and the exact wake
@@ -65,15 +70,26 @@
     <p><a class="dl" href="https://buy.stripe.com/14A7sLcVW78D0EFga9fnO0r">Complete Library (30 books) — $19</a></p>
     <p><a class="dl" href="https://buy.stripe.com/5kQ4gze0064z8775vvfnO0s">Pro-Soul Pack: The Scorer — $49</a></p>
     <p class="meta">Already paid and landed here directly? Come back through
-    your Stripe checkout return and downloads will open. This check keeps
-    casual link-sharing out; it is not a license lock.</p>
+    your Stripe checkout return and downloads will open. Or paste your
+    checkout session id (it starts with <code>cs_</code>) and this page
+    will check it against Stripe and open exactly the pack you bought:</p>
+    <p><input id="dlSessionId" type="text" placeholder="cs_live_…" size="40" style="padding:10px;border-radius:8px;border:1px solid rgba(255,209,102,.5);background:#1a1206;color:#f2ead8;max-width:100%">
+    <button id="dlSessionBtn" type="button" style="padding:10px 18px;border-radius:999px;background:#FFD166;color:#1a1206;font-weight:bold;border:0;cursor:pointer;margin-left:6px">Verify purchase</button></p>
+    <p class="meta" id="dlSessionMsg"></p>
+    <p class="meta">This check keeps casual link-sharing out; it is not a
+    license lock. If verification is unavailable for any reason, the page
+    falls back to the checkout-return check above — a failed check never
+    denies a download.</p>
   </section>
   </div>
 
   <section class="note">
     <strong>Delivery note (honest):</strong> downloads open from a Stripe
-    checkout return and stay open on this device for 30 days. The check
-    keeps casual link-sharing out — it is not a license lock, and the page
+    checkout return and stay open on this device for 30 days. A paid
+    checkout session can also be verified directly (paste its
+    <code>cs_</code> id above) to open exactly the pack bought — $19
+    Complete Library or $49 Scorer Pack. The check keeps casual
+    link-sharing out — it is not a license lock, and the page
     fails open without JavaScript so no buyer is ever locked out. If you
     paid and a download fails, write to the Soul Economy and it will be
     made right.

@@ -3,6 +3,7 @@ import { FamilyRoom } from './chat.mjs';
 import { FeedRoom } from './feed.mjs';
 import { handleShop } from './shop.mjs';
 import { handleTelephone } from './telephone.mjs';
+import { handleOrderCheck, handleOrderCheckVerify } from './order-check.mjs';
 
 export { FamilyRoom, FeedRoom };
 
@@ -885,6 +886,13 @@ export default {
       if (url.pathname.startsWith('/api/telephone')) return await handleTelephone(request, env, url);
 
       if (url.pathname === '/api/health') return json({ ok: true, at: Date.now() });
+      // Real order check for book downloads (order-check.mjs): validates a
+      // Stripe checkout session and mints a pack-scoped token. Every
+      // failure mode answers fallback — never a denial (see spec).
+      if (url.pathname === '/api/order-check' && request.method === 'POST')
+        return await handleOrderCheck(request, env);
+      if (url.pathname === '/api/order-check/verify' && request.method === 'POST')
+        return await handleOrderCheckVerify(request, env);
       if (url.pathname === '/api/portal-guide') return json(PORTAL_GUIDE);
       if (url.pathname === '/api/events' && request.method === 'POST')
         return await handleEvent(request, env);
