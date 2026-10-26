@@ -4,6 +4,7 @@ import { FeedRoom } from './feed.mjs';
 import { handleShop } from './shop.mjs';
 import { handleTelephone } from './telephone.mjs';
 import { handleOrderCheck, handleOrderCheckVerify } from './order-check.mjs';
+import { scheduleRelayBroadcast, parseRelayList } from './relay-sync.mjs';
 
 export { FamilyRoom, FeedRoom };
 
@@ -115,7 +116,7 @@ async function ensureUser(env, pubkey) {
 }
 
 // ─── Write path ──────────────────────────────────────────────────────────────
-async function handleEvent(request, env) {
+async function handleEvent(request, env, ctx) {
   let ev;
   try {
     ev = await request.json();
@@ -205,6 +206,12 @@ async function handleEvent(request, env) {
         .run()
         .catch(() => {});
       await broadcastFeed(env, { type: 'feed', action: 'new', id: ev.id, reply: isReply, pubkey: ev.pubkey });
+      // Backend relay sync (broadcast-on-create only): re-broadcast this
+      // exact already-signed event to public relays in the background.
+      // NOT awaited — ctx.waitUntil keeps it alive past the response, so
+      // it adds zero user latency, and any relay failure is logged inside
+      // the module and can never fail this post. See relay-sync.mjs.
+      try { scheduleRelayBroadcast(ctx, env, ev); } catch { /* fail-open */ }
       let parentAuthor = null;
       if (parent) {
         await env.DB.prepare('UPDATE posts SET reply_count = reply_count + 1 WHERE id = ?')
@@ -865,7 +872,7 @@ const PORTAL_GUIDE = {
 };
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const url = new URL(request.url);
     if (request.method === 'OPTIONS') return new Response(null, { headers: CORS, status: 204 });
     try {
@@ -895,7 +902,16 @@ export default {
         return await handleOrderCheckVerify(request, env);
       if (url.pathname === '/api/portal-guide') return json(PORTAL_GUIDE);
       if (url.pathname === '/api/events' && request.method === 'POST')
-        return await handleEvent(request, env);
+        return await handleEvent(request, env, ctx);
+      // Backend relay sync diagnostic: the public relay list this Worker
+      // broadcasts new signed kind-1 posts to (background, waitUntil).
+      // No delivery state is stored, so this reports scope only.
+      if (url.pathname === '/api/relays' && request.method === 'GET')
+        return json({
+          ok: true,
+          relays: parseRelayList(env),
+          broadcast: { kinds: [1], trigger: 'new post insert only', signed_only: true, background: 'waitUntil' },
+        });
       if (url.pathname === '/api/feed/ws') {
         if ((request.headers.get('Upgrade') || '').toLowerCase() !== 'websocket')
           return new Response('WebSocket upgrade required', { status: 426, headers: CORS });

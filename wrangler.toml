@@ -2,6 +2,13 @@ name = "soul-economy"
 main = "api/src/index.js"
 compatibility_date = "2026-09-01"
 
+# Backend relay sync: public relays new signed kind-1 posts are
+# re-broadcast to in the background (see api/src/relay-sync.mjs).
+# Public list, no secrets. Overridable from the Cloudflare dashboard
+# without a code change; empty/invalid values fall back to the default.
+[vars]
+NOSTR_RELAYS = "wss://relay.damus.io,wss://nos.lol,wss://relay.primal.net,wss://relay.snort.social"
+
 # One origin: static site (free & unlimited) + /api/* (Square API) on the same worker.
 [ai]
 binding = "AI"
