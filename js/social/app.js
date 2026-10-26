@@ -12,8 +12,10 @@ import {
   resolveScope, getSoulAttachment, setSoulAttachment, clearSoulAttachment,
   findSoul, searchSouls, buildSoulCardEl,
   getTradeDraft, setTradeDraft, clearTradeDraft, buildTradeCardEl,
+  setTrustFilter, applyTrustFilter,
 } from './feed.js';
 import * as trade from './trade.js';
+import * as trust from './trust.js';
 
 const $ = (id) => document.getElementById(id);
 
@@ -638,6 +640,99 @@ if (attach && file) {
     };
   });
 
+  // ─── WEB OF TRUST v1 (Layer 2, client-side only) ─────────────────────
+  // Dropdown with exactly three states; persistence mirrors scope
+  // (sqTrustMode + ?trust=, URL wins). Changing it re-applies to the
+  // already-rendered feed — no refetch. The graph is built on demand
+  // only (default 'all' never fetches). Fail-open: any unavailable /
+  // empty / error graph shows all posts + a note, never a blank feed.
+  // Markup + CSS are created here (not in square.html) so this lands
+  // without touching the file Layer 3 is working in; moving them into
+  // square.html later is a zero-behavior change.
+  if (!$('sqTrustCss')) {
+    const st = document.createElement('style');
+    st.id = 'sqTrustCss';
+    st.textContent = '.sq-trust-select{padding:8px 10px;border-radius:10px;border:1px solid rgba(139,92,246,0.35);background:rgba(255,255,255,0.04);color:#fff;font-family:inherit;font-size:0.82rem;cursor:pointer}'
+      + '.sq-trust-note{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 14px;margin-bottom:12px;border:1px solid rgba(139,92,246,0.35);border-radius:12px;background:rgba(139,92,246,0.07);font-size:0.82rem}'
+      + '.sq-trust-note button{color:#00D4FF;border:1px solid rgba(0,212,255,0.3);border-radius:20px;padding:4px 12px;background:none;cursor:pointer;font-size:0.72rem}';
+    document.head.appendChild(st);
+  }
+  let trustSelect = $('sqTrustFilter');
+  if (!trustSelect) {
+    trustSelect = document.createElement('select');
+    trustSelect.id = 'sqTrustFilter';
+    trustSelect.className = 'sq-trust-select';
+    trustSelect.title = 'Filter the feed by trust';
+    for (const [v, label] of [['all', 'All Posts'], ['trusted', 'Trusted Network'], ['following', 'Following Only']]) {
+      const o = document.createElement('option');
+      o.value = v;
+      o.textContent = label;
+      trustSelect.appendChild(o);
+    }
+    const tabsEl = document.querySelector('.sq-tabs');
+    if (tabsEl) tabsEl.insertBefore(trustSelect, $('sqSearch') || null);
+  }
+  const persistTrustMode = (mode) => {
+    try { localStorage.setItem(trust.TRUST_MODE_KEY, mode); } catch {}
+    try {
+      const u = new URL(location.href);
+      if (mode === 'all') u.searchParams.delete('trust');
+      else u.searchParams.set('trust', mode);
+      history.replaceState(null, '', u);
+    } catch {}
+  };
+  const resetTrustToAll = () => {
+    trustSelect.value = 'all';
+    persistTrustMode('all');
+    setTrustFilter({ mode: 'all', onShowAll: resetTrustToAll });
+    applyTrustFilter();
+    status('');
+  };
+  const applyTrustMode = async (mode) => {
+    persistTrustMode(mode);
+    if (mode === 'all') {
+      setTrustFilter({ mode: 'all', onShowAll: resetTrustToAll });
+      applyTrustFilter();
+      status('');
+      return;
+    }
+    if (!state.me) {
+      setTrustFilter({ mode, sets: null, fallbackNote: 'connect', onShowAll: resetTrustToAll });
+      applyTrustFilter();
+      return;
+    }
+    const cached = trust.readTrustCache(localStorage, state.me);
+    if (cached && trust.isTrustCacheFresh(cached)) {
+      setTrustFilter({
+        mode,
+        sets: { following: trust.buildFollowingSet(state.me, cached.following), trusted: new Set(cached.trusted) },
+        onShowAll: resetTrustToAll,
+      });
+      applyTrustFilter();
+      return;
+    }
+    status('building trusted network…');
+    let r;
+    try {
+      r = await trust.fetchTrustGraph({ me: state.me, followsFn: (pk) => api.follows(pk), cached });
+    } catch {
+      r = { status: 'unavailable' };
+    }
+    if (r.status === 'ok' || r.status === 'stale-cache') {
+      if (r.status === 'ok') trust.writeTrustCache(localStorage, { me: state.me, following: r.following, trusted: r.trusted, builtAt: Date.now() });
+      setTrustFilter({ mode, sets: r.sets, onShowAll: resetTrustToAll });
+      status(r.status === 'stale-cache' ? 'trusted network (cached)…' : '');
+    } else if (r.status === 'empty') {
+      setTrustFilter({ mode, sets: null, fallbackNote: 'empty', onShowAll: resetTrustToAll });
+      status('');
+    } else {
+      setTrustFilter({ mode, sets: null, fallbackNote: 'unavailable', onShowAll: resetTrustToAll });
+      status('');
+    }
+    applyTrustFilter();
+  };
+  trustSelect.onchange = () => applyTrustMode(trustSelect.value);
+
   // square search (D1 FTS over souls + posts)
   const sq = $('sqSearch');
   if (sq) {
@@ -695,7 +790,20 @@ if (attach && file) {
   } catch {}
   applyScope(resolveScope(urlScope, storedScope));
 
+  // WEB OF TRUST v1: restore the trust mode (URL ?trust= wins, else
+  // stored sqTrustMode, else 'all'). A restored restricted mode
+  // re-applies once the first feed lands (applyTrustMode re-applies
+  // to the current DOM, and loadFeed() re-applies it on every render).
+  let storedTrust = null;
+  try { storedTrust = localStorage.getItem(trust.TRUST_MODE_KEY); } catch {}
+  let urlTrust = null;
+  try { urlTrust = new URLSearchParams(location.search).get('trust'); } catch {}
+  const restoredTrust = trust.resolveTrustMode(urlTrust, storedTrust);
+  trustSelect.value = restoredTrust;
+  persistTrustMode(restoredTrust);
+
   loadFeed();
+  if (restoredTrust !== 'all') applyTrustMode(restoredTrust);
   startFeedLive();
   if (state.me) pollNotifications();
 }

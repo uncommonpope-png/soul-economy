@@ -3,6 +3,7 @@ import * as api from './api.js';
 import { signEvent, getPubkey } from './auth.js';
 import { publishToRelays, relayFeed, nip19, hexToBytes, getEventHash, verifyEvent } from './nostr.js';
 import * as trade from './trade.js';
+import { applyTrustToFeed } from './trust.js';
 
 export const state = {
   scope: 'global',
@@ -14,6 +15,40 @@ export const state = {
 };
 
 const $ = (id) => document.getElementById(id);
+
+// ─── WEB OF TRUST v1 (Layer 2, client-side only) ─────────────────────────
+// Trust state lives here so loadFeed() can re-apply the active filter
+// after every render (server path, relay paths, Load-more appends).
+// app.js owns the dropdown and calls setTrustFilter(); feed.js never
+// fetches the graph. Default is 'all' — the filter is inert until the
+// user picks a restricted mode, and any failure falls back to All
+// (see trust.js fail-open rules). The soul-filter view (loadSoulFeed)
+// and search results deliberately do NOT go through this hook.
+let trustFilter = { mode: 'all', sets: null, fallbackNote: null, onShowAll: null };
+export function setTrustFilter(opts = {}) {
+  trustFilter = {
+    mode: opts.mode || 'all',
+    sets: opts.sets || null,
+    fallbackNote: opts.fallbackNote || null,
+    onShowAll: typeof opts.onShowAll === 'function' ? opts.onShowAll : null,
+  };
+}
+export function applyTrustFilter() {
+  const feedEl = $('sqFeed');
+  if (!feedEl) return;
+  let r;
+  try {
+    r = applyTrustToFeed(feedEl, { ...trustFilter, doc: document });
+  } catch {
+    r = { note: 'error' };
+  }
+  if (r && r.note === 'error') {
+    // Filter crashed after rendering: show everything, reset to All.
+    // The dropdown UI reset goes through onShowAll when app.js set it.
+    if (trustFilter.onShowAll) trustFilter.onShowAll();
+    else setTrustFilter({ mode: 'all' });
+  }
+}
 
 // ─── scope + soul pure helpers (harness-tested; no DOM) ────────────────────
 // resolveScope: URL ?scope= wins over stored sqScope; anything else → global.
@@ -596,6 +631,7 @@ export async function loadFeed({ append = false } = {}) {
       }
     }
     posts.forEach((p, i) => feedEl.appendChild(postCard(p, i)));
+    applyTrustFilter(); // WEB OF TRUST v1: filter the rendered batch (no-op on 'all')
     status(api.API.includes('workers.dev') ? 'live · signed · sovereign' : '');
     return;
   } catch (e) {
@@ -620,6 +656,7 @@ export async function loadFeed({ append = false } = {}) {
           return;
         }
         events.forEach((ev, i) => feedEl.appendChild(postCard(relayPost(ev), i)));
+        applyTrustFilter(); // WEB OF TRUST v1 (relay Following path)
         $('sqMore').hidden = true;
         return;
       }
@@ -636,6 +673,7 @@ export async function loadFeed({ append = false } = {}) {
       return;
     }
     events.forEach((ev, i) => feedEl.appendChild(postCard(relayPost(ev), i)));
+    applyTrustFilter(); // WEB OF TRUST v1 (relay global path)
     $('sqMore').hidden = true;
   }
 }
@@ -773,6 +811,13 @@ export function postCard(p, index = 0) {
   const art = document.createElement('article');
   art.className = 'sq-post';
   art.dataset.id = p.id;
+  /* Front-door deep link: the homepage ticker links to square.html#post-<id>.
+     The id attribute lets the landing jump find the card directly; the
+     dataset.id it already carried stays the source of truth for actions. */
+  if (p.id != null && String(p.id) !== '') art.id = 'post-' + p.id;
+  // WEB OF TRUST v1: author pubkey on the card so the client-side trust
+  // filter can hide/show cards without re-reading post data.
+  art.dataset.pubkey = p.pubkey || '';
   art.style.animationDelay = Math.min(index * 40, 300) + 'ms';
 
   art.appendChild(avatarEl(p));
