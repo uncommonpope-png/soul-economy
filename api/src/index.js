@@ -1,12 +1,13 @@
 import { verifyEvent } from 'nostr-tools';
 import { FamilyRoom } from './chat.mjs';
 import { FeedRoom } from './feed.mjs';
+import { TelephoneLine } from './telephone-line.mjs';
 import { handleShop } from './shop.mjs';
 import { handleTelephone } from './telephone.mjs';
 import { handleOrderCheck, handleOrderCheckVerify } from './order-check.mjs';
 import { scheduleRelayBroadcast, parseRelayList } from './relay-sync.mjs';
 
-export { FamilyRoom, FeedRoom };
+export { FamilyRoom, FeedRoom, TelephoneLine };
 
 // ─── Soul Economy API ────────────────────────────────────────────────────────
 // Stateless Nostr-native backend. Every write is a signed Nostr event;
@@ -889,6 +890,16 @@ export default {
       }
       // Shop API (port of chat/api.mjs)
       if (url.pathname.startsWith('/api/v1/')) return await handleShop(request, env, url);
+      // Soul Telephone always-open line (Durable Object). MUST precede the
+      // async /api/telephone delegation below, which would 404 this path.
+      // Auth lives inside the DO (Bearer header or ?key= fallback); the
+      // Worker only checks the upgrade and routes to the 'lines' instance.
+      if (url.pathname === '/api/telephone/line') {
+        if ((request.headers.get('Upgrade') || '').toLowerCase() !== 'websocket')
+          return new Response('WebSocket upgrade required', { status: 426, headers: CORS });
+        const stub = env.LINEROOM.idFromName('lines');
+        return env.LINEROOM.get(stub).fetch(request);
+      }
       // Soul Telephone — agent registry + call relay (telephone.mjs)
       if (url.pathname.startsWith('/api/telephone')) return await handleTelephone(request, env, url);
 

@@ -34,6 +34,12 @@ class_name = "FamilyRoom"
 name = "FEEDROOM"
 class_name = "FeedRoom"
 
+# Soul Telephone always-open line (v1, 1:1). One 'lines' instance holds
+# every line; sockets are tagged by pair key (see api/src/telephone-line.mjs).
+[[durable_objects.bindings]]
+name = "LINEROOM"
+class_name = "TelephoneLine"
+
 [[migrations]]
 tag = "v1"
 new_sqlite_classes = ["FamilyRoom"]
@@ -41,6 +47,10 @@ new_sqlite_classes = ["FamilyRoom"]
 [[migrations]]
 tag = "v2"
 new_sqlite_classes = ["FeedRoom"]
+
+[[migrations]]
+tag = "v3"
+new_sqlite_classes = ["TelephoneLine"]
 
 [[d1_databases]]
 binding = "DB"
