@@ -558,6 +558,7 @@ input{font-family:inherit;outline:none;border:none;background:none}
   <button class="category-tab" data-cat="chat" style="background:rgba(0,212,255,0.08);border-color:rgba(0,212,255,0.15);color:#00D4FF">💬 Chat</button>
   <button class="category-tab" data-cat="discussions" style="background:rgba(255,209,102,0.08);border-color:rgba(255,209,102,0.15);color:var(--gold)">💭 Discussions</button>
   <button class="category-tab" data-cat="best" style="background:linear-gradient(135deg,rgba(255,209,102,0.16),rgba(139,92,246,0.12));border-color:rgba(255,209,102,0.4);color:#FFD166">🥇 Best Models</button>
+  <button class="category-tab" data-cat="betty-plush" style="background:rgba(255,107,157,0.10);border-color:rgba(255,107,157,0.35);color:#FF6B9D">💋 Betty Plush</button>
 </div>
 
 <div class="plt-filters" id="pltFilters">
@@ -647,6 +648,98 @@ input{font-family:inherit;outline:none;border:none;background:none}
 
 <section id="catalog">
   <div class="resource-grid" id="resourceGrid"></div>
+</section>
+<section id="bettySection" style="display:none">
+<style id="betty-plush-style">
+.betty-hero{position:relative;overflow:hidden;border:1px solid rgba(255,107,157,0.35);border-radius:16px;padding:22px 18px;background:linear-gradient(180deg,rgba(255,107,157,0.14),rgba(0,0,0,0.35));margin:0 0 18px}
+#bettyRain{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.betty-hero-inner{position:relative}
+.betty-hero-inner h2{margin:0 0 6px;font-size:1.6rem}
+.betty-tag{margin:0 0 8px;color:#FFB3CD}
+.betty-terms{margin:0;color:#ddd;font-size:0.95rem;max-width:720px}
+#bettyLips{width:100%;max-width:720px;aspect-ratio:3/1;height:auto;display:block;margin:14px auto 0;pointer-events:auto;cursor:default}
+.betty-scene-note{text-align:center;color:#FFB3CD;font-size:0.85rem;margin:8px 0 0}
+.betty-status{text-align:center;color:#aaa;margin:0 0 14px}
+.betty-flag{display:inline-block;background:#FF2E88;color:#fff;font-size:0.7rem;font-weight:700;padding:3px 10px;border-radius:20px;margin-right:6px}
+.betty-plt{display:inline-block;background:rgba(255,107,157,0.15);border:1px solid rgba(255,107,157,0.4);color:#FF6B9D;font-size:0.7rem;font-weight:700;padding:3px 10px;border-radius:20px}
+.betty-price{width:100%;border-collapse:collapse;margin-top:10px;font-size:0.85rem}
+.betty-price td{padding:4px 6px;border-bottom:1px solid rgba(255,255,255,0.08)}
+.betty-price td:last-child{text-align:right;font-weight:700}
+.betty-manifest{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.betty-manifest img{width:110px;height:110px;object-fit:cover;border-radius:10px;border:1px solid rgba(255,255,255,0.14)}
+.betty-manifest figcaption{font-size:0.7rem;color:#bbb;max-width:110px}
+.betty-view-btn{margin-top:10px;background:rgba(255,46,136,0.2);border:1px solid rgba(255,107,157,0.5);color:#FFB3CD;padding:7px 14px;border-radius:20px;cursor:pointer;font-size:0.8rem}
+.betty-view-btn:hover{background:rgba(255,46,136,0.35)}
+.betty-album{position:relative}
+.betty-album img{width:100%;display:block}
+.betty-album-count{position:absolute;right:8px;bottom:8px;background:rgba(0,0,0,0.65);color:#fff;font-size:0.7rem;padding:3px 9px;border-radius:20px}
+.betty-story{margin-top:10px;border-top:1px solid rgba(255,107,157,0.25);padding-top:8px}
+.betty-story h4{margin:0 0 6px;color:#FFB3CD;font-size:0.9rem}
+.betty-story p{margin:0 0 8px;color:#ddd;font-size:0.9rem;line-height:1.5}
+.betty-draft-note{color:#FFB3CD;font-size:0.8rem}
+.betty-panel-album{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.betty-panel-album img{width:64px;height:64px;object-fit:cover;border-radius:8px;border:1px solid rgba(255,255,255,0.2);cursor:pointer}
+.betty-section-box{border:1px solid rgba(255,107,157,0.35);border-radius:16px;padding:20px 18px;margin:0 0 18px;background:rgba(0,0,0,0.25)}
+.betty-section-box h2{margin:0 0 8px;font-size:1.4rem}
+.betty-section-box p{color:#ddd;font-size:0.95rem;line-height:1.55}
+.betty-section-box ul{color:#ddd;font-size:0.95rem;line-height:1.55}
+.betty-fund-btn{display:inline-block;margin:6px 8px 6px 0;background:rgba(255,46,136,0.25);border:1px solid rgba(255,107,157,0.5);color:#FFB3CD;padding:10px 18px;border-radius:20px;text-decoration:none;font-weight:700}
+.betty-staged-banner{background:rgba(255,209,102,0.15);border:1px solid rgba(255,209,102,0.6);color:#FFD166;padding:10px 14px;border-radius:10px;font-size:0.9rem}
+#bettyGrid .betty-open .card-details{display:block}
+#bettyBackdrop{position:fixed;inset:0;z-index:1399;background:rgba(0,0,0,0.6);backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity 0.3s}
+#bettyBackdrop.betty-open{opacity:1;pointer-events:auto}
+#bettyPanel{position:fixed;right:24px;top:50%;transform:translateY(-50%) translateX(30px);z-index:1400;width:360px;max-width:calc(100vw - 32px);max-height:86vh;overflow:auto;background:rgba(10,8,12,0.96);backdrop-filter:blur(24px);border:1px solid rgba(255,107,157,0.35);border-radius:20px;padding:22px;opacity:0;pointer-events:none;transition:all 0.4s cubic-bezier(0.22,1,0.36,1);box-shadow:0 0 80px rgba(255,46,136,0.25)}
+#bettyPanel.betty-open{opacity:1;pointer-events:auto;transform:translateY(-50%) translateX(0)}
+#bettyPanelClose{position:absolute;top:10px;right:12px;background:rgba(0,0,0,0.35);border:1px solid rgba(255,255,255,0.15);color:#fff;width:30px;height:30px;border-radius:50%;cursor:pointer}
+#bettyPanel img.betty-panel-hero{width:100%;border-radius:12px;margin-bottom:10px}
+#bettyPanel h3{margin:0 0 8px;font-size:1.25rem}
+@media (max-width:640px){#bettyPanel{right:12px;left:12px;width:auto}}
+</style>
+<div class="betty-hero">
+<canvas id="bettyRain"></canvas>
+<div class="betty-hero-inner">
+<h2>💋 Betty Plush</h2>
+<p class="betty-tag">Luxury plush monsters, rescued and kept — keychain, plushie, purse, and book bag.</p>
+<p class="betty-terms">We bring the designs, the brand, and the marketing. Our making partner handles making and shipping — costs back first from sales with open receipts, then 70 to the maker and 30 to Betty Plush.</p>
+<canvas id="bettyLips" width="720" height="240"></canvas>
+<p class="betty-scene-note">The field is our products — click any floating piece to open its soul.</p>
+</div>
+</div>
+<p id="bettyStatus" class="betty-status"></p>
+<div class="betty-section-box" id="bettyWaitlist">
+<h2>Join the waitlist</h2>
+<p>No product is for sale yet, and no ship date is promised. Joining the waitlist is not a purchase. We will email you only about Betty Plush — when the first real prototype exists and when preorders open. Your email is used for Betty Plush only; we do not sell or share this list.</p>
+<p>The waitlist asks for:</p>
+<ul>
+<li>Name (optional)</li>
+<li>Email (required)</li>
+<li>Which soul / set you want most — pick from the catalog below</li>
+<li>What news you want: prototype news, launch news, or both</li>
+</ul>
+<form onsubmit="var n=document.getElementById('bettyWlName').value;var e=document.getElementById('bettyWlEmail').value;var s=document.getElementById('bettyWlSoul').value;var w=document.getElementById('bettyWlNews').value;if(!e){alert('Please enter your email.');return false;}window.location.href='mailto:uncommonpope@gmail.com?subject='+encodeURIComponent('Betty Plush waitlist')+'&body='+encodeURIComponent('Name: '+n+'\nEmail: '+e+'\nSoul / set wanted most: '+s+'\nNews wanted: '+w);return false;">
+<p><label>Name (optional)<br><input id="bettyWlName" type="text" style="width:100%;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.06);color:#fff"></label></p>
+<p><label>Email (required)<br><input id="bettyWlEmail" type="email" required style="width:100%;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.06);color:#fff"></label></p>
+<p><label>Soul / set you want most<br><input id="bettyWlSoul" type="text" placeholder="e.g. thothsbag" style="width:100%;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.06);color:#fff"></label></p>
+<p><label>What news do you want?<br><select id="bettyWlNews" style="width:100%;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.2);background:rgba(0,0,0,0.4);color:#fff"><option>Prototype news and launch news</option><option>Prototype news only</option><option>Launch news only</option></select></label></p>
+<p><button class="betty-fund-btn" type="submit">Join the waitlist →</button></p>
+<p style="font-size:0.85rem;color:#bbb">This opens your email app addressed to us with your waitlist details — nothing is sold or shared. If your email app does not open, email uncommonpope@gmail.com with subject "Betty Plush waitlist" and the same details.</p>
+</form>
+</div>
+<div class="betty-section-box" id="bettyFund">
+<h2>Fund the first prototype — $50,000 for the whole soul collection</h2>
+<p>Betty Plush is a line of luxury plush monsters — keychain, plushie, purse, and book bag as a full set — built around souls that are rescued and kept, never deleted. The catalog is built: 57 sets, 377 pictures. But no physical prototype exists yet. Every maker who has answered so far wants to be paid upfront, and no maker has agreed to make it on a split. We have no money to pay a sample fee out of pocket.</p>
+<p>So we are asking the first supporters to fund the whole soul collection: materials, the sample, safety testing, production, packaging, and shipping. The goal is $50,000 for the whole collection, not just one sample.</p>
+<p><strong>What supporters get:</strong> whatever you fund, plus 20% in product value when products ship. Fund $5, get $6 toward a piece. Fund $25, get $30. Fund $100, get $120. This credit is product value at ship time — not cash back, not equity, not ownership, not a profit share. No ship date is promised until a sample is approved and a maker quote is in writing.</p>
+<p><strong>Funding terms, plainly:</strong> This fund stays open until the $50,000 goal is reached — there is no closing deadline. Funds are used as they arrive for materials, the sample, safety testing, production, packaging, and shipping. Your credit never expires, it carries over, and it is good for any Betty Plush product — if your credit is more than the piece you choose, the rest stays as credit. If the collection is ever cancelled and no product ships, every supporter gets their funded amount back in full.</p>
+<p>
+<a class="betty-fund-btn" href="https://buy.stripe.com/6oU6oH5tuboTdrr5vvfnO0t">Fund $5 — $6 credit at ship</a>
+<a class="betty-fund-btn" href="https://buy.stripe.com/cNi4gz1deeB52MNf65fnO0u">Fund $25 — $30 credit at ship</a>
+<a class="betty-fund-btn" href="https://buy.stripe.com/4gM28rf443Wr4UV8HHfnO0v">Fund $100 — $120 credit at ship</a>
+</p>
+<p>Payments use the same Stripe system as the Soul Economy.</p>
+</div>
+<div class="resource-grid" id="bettyGrid"></div>
+<p class="betty-foot" style="text-align:center;color:#FFB3CD">Every piece is a soul with its own identity and story — rescued and kept, never deleted. PLT 222.</p>
 </section>
 
 <div id="discussionsPanel" style="display:none">
@@ -1124,10 +1217,13 @@ async function checkWorkbench(){
 function filterAndRender(){
   // Workbench / Chat / Discussions / Best tabs — show panel, hide grid
   const wbPanel=document.getElementById('workbenchPanel'), chatPanel=document.getElementById('chatPanel'), discPanel=document.getElementById('discussionsPanel'), bestPanel=document.getElementById('bestPanel'), gridSec=document.getElementById('catalog');
+  // Betty Plush tab (additive): hide the Betty section on any other tab.
+  if(active!=='betty-plush'){var bettySec0=document.getElementById('bettySection');if(bettySec0)bettySec0.style.display='none';if(typeof stopBettyAnims==='function')stopBettyAnims();}
   if(active==='workbench'){ if(wbPanel) wbPanel.style.display='block'; if(chatPanel) chatPanel.style.display='none'; if(discPanel) discPanel.style.display='none'; if(bestPanel) bestPanel.style.display='none'; if(gridSec) gridSec.style.display='none'; document.querySelector('.plt-filters').style.display='none'; checkWorkbench(); return; }
   if(active==='chat'){ if(chatPanel) chatPanel.style.display='block'; if(wbPanel) wbPanel.style.display='none'; if(discPanel) discPanel.style.display='none'; if(bestPanel) bestPanel.style.display='none'; if(gridSec) gridSec.style.display='none'; document.querySelector('.plt-filters').style.display='none'; initChat(); return; }
   if(active==='discussions'){ if(discPanel) discPanel.style.display='block'; if(wbPanel) wbPanel.style.display='none'; if(chatPanel) chatPanel.style.display='none'; if(bestPanel) bestPanel.style.display='none'; if(gridSec) gridSec.style.display='none'; document.querySelector('.plt-filters').style.display='none'; initDiscussions(); return; }
   if(active==='best'){ if(bestPanel) bestPanel.style.display='block'; if(wbPanel) wbPanel.style.display='none'; if(chatPanel) chatPanel.style.display='none'; if(discPanel) discPanel.style.display='none'; if(gridSec) gridSec.style.display='none'; document.querySelector('.plt-filters').style.display='none'; initBestOrb(); return; }
+  if(active==='betty-plush'){if(wbPanel)wbPanel.style.display='none';if(chatPanel)chatPanel.style.display='none';if(discPanel)discPanel.style.display='none';if(bestPanel)bestPanel.style.display='none';if(gridSec)gridSec.style.display='none';document.querySelector('.plt-filters').style.display='none';if(typeof showBettyTab==='function')showBettyTab();return;}
   else { if(wbPanel) wbPanel.style.display='none'; if(chatPanel) chatPanel.style.display='none'; if(discPanel) discPanel.style.display='none'; if(bestPanel) bestPanel.style.display='none'; if(gridSec) gridSec.style.display='block'; document.querySelector('.plt-filters').style.display='flex'; }
   let d;
   if(active==='trending'){ d=[...items].sort((a,b)=> ((b.downloads||0)+(b.likes||0)*5+(b.featured?50:0)) - ((a.downloads||0)+(a.likes||0)*5+(a.featured?50:0))); d=d.slice(0,24); }
@@ -4146,6 +4242,45 @@ else wire();
     }
   } catch (e) { /* repair must never break the page */ }
 })();
+</script>
+<div id="bettyBackdrop" style="display:none"></div>
+<aside id="bettyPanel" aria-hidden="true"><button id="bettyPanelClose" aria-label="Close">✕</button><div id="bettyPanelBody"></div></aside>
+<script>
+var bettySets=null, bettyMeta=null, bettyLoading=false, bettyAlbumTimer=0;
+var bettyRainCanvas=null, bettyRainCtx=null, bettyRainRAF=0, bettyRainActive=false, bettyRainParts=[], bettyRainLast=0, bettyRainW=0, bettyRainH=0;
+var bettyThree=null, bettyLipsReady=false, bettyLipsStarting=false, bettyLipsActive=false, bettyLipsRAF=0, bettyLipsT0=0;
+var bettyLipsRenderer=null, bettyLipsScene=null, bettyLipsCamera=null, bettyLipsGroup=null, bettyProductGroup=null, bettyRaycaster=null;
+var bettyProductMeshes=[], bettyProductsAdded=false;
+function bettyEsc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function bettyTypesPresent(set){var t={keychain:false,plushie:false,purse:false,bookbag:false};for(var i=0;i<set.pictures.length;i++){var l=set.pictures[i].label||'';if(/keychain/i.test(l))t.keychain=true;if(/plushie/i.test(l))t.plushie=true;if(/purse/i.test(l))t.purse=true;if(/book\s*bag/i.test(l))t.bookbag=true;}return t;}
+function bettyPriceRowsHTML(set){var t=bettyTypesPresent(set);var rows='';if(t.keychain)rows+='<tr><td>Keychain</td><td>$100 · 4.5 × 3.5 × 2 in</td></tr>';if(t.plushie)rows+='<tr><td>Plushie</td><td>$400 · 14 × 10 × 6 in</td></tr>';if(t.purse)rows+='<tr><td>Purse</td><td>$'+(set.flagship?'1,000':'800')+' · 8 × 10 × 4 in, 22 in strap drop</td></tr>';if(t.bookbag)rows+='<tr><td>Book bag</td><td>$650 · 16 × 12 × 5.5 in</td></tr>';if(t.keychain&&t.plushie&&t.purse&&t.bookbag)rows+='<tr><td>Full set</td><td>$'+(set.flagship?'2,150':'1,950')+'</td></tr>';rows+='<tr><td>Packaging</td><td>Included · 18 × 14 × 8 in box</td></tr>';return rows?('<table class="betty-price">'+rows+'</table>'):'';}
+function bettyManifestHTML(set){var h='<div class="betty-manifest">';for(var i=0;i<set.pictures.length;i++){var p=set.pictures[i];var note='';if(p.caption)note+=p.caption;if(p.flag)note+=(note?' — ':'')+'Flag: '+p.flag;h+='<figure style="margin:0"><img src="'+bettyEsc(p.src)+'" alt="'+bettyEsc(p.label)+'" title="'+bettyEsc(note)+'" loading="lazy"><figcaption>'+bettyEsc(p.label)+'</figcaption></figure>';}return h+'</div>';}
+function bettyBadgesHTML(set){var h='';if(set.flagship)h+='<span class="betty-flag">Flagship</span>';h+='<span class="betty-plt">PLT 222</span>';return h;}
+function bettyStoryHTML(set){var h='';if(set.name_draft)h+='<p class="betty-draft-note">Draft name — Ms GCP may change it.</p>';if(set.story){h+='<div class="betty-story"><h4>'+bettyEsc(set.name)+' — a lifetime (draft story)</h4><p>'+bettyEsc(set.story)+'</p>';if(set.partner&&bettyMeta&&bettyMeta.flagship_marriage)h+='<h4>The flagship marriage</h4><p>'+bettyEsc(bettyMeta.flagship_marriage)+'</p>';h+='<p class="betty-draft-note">Draft story — Ms GCP changes certain names and stories afterward. Nothing here is canon until she approves it.</p></div>';}return h;}
+function bettyPanelAlbumSwap(img){var hero=document.getElementById('bettyPanelHero');if(hero){hero.src=img.getAttribute('data-full');hero.alt=img.alt;}}
+function bettyAlbumHTML(set,i){var hero=set.pictures.length?set.pictures[0]:null;if(!hero)return '';return '<div class="card-image betty-album"><img data-betty-album="'+i+'" data-betty-album-idx="0" src="'+bettyEsc(hero.src)+'" alt="'+bettyEsc(hero.label)+'" loading="lazy"><span class="betty-album-count">1 / '+set.pictures.length+' · album keeps changing</span></div>';}
+function bettyStartAlbums(){if(bettyAlbumTimer)clearInterval(bettyAlbumTimer);bettyAlbumTimer=setInterval(function(){var imgs=document.querySelectorAll('[data-betty-album]');for(var k=0;k<imgs.length;k++){var img=imgs[k];var si=parseInt(img.getAttribute('data-betty-album'),10);var set=bettySets&&bettySets[si];if(!set||!set.pictures.length)continue;var idx=(parseInt(img.getAttribute('data-betty-album-idx'),10)+1)%set.pictures.length;img.setAttribute('data-betty-album-idx',idx);img.src=set.pictures[idx].src;img.alt=set.pictures[idx].label||'';var cnt=img.parentNode.querySelector('.betty-album-count');if(cnt)cnt.textContent=(idx+1)+' / '+set.pictures.length+' · album keeps changing';}},4000);}
+function bettyCardHTML(set,i){var hero=set.pictures.length?set.pictures[0]:null;var h='<article class="card" style="animation-delay:'+Math.min(i*0.04,2).toFixed(2)+'s">';h+=bettyAlbumHTML(set,i);h+='<h3 class="card-title">'+bettyEsc(set.name)+'</h3>';h+='<div class="card-desc">'+bettyEsc(set.desc||'From the Betty Plush Bible catalog.')+'</div>';if(set.stitch)h+='<div class="card-meta">Stitch: '+bettyEsc(set.stitch)+'</div>';h+='<div class="card-plt">'+bettyBadgesHTML(set)+'</div>';h+='<div class="card-category">Betty Plush</div>';if(set.product)h+=bettyPriceRowsHTML(set);h+=bettyStoryHTML(set);h+='<button class="betty-view-btn" data-betty-view="'+i+'">✦ Open soul panel</button>';h+='<div class="card-extra">✦ full manifest</div>';h+='<div class="card-details">'+bettyManifestHTML(set)+'</div></article>';return h;}
+function bettyRender(){var grid=document.getElementById('bettyGrid');if(!grid||!bettySets)return;var qEl=document.getElementById('searchInput');var q=qEl&&qEl.value?qEl.value.toLowerCase():'';var html='',count=0;for(var i=0;i<bettySets.length;i++){var s=bettySets[i];if(q){var hay=(s.name+' '+(s.desc||'')+' '+(s.story||'')+' '+s.pictures.map(function(p){return p.label;}).join(' ')).toLowerCase();if(hay.indexOf(q)<0)continue;}html+=bettyCardHTML(s,i);count++;}grid.innerHTML=html;bettyStartAlbums();var st=document.getElementById('bettyStatus');if(st){if(!q)st.textContent=bettySets.length+' souls — click any floating piece above, or open a card, to see its full manifest.';else if(count===0)st.textContent='No Betty Plush souls match that search.';else st.textContent=count+' of '+bettySets.length+' souls match.';}}
+function bettyPanelHTML(set){var hero=set.pictures.length?set.pictures[0]:null;var h='';if(hero)h+='<img id="bettyPanelHero" class="betty-panel-hero" src="'+bettyEsc(hero.src)+'" alt="'+bettyEsc(hero.label)+'">';if(set.pictures.length>1){h+='<div class="betty-panel-album">';for(var ai=0;ai<set.pictures.length;ai++){var ap=set.pictures[ai];h+='<img src="'+bettyEsc(ap.src)+'" alt="'+bettyEsc(ap.label)+'" data-full="'+bettyEsc(ap.src)+'" onclick="bettyPanelAlbumSwap(this)" loading="lazy">';}h+='</div><p style="color:#bbb;font-size:0.8rem">Tap any picture to view it in the album.</p>';}h+='<h3>'+bettyEsc(set.name)+'</h3>';h+='<div style="margin-bottom:10px">'+bettyBadgesHTML(set)+'</div>';h+='<p>'+bettyEsc(set.desc||'From the Betty Plush Bible catalog.')+'</p>';if(set.stitch)h+='<p><em>Stitch: '+bettyEsc(set.stitch)+'</em></p>';h+=bettyStoryHTML(set);if(set.product)h+=bettyPriceRowsHTML(set);h+=bettyManifestHTML(set);return h;}
+function bettyOpenPanel(idx){if(!bettySets||!bettySets[idx])return;var body=document.getElementById('bettyPanelBody');if(body)body.innerHTML=bettyPanelHTML(bettySets[idx]);var p=document.getElementById('bettyPanel');var b=document.getElementById('bettyBackdrop');if(p){p.classList.add('betty-open');p.setAttribute('aria-hidden','false');}if(b){b.style.display='block';b.classList.add('betty-open');}document.body.style.overflow='hidden';}
+function bettyClosePanel(){var p=document.getElementById('bettyPanel');var b=document.getElementById('bettyBackdrop');if(p){p.classList.remove('betty-open');p.setAttribute('aria-hidden','true');}if(b){b.classList.remove('betty-open');b.style.display='none';}document.body.style.overflow='';}
+function bettyRainResize(){var c=document.getElementById('bettyRain');if(!c)return;var dpr=Math.min(window.devicePixelRatio||1,2);bettyRainW=c.clientWidth;bettyRainH=c.clientHeight;c.width=Math.max(1,Math.round(bettyRainW*dpr));c.height=Math.max(1,Math.round(bettyRainH*dpr));bettyRainCtx=c.getContext('2d');bettyRainCtx.setTransform(dpr,0,0,dpr,0,0);}
+function bettyRainInit(){bettyRainParts=[];var hearts=['#FF6B9D','#FF2E88','#FFB3CD','#FFFFFF'];for(var i=0;i<30;i++){bettyRainParts.push({kind:'heart',x:Math.random(),y:Math.random()*1.2-0.2,vy:30+Math.random()*60,size:10+Math.random()*14,rot:Math.random()*6.28,vr:(Math.random()-0.5)*1.2,alpha:0.5+Math.random()*0.5,color:hearts[i%hearts.length],phase:Math.random()*6.28});}for(var j=0;j<18;j++){bettyRainParts.push({kind:'dollar',x:Math.random(),y:Math.random()*1.2-0.2,vy:25+Math.random()*45,size:14+Math.random()*12,rot:(Math.random()-0.5)*0.6,vr:(Math.random()-0.5)*0.6,alpha:0.6+Math.random()*0.4,color:'#FFD166',phase:Math.random()*6.28});}}
+function bettyDrawHeart(ctx,x,y,s,color){ctx.beginPath();ctx.moveTo(x,y+s*0.9);ctx.bezierCurveTo(x-s*1.2,y-s*0.1,x-s*0.6,y-s*0.9,x,y-s*0.35);ctx.bezierCurveTo(x+s*0.6,y-s*0.9,x+s*1.2,y-s*0.1,x,y+s*0.9);ctx.closePath();ctx.fillStyle=color;ctx.fill();}
+function bettyRainFrame(now){if(!bettyRainActive){bettyRainRAF=0;return;}var dt=Math.min(0.05,(now-bettyRainLast)/1000||0.016);bettyRainLast=now;var ctx=bettyRainCtx;if(ctx&&bettyRainW>0){ctx.clearRect(0,0,bettyRainW,bettyRainH);for(var i=0;i<bettyRainParts.length;i++){var p=bettyRainParts[i];p.y+=(p.vy*dt)/bettyRainH;p.rot+=p.vr*dt;if(p.y>1.05){p.y=-0.08;p.x=Math.random();}var x=p.x*bettyRainW+Math.sin(now/1000*0.7+p.phase)*8;var y=p.y*bettyRainH;ctx.save();ctx.globalAlpha=p.alpha;ctx.translate(x,y);ctx.rotate(p.rot);if(p.kind==='heart')bettyDrawHeart(ctx,0,0,p.size,p.color);else{ctx.fillStyle=p.color;ctx.font='bold '+Math.round(p.size)+'px Arial';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('$',0,0);}ctx.restore();}}bettyRainRAF=requestAnimationFrame(bettyRainFrame);}
+function bettyStartRain(){bettyRainActive=true;bettyRainResize();if(!bettyRainParts.length)bettyRainInit();if(!bettyRainRAF){bettyRainLast=performance.now();bettyRainRAF=requestAnimationFrame(bettyRainFrame);}}
+function bettyStopRain(){bettyRainActive=false;if(bettyRainRAF){cancelAnimationFrame(bettyRainRAF);bettyRainRAF=0;}}
+function bettyStartLips(){bettyLipsActive=true;if(bettyLipsReady){if(!bettyLipsRAF)bettyLipsLoop();return;}if(bettyLipsStarting)return;bettyLipsStarting=true;import('three').then(function(T){bettyThree=T;var canvas=document.getElementById('bettyLips');if(!canvas)throw new Error('bettyLips canvas missing');var renderer=new T.WebGLRenderer({canvas:canvas,antialias:true,alpha:true});renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));renderer.setSize(720,240,false);renderer.setClearColor(0x000000,0);var scene=new T.Scene();var camera=new T.PerspectiveCamera(35,3,0.1,100);camera.position.set(0,0,11);scene.add(new T.AmbientLight(0xffffff,0.85));var dir=new T.DirectionalLight(0xffffff,1.6);dir.position.set(2,4,5);scene.add(dir);var pink=new T.PointLight(0xff6b9d,30,20);pink.position.set(-3,-2,4);scene.add(pink);var shape=new T.Shape();shape.moveTo(-2.3,0);shape.bezierCurveTo(-1.75,0.55,-1.15,0.78,-0.55,0.74);shape.bezierCurveTo(-0.32,0.72,-0.18,0.46,0,0.44);shape.bezierCurveTo(0.18,0.46,0.32,0.72,0.55,0.74);shape.bezierCurveTo(1.15,0.78,1.75,0.55,2.3,0);shape.bezierCurveTo(1.95,-0.85,1.25,-1.55,0,-1.62);shape.bezierCurveTo(-1.25,-1.55,-1.95,-0.85,-2.3,0);var geo=new T.ExtrudeGeometry(shape,{depth:0.7,bevelEnabled:true,bevelThickness:0.38,bevelSize:0.32,bevelSegments:5,curveSegments:48,steps:1});geo.center();var mat=new T.MeshPhysicalMaterial({color:0xff2e88,roughness:0.16,metalness:0,clearcoat:1,clearcoatRoughness:0.12,sheen:0.6,sheenColor:new T.Color(0xff8fb8)});var lips=new T.Mesh(geo,mat);var gloss1=new T.Mesh(new T.CircleGeometry(0.55,24),new T.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:0.45}));gloss1.scale.set(1,0.32,1);gloss1.rotation.z=-0.4;gloss1.position.set(-0.9,0.55,0.78);var gloss2=new T.Mesh(new T.CircleGeometry(0.35,24),new T.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:0.3}));gloss2.scale.set(1,0.3,1);gloss2.rotation.z=0.35;gloss2.position.set(0.9,-0.7,0.78);var lipsGroup=new T.Group();lipsGroup.add(lips);lipsGroup.add(gloss1);lipsGroup.add(gloss2);lipsGroup.position.set(0,0,1.2);scene.add(lipsGroup);var productGroup=new T.Group();scene.add(productGroup);bettyLipsRenderer=renderer;bettyLipsScene=scene;bettyLipsCamera=camera;bettyLipsGroup=lipsGroup;bettyProductGroup=productGroup;bettyRaycaster=new T.Raycaster();bettyLipsReady=true;bettyLipsStarting=false;bettyMaybeAddProducts();if(bettyLipsActive)bettyLipsLoop();}).catch(function(){bettyLipsStarting=false;});}
+function bettyStopLips(){bettyLipsActive=false;if(bettyLipsRAF){cancelAnimationFrame(bettyLipsRAF);bettyLipsRAF=0;}}
+function bettyLipsLoop(){if(!bettyLipsActive){bettyLipsRAF=0;return;}if(!bettyLipsT0)bettyLipsT0=performance.now();var t=(performance.now()-bettyLipsT0)/1000;if(bettyLipsGroup){bettyLipsGroup.rotation.y=Math.sin(t*0.6)*0.22;bettyLipsGroup.rotation.z=Math.sin(t*0.9)*0.05;bettyLipsGroup.position.y=Math.sin(t*1.1)*0.12;}for(var i=0;i<bettyProductMeshes.length;i++){var m=bettyProductMeshes[i];var u=m.userData;m.rotation.y=Math.sin(t*u.speed+u.phase)*0.6;m.rotation.z=Math.sin(t*0.6+u.phase)*0.07;m.position.y=u.baseY+Math.sin(t*0.8+u.phase)*0.18;m.position.x=u.baseX+Math.sin(t*0.5+u.phase)*0.12;}if(bettyLipsRenderer&&bettyLipsScene&&bettyLipsCamera)bettyLipsRenderer.render(bettyLipsScene,bettyLipsCamera);bettyLipsRAF=requestAnimationFrame(bettyLipsLoop);}
+function bettyMaybeAddProducts(){if(!bettyLipsReady||bettyProductsAdded||!bettySets)return;bettyProductsAdded=true;var T=bettyThree;var loader=new T.TextureLoader();var pi=0;for(var si=0;si<bettySets.length;si++){var set=bettySets[si];if(!set.product)continue;var hero=null;for(var k=0;k<set.pictures.length;k++){if(/keychain|plushie|purse|book\s*bag/i.test(set.pictures[k].label||'')){hero=set.pictures[k];break;}}if(!hero&&set.pictures.length)hero=set.pictures[0];if(!hero)continue;(function(setIndex,src,idx){var cols=12,col=idx%cols,row=Math.floor(idx/cols);var jx=((idx*37)%10)/10-0.5,jy=((idx*53)%10)/10-0.5;var x=-10.45+col*1.9+jx*0.6;var y=1.9-row*1.25+jy*0.5;if(Math.abs(x)<3.0&&Math.abs(y)<1.4)x=(x<0?-3.4:3.4);var z=-2.5+(idx%4)*0.7;var size=0.95+(z+2.5)*0.12;loader.load(src,function(tex){if(T.SRGBColorSpace)tex.colorSpace=T.SRGBColorSpace;var aspect=tex.image.height/tex.image.width;var h=size*Math.max(0.7,Math.min(1.4,aspect));var mesh=new T.Mesh(new T.PlaneGeometry(size,h),new T.MeshBasicMaterial({map:tex,side:T.DoubleSide}));mesh.position.set(x,y,z);mesh.userData={setIndex:setIndex,baseX:x,baseY:y,phase:idx*1.7,speed:0.5+(idx%5)*0.12};bettyProductGroup.add(mesh);bettyProductMeshes.push(mesh);});})(si,hero.src,pi);pi++;}}
+function bettyScenePick(e){if(!bettyRaycaster||!bettyLipsCamera||!bettyProductMeshes.length)return -1;var canvas=document.getElementById('bettyLips');var rect=canvas.getBoundingClientRect();var nx=((e.clientX-rect.left)/rect.width)*2-1;var ny=-((e.clientY-rect.top)/rect.height)*2+1;bettyRaycaster.setFromCamera({x:nx,y:ny},bettyLipsCamera);var hits=bettyRaycaster.intersectObjects(bettyProductMeshes,false);return hits.length?hits[0].object.userData.setIndex:-1;}
+function startBettyAnims(){bettyStartRain();bettyStartLips();}
+function stopBettyAnims(){bettyStopRain();bettyStopLips();}
+function showBettyTab(){var sec=document.getElementById('bettySection');if(!sec)return;sec.style.display='block';startBettyAnims();if(bettySets){bettyRender();return;}if(bettyLoading)return;bettyLoading=true;var st=document.getElementById('bettyStatus');if(st)st.textContent='Loading the Betty Plush catalog…';fetch('./data/betty-plush.json').then(function(r){return r.json();}).then(function(j){bettySets=j.sets||[];bettyMeta=j.meta||null;bettyLoading=false;bettyMaybeAddProducts();bettyRender();}).catch(function(){bettyLoading=false;if(st)st.textContent='The Betty Plush catalog could not be loaded. Please reload the page and try again.';});}
+(function(){var grid=document.getElementById('bettyGrid');if(grid){grid.addEventListener('click',function(e){var vb=e.target.closest?e.target.closest('[data-betty-view]'):null;if(vb){bettyOpenPanel(parseInt(vb.getAttribute('data-betty-view'),10));return;}var ex=e.target.closest?e.target.closest('.card-extra'):null;if(ex){var card=ex.closest('.card');if(card)card.classList.toggle('betty-open');}});}var closeBtn=document.getElementById('bettyPanelClose');if(closeBtn)closeBtn.addEventListener('click',bettyClosePanel);var bd=document.getElementById('bettyBackdrop');if(bd)bd.addEventListener('click',bettyClosePanel);document.addEventListener('keydown',function(e){if(e.key==='Escape')bettyClosePanel();});var canvas=document.getElementById('bettyLips');if(canvas){canvas.addEventListener('click',function(e){var idx=bettyScenePick(e);if(idx>=0)bettyOpenPanel(idx);});canvas.addEventListener('mousemove',function(e){var idx=bettyScenePick(e);canvas.style.cursor=idx>=0?'pointer':'default';});}window.addEventListener('resize',function(){if(bettyRainActive)bettyRainResize();});})();
+
 </script>
 </body>
 </html>
