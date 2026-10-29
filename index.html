@@ -542,6 +542,7 @@ input{font-family:inherit;outline:none;border:none;background:none}
 </div>
 
 <div class="categories" id="categoryTabs">
+  <button class="category-tab" data-cat="betty-plush" style="background:rgba(255,107,157,0.10);border-color:rgba(255,107,157,0.35);color:#FF6B9D">💋 Betty Plush</button>
   <button class="category-tab active" data-cat="all">✦ All</button>
   <button class="category-tab" data-cat="trending" style="background:rgba(255,209,102,0.08);border-color:rgba(255,209,102,0.2);color:var(--gold)">🔥 Trending</button>
   <button class="category-tab" data-cat="soul">🧠 Souls</button>
@@ -558,7 +559,6 @@ input{font-family:inherit;outline:none;border:none;background:none}
   <button class="category-tab" data-cat="chat" style="background:rgba(0,212,255,0.08);border-color:rgba(0,212,255,0.15);color:#00D4FF">💬 Chat</button>
   <button class="category-tab" data-cat="discussions" style="background:rgba(255,209,102,0.08);border-color:rgba(255,209,102,0.15);color:var(--gold)">💭 Discussions</button>
   <button class="category-tab" data-cat="best" style="background:linear-gradient(135deg,rgba(255,209,102,0.16),rgba(139,92,246,0.12));border-color:rgba(255,209,102,0.4);color:#FFD166">🥇 Best Models</button>
-  <button class="category-tab" data-cat="betty-plush" style="background:rgba(255,107,157,0.10);border-color:rgba(255,107,157,0.35);color:#FF6B9D">💋 Betty Plush</button>
 </div>
 
 <div class="plt-filters" id="pltFilters">
@@ -1268,6 +1268,7 @@ si.addEventListener('input',()=>{
 sc.addEventListener('click',()=>{si.value='';sc.classList.remove('visible');sr.classList.remove('active');filterAndRender();si.focus()});
 document.addEventListener('click',e=>{if(!e.target.closest('.search-section'))sr.classList.remove('active')});
 tabs.forEach(t=>t.addEventListener('click',()=>{tabs.forEach(x=>x.classList.remove('active'));t.classList.add('active');active=t.dataset.cat;filterAndRender()}));
+if(location.hash==='#betty-plush'){var _bt=document.querySelector('[data-cat="betty-plush"]');if(_bt)_bt.click();}
 
 let idx=-1;
 si.addEventListener('keydown',e=>{
