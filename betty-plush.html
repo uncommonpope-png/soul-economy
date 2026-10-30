@@ -402,7 +402,7 @@ function bettyStageInit(){
     renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
     renderer.shadowMap.enabled=true; renderer.shadowMap.type=T.PCFSoftShadowMap;
     // r186 modern lighting: no useLegacyLights flag exists anymore. Explicit tone mapping + colour space.
-    renderer.toneMapping=T.ACESFilmicToneMapping; renderer.toneMappingExposure=1.0;
+    renderer.toneMapping=T.ACESFilmicToneMapping; renderer.toneMappingExposure=0.85;
     if(T.SRGBColorSpace) renderer.outputColorSpace=T.SRGBColorSpace;
     var scene=new T.Scene();
     var camera=new T.PerspectiveCamera(42,900/420,0.1,100); camera.position.set(0,2.2,11); camera.lookAt(0,0.6,0);
@@ -410,14 +410,14 @@ function bettyStageInit(){
     if(RoomEnvironment){
       try{ var pmrem=new T.PMREMGenerator(renderer); scene.environment=pmrem.fromScene(new RoomEnvironment(),0.04).texture; }catch(e){ /* environment is garnish; lights below still work */ }
     }
-    scene.add(new T.HemisphereLight(0xffffff,0x1a0f16,0.5));
+    scene.add(new T.HemisphereLight(0xffffff,0x1a0f16,0.35));
     var isPhone=window.innerWidth<=640;
-    var sun=new T.DirectionalLight(0xffffff,2.5); sun.position.set(4,8,6); sun.castShadow=true;
+    var sun=new T.DirectionalLight(0xffffff,1.7); sun.position.set(4,8,6); sun.castShadow=true;
     sun.shadow.mapSize.set(isPhone?1024:2048,isPhone?1024:2048);
     sun.shadow.camera.left=-7; sun.shadow.camera.right=7; sun.shadow.camera.top=7; sun.shadow.camera.bottom=-7;
     sun.shadow.camera.near=1; sun.shadow.camera.far=25; sun.shadow.bias=-0.0005;
     scene.add(sun);
-    var pink=new T.PointLight(0xff2e88,30,30); pink.position.set(-5,3,5); scene.add(pink);
+    var pink=new T.PointLight(0xff2e88,18,30); pink.position.set(-5,3,5); scene.add(pink);
     var ground=new T.Mesh(new T.PlaneGeometry(30,30), new T.ShadowMaterial({opacity:0.35}));
     ground.rotation.x=-Math.PI/2; ground.position.y=-1.1; ground.receiveShadow=true; scene.add(ground);
     var group=new T.Group(); scene.add(group); bettyStageGroup=group; bettyStageCamera=camera;
@@ -441,7 +441,7 @@ function bettyStageInit(){
       if(mods[5]&&mods[6]&&mods[7]&&mods[8]){
         composer=new mods[5].EffectComposer(renderer);
         composer.addPass(new mods[6].RenderPass(scene,camera));
-        var bloom=new mods[7].UnrealBloomPass(new T.Vector2(canvas.clientWidth||900,canvas.clientHeight||420),0.55,0.4,0.85);
+        var bloom=new mods[7].UnrealBloomPass(new T.Vector2(canvas.clientWidth||900,canvas.clientHeight||420),0.35,0.4,0.85);
         composer.addPass(bloom);
         composer.addPass(new mods[8].OutputPass());
       }
@@ -788,8 +788,8 @@ function bettyPanelStageTry(idx){
     renderer.toneMapping=T.ACESFilmicToneMapping; if(T.SRGBColorSpace) renderer.outputColorSpace=T.SRGBColorSpace;
     var scene=new T.Scene();
     var camera=new T.PerspectiveCamera(40,320/200,0.1,100); camera.position.set(0,1.2,5); camera.lookAt(0,0.5,0);
-    scene.add(new T.HemisphereLight(0xffffff,0x1a0f16,0.7));
-    var dir=new T.DirectionalLight(0xffffff,2.0); dir.position.set(3,5,4); scene.add(dir);
+    scene.add(new T.HemisphereLight(0xffffff,0x1a0f16,0.5));
+    var dir=new T.DirectionalLight(0xffffff,1.4); dir.position.set(3,5,4); scene.add(dir);
     new GLTFLoader().load(file, function(glb){
       glb.scene.scale.setScalar(1.0); glb.scene.position.y=-0.3; scene.add(glb.scene);
       wrap.style.display='block';
