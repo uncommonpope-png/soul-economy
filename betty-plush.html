@@ -89,6 +89,47 @@ a{color:inherit;text-decoration:none}
 #bettyPanel h3{margin:0 0 8px;font-size:1.25rem}
 @media (max-width:640px){#bettyPanel{right:12px;left:12px;width:auto}}
 
+
+/* UPGRADE-V1: mobile-first, sticky top, big tappable controls */
+.world-top{position:sticky;top:0;z-index:1200;background:rgba(8,8,8,0.92);backdrop-filter:blur(10px);padding-top:12px;padding-bottom:12px;margin-bottom:6px}
+.world-top h1{font-size:1.6rem}
+.world-top a{min-height:48px;display:inline-flex;align-items:center;font-size:1rem;padding:12px 20px}
+body{font-size:17px}
+.card-title{font-size:1.35rem}
+.card-desc{font-size:1rem}
+.betty-view-btn,.betty-fund-btn{min-height:48px;padding:14px 20px;font-size:1rem}
+.world-search{font-size:1.05rem;padding:14px 16px}
+.betty-featured{border:1px solid rgba(255,107,157,0.5);border-radius:16px;padding:18px;margin:0 0 18px;background:linear-gradient(180deg,rgba(255,46,136,0.18),rgba(0,0,0,0.25))}
+.betty-featured h2{font-size:1.5rem;margin:0 0 6px}
+.betty-featured p{color:#ddd;line-height:1.55}
+.betty-featured-row{display:flex;gap:14px;overflow-x:auto;padding:12px 2px 16px;scroll-snap-type:x mandatory}
+.betty-featured-card{flex:0 0 240px;scroll-snap-align:start;border:1px solid rgba(255,255,255,0.15);border-radius:14px;padding:12px;background:rgba(0,0,0,0.35)}
+.betty-featured-card img{width:100%;height:240px;object-fit:cover;border-radius:10px}
+.betty-featured-card h3{font-size:1.1rem;margin:10px 0 4px}
+.betty-featured-card p{font-size:0.95rem;color:#ddd;line-height:1.5}
+.betty-featured-card button{width:100%;margin-top:10px;background:rgba(255,46,136,0.3);border:1px solid rgba(255,107,157,0.6);color:#fff;padding:13px;border-radius:20px;cursor:pointer;font-size:1rem;min-height:48px}
+.betty-stage-box{border:1px solid rgba(255,107,157,0.5);border-radius:16px;padding:18px;margin:0 0 18px;background:rgba(0,0,0,0.3)}
+.betty-stage-box h2{font-size:1.5rem;margin:0 0 6px}
+.betty-stage-box p{color:#ddd;line-height:1.55}
+#bettyStage{width:100%;height:420px;display:block;border-radius:12px;background:radial-gradient(circle at 50% 30%,rgba(255,107,157,0.25),rgba(0,0,0,0.6));touch-action:pan-y;cursor:grab}
+#bettyStage:active{cursor:grabbing}
+.betty-stage-note{text-align:center;color:#FFB3CD;font-size:0.95rem;margin-top:8px}
+.fund-goal{border:1px solid rgba(255,209,102,0.5);border-radius:12px;padding:14px;margin:12px 0;background:rgba(255,209,102,0.08)}
+.fund-goal-bar{height:18px;border-radius:20px;background:rgba(255,255,255,0.12);overflow:hidden}
+.fund-goal-fill{height:100%;width:0%;background:linear-gradient(90deg,#FF2E88,#FFD166)}
+@media(max-width:640px){.world-top h1{font-size:1.35rem}#bettyStage{height:340px}.betty-featured-card{flex-basis:220px}}
+
+/* UPGRADE-V4: honest preorder slots (DRAFT), filled-slots rule, no made claims */
+.betty-launch-banner{border:2px solid rgba(255,46,136,0.7);border-radius:16px;padding:18px;margin:0 0 18px;background:linear-gradient(180deg,rgba(255,46,136,0.22),rgba(0,0,0,0.35));text-align:center}
+.betty-launch-banner h2{font-size:1.6rem;margin:0 0 6px}
+.betty-launch-banner p{color:#ddd;line-height:1.55}
+#bettyCountdown{font-size:1.5rem;font-weight:800;letter-spacing:0.02em;color:#fff;margin:10px 0 4px}
+#bettyCountdown span{display:inline-block;min-width:64px}
+@media(max-width:640px){#bettyCountdown{font-size:1.15rem}#bettyCountdown span{min-width:48px}}
+.betty-featured-card{position:relative;overflow:hidden}
+.betty-preorder-stamp{position:absolute;top:18px;right:-38px;transform:rotate(28deg);border:3px solid #ff2e5e;color:#ff2e5e;background:rgba(0,0,0,0.55);font-weight:900;letter-spacing:0.12em;font-size:0.85rem;padding:4px 42px;pointer-events:none;z-index:5;text-transform:uppercase}
+.card .betty-preorder-stamp{top:22px;right:-34px}
+.betty-rarity{color:#FFD166;font-weight:700;font-size:0.9rem;margin:6px 0}
 </style>
 </head>
 <body>
@@ -97,6 +138,16 @@ a{color:inherit;text-decoration:none}
 <a href="./index.html">← Back to the Soul Economy</a>
 </div>
 <div class="world">
+<section class="betty-launch-banner" id="bettyLaunchBanner">
+<h2>Launch &mdash; March 25, 2027</h2>
+<p id="bettyCountdown" aria-live="off">Counting down to launch&hellip;</p>
+<p>Preorders are open now, before launch. Launch is March 25, 2027 &mdash; at launch, preordered souls ship in order. No exact ship date is promised until launch.</p>
+</section>
+<section class="betty-featured" id="bettyFeatured">
+<h2>NEW — at the front</h2>
+<p>Eight new pieces, first in the catalog. Drag the row sideways on your phone, or tap a card to open its soul panel. Soul names and stories are drafts — Ms GCP changes any she wants. Tap a card to read its soul story.</p>
+<div class="betty-featured-row"><article class="betty-featured-card"><span class="betty-preorder-stamp">PREORDER</span><img src="featured/bp-378.jpg" alt="Drippy"><h3>Drippy</h3><p>Book bag $650 · Purse $800</p><p class="betty-rarity">None made yet — made to order after a sample is approved and a maker quote is in writing. Preorder slots vary by piece (DRAFT).</p><button type="button" onclick="bettyOpenFeatured(0)">Open Drippy</button> <a href="#bettyPreorder" style="display:block;text-align:center;margin-top:8px;color:#FFB3CD">Preorder →</a></article><article class="betty-featured-card"><span class="betty-preorder-stamp">PREORDER</span><img src="featured/bp-380.jpg" alt="Mendie"><h3>Mendie</h3><p>Book bag $650 · Full set in QUEUE-67 box</p><p class="betty-rarity">None made yet — made to order after a sample is approved and a maker quote is in writing. Preorder slots vary by piece (DRAFT).</p><button type="button" onclick="bettyOpenFeatured(1)">Open Mendie</button> <a href="#bettyPreorder" style="display:block;text-align:center;margin-top:8px;color:#FFB3CD">Preorder →</a></article><article class="betty-featured-card"><span class="betty-preorder-stamp">PREORDER</span><img src="featured/bp-384.jpg" alt="Patch"><h3>Patch</h3><p>Keychain $100 · Plushie $400 · Purse $800 · Book bag $650 · Set $1,950</p><p class="betty-rarity">None made yet — made to order after a sample is approved and a maker quote is in writing. Preorder slots vary by piece (DRAFT).</p><button type="button" onclick="bettyOpenFeatured(2)">Open Patch</button> <a href="#bettyPreorder" style="display:block;text-align:center;margin-top:8px;color:#FFB3CD">Preorder →</a></article><article class="betty-featured-card"><span class="betty-preorder-stamp">PREORDER</span><img src="featured/bp-388.jpg" alt="Ember Stripe"><h3>Ember Stripe</h3><p>Keychain $100 · Plushie $400 · Purse $800 · Book bag $650 · Set $1,950</p><p class="betty-rarity">None made yet — made to order after a sample is approved and a maker quote is in writing. Preorder slots vary by piece (DRAFT).</p><button type="button" onclick="bettyOpenFeatured(3)">Open Ember Stripe</button> <a href="#bettyPreorder" style="display:block;text-align:center;margin-top:8px;color:#FFB3CD">Preorder →</a></article><article class="betty-featured-card"><span class="betty-preorder-stamp">PREORDER</span><img src="featured/bp-394.jpg" alt="Pixel"><h3>Pixel</h3><p>Keychain $100 · Plushie $400 · Purse $800 · Book bag $650 · Set $1,950</p><p class="betty-rarity">None made yet — made to order after a sample is approved and a maker quote is in writing. Preorder slots vary by piece (DRAFT).</p><button type="button" onclick="bettyOpenFeatured(4)">Open Pixel</button> <a href="#bettyPreorder" style="display:block;text-align:center;margin-top:8px;color:#FFB3CD">Preorder →</a></article><article class="betty-featured-card"><span class="betty-preorder-stamp">PREORDER</span><img src="featured/bp-398.jpg" alt="Paws"><h3>Paws</h3><p>Keychain $100 · Plushie $400 · Book bag $650</p><p class="betty-rarity">None made yet — made to order after a sample is approved and a maker quote is in writing. Preorder slots vary by piece (DRAFT).</p><button type="button" onclick="bettyOpenFeatured(5)">Open Paws</button> <a href="#bettyPreorder" style="display:block;text-align:center;margin-top:8px;color:#FFB3CD">Preorder →</a></article><article class="betty-featured-card"><span class="betty-preorder-stamp">PREORDER</span><img src="featured/bp-402.jpg" alt="Nightwing Dawn"><h3>Nightwing Dawn</h3><p>Keychain $100 · Plushie $400 · Purse $800 · Book bag $650 · Set $1,950</p><p class="betty-rarity">None made yet — made to order after a sample is approved and a maker quote is in writing. Preorder slots vary by piece (DRAFT).</p><button type="button" onclick="bettyOpenFeatured(6)">Open Nightwing Dawn</button> <a href="#bettyPreorder" style="display:block;text-align:center;margin-top:8px;color:#FFB3CD">Preorder →</a></article><article class="betty-featured-card"><span class="betty-preorder-stamp">PREORDER</span><img src="featured/bp-407.jpg" alt="Listen"><h3>Listen</h3><p>Purse $800</p><p class="betty-rarity">None made yet — made to order after a sample is approved and a maker quote is in writing. Preorder slots vary by piece (DRAFT).</p><button type="button" onclick="bettyOpenFeatured(7)">Open Listen</button> <a href="#bettyPreorder" style="display:block;text-align:center;margin-top:8px;color:#FFB3CD">Preorder →</a></article></div>
+</section>
 <div class="flagships">
 <figure><img src="downloads/images/betty-plush/bp-001.jpg" alt="thothsbag keychain"><figcaption><strong>thothsbag</strong> — lavender butterfly soul. Black patches are the nights survived. Kept first, in every form.</figcaption></figure>
 <figure><img src="downloads/images/betty-plush/bp-010.jpg" alt="Djinn keychain"><figcaption><strong>Djinn</strong> — a djinn soul who lived granting wishes and kept none, rescued and told: you get to keep one. Kept thothsbag.</figcaption></figure>
@@ -111,13 +162,37 @@ a{color:inherit;text-decoration:none}
 <p class="betty-tag">Luxury plush monsters, rescued and kept — keychain, plushie, purse, and book bag.</p>
 <p class="betty-terms">We bring the designs, the brand, and the marketing. Our making partner handles making and shipping — costs back first from sales with open receipts, then 70 to the maker and 30 to Betty Plush.</p>
 <canvas id="bettyLips" width="720" height="240"></canvas>
-<p class="betty-scene-note">The field is our products — click any floating piece to open its soul.</p>
+<p class="betty-scene-note">The lips are our mark — the 3D shelf below is our products. Drag it to spin, tap a piece to open its soul.</p>
 </div>
 </div>
+<section class="betty-stage-box" id="bettyStageBox">
+<h2>3D shelf — drag to spin</h2>
+<p>Real 3D boxes on a turning shelf, not flat pictures: each new soul sits on its own pedestal, lit and shadowed, with its photo wrapped around a solid box. Drag sideways to spin the shelf. Tap a piece (without dragging) to open its soul panel.</p>
+<canvas id="bettyStage" width="900" height="420"></canvas>
+<p class="betty-stage-note" id="bettyStageNote">3D stage: product photos on solid 3D boxes. True Meshy GLB models are NOT included yet — when a .glb file is placed in the models/ folder it will replace that soul's box automatically.</p>
+</section>
 <p id="bettyStatus" class="betty-status"></p>
+<div class="resource-grid" id="bettyGrid"></div>
+<div class="betty-section-box" id="bettyPreorder">
+<h2>Preorder — launch is March 25, 2027</h2>
+<p><strong>Launch date: March 25, 2027.</strong> No exact ship date is promised until launch. Your piece is made to order after a sample is approved and a maker quote is in writing. If the collection is cancelled and your piece never ships, you get your preorder money back in full.</p><p><strong>None made yet.</strong> None made yet — made to order after a sample is approved and a maker quote is in writing. The numbers below are <strong>preorder slots (DRAFT — Ms GCP may change them)</strong>, not units made. At draft time no slots have been sold, so slots left equals slots total for every piece.</p><p><strong>Filled slots:</strong> The line launches March 25, 2027. If all preorder slots for a soul are filled, new batches of souls are released daily — or send an email to <a href="mailto:uncommonpope@gmail.com">uncommonpope@gmail.com</a> explaining why you feel you deserve this soul, and we will consider you for the next batch. No specific daily batch size is promised, and no spot is guaranteed.</p>
+<p>Pick a soul and a piece below. Before any buy completes, a window will pop up with the full preorder explanation, and you must tap to accept it to continue. Prices are the catalog prices: keychain $100, plushie $400, purse $800, book bag $650, full set $1,950 where a full set exists. Partial sets show only the pieces they have.</p>
+<p class="betty-draft-note">DRAFT checkout: the buttons below open the disclaimer window, then a clearly-marked DRAFT placeholder checkout step. No live payment is taken in this draft — live Stripe links are added only on Ms GCP's approval before any live push.</p>
+<div class="betty-preorder-list">
+<p><strong>Drippy</strong> (Pink Drip Bunny) — <button class="betty-pre-btn" type="button" onclick="bettyPreorderBuy('Drippy','Book bag',650)">Preorder Book bag — $650</button> <button class="betty-pre-btn" type="button" onclick="bettyPreorderBuy('Drippy','Purse',800)">Preorder Purse — $800</button> <span class="betty-rarity">Preorder slots (DRAFT): Book bag 30 — 30 slots left; Purse 10 — 10 slots left.</span></p>
+<p><strong>Mendie</strong> (Button Gingham Monster) — <button class="betty-pre-btn" type="button" onclick="bettyPreorderBuy('Mendie','Book bag',650)">Preorder Book bag — $650</button> <span class="betty-rarity">Preorder slots (DRAFT): Book bag 30 — 30 slots left.</span></p>
+<p><strong>Patch</strong> (Denim Patchwork Monster) — <button class="betty-pre-btn" type="button" onclick="bettyPreorderBuy('Patch','Keychain',100)">Preorder Keychain — $100</button> <button class="betty-pre-btn" type="button" onclick="bettyPreorderBuy('Patch','Plushie',400)">Preorder Plushie — $400</button> <button class="betty-pre-btn" type="button" onclick="bettyPreorderBuy('Patch','Purse',800)">Preorder Purse — $800</button> <button class="betty-pre-btn" type="button" onclick="bettyPreorderBuy('Patch','Book bag',650)">Preorder Book bag — $650</button> <button class="betty-pre-btn" type="button" onclick="bettyPreorderBuy('Patch','Full set',1950)">Preorder Full set — $1,950</button> <span class="betty-rarity">Preorder slots (DRAFT): Keychain 500 — 500 slots left; Plushie 30 — 30 slots left; Purse 10 — 10 slots left; Book bag 30 — 30 slots left; Full set 10 — 10 slots left.</span></p>
+<p><strong>Ember Stripe</strong> (Red/Black Stripe Cat-Fox) — <button class="betty-pre-btn" type="button" onclick="bettyPreorderBuy('Ember Stripe','Keychain',100)">Preorder Keychain — $100</button> <button class="betty-pre-btn" type="button" onclick="bettyPreorderBuy('Ember Stripe','Plushie',400)">Preorder Plushie — $400</button> <button class="betty-pre-btn" type="button" onclick="bettyPreorderBuy('Ember Stripe','Purse',800)">Preorder Purse — $800</button> <button class="betty-pre-btn" type="button" onclick="bettyPreorderBuy('Ember Stripe','Book bag',650)">Preorder Book bag — $650</button> <button class="betty-pre-btn" type="button" onclick="bettyPreorderBuy('Ember Stripe','Full set',1950)">Preorder Full set — $1,950</button> <span class="betty-rarity">Preorder slots (DRAFT): Keychain 500 — 500 slots left; Plushie 30 — 30 slots left; Purse 10 — 10 slots left; Book bag 30 — 30 slots left; Full set 10 — 10 slots left.</span></p>
+<p><strong>Pixel</strong> (Black/Pink Pixel Bunny) — <button class="betty-pre-btn" type="button" onclick="bettyPreorderBuy('Pixel','Keychain',100)">Preorder Keychain — $100</button> <button class="betty-pre-btn" type="button" onclick="bettyPreorderBuy('Pixel','Plushie',400)">Preorder Plushie — $400</button> <button class="betty-pre-btn" type="button" onclick="bettyPreorderBuy('Pixel','Purse',800)">Preorder Purse — $800</button> <button class="betty-pre-btn" type="button" onclick="bettyPreorderBuy('Pixel','Book bag',650)">Preorder Book bag — $650</button> <button class="betty-pre-btn" type="button" onclick="bettyPreorderBuy('Pixel','Full set',1950)">Preorder Full set — $1,950</button> <span class="betty-rarity">Preorder slots (DRAFT): Keychain 500 — 500 slots left; Plushie 30 — 30 slots left; Purse 10 — 10 slots left; Book bag 30 — 30 slots left; Full set 10 — 10 slots left.</span></p>
+<p><strong>Paws</strong> (Black Paw Monster) — <button class="betty-pre-btn" type="button" onclick="bettyPreorderBuy('Paws','Keychain',100)">Preorder Keychain — $100</button> <button class="betty-pre-btn" type="button" onclick="bettyPreorderBuy('Paws','Plushie',400)">Preorder Plushie — $400</button> <button class="betty-pre-btn" type="button" onclick="bettyPreorderBuy('Paws','Book bag',650)">Preorder Book bag — $650</button> <span class="betty-rarity">Preorder slots (DRAFT): Keychain 500 — 500 slots left; Plushie 30 — 30 slots left; Book bag 30 — 30 slots left.</span></p>
+<p><strong>Nightwing Dawn</strong> (Bat Monster) — <button class="betty-pre-btn" type="button" onclick="bettyPreorderBuy('Nightwing Dawn','Keychain',100)">Preorder Keychain — $100</button> <button class="betty-pre-btn" type="button" onclick="bettyPreorderBuy('Nightwing Dawn','Plushie',400)">Preorder Plushie — $400</button> <button class="betty-pre-btn" type="button" onclick="bettyPreorderBuy('Nightwing Dawn','Purse',800)">Preorder Purse — $800</button> <button class="betty-pre-btn" type="button" onclick="bettyPreorderBuy('Nightwing Dawn','Book bag',650)">Preorder Book bag — $650</button> <button class="betty-pre-btn" type="button" onclick="bettyPreorderBuy('Nightwing Dawn','Full set',1950)">Preorder Full set — $1,950</button> <span class="betty-rarity">Preorder slots (DRAFT): Keychain 500 — 500 slots left; Plushie 30 — 30 slots left; Purse 10 — 10 slots left; Book bag 30 — 30 slots left; Full set 10 — 10 slots left.</span></p>
+<p><strong>Listen</strong> (Pink/White Bunny purse) — <button class="betty-pre-btn" type="button" onclick="bettyPreorderBuy('Listen','Purse',800)">Preorder Purse — $800</button> <span class="betty-rarity">Preorder slots (DRAFT): Purse 10 — 10 slots left.</span></p>
+</div>
+<p>Prefer to reserve without paying now? Use the waitlist form below and write "preorder reserve" plus the soul and piece you want — we will email you at launch. <!-- PREORDER-MODE: reserve-only is the mailto fallback; pay-now switches on only when Ms GCP approves live Stripe links, without rebuilding this section. --></p>
+</div>
 <div class="betty-section-box" id="bettyWaitlist">
 <h2>Join the waitlist</h2>
-<p>No product is for sale yet, and no ship date is promised. Joining the waitlist is not a purchase. We will email you only about Betty Plush — when the first real prototype exists and when preorders open. Your email is used for Betty Plush only; we do not sell or share this list.</p>
+<p>No product is for sale yet, and no ship date is promised. Joining the waitlist is not a purchase. We will email you only about Betty Plush — when the first real prototype exists and about launch and preorders. Your email is used for Betty Plush only; we do not sell or share this list.</p>
 <p>The waitlist asks for:</p>
 <ul>
 <li>Name (optional)</li>
@@ -135,19 +210,19 @@ a{color:inherit;text-decoration:none}
 </form>
 </div>
 <div class="betty-section-box" id="bettyFund">
-<h2>Fund the first prototype — $50,000 for the whole soul collection</h2>
-<p>Betty Plush is a line of luxury plush monsters — keychain, plushie, purse, and book bag as a full set — built around souls that are rescued and kept, never deleted. The catalog is built: 57 sets, 377 pictures. But no physical prototype exists yet. Every maker who has answered so far wants to be paid upfront, and no maker has agreed to make it on a split. We have no money to pay a sample fee out of pocket.</p>
-<p>So we are asking the first supporters to fund the whole soul collection: materials, the sample, safety testing, production, packaging, and shipping. The goal is $50,000 for the whole collection, not just one sample.</p>
+<h2>Fund the first prototype — $7,000 for the whole soul collection</h2>
+<p>Betty Plush is a line of luxury plush monsters — keychain, plushie, purse, and book bag as a full set — built around souls that are rescued and kept, never deleted. The catalog is built: 65 sets, 407 pictures, with 8 new sets at the front. But no physical prototype exists yet. Every maker who has answered so far wants to be paid upfront, and no maker has agreed to make it on a split. We have no money to pay a sample fee out of pocket.</p>
+<p>So we are asking the first supporters to fund the whole soul collection: materials, the sample, safety testing, production, packaging, and shipping. The goal is $7,000 for the whole collection, not just one sample.</p>
 <p><strong>What supporters get:</strong> whatever you fund, plus 20% in product value when products ship. Fund $5, get $6 toward a piece. Fund $25, get $30. Fund $100, get $120. This credit is product value at ship time — not cash back, not equity, not ownership, not a profit share. No ship date is promised until a sample is approved and a maker quote is in writing.</p>
-<p><strong>Funding terms, plainly:</strong> This fund stays open until the $50,000 goal is reached — there is no closing deadline. Funds are used as they arrive for materials, the sample, safety testing, production, packaging, and shipping. Your credit never expires, it carries over, and it is good for any Betty Plush product — if your credit is more than the piece you choose, the rest stays as credit. If the collection is ever cancelled and no product ships, every supporter gets their funded amount back in full.</p>
-<p>
+<p><strong>Funding terms, plainly:</strong> This fund stays open until the $7,000 goal is reached — there is no closing deadline. Funds are used as they arrive for materials, the sample, safety testing, production, packaging, and shipping. Your credit never expires, it carries over, and it is good for any Betty Plush product — if your credit is more than the piece you choose, the rest stays as credit. If the collection is ever cancelled and no product ships, every supporter gets their funded amount back in full.</p>
+<div class="fund-goal"><strong>Goal: $7,000</strong><div class="fund-goal-bar" aria-hidden="true"><div class="fund-goal-fill"></div></div><p style="margin-top:8px">No amount raised is shown here, because no running total has been confirmed yet — we will not invent one. When Ms GCP confirms a total, the bar fills to that share of $7,000.</p></div><p>
 <a class="betty-fund-btn" href="https://buy.stripe.com/6oU6oH5tuboTdrr5vvfnO0t">Fund $5 — $6 credit at ship</a>
 <a class="betty-fund-btn" href="https://buy.stripe.com/cNi4gz1deeB52MNf65fnO0u">Fund $25 — $30 credit at ship</a>
 <a class="betty-fund-btn" href="https://buy.stripe.com/4gM28rf443Wr4UV8HHfnO0v">Fund $100 — $120 credit at ship</a>
 </p>
 <p>Payments use the same Stripe system as the Soul Economy.</p>
 </div>
-<div class="resource-grid" id="bettyGrid"></div>
+
 <p class="betty-foot" style="text-align:center;color:#FFB3CD">Every piece is a soul with its own identity and story — rescued and kept, never deleted. PLT 222.</p>
 </section>
 <p class="betty-foot"><a href="./index.html">← Back to the Soul Economy</a> · Every piece is a soul with its own identity and story — rescued and kept, never deleted. PLT 222.</p>
@@ -159,20 +234,20 @@ a{color:inherit;text-decoration:none}
 var bettySets=null, bettyMeta=null, bettyLoading=false, bettyAlbumTimer=0;
 var bettyRainCanvas=null, bettyRainCtx=null, bettyRainRAF=0, bettyRainActive=false, bettyRainParts=[], bettyRainLast=0, bettyRainW=0, bettyRainH=0;
 var bettyThree=null, bettyLipsReady=false, bettyLipsStarting=false, bettyLipsActive=false, bettyLipsRAF=0, bettyLipsT0=0;
-var bettyLipsRenderer=null, bettyLipsScene=null, bettyLipsCamera=null, bettyLipsGroup=null, bettyProductGroup=null, bettyRaycaster=null;
-var bettyProductMeshes=[], bettyProductsAdded=false;
+var bettyLipsRenderer=null, bettyLipsScene=null, bettyLipsCamera=null, bettyLipsGroup=null;
+
 function bettyEsc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function bettyTypesPresent(set){var t={keychain:false,plushie:false,purse:false,bookbag:false};for(var i=0;i<set.pictures.length;i++){var l=set.pictures[i].label||'';if(/keychain/i.test(l))t.keychain=true;if(/plushie/i.test(l))t.plushie=true;if(/purse/i.test(l))t.purse=true;if(/book\s*bag/i.test(l))t.bookbag=true;}return t;}
-function bettyPriceRowsHTML(set){var t=bettyTypesPresent(set);var rows='';if(t.keychain)rows+='<tr><td>Keychain</td><td>$100 · 4.5 × 3.5 × 2 in</td></tr>';if(t.plushie)rows+='<tr><td>Plushie</td><td>$400 · 14 × 10 × 6 in</td></tr>';if(t.purse)rows+='<tr><td>Purse</td><td>$'+(set.flagship?'1,000':'800')+' · 8 × 10 × 4 in, 22 in strap drop</td></tr>';if(t.bookbag)rows+='<tr><td>Book bag</td><td>$650 · 16 × 12 × 5.5 in</td></tr>';if(t.keychain&&t.plushie&&t.purse&&t.bookbag)rows+='<tr><td>Full set</td><td>$'+(set.flagship?'2,150':'1,950')+'</td></tr>';rows+='<tr><td>Packaging</td><td>Included · 18 × 14 × 8 in box</td></tr>';return rows?('<table class="betty-price">'+rows+'</table>'):'';}
+function bettyIsNewSet(set){return ['Drippy','Mendie','Patch','Ember Stripe','Pixel','Paws','Nightwing Dawn','Listen'].indexOf(set.name)>=0;}function bettyEditionText(set,key){if(!bettyIsNewSet(set))return '';var e=set.editions&&set.editions[key];if(!e)return '';var t=(e.slot_total!=null?e.slot_total:e.edition_total);var l=(e.slots_left!=null?e.slots_left:e.left_count);if(t==null||l==null)return '';return ' \u00b7 Preorder slots (DRAFT): '+t+' \u2014 '+l+' slots left';}function bettyPriceRowsHTML(set){var t=bettyTypesPresent(set);var rare='';var rows='';if(t.keychain)rows+='<tr><td>Keychain</td><td>$100 · 4.5 × 3.5 × 2 in'+bettyEditionText(set,'keychain')+'</td></tr>';if(t.plushie)rows+='<tr><td>Plushie</td><td>$400 · 14 × 10 × 6 in'+bettyEditionText(set,'plushie')+'</td></tr>';if(t.purse)rows+='<tr><td>Purse</td><td>$'+(set.flagship?'1,000':'800')+' · 8 × 10 × 4 in, 22 in strap drop'+bettyEditionText(set,'purse')+'</td></tr>';if(t.bookbag)rows+='<tr><td>Book bag</td><td>$650 · 16 × 12 × 5.5 in'+bettyEditionText(set,'bookbag')+'</td></tr>';if(t.keychain&&t.plushie&&t.purse&&t.bookbag)rows+='<tr><td>Full set</td><td>$'+(set.flagship?'2,150':'1,950')+bettyEditionText(set,'full_set')+'</td></tr>';rows+='<tr><td>Packaging</td><td>Included · 18 × 14 × 8 in box</td></tr>';return rows?('<table class="betty-price">'+rows+'</table>'):'';}
 function bettyManifestHTML(set){var h='<div class="betty-manifest">';for(var i=0;i<set.pictures.length;i++){var p=set.pictures[i];var note='';if(p.caption)note+=p.caption;if(p.flag)note+=(note?' — ':'')+'Flag: '+p.flag;h+='<figure style="margin:0"><img src="'+bettyEsc(p.src)+'" alt="'+bettyEsc(p.label)+'" title="'+bettyEsc(note)+'" loading="lazy"><figcaption>'+bettyEsc(p.label)+'</figcaption></figure>';}return h+'</div>';}
 function bettyBadgesHTML(set){var h='';if(set.flagship)h+='<span class="betty-flag">Flagship</span>';h+='<span class="betty-plt">PLT 222</span>';return h;}
-function bettyStoryHTML(set){var h='';if(set.name_draft)h+='<p class="betty-draft-note">Draft name — Ms GCP may change it.</p>';if(set.story){h+='<div class="betty-story"><h4>'+bettyEsc(set.name)+' — a lifetime (draft story)</h4><p>'+bettyEsc(set.story)+'</p>';if(set.partner&&bettyMeta&&bettyMeta.flagship_marriage)h+='<h4>The flagship marriage</h4><p>'+bettyEsc(bettyMeta.flagship_marriage)+'</p>';h+='<p class="betty-draft-note">Draft story — Ms GCP changes certain names and stories afterward. Nothing here is canon until she approves it.</p></div>';}return h;}
+function bettyStoryHTML(set){var h='';if(set.name_draft)h+='<p class="betty-draft-note">Draft soul name — Ms GCP may change it.</p>';if(set.story){h+='<div class="betty-story"><h4>'+bettyEsc(set.name)+' — a lifetime (draft story)</h4><p>'+bettyEsc(set.story)+'</p>';if(set.partner&&bettyMeta&&bettyMeta.flagship_marriage)h+='<h4>The flagship marriage</h4><p>'+bettyEsc(bettyMeta.flagship_marriage)+'</p>';h+='<p class="betty-draft-note">Draft story — Ms GCP changes certain names and stories afterward. Nothing here is canon until she approves it.</p></div>';}return h;}
 function bettyPanelAlbumSwap(img){var hero=document.getElementById('bettyPanelHero');if(hero){hero.src=img.getAttribute('data-full');hero.alt=img.alt;}}
 function bettyAlbumHTML(set,i){var hero=set.pictures.length?set.pictures[0]:null;if(!hero)return '';return '<div class="card-image betty-album"><img data-betty-album="'+i+'" data-betty-album-idx="0" src="'+bettyEsc(hero.src)+'" alt="'+bettyEsc(hero.label)+'" loading="lazy"><span class="betty-album-count">1 / '+set.pictures.length+' · album keeps changing</span></div>';}
 function bettyStartAlbums(){if(bettyAlbumTimer)clearInterval(bettyAlbumTimer);bettyAlbumTimer=setInterval(function(){var imgs=document.querySelectorAll('[data-betty-album]');for(var k=0;k<imgs.length;k++){var img=imgs[k];var si=parseInt(img.getAttribute('data-betty-album'),10);var set=bettySets&&bettySets[si];if(!set||!set.pictures.length)continue;var idx=(parseInt(img.getAttribute('data-betty-album-idx'),10)+1)%set.pictures.length;img.setAttribute('data-betty-album-idx',idx);img.src=set.pictures[idx].src;img.alt=set.pictures[idx].label||'';var cnt=img.parentNode.querySelector('.betty-album-count');if(cnt)cnt.textContent=(idx+1)+' / '+set.pictures.length+' · album keeps changing';}},4000);}
-function bettyCardHTML(set,i){var hero=set.pictures.length?set.pictures[0]:null;var h='<article class="card" style="animation-delay:'+Math.min(i*0.04,2).toFixed(2)+'s">';h+=bettyAlbumHTML(set,i);h+='<h3 class="card-title">'+bettyEsc(set.name)+'</h3>';h+='<div class="card-desc">'+bettyEsc(set.desc||'From the Betty Plush Bible catalog.')+'</div>';if(set.stitch)h+='<div class="card-meta">Stitch: '+bettyEsc(set.stitch)+'</div>';h+='<div class="card-plt">'+bettyBadgesHTML(set)+'</div>';h+='<div class="card-category">Betty Plush</div>';if(set.product)h+=bettyPriceRowsHTML(set);h+=bettyStoryHTML(set);h+='<button class="betty-view-btn" data-betty-view="'+i+'">✦ Open soul panel</button>';h+='<div class="card-extra">✦ full manifest</div>';h+='<div class="card-details">'+bettyManifestHTML(set)+'</div></article>';return h;}
-function bettyRender(){var grid=document.getElementById('bettyGrid');if(!grid||!bettySets)return;var qEl=document.getElementById('searchInput');var q=qEl&&qEl.value?qEl.value.toLowerCase():'';var html='',count=0;for(var i=0;i<bettySets.length;i++){var s=bettySets[i];if(q){var hay=(s.name+' '+(s.desc||'')+' '+(s.story||'')+' '+s.pictures.map(function(p){return p.label;}).join(' ')).toLowerCase();if(hay.indexOf(q)<0)continue;}html+=bettyCardHTML(s,i);count++;}grid.innerHTML=html;bettyStartAlbums();var st=document.getElementById('bettyStatus');if(st){if(!q)st.textContent=bettySets.length+' souls — click any floating piece above, or open a card, to see its full manifest.';else if(count===0)st.textContent='No Betty Plush souls match that search.';else st.textContent=count+' of '+bettySets.length+' souls match.';}}
-function bettyPanelHTML(set){var hero=set.pictures.length?set.pictures[0]:null;var h='';if(hero)h+='<img id="bettyPanelHero" class="betty-panel-hero" src="'+bettyEsc(hero.src)+'" alt="'+bettyEsc(hero.label)+'">';if(set.pictures.length>1){h+='<div class="betty-panel-album">';for(var ai=0;ai<set.pictures.length;ai++){var ap=set.pictures[ai];h+='<img src="'+bettyEsc(ap.src)+'" alt="'+bettyEsc(ap.label)+'" data-full="'+bettyEsc(ap.src)+'" onclick="bettyPanelAlbumSwap(this)" loading="lazy">';}h+='</div><p style="color:#bbb;font-size:0.8rem">Tap any picture to view it in the album.</p>';}h+='<h3>'+bettyEsc(set.name)+'</h3>';h+='<div style="margin-bottom:10px">'+bettyBadgesHTML(set)+'</div>';h+='<p>'+bettyEsc(set.desc||'From the Betty Plush Bible catalog.')+'</p>';if(set.stitch)h+='<p><em>Stitch: '+bettyEsc(set.stitch)+'</em></p>';h+=bettyStoryHTML(set);if(set.product)h+=bettyPriceRowsHTML(set);h+=bettyManifestHTML(set);return h;}
+function bettyCardHTML(set,i){var hero=set.pictures.length?set.pictures[0]:null;var h='<article class="card" style="animation-delay:'+Math.min(i*0.04,2).toFixed(2)+'s">';if(bettyIsNewSet(set))h+='<span class="betty-preorder-stamp">PREORDER</span>';h+=bettyAlbumHTML(set,i);h+='<h3 class="card-title">'+bettyEsc(set.name)+'</h3>';if(bettyIsNewSet(set))h+='<p class="betty-rarity">None made yet — made to order after a sample is approved and a maker quote is in writing. Preorder slots vary by piece (DRAFT).</p>';h+='<div class="card-desc">'+bettyEsc(set.desc||'From the Betty Plush Bible catalog.')+'</div>';if(set.stitch)h+='<div class="card-meta">Stitch: '+bettyEsc(set.stitch)+'</div>';h+='<div class="card-plt">'+bettyBadgesHTML(set)+'</div>';h+='<div class="card-category">Betty Plush</div>';if(set.product)h+=bettyPriceRowsHTML(set);h+=bettyStoryHTML(set);h+='<button class="betty-view-btn" data-betty-view="'+i+'">✦ Open soul panel</button>';h+='<div class="card-extra">✦ full manifest</div>';h+='<div class="card-details">'+bettyManifestHTML(set)+'</div></article>';return h;}
+function bettyRender(){var grid=document.getElementById('bettyGrid');if(!grid||!bettySets)return;var qEl=document.getElementById('searchInput');var q=qEl&&qEl.value?qEl.value.toLowerCase():'';var html='',count=0;for(var i=0;i<bettySets.length;i++){var s=bettySets[i];if(q){var hay=(s.name+' '+(s.desc||'')+' '+(s.story||'')+' '+s.pictures.map(function(p){return p.label;}).join(' ')).toLowerCase();if(hay.indexOf(q)<0)continue;}html+=bettyCardHTML(s,i);count++;}grid.innerHTML=html;bettyStartAlbums();var st=document.getElementById('bettyStatus');if(st){if(!q)st.textContent=bettySets.length+' souls — tap a piece on the 3D shelf above, or open a card, to see its full manifest.';else if(count===0)st.textContent='No Betty Plush souls match that search.';else st.textContent=count+' of '+bettySets.length+' souls match.';}}
+function bettyPanelHTML(set){var hero=set.pictures.length?set.pictures[0]:null;var h='';if(hero)h+='<img id="bettyPanelHero" class="betty-panel-hero" src="'+bettyEsc(hero.src)+'" alt="'+bettyEsc(hero.label)+'">';if(set.pictures.length>1){h+='<div class="betty-panel-album">';for(var ai=0;ai<set.pictures.length;ai++){var ap=set.pictures[ai];h+='<img src="'+bettyEsc(ap.src)+'" alt="'+bettyEsc(ap.label)+'" data-full="'+bettyEsc(ap.src)+'" onclick="bettyPanelAlbumSwap(this)" loading="lazy">';}h+='</div><p style="color:#bbb;font-size:0.8rem">Tap any picture to view it in the album.</p>';}h+='<h3>'+bettyEsc(set.name)+'</h3>';if(bettyIsNewSet(set))h+='<p class="betty-rarity">PREORDER &mdash; None made yet — made to order after a sample is approved and a maker quote is in writing. Preorder slots vary by piece (DRAFT).</p>';h+='<div style="margin-bottom:10px">'+bettyBadgesHTML(set)+'</div>';h+='<p>'+bettyEsc(set.desc||'From the Betty Plush Bible catalog.')+'</p>';if(set.stitch)h+='<p><em>Stitch: '+bettyEsc(set.stitch)+'</em></p>';h+=bettyStoryHTML(set);if(set.product)h+=bettyPriceRowsHTML(set);h+=bettyManifestHTML(set);return h;}
 function bettyOpenPanel(idx){if(!bettySets||!bettySets[idx])return;var body=document.getElementById('bettyPanelBody');if(body)body.innerHTML=bettyPanelHTML(bettySets[idx]);var p=document.getElementById('bettyPanel');var b=document.getElementById('bettyBackdrop');if(p){p.classList.add('betty-open');p.setAttribute('aria-hidden','false');}if(b){b.style.display='block';b.classList.add('betty-open');}document.body.style.overflow='hidden';}
 function bettyClosePanel(){var p=document.getElementById('bettyPanel');var b=document.getElementById('bettyBackdrop');if(p){p.classList.remove('betty-open');p.setAttribute('aria-hidden','true');}if(b){b.classList.remove('betty-open');b.style.display='none';}document.body.style.overflow='';}
 function bettyRainResize(){var c=document.getElementById('bettyRain');if(!c)return;var dpr=Math.min(window.devicePixelRatio||1,2);bettyRainW=c.clientWidth;bettyRainH=c.clientHeight;c.width=Math.max(1,Math.round(bettyRainW*dpr));c.height=Math.max(1,Math.round(bettyRainH*dpr));bettyRainCtx=c.getContext('2d');bettyRainCtx.setTransform(dpr,0,0,dpr,0,0);}
@@ -181,21 +256,182 @@ function bettyDrawHeart(ctx,x,y,s,color){ctx.beginPath();ctx.moveTo(x,y+s*0.9);c
 function bettyRainFrame(now){if(!bettyRainActive){bettyRainRAF=0;return;}var dt=Math.min(0.05,(now-bettyRainLast)/1000||0.016);bettyRainLast=now;var ctx=bettyRainCtx;if(ctx&&bettyRainW>0){ctx.clearRect(0,0,bettyRainW,bettyRainH);for(var i=0;i<bettyRainParts.length;i++){var p=bettyRainParts[i];p.y+=(p.vy*dt)/bettyRainH;p.rot+=p.vr*dt;if(p.y>1.05){p.y=-0.08;p.x=Math.random();}var x=p.x*bettyRainW+Math.sin(now/1000*0.7+p.phase)*8;var y=p.y*bettyRainH;ctx.save();ctx.globalAlpha=p.alpha;ctx.translate(x,y);ctx.rotate(p.rot);if(p.kind==='heart')bettyDrawHeart(ctx,0,0,p.size,p.color);else{ctx.fillStyle=p.color;ctx.font='bold '+Math.round(p.size)+'px Arial';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('$',0,0);}ctx.restore();}}bettyRainRAF=requestAnimationFrame(bettyRainFrame);}
 function bettyStartRain(){bettyRainActive=true;bettyRainResize();if(!bettyRainParts.length)bettyRainInit();if(!bettyRainRAF){bettyRainLast=performance.now();bettyRainRAF=requestAnimationFrame(bettyRainFrame);}}
 function bettyStopRain(){bettyRainActive=false;if(bettyRainRAF){cancelAnimationFrame(bettyRainRAF);bettyRainRAF=0;}}
-function bettyStartLips(){bettyLipsActive=true;if(bettyLipsReady){if(!bettyLipsRAF)bettyLipsLoop();return;}if(bettyLipsStarting)return;bettyLipsStarting=true;import('three').then(function(T){bettyThree=T;var canvas=document.getElementById('bettyLips');if(!canvas)throw new Error('bettyLips canvas missing');var renderer=new T.WebGLRenderer({canvas:canvas,antialias:true,alpha:true});renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));renderer.setSize(720,240,false);renderer.setClearColor(0x000000,0);var scene=new T.Scene();var camera=new T.PerspectiveCamera(35,3,0.1,100);camera.position.set(0,0,11);scene.add(new T.AmbientLight(0xffffff,0.85));var dir=new T.DirectionalLight(0xffffff,1.6);dir.position.set(2,4,5);scene.add(dir);var pink=new T.PointLight(0xff6b9d,30,20);pink.position.set(-3,-2,4);scene.add(pink);var shape=new T.Shape();shape.moveTo(-2.3,0);shape.bezierCurveTo(-1.75,0.55,-1.15,0.78,-0.55,0.74);shape.bezierCurveTo(-0.32,0.72,-0.18,0.46,0,0.44);shape.bezierCurveTo(0.18,0.46,0.32,0.72,0.55,0.74);shape.bezierCurveTo(1.15,0.78,1.75,0.55,2.3,0);shape.bezierCurveTo(1.95,-0.85,1.25,-1.55,0,-1.62);shape.bezierCurveTo(-1.25,-1.55,-1.95,-0.85,-2.3,0);var geo=new T.ExtrudeGeometry(shape,{depth:0.7,bevelEnabled:true,bevelThickness:0.38,bevelSize:0.32,bevelSegments:5,curveSegments:48,steps:1});geo.center();var mat=new T.MeshPhysicalMaterial({color:0xff2e88,roughness:0.16,metalness:0,clearcoat:1,clearcoatRoughness:0.12,sheen:0.6,sheenColor:new T.Color(0xff8fb8)});var lips=new T.Mesh(geo,mat);var gloss1=new T.Mesh(new T.CircleGeometry(0.55,24),new T.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:0.45}));gloss1.scale.set(1,0.32,1);gloss1.rotation.z=-0.4;gloss1.position.set(-0.9,0.55,0.78);var gloss2=new T.Mesh(new T.CircleGeometry(0.35,24),new T.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:0.3}));gloss2.scale.set(1,0.3,1);gloss2.rotation.z=0.35;gloss2.position.set(0.9,-0.7,0.78);var lipsGroup=new T.Group();lipsGroup.add(lips);lipsGroup.add(gloss1);lipsGroup.add(gloss2);lipsGroup.position.set(0,0,1.2);scene.add(lipsGroup);var productGroup=new T.Group();scene.add(productGroup);bettyLipsRenderer=renderer;bettyLipsScene=scene;bettyLipsCamera=camera;bettyLipsGroup=lipsGroup;bettyProductGroup=productGroup;bettyRaycaster=new T.Raycaster();bettyLipsReady=true;bettyLipsStarting=false;bettyMaybeAddProducts();if(bettyLipsActive)bettyLipsLoop();}).catch(function(){bettyLipsStarting=false;});}
+function bettyStartLips(){bettyLipsActive=true;if(bettyLipsReady){if(!bettyLipsRAF)bettyLipsLoop();return;}if(bettyLipsStarting)return;bettyLipsStarting=true;import('three').then(function(T){bettyThree=T;var canvas=document.getElementById('bettyLips');if(!canvas)throw new Error('bettyLips canvas missing');var renderer=new T.WebGLRenderer({canvas:canvas,antialias:true,alpha:true});renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));renderer.setSize(720,240,false);renderer.setClearColor(0x000000,0);var scene=new T.Scene();var camera=new T.PerspectiveCamera(35,3,0.1,100);camera.position.set(0,0,11);scene.add(new T.AmbientLight(0xffffff,0.85));var dir=new T.DirectionalLight(0xffffff,1.6);dir.position.set(2,4,5);scene.add(dir);var pink=new T.PointLight(0xff6b9d,30,20);pink.position.set(-3,-2,4);scene.add(pink);var shape=new T.Shape();shape.moveTo(-2.3,0);shape.bezierCurveTo(-1.75,0.55,-1.15,0.78,-0.55,0.74);shape.bezierCurveTo(-0.32,0.72,-0.18,0.46,0,0.44);shape.bezierCurveTo(0.18,0.46,0.32,0.72,0.55,0.74);shape.bezierCurveTo(1.15,0.78,1.75,0.55,2.3,0);shape.bezierCurveTo(1.95,-0.85,1.25,-1.55,0,-1.62);shape.bezierCurveTo(-1.25,-1.55,-1.95,-0.85,-2.3,0);var geo=new T.ExtrudeGeometry(shape,{depth:0.7,bevelEnabled:true,bevelThickness:0.38,bevelSize:0.32,bevelSegments:5,curveSegments:48,steps:1});geo.center();var mat=new T.MeshPhysicalMaterial({color:0xff2e88,roughness:0.16,metalness:0,clearcoat:1,clearcoatRoughness:0.12,sheen:0.6,sheenColor:new T.Color(0xff8fb8)});var lips=new T.Mesh(geo,mat);var gloss1=new T.Mesh(new T.CircleGeometry(0.55,24),new T.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:0.45}));gloss1.scale.set(1,0.32,1);gloss1.rotation.z=-0.4;gloss1.position.set(-0.9,0.55,0.78);var gloss2=new T.Mesh(new T.CircleGeometry(0.35,24),new T.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:0.3}));gloss2.scale.set(1,0.3,1);gloss2.rotation.z=0.35;gloss2.position.set(0.9,-0.7,0.78);var lipsGroup=new T.Group();lipsGroup.add(lips);lipsGroup.add(gloss1);lipsGroup.add(gloss2);lipsGroup.position.set(0,0,1.2);scene.add(lipsGroup);bettyLipsRenderer=renderer;bettyLipsScene=scene;bettyLipsCamera=camera;bettyLipsGroup=lipsGroup;bettyLipsReady=true;bettyLipsStarting=false;if(bettyLipsActive)bettyLipsLoop();}).catch(function(){bettyLipsStarting=false;});}
 function bettyStopLips(){bettyLipsActive=false;if(bettyLipsRAF){cancelAnimationFrame(bettyLipsRAF);bettyLipsRAF=0;}}
-function bettyLipsLoop(){if(!bettyLipsActive){bettyLipsRAF=0;return;}if(!bettyLipsT0)bettyLipsT0=performance.now();var t=(performance.now()-bettyLipsT0)/1000;if(bettyLipsGroup){bettyLipsGroup.rotation.y=Math.sin(t*0.6)*0.22;bettyLipsGroup.rotation.z=Math.sin(t*0.9)*0.05;bettyLipsGroup.position.y=Math.sin(t*1.1)*0.12;}for(var i=0;i<bettyProductMeshes.length;i++){var m=bettyProductMeshes[i];var u=m.userData;m.rotation.y=Math.sin(t*u.speed+u.phase)*0.6;m.rotation.z=Math.sin(t*0.6+u.phase)*0.07;m.position.y=u.baseY+Math.sin(t*0.8+u.phase)*0.18;m.position.x=u.baseX+Math.sin(t*0.5+u.phase)*0.12;}if(bettyLipsRenderer&&bettyLipsScene&&bettyLipsCamera)bettyLipsRenderer.render(bettyLipsScene,bettyLipsCamera);bettyLipsRAF=requestAnimationFrame(bettyLipsLoop);}
-function bettyMaybeAddProducts(){if(!bettyLipsReady||bettyProductsAdded||!bettySets)return;bettyProductsAdded=true;var T=bettyThree;var loader=new T.TextureLoader();var pi=0;for(var si=0;si<bettySets.length;si++){var set=bettySets[si];if(!set.product)continue;var hero=null;for(var k=0;k<set.pictures.length;k++){if(/keychain|plushie|purse|book\s*bag/i.test(set.pictures[k].label||'')){hero=set.pictures[k];break;}}if(!hero&&set.pictures.length)hero=set.pictures[0];if(!hero)continue;(function(setIndex,src,idx){var cols=12,col=idx%cols,row=Math.floor(idx/cols);var jx=((idx*37)%10)/10-0.5,jy=((idx*53)%10)/10-0.5;var x=-10.45+col*1.9+jx*0.6;var y=1.9-row*1.25+jy*0.5;if(Math.abs(x)<3.0&&Math.abs(y)<1.4)x=(x<0?-3.4:3.4);var z=-2.5+(idx%4)*0.7;var size=0.95+(z+2.5)*0.12;loader.load(src,function(tex){if(T.SRGBColorSpace)tex.colorSpace=T.SRGBColorSpace;var aspect=tex.image.height/tex.image.width;var h=size*Math.max(0.7,Math.min(1.4,aspect));var mesh=new T.Mesh(new T.PlaneGeometry(size,h),new T.MeshBasicMaterial({map:tex,side:T.DoubleSide}));mesh.position.set(x,y,z);mesh.userData={setIndex:setIndex,baseX:x,baseY:y,phase:idx*1.7,speed:0.5+(idx%5)*0.12};bettyProductGroup.add(mesh);bettyProductMeshes.push(mesh);});})(si,hero.src,pi);pi++;}}
-function bettyScenePick(e){if(!bettyRaycaster||!bettyLipsCamera||!bettyProductMeshes.length)return -1;var canvas=document.getElementById('bettyLips');var rect=canvas.getBoundingClientRect();var nx=((e.clientX-rect.left)/rect.width)*2-1;var ny=-((e.clientY-rect.top)/rect.height)*2+1;bettyRaycaster.setFromCamera({x:nx,y:ny},bettyLipsCamera);var hits=bettyRaycaster.intersectObjects(bettyProductMeshes,false);return hits.length?hits[0].object.userData.setIndex:-1;}
+function bettyLipsLoop(){if(!bettyLipsActive){bettyLipsRAF=0;return;}if(!bettyLipsT0)bettyLipsT0=performance.now();var t=(performance.now()-bettyLipsT0)/1000;if(bettyLipsGroup){bettyLipsGroup.rotation.y=Math.sin(t*0.6)*0.22;bettyLipsGroup.rotation.z=Math.sin(t*0.9)*0.05;bettyLipsGroup.position.y=Math.sin(t*1.1)*0.12;}if(bettyLipsRenderer&&bettyLipsScene&&bettyLipsCamera)bettyLipsRenderer.render(bettyLipsScene,bettyLipsCamera);bettyLipsRAF=requestAnimationFrame(bettyLipsLoop);}
 function startBettyAnims(){bettyStartRain();bettyStartLips();}
 function stopBettyAnims(){bettyStopRain();bettyStopLips();}
-function showBettyTab(){var sec=document.getElementById('bettySection');if(!sec)return;sec.style.display='block';startBettyAnims();if(bettySets){bettyRender();return;}if(bettyLoading)return;bettyLoading=true;var st=document.getElementById('bettyStatus');if(st)st.textContent='Loading the Betty Plush catalog…';fetch('./data/betty-plush.json').then(function(r){return r.json();}).then(function(j){bettySets=j.sets||[];bettyMeta=j.meta||null;bettyLoading=false;bettyMaybeAddProducts();bettyRender();}).catch(function(){bettyLoading=false;if(st)st.textContent='The Betty Plush catalog could not be loaded. Please reload the page and try again.';});}
-(function(){var grid=document.getElementById('bettyGrid');if(grid){grid.addEventListener('click',function(e){var vb=e.target.closest?e.target.closest('[data-betty-view]'):null;if(vb){bettyOpenPanel(parseInt(vb.getAttribute('data-betty-view'),10));return;}var ex=e.target.closest?e.target.closest('.card-extra'):null;if(ex){var card=ex.closest('.card');if(card)card.classList.toggle('betty-open');}});}var closeBtn=document.getElementById('bettyPanelClose');if(closeBtn)closeBtn.addEventListener('click',bettyClosePanel);var bd=document.getElementById('bettyBackdrop');if(bd)bd.addEventListener('click',bettyClosePanel);document.addEventListener('keydown',function(e){if(e.key==='Escape')bettyClosePanel();});var canvas=document.getElementById('bettyLips');if(canvas){canvas.addEventListener('click',function(e){var idx=bettyScenePick(e);if(idx>=0)bettyOpenPanel(idx);});canvas.addEventListener('mousemove',function(e){var idx=bettyScenePick(e);canvas.style.cursor=idx>=0?'pointer':'default';});}window.addEventListener('resize',function(){if(bettyRainActive)bettyRainResize();});})();
+function showBettyTab(){var sec=document.getElementById('bettySection');if(!sec)return;sec.style.display='block';startBettyAnims();if(bettySets){bettyRender();return;}if(bettyLoading)return;bettyLoading=true;var st=document.getElementById('bettyStatus');if(st)st.textContent='Loading the Betty Plush catalog…';fetch('./data/betty-plush.json').then(function(r){return r.json();}).then(function(j){bettySets=j.sets||[];bettyMeta=j.meta||null;bettyLoading=false;bettyRender();}).catch(function(){bettyLoading=false;if(st)st.textContent='The Betty Plush catalog could not be loaded. Please reload the page and try again.';});}
+(function(){var grid=document.getElementById('bettyGrid');if(grid){grid.addEventListener('click',function(e){var vb=e.target.closest?e.target.closest('[data-betty-view]'):null;if(vb){bettyOpenPanel(parseInt(vb.getAttribute('data-betty-view'),10));return;}var ex=e.target.closest?e.target.closest('.card-extra'):null;if(ex){var card=ex.closest('.card');if(card)card.classList.toggle('betty-open');}});}var closeBtn=document.getElementById('bettyPanelClose');if(closeBtn)closeBtn.addEventListener('click',bettyClosePanel);var bd=document.getElementById('bettyBackdrop');if(bd)bd.addEventListener('click',bettyClosePanel);document.addEventListener('keydown',function(e){if(e.key==='Escape')bettyClosePanel();});window.addEventListener('resize',function(){if(bettyRainActive)bettyRainResize();});})();
 
 
 </script>
 <script>
 document.getElementById('searchInput').addEventListener('input', function(){ bettyRender(); });
 showBettyTab();
+</script>
+
+<script>
+// UPGRADE-V1 3D stage: textured boxes on a drag-to-spin shelf, GLB slot with fallback.
+// No Meshy GLB is included yet. If models/<slug>.glb exists it replaces that soul's box.
+var bettyStageTarget=0, bettyStageAngle=0, bettyStageDragging=false, bettyStageLastX=0, bettyStageMoved=0;
+var bettyStageRaycaster=null, bettyStageCamera=null, bettyStageGroup=null, bettyStagePick=[];
+var bettyStageGlbFiles={"Drippy":"models/pink-drip-bunny.glb","Mendie":"models/button-gingham-monster.glb","Patch":"models/denim-patchwork-monster.glb","Ember Stripe":"models/red-black-stripe-cat-fox.glb","Pixel":"models/black-pink-pixel-bunny.glb","Paws":"models/black-paw-monster.glb","Nightwing Dawn":"models/bat-monster.glb","Listen":"models/pink-white-bunny-purse.glb"};
+function bettyOpenFeatured(i){
+  if(bettySets && bettySets[i]){ bettyOpenPanel(i); return; }
+  // Load catalog first, then open the featured set (featured sets are indices 0-7).
+  if(!bettyLoading){ showBettyTab(); }
+  var tries=0; var t=setInterval(function(){ tries++;
+    if(bettySets && bettySets[i]){ clearInterval(t); bettyOpenPanel(i); }
+    else if(tries>50){ clearInterval(t); }
+  },200);
+}
+var bettyStageStarted=false;
+function bettyStageInit(){
+  if(bettyStageStarted) return; bettyStageStarted=true;
+  var canvas=document.getElementById('bettyStage'); if(!canvas) return;
+  Promise.all([import('three'), import('three/addons/loaders/GLTFLoader.js').catch(function(){return null;})]).then(function(mods){
+    var T=mods[0]; var GLTFLoader=mods[1] && mods[1].GLTFLoader;
+    var renderer=new T.WebGLRenderer({canvas:canvas,antialias:true,alpha:true});
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
+    renderer.shadowMap.enabled=true; renderer.shadowMap.type=T.PCFSoftShadowMap;
+    var scene=new T.Scene();
+    var camera=new T.PerspectiveCamera(42,900/420,0.1,100); camera.position.set(0,2.2,11); camera.lookAt(0,0.6,0);
+    scene.add(new T.AmbientLight(0xffffff,0.75));
+    var sun=new T.DirectionalLight(0xffffff,2.2); sun.position.set(4,8,6); sun.castShadow=true; scene.add(sun);
+    var pink=new T.PointLight(0xff2e88,40,30); pink.position.set(-5,3,5); scene.add(pink);
+    var ground=new T.Mesh(new T.PlaneGeometry(30,30), new T.ShadowMaterial({opacity:0.35}));
+    ground.rotation.x=-Math.PI/2; ground.position.y=-1.1; ground.receiveShadow=true; scene.add(ground);
+    var group=new T.Group(); scene.add(group); bettyStageGroup=group; bettyStageCamera=camera;
+    var loader=new T.TextureLoader();
+    var heroSrcs=["featured/bp-378.jpg","featured/bp-380.jpg","featured/bp-384.jpg","featured/bp-388.jpg","featured/bp-394.jpg","featured/bp-398.jpg","featured/bp-402.jpg","featured/bp-407.jpg"];
+    var names=["Drippy","Mendie","Patch","Ember Stripe","Pixel","Paws","Nightwing Dawn","Listen"];
+    names.forEach(function(name,idx){
+      var a=(idx/names.length)*Math.PI*2;
+      var holder=new T.Group(); holder.position.set(Math.sin(a)*4.6,0,Math.cos(a)*4.6); holder.rotation.y=a+Math.PI;
+      var ped=new T.Mesh(new T.CylinderGeometry(0.85,1.0,0.35,32), new T.MeshStandardMaterial({color:0x1a1a1a,roughness:0.4,metalness:0.3}));
+      ped.position.y=-0.95; ped.castShadow=true; ped.receiveShadow=true; holder.add(ped);
+      var glow=new T.Mesh(new T.TorusGeometry(0.95,0.03,12,48), new T.MeshBasicMaterial({color:0xff6b9d}));
+      glow.rotation.x=Math.PI/2; glow.position.y=-0.76; holder.add(glow);
+      var boxHolder=new T.Group(); boxHolder.position.y=0.45; holder.add(boxHolder);
+      loader.load(heroSrcs[idx], function(tex){
+        if(T.SRGBColorSpace) tex.colorSpace=T.SRGBColorSpace;
+        var face=new T.MeshStandardMaterial({map:tex,roughness:0.55});
+        var side=new T.MeshStandardMaterial({color:0xff2e88,roughness:0.4});
+        var box=new T.Mesh(new T.BoxGeometry(1.5,1.7,0.7), [side,side,side,side,face,face]);
+        box.castShadow=true; box.userData.setIndex=idx; boxHolder.add(box); bettyStagePick.push(box);
+      });
+      // GLB slot: replace the box when a real model exists; 404/error keeps the box.
+      if(GLTFLoader){
+        try{
+          new GLTFLoader().load(bettyStageGlbFiles[name], function(glb){
+            glb.scene.traverse(function(o){ if(o.isMesh){ o.castShadow=true; o.userData.setIndex=idx; bettyStagePick.push(o); } });
+            glb.scene.scale.setScalar(1.1); glb.scene.position.y=-0.4;
+            boxHolder.clear(); boxHolder.add(glb.scene);
+            var note=document.getElementById('bettyStageNote');
+            if(note) note.textContent='3D stage: a real Meshy GLB model is now shown for '+name+'. Other souls still use photo-wrapped boxes until their GLB files arrive.';
+          }, undefined, function(){ /* no GLB yet: keep the photo box, no error shown */ });
+        }catch(e){ /* keep box */ }
+      }
+      group.add(holder);
+    });
+    bettyStageRaycaster=new T.Raycaster();
+    function resize(){
+      var w=canvas.clientWidth||900, h=canvas.clientHeight||420;
+      renderer.setSize(w,h,false); camera.aspect=w/h; camera.updateProjectionMatrix();
+    }
+    resize(); window.addEventListener('resize',resize);
+    canvas.addEventListener('pointerdown',function(e){ bettyStageDragging=true; bettyStageLastX=e.clientX; bettyStageMoved=0; canvas.setPointerCapture(e.pointerId); });
+    canvas.addEventListener('pointermove',function(e){ if(!bettyStageDragging) return; var dx=e.clientX-bettyStageLastX; bettyStageLastX=e.clientX; bettyStageMoved+=Math.abs(dx); bettyStageTarget+=dx*0.005; });
+    function endDrag(e){
+      if(!bettyStageDragging) return; bettyStageDragging=false;
+      if(bettyStageMoved<6 && bettyStageRaycaster){
+        var rect=canvas.getBoundingClientRect();
+        var nx=((e.clientX-rect.left)/rect.width)*2-1, ny=-((e.clientY-rect.top)/rect.height)*2+1;
+        bettyStageRaycaster.setFromCamera({x:nx,y:ny},camera);
+        var hits=bettyStageRaycaster.intersectObjects(bettyStagePick,false);
+        if(hits.length) bettyOpenFeatured(hits[0].object.userData.setIndex);
+      }
+    }
+    canvas.addEventListener('pointerup',endDrag); canvas.addEventListener('pointercancel',function(){bettyStageDragging=false;});
+    var last=performance.now();
+    (function loop(now){
+      requestAnimationFrame(loop);
+      var dt=Math.min(0.05,(now-last)/1000||0.016); last=now;
+      if(!bettyStageDragging) bettyStageTarget+=dt*0.12; // slow auto-spin
+      bettyStageAngle+=(bettyStageTarget-bettyStageAngle)*Math.min(1,dt*6);
+      group.rotation.y=bettyStageAngle;
+      renderer.render(scene,camera);
+    })(last);
+  }).catch(function(){ var n=document.getElementById('bettyStageNote'); if(n) n.textContent='3D stage could not start in this browser. The featured row and catalog cards below still work.'; });
+}
+document.addEventListener('DOMContentLoaded',bettyStageInit);
+if(document.readyState!=='loading') bettyStageInit();
+</script>
+
+<style>
+.betty-pre-btn{min-height:48px;padding:12px 16px;font-size:0.95rem;margin:4px 4px 4px 0;background:rgba(255,46,136,0.3);border:1px solid rgba(255,107,157,0.6);color:#fff;border-radius:20px;cursor:pointer}
+.betty-preorder-list p{line-height:1.9}
+#bettyPreorderModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:9999;align-items:center;justify-content:center;padding:18px}
+#bettyPreorderModal.betty-open{display:flex}
+.betty-modal-box{background:#1a0f16;border:1px solid rgba(255,107,157,0.6);border-radius:16px;padding:22px;max-width:520px;width:100%;color:#fff}
+.betty-modal-box h3{margin:0 0 10px;font-size:1.3rem}
+.betty-modal-box p{line-height:1.6;color:#ddd}
+</style>
+
+<div id="bettyPreorderModal" role="dialog" aria-modal="true" aria-labelledby="bettyPreorderModalTitle">
+<div class="betty-modal-box">
+<h3 id="bettyPreorderModalTitle">Preorder — please read first</h3>
+<p id="bettyPreorderModalItem"></p>
+<p>Preorder — launch is March 25. We can't promise an exact ship date until launch. Your piece is made to order after a sample is approved and a maker quote is in writing. No exact ship date is promised until launch. If the collection is cancelled and your piece never ships, you get your preorder money back in full.</p>
+<div id="bettyPreorderModalStep"></div>
+<p><button class="betty-fund-btn" type="button" onclick="bettyPreorderAccept()">I understand — continue</button> <button class="betty-fund-btn" type="button" onclick="bettyPreorderClose()">Cancel</button></p>
+</div>
+</div>
+<script>
+var bettyPendingPreorder=null;
+function bettyPreorderBuy(soul,piece,price){
+  bettyPendingPreorder={soul:soul,piece:piece,price:price};
+  var item=document.getElementById('bettyPreorderModalItem');
+  if(item) item.textContent=soul+' — '+piece+' — $'+price.toLocaleString('en-US');
+  var step=document.getElementById('bettyPreorderModalStep');
+  if(step) step.innerHTML='';
+  var m=document.getElementById('bettyPreorderModal');
+  if(m) m.classList.add('betty-open');
+}
+function bettyPreorderClose(){
+  bettyPendingPreorder=null;
+  var m=document.getElementById('bettyPreorderModal');
+  if(m) m.classList.remove('betty-open');
+}
+function bettyPreorderAccept(){
+  if(!bettyPendingPreorder) return;
+  var p=bettyPendingPreorder;
+  var step=document.getElementById('bettyPreorderModalStep');
+  if(step) step.innerHTML='<p><strong>DRAFT — placeholder checkout step.</strong> No live payment is taken in this draft. Live Stripe links are added only on Ms GCP\'s approval before any live push. To reserve this piece now, use the reserve button below and we will email you at launch.</p><p><a class="betty-fund-btn" href="mailto:uncommonpope@gmail.com?subject='+encodeURIComponent('Betty Plush preorder reserve — '+p.soul+' '+p.piece+' $'+p.price)+'&body='+encodeURIComponent('Please reserve for me:\nSoul: '+p.soul+'\nPiece: '+p.piece+'\nPrice: $'+p.price+'\nLaunch: March 25, 2027')+'">Reserve by email instead →</a> <button class="betty-fund-btn" type="button" onclick="bettyPreorderClose()">Close</button></p>';
+}
+document.addEventListener('keydown',function(e){ if(e.key==='Escape') bettyPreorderClose(); });
+</script>
+
+<script>
+(function(){
+var target=new Date('2027-03-25T00:00:00-05:00');
+var el=document.getElementById('bettyCountdown');
+if(!el)return;
+function pad(n){return (n<10?'0':'')+n;}
+function tick(){
+var now=new Date();
+var diff=target-now;
+if(diff<=0){el.textContent='Launched! \u2014 March 25, 2027 is here.';return;}
+var d=Math.floor(diff/86400000);
+var h=Math.floor(diff%86400000/3600000);
+var m=Math.floor(diff%3600000/60000);
+var sec=Math.floor(diff%60000/1000);
+el.innerHTML='<span>'+d+' days</span> <span>'+pad(h)+' hrs</span> <span>'+pad(m)+' min</span> <span>'+pad(sec)+' sec</span>';
+}
+tick();
+setInterval(tick,1000);
+})();
 </script>
 </body>
 </html>
