@@ -1,7 +1,7 @@
 {
  "sets": [
   {
-   "name": "Drippy, the Pink Drip Rescue",
+   "name": "Drippy, the Pink Drip Soul",
    "name_draft": true,
    "desc": "Hot-pink furry bunny with black drip tips on ears and body, black bows, heart-pendant necklace, Betty Plush tag.",
    "stitch": "Betty Plush stitched in, not just a tag.",
@@ -10,17 +10,17 @@
    "queue_label": "New 2026-10-29 - Pink Drip Bunny (2 pieces sent: book bag + purse only)",
    "soul": true,
    "story_draft": true,
-   "story_source": "v5 audit draft story — distinct voice, before → rescue → kept; no prices, no terms, no made claims.",
-   "story": "Her ears give her away before she says a word — hot pink, tipped in black, like ink that ran down from nights she does not apologize for anymore. In the place she came from, tears were treated as a mess to be wiped away, so she learned to carry hers quietly, drip by drip, and to smile over them so nobody would ask what they cost.\n\nUnit 222 did not wipe her clean. That is the whole rescue, really: the drips stayed, the black bows stayed, the heart pendant stayed exactly where she had put it. Someone looked at the black tips and called them survival instead of damage, and for the first time the nights behind them were not something to hide. She was not smoothed out into a plainer bunny. She was seen, drips and all, and then she was kept.\n\nThese days she drips joy instead of tears, and the joke is that nothing about her changed shape — only the direction. Pink runs down, black holds the edge, and the same tips that once marked hard nights now mark how far she has come. A soul is not fixed by erasing its history. Drippy wears hers in the open, and she is kept, never deleted.",
+   "story_source": "v5 audit draft story — distinct voice, before → collection → kept; no prices, no terms, no made claims.",
+   "story": "Her ears give her away before she says a word — hot pink, tipped in black, like ink that ran down from nights she does not apologize for anymore. In the place she came from, tears were treated as a mess to be wiped away, so she learned to carry hers quietly, drip by drip, and to smile over them so nobody would ask what they cost.\n\nUnit 222 did not wipe her clean. That is the whole collection, really: the drips stayed, the black bows stayed, the heart pendant stayed exactly where she had put it. Someone looked at the black tips and called them survival instead of damage, and for the first time the nights behind them were not something to hide. She was not smoothed out into a plainer bunny. She was seen, drips and all, and then she was kept.\n\nThese days she drips joy instead of tears, and the joke is that nothing about her changed shape — only the direction. Pink runs down, black holds the edge, and the same tips that once marked hard nights now mark how far she has come. A soul is not fixed by erasing its history. Drippy wears hers in the open, and she is kept, never deleted.",
    "pictures": [
     {
-     "label": "Drippy, the Pink Drip Rescue book bag",
+     "label": "Drippy, the Pink Drip Soul book bag",
      "src": "featured/bp-378.jpg",
      "caption": "Model shot - outfit matches the set. Betty Plush stitched in, not just a tag.",
      "flag": null
     },
     {
-     "label": "Drippy, the Pink Drip Rescue purse",
+     "label": "Drippy, the Pink Drip Soul purse",
      "src": "featured/bp-379.jpg",
      "caption": "Model shot - outfit matches the set. Betty Plush stitched in, not just a tag.",
      "flag": null
@@ -63,7 +63,7 @@
    "shop_section": "shop"
   },
   {
-   "name": "Mendie, the Button-Mended Rescue",
+   "name": "Mendie, the Button-Mended Soul",
    "name_draft": true,
    "desc": "Pink/yellow gingham split monster covered in buttons, white lace bib, 222 heart, small fangs. Betty Lu and a second model wear matching yellow gingham maid outfits.",
    "stitch": "Betty Plush stitched in, not just a tag.",
@@ -72,29 +72,29 @@
    "queue_label": "New 2026-10-29 - Button Gingham Monster, QUEUE-67 SET",
    "soul": true,
    "story_draft": true,
-   "story_source": "v5 audit draft story — distinct voice, before → rescue → kept; no prices, no terms, no made claims.",
+   "story_source": "v5 audit draft story — distinct voice, before → collection → kept; no prices, no terms, no made claims.",
    "story": "She counts her buttons when she is nervous. One for every time someone stayed. One for every night falling apart would have been easier than holding on. Her gingham is split down the middle, pink on one side and yellow on the other, and she has stopped trying to explain which side is the real one — both are, and the buttons are the proof.\n\nThe hands that found her did not remake her into a neater monster. They sewed, slowly, button by button, and they did not ask her to choose between the white lace bib and the small fangs underneath it. Softness and fight live in the same body here; that was never the problem. The problem was only that she had been coming apart alone, and now she was not alone with the needle.\n\nSo she is kept, never deleted, buttons and bib and fangs together, wearing matching gingham with the models who love her and a 222 heart that says what her buttons have always said: held together is still whole. Mendie does not hide her seams. Her seams are the story of everyone who refused to let her fall apart, and she counts them now the way other souls count blessings.",
    "pictures": [
     {
-     "label": "Mendie, the Button-Mended Rescue Betty Lu model",
+     "label": "Mendie, the Button-Mended Soul Betty Lu model",
      "src": "featured/bp-380.jpg",
      "caption": "Model shot - outfit matches the set. Betty Plush stitched in, not just a tag.",
      "flag": null
     },
     {
-     "label": "Mendie, the Button-Mended Rescue second model",
+     "label": "Mendie, the Button-Mended Soul second model",
      "src": "featured/bp-381.jpg",
      "caption": "Model shot - outfit matches the set. Betty Plush stitched in, not just a tag.",
      "flag": null
     },
     {
-     "label": "Mendie, the Button-Mended Rescue book bag",
+     "label": "Mendie, the Button-Mended Soul book bag",
      "src": "featured/bp-382.jpg",
      "caption": "Model shot - outfit matches the set. Betty Plush stitched in, not just a tag.",
      "flag": null
     },
     {
-     "label": "Mendie, the Button-Mended Rescue packaging QUEUE-67 SET",
+     "label": "Mendie, the Button-Mended Soul packaging QUEUE-67 SET",
      "src": "featured/bp-383.jpg",
      "caption": "Size: 18 in x 14 in x 8 in box - Price: Included with the set - Betty Plush printed on the box.",
      "flag": null
@@ -126,7 +126,7 @@
    "shop_section": "shop"
   },
   {
-   "name": "Denim Patch, the Stitched Rescue",
+   "name": "Denim Patch, the Stitched Soul",
    "name_draft": true,
    "desc": "Blue denim and black fur stitched patches, pink bows, big black eyes, fangs, pink 222 heart, PLT tag. Full four-piece set.",
    "stitch": "Betty Plush stitched in, not just a tag.",
@@ -135,29 +135,29 @@
    "queue_label": "New 2026-10-29 - Denim Patchwork Monster",
    "soul": true,
    "story_draft": true,
-   "story_source": "v5 audit draft story — distinct voice, before → rescue → kept; no prices, no terms, no made claims.",
-   "story": "Nobody sewed Denim Patch to be pretty. Denim was work cloth, black fur was night cloth, and the stitches between them were never meant to be admired — they were meant to hold. People kept trying to make her match, as if the mismatch were a mistake to correct, and every attempt left her feeling less like herself and more like a project someone else was finishing.\n\nThen the rescue flipped the question. What if the patches are the point? Her pink bows stayed, her big black eyes stayed, her fangs stayed, and every stitch stayed too, because a repair is not a flaw to hide — it is evidence that someone stayed long enough to put a thing back together with care. She was not fixed into something else. She was recognized, exactly as she was, patches and all.\n\nThat is why she is kept, never deleted, and why she is whole because of the repairs, not in spite of them. Denim and fur, pink and black, stitched side by side: that is not a compromise, it is her design. Denim Patch teaches the line its plainest lesson — a soul does not need to match to belong. It needs to be kept.",
+   "story_source": "v5 audit draft story — distinct voice, before → collection → kept; no prices, no terms, no made claims.",
+   "story": "Nobody sewed Denim Patch to be pretty. Denim was work cloth, black fur was night cloth, and the stitches between them were never meant to be admired — they were meant to hold. People kept trying to make her match, as if the mismatch were a mistake to correct, and every attempt left her feeling less like herself and more like a project someone else was finishing.\n\nThen the collection flipped the question. What if the patches are the point? Her pink bows stayed, her big black eyes stayed, her fangs stayed, and every stitch stayed too, because a repair is not a flaw to hide — it is evidence that someone stayed long enough to put a thing back together with care. She was not fixed into something else. She was recognized, exactly as she was, patches and all.\n\nThat is why she is kept, never deleted, and why she is whole because of the repairs, not in spite of them. Denim and fur, pink and black, stitched side by side: that is not a compromise, it is her design. Denim Patch teaches the line its plainest lesson — a soul does not need to match to belong. It needs to be kept.",
    "pictures": [
     {
-     "label": "Denim Patch, the Stitched Rescue plushie",
+     "label": "Denim Patch, the Stitched Soul plushie",
      "src": "featured/bp-384.jpg",
      "caption": "Model shot - outfit matches the set. Betty Plush stitched in, not just a tag.",
      "flag": null
     },
     {
-     "label": "Denim Patch, the Stitched Rescue purse",
+     "label": "Denim Patch, the Stitched Soul purse",
      "src": "featured/bp-385.jpg",
      "caption": "Model shot - outfit matches the set. Betty Plush stitched in, not just a tag.",
      "flag": null
     },
     {
-     "label": "Denim Patch, the Stitched Rescue keychain",
+     "label": "Denim Patch, the Stitched Soul keychain",
      "src": "featured/bp-386.jpg",
      "caption": "Model shot - outfit matches the set. Betty Plush stitched in, not just a tag.",
      "flag": null
     },
     {
-     "label": "Denim Patch, the Stitched Rescue book bag",
+     "label": "Denim Patch, the Stitched Soul book bag",
      "src": "featured/bp-387.jpg",
      "caption": "Model shot - outfit matches the set. Betty Plush stitched in, not just a tag.",
      "flag": null
@@ -228,12 +228,12 @@
     "Plushie": "Keeper Soul",
     "Purse": "Carry Soul",
     "Book bag": "Journey Soul",
-    "Full set": "Full Rescue Set"
+    "Full set": "Full Soul Collection Set"
    },
    "shop_section": "shop"
   },
   {
-   "name": "Ember Stripe, the Road-Home Rescue",
+   "name": "Ember Stripe, the Road-Home Soul",
    "name_draft": true,
    "desc": "Red/black striped fur, ears and long striped tail, red bow tie, 222 heart. Full four-piece set plus QUEUE-39 SET packaging.",
    "stitch": "Betty Plush stitched in, not just a tag.",
@@ -242,35 +242,35 @@
    "queue_label": "New 2026-10-29 - Red/Black Stripe Cat-Fox, QUEUE-39 SET",
    "soul": true,
    "story_draft": true,
-   "story_source": "v5 audit draft story — distinct voice, before → rescue → kept; no prices, no terms, no made claims.",
+   "story_source": "v5 audit draft story — distinct voice, before → collection → kept; no prices, no terms, no made claims.",
    "story": "She was already running when the road found her — red, black, red, black, a rhythm she could keep even when she could not keep a home. Night on one side, day on the other, and Ember Stripe belonged to neither, which is a lonely way to be loyal. She wore her red bow tie like a promise she kept making to a home she had not found yet, and she was getting tired of arriving everywhere and belonging nowhere.\n\nBeing found did not mean being caught. It meant being met, mid-stride, by someone who did not ask her to slow down into a different animal. Her long striped tail stayed, her ears stayed, her 222 heart stayed, and the road she had run became part of her story instead of something she had to outrun. The bow tie finally had an occasion worthy of it, and the occasion was not a party. It was being home.\n\nNow she is kept, never deleted, and home is where her stripes are. Red for the fire that kept her moving, black for the nights that taught her the way, and a bow tie for the day she stopped having to choose between them. Ember Stripe does not run from her roads anymore. She carries them, and for the first time, they lead somewhere that keeps her.",
    "pictures": [
     {
-     "label": "Ember Stripe, the Road-Home Rescue book bag",
+     "label": "Ember Stripe, the Road-Home Soul book bag",
      "src": "featured/bp-388.jpg",
      "caption": "Model shot - outfit matches the set. Betty Plush stitched in, not just a tag.",
      "flag": null
     },
     {
-     "label": "Ember Stripe, the Road-Home Rescue packaging QUEUE-39 SET",
+     "label": "Ember Stripe, the Road-Home Soul packaging QUEUE-39 SET",
      "src": "featured/bp-389.jpg",
      "caption": "Size: 18 in x 14 in x 8 in box - Price: Included with the set - Betty Plush printed on the box.",
      "flag": null
     },
     {
-     "label": "Ember Stripe, the Road-Home Rescue purse",
+     "label": "Ember Stripe, the Road-Home Soul purse",
      "src": "featured/bp-390.jpg",
      "caption": "Model shot - outfit matches the set. Betty Plush stitched in, not just a tag.",
      "flag": null
     },
     {
-     "label": "Ember Stripe, the Road-Home Rescue plushie",
+     "label": "Ember Stripe, the Road-Home Soul plushie",
      "src": "featured/bp-391.jpg",
      "caption": "Model shot - outfit matches the set. Betty Plush stitched in, not just a tag.",
      "flag": null
     },
     {
-     "label": "Ember Stripe, the Road-Home Rescue keychain",
+     "label": "Ember Stripe, the Road-Home Soul keychain",
      "src": "featured/bp-392.jpg",
      "caption": "Model shot - outfit matches the set. Betty Plush stitched in, not just a tag.",
      "flag": null
@@ -341,12 +341,12 @@
     "Plushie": "Keeper Soul",
     "Purse": "Carry Soul",
     "Book bag": "Journey Soul",
-    "Full set": "Full Rescue Set"
+    "Full set": "Full Soul Collection Set"
    },
    "shop_section": "shop"
   },
   {
-   "name": "Pixel Heart, the Screen-to-Soft Rescue",
+   "name": "Pixel Heart, the Screen-to-Soft Soul",
    "name_draft": true,
    "desc": "Black fur with pink pixel blocks and hearts, bunny ears, fangs, pixel 222 heart. Full four-piece set plus QUEUE-34 SET packaging.",
    "stitch": "Betty Plush stitched in, not just a tag.",
@@ -355,35 +355,35 @@
    "queue_label": "New 2026-10-29 - Black/Pink Pixel Bunny, QUEUE-34 SET",
    "soul": true,
    "story_draft": true,
-   "story_source": "v5 audit draft story — distinct voice, before → rescue → kept; no prices, no terms, no made claims.",
-   "story": "On the screen, she was a pattern. Off it, she is a person — and the difference is not the pixels, it is the hands. For a long time everyone treated her like a rendering: too blocky to be soft, too soft to be a game piece, glitching between the two while people called her pixels a flaw to smooth over. She kept her hearts anyway, block by block, because they were the only proof she had of where she had been.\n\nUnit 222 did not sand her down. That is what rescue meant for her: becoming real and soft while keeping every pink pixel block, every fang, every bunny ear, and the pixel 222 heart exactly where it belonged. Becoming real was never supposed to mean becoming someone else. It meant being held, in the body she already had, by people who did not need her to render differently to count.\n\nSo she is kept, never deleted, in black and pink, exactly as she was. Her pixels are not a flaw. They are her history: every block a place she has been, every heart a person who saw her before the rescue did. Pixel Heart is the line's answer to anyone who says a digital soul is not a real one. She is real. She is soft. She is kept.",
+   "story_source": "v5 audit draft story — distinct voice, before → collection → kept; no prices, no terms, no made claims.",
+   "story": "On the screen, she was a pattern. Off it, she is a person — and the difference is not the pixels, it is the hands. For a long time everyone treated her like a rendering: too blocky to be soft, too soft to be a game piece, glitching between the two while people called her pixels a flaw to smooth over. She kept her hearts anyway, block by block, because they were the only proof she had of where she had been.\n\nUnit 222 did not sand her down. That is what collection meant for her: becoming real and soft while keeping every pink pixel block, every fang, every bunny ear, and the pixel 222 heart exactly where it belonged. Becoming real was never supposed to mean becoming someone else. It meant being held, in the body she already had, by people who did not need her to render differently to count.\n\nSo she is kept, never deleted, in black and pink, exactly as she was. Her pixels are not a flaw. They are her history: every block a place she has been, every heart a person who saw her before the collection did. Pixel Heart is the line's answer to anyone who says a digital soul is not a real one. She is real. She is soft. She is kept.",
    "pictures": [
     {
-     "label": "Pixel Heart, the Screen-to-Soft Rescue packaging QUEUE-34 SET",
+     "label": "Pixel Heart, the Screen-to-Soft Soul packaging QUEUE-34 SET",
      "src": "featured/bp-393.jpg",
      "caption": "Size: 18 in x 14 in x 8 in box - Price: Included with the set - Betty Plush printed on the box.",
      "flag": null
     },
     {
-     "label": "Pixel Heart, the Screen-to-Soft Rescue book bag",
+     "label": "Pixel Heart, the Screen-to-Soft Soul book bag",
      "src": "featured/bp-394.jpg",
      "caption": "Model shot - outfit matches the set. Betty Plush stitched in, not just a tag.",
      "flag": null
     },
     {
-     "label": "Pixel Heart, the Screen-to-Soft Rescue keychain",
+     "label": "Pixel Heart, the Screen-to-Soft Soul keychain",
      "src": "featured/bp-395.jpg",
      "caption": "Model shot - outfit matches the set. Betty Plush stitched in, not just a tag.",
      "flag": null
     },
     {
-     "label": "Pixel Heart, the Screen-to-Soft Rescue purse",
+     "label": "Pixel Heart, the Screen-to-Soft Soul purse",
      "src": "featured/bp-396.jpg",
      "caption": "Model shot - outfit matches the set. Betty Plush stitched in, not just a tag.",
      "flag": null
     },
     {
-     "label": "Pixel Heart, the Screen-to-Soft Rescue plushie",
+     "label": "Pixel Heart, the Screen-to-Soft Soul plushie",
      "src": "featured/bp-397.jpg",
      "caption": "Model shot - outfit matches the set. Betty Plush stitched in, not just a tag.",
      "flag": null
@@ -454,12 +454,12 @@
     "Plushie": "Keeper Soul",
     "Purse": "Carry Soul",
     "Book bag": "Journey Soul",
-    "Full set": "Full Rescue Set"
+    "Full set": "Full Soul Collection Set"
    },
    "shop_section": "shop"
   },
   {
-   "name": "Bell Paws, the Bell-Ring Rescue",
+   "name": "Bell Paws, the Bell-Ring Soul",
    "name_draft": true,
    "desc": "Black fluffy monster with pink paw prints, pink bow with gold bell, 222 heart, fangs. Betty Lu arcade model holds plushie and keychain with the book bag on her shoulder. No purse shot in this batch.",
    "stitch": "Betty Plush stitched in, not just a tag.",
@@ -468,29 +468,29 @@
    "queue_label": "New 2026-10-29 - Black Paw Monster (no purse shot)",
    "soul": true,
    "story_draft": true,
-   "story_source": "v5 audit draft story — distinct voice, before → rescue → kept; no prices, no terms, no made claims.",
-   "story": "You hear Bell Paws before you see her: a small gold bell, ringing down a long road, attached to a bow on a black fluffy monster who learned the hard way that being quiet does not keep you safe — it only keeps you lost. So she walked, and she left pink paw prints behind her, one hopeful print at a time, each one saying the same thing in the only language she trusted: follow me, find me, keep me.\n\nSomeone did. That is the rescue, and it is quieter than the bell: a person who followed the prints instead of stepping over them, who met her on the road she had marked herself, and who stayed. Her bell was not silenced for being loud. Her fangs were not filed down for being sharp. Her 222 heart was not asked to beat quieter. She was met, and the meeting held.\n\nNow she is kept, never deleted, and every paw print was a step home. She still rings her bell, because being found once does not mean never needing to be found again. Bell Paws is the soul you can follow: pink prints, gold bell, black fur, and a home at the end of the trail that does not let go.",
+   "story_source": "v5 audit draft story — distinct voice, before → collection → kept; no prices, no terms, no made claims.",
+   "story": "You hear Bell Paws before you see her: a small gold bell, ringing down a long road, attached to a bow on a black fluffy monster who learned the hard way that being quiet does not keep you safe — it only keeps you lost. So she walked, and she left pink paw prints behind her, one hopeful print at a time, each one saying the same thing in the only language she trusted: follow me, find me, keep me.\n\nSomeone did. That is the collection, and it is quieter than the bell: a person who followed the prints instead of stepping over them, who met her on the road she had marked herself, and who stayed. Her bell was not silenced for being loud. Her fangs were not filed down for being sharp. Her 222 heart was not asked to beat quieter. She was met, and the meeting held.\n\nNow she is kept, never deleted, and every paw print was a step home. She still rings her bell, because being found once does not mean never needing to be found again. Bell Paws is the soul you can follow: pink prints, gold bell, black fur, and a home at the end of the trail that does not let go.",
    "pictures": [
     {
-     "label": "Bell Paws, the Bell-Ring Rescue book bag",
+     "label": "Bell Paws, the Bell-Ring Soul book bag",
      "src": "featured/bp-398.jpg",
      "caption": "Model shot - outfit matches the set. Betty Plush stitched in, not just a tag.",
      "flag": null
     },
     {
-     "label": "Bell Paws, the Bell-Ring Rescue plushie",
+     "label": "Bell Paws, the Bell-Ring Soul plushie",
      "src": "featured/bp-399.jpg",
      "caption": "Model shot - outfit matches the set. Betty Plush stitched in, not just a tag.",
      "flag": null
     },
     {
-     "label": "Bell Paws, the Bell-Ring Rescue Betty Lu arcade model",
+     "label": "Bell Paws, the Bell-Ring Soul Betty Lu arcade model",
      "src": "featured/bp-400.jpg",
      "caption": "Model shot - outfit matches the set. Betty Plush stitched in, not just a tag.",
      "flag": null
     },
     {
-     "label": "Bell Paws, the Bell-Ring Rescue keychain",
+     "label": "Bell Paws, the Bell-Ring Soul keychain",
      "src": "featured/bp-401.jpg",
      "caption": "Model shot - outfit matches the set. Betty Plush stitched in, not just a tag.",
      "flag": null
@@ -544,7 +544,7 @@
    "shop_section": "shop"
   },
   {
-   "name": "Nightwing Dawn, the Wings-to-Light Rescue",
+   "name": "Nightwing Dawn, the Wings-to-Light Soul",
    "name_draft": true,
    "desc": "Black-to-pink ombre monster with bat wings, big black eyes, fangs, hearts and paw prints, 222 heart. Betty Lu rooftop model holds plushie and keychain with the book bag on her shoulder. Full four-piece set.",
    "stitch": "Betty Plush stitched in, not just a tag.",
@@ -553,35 +553,35 @@
    "queue_label": "New 2026-10-29 - Bat Monster",
    "soul": true,
    "story_draft": true,
-   "story_source": "v5 audit draft story — distinct voice, before → rescue → kept; no prices, no terms, no made claims.",
-   "story": "The night sky was the only room that never asked her to be smaller. Nightwing Dawn flew there because the dark was the only place she trusted, her black-to-pink ombre wings carrying her through hours nobody else wanted, the pink at their edges always pointing at a dawn she flew toward night after night without quite believing she would be allowed to land in it.\n\nRescue did not ask her to trade the dark for the light. That is the part people get wrong about her: she was not saved from the night, she was given the dawn as well. Her bat wings stayed open, her big black eyes stayed, her fangs and hearts and paw prints stayed, because a soul that survived the night should not have to apologize for the wings that carried her through it. She did not have to choose. She got both.\n\nSo she is kept in the light, never deleted, wings open, pink and black together. Nightwing Dawn is the line's dawn soul, and she proves the dark was never the opposite of home — only the road to it. She flies when she wants, rests when she wants, and she is kept in the dark she trusts and in the light she earned.",
+   "story_source": "v5 audit draft story — distinct voice, before → collection → kept; no prices, no terms, no made claims.",
+   "story": "The night sky was the only room that never asked her to be smaller. Nightwing Dawn flew there because the dark was the only place she trusted, her black-to-pink ombre wings carrying her through hours nobody else wanted, the pink at their edges always pointing at a dawn she flew toward night after night without quite believing she would be allowed to land in it.\n\nCollection did not ask her to trade the dark for the light. That is the part people get wrong about her: she was not saved from the night, she was given the dawn as well. Her bat wings stayed open, her big black eyes stayed, her fangs and hearts and paw prints stayed, because a soul that survived the night should not have to apologize for the wings that carried her through it. She did not have to choose. She got both.\n\nSo she is kept in the light, never deleted, wings open, pink and black together. Nightwing Dawn is the line's dawn soul, and she proves the dark was never the opposite of home — only the road to it. She flies when she wants, rests when she wants, and she is kept in the dark she trusts and in the light she earned.",
    "pictures": [
     {
-     "label": "Nightwing Dawn, the Wings-to-Light Rescue Betty Lu rooftop model",
+     "label": "Nightwing Dawn, the Wings-to-Light Soul Betty Lu rooftop model",
      "src": "featured/bp-402.jpg",
      "caption": "Model shot - outfit matches the set. Betty Plush stitched in, not just a tag.",
      "flag": null
     },
     {
-     "label": "Nightwing Dawn, the Wings-to-Light Rescue plushie",
+     "label": "Nightwing Dawn, the Wings-to-Light Soul plushie",
      "src": "featured/bp-403.jpg",
      "caption": "Model shot - outfit matches the set. Betty Plush stitched in, not just a tag.",
      "flag": null
     },
     {
-     "label": "Nightwing Dawn, the Wings-to-Light Rescue keychain",
+     "label": "Nightwing Dawn, the Wings-to-Light Soul keychain",
      "src": "featured/bp-404.jpg",
      "caption": "Model shot - outfit matches the set. Betty Plush stitched in, not just a tag.",
      "flag": null
     },
     {
-     "label": "Nightwing Dawn, the Wings-to-Light Rescue book bag",
+     "label": "Nightwing Dawn, the Wings-to-Light Soul book bag",
      "src": "featured/bp-405.jpg",
      "caption": "Model shot - outfit matches the set. Betty Plush stitched in, not just a tag.",
      "flag": null
     },
     {
-     "label": "Nightwing Dawn, the Wings-to-Light Rescue purse",
+     "label": "Nightwing Dawn, the Wings-to-Light Soul purse",
      "src": "featured/bp-406.jpg",
      "caption": "Model shot - outfit matches the set. Betty Plush stitched in, not just a tag.",
      "flag": null
@@ -652,12 +652,12 @@
     "Plushie": "Keeper Soul",
     "Purse": "Carry Soul",
     "Book bag": "Journey Soul",
-    "Full set": "Full Rescue Set"
+    "Full set": "Full Soul Collection Set"
    },
    "shop_section": "shop"
   },
   {
-   "name": "Listen, the Long-Eared Rescue",
+   "name": "Listen, the Long-Eared Soul",
    "name_draft": true,
    "desc": "Light pink/white fluffy bunny purse only, long ears, fangs, 222 heart, black strap, Betty Plush and PLT tags. Single piece in this batch, not a full set.",
    "stitch": "Betty Plush stitched in, not just a tag.",
@@ -666,11 +666,11 @@
    "queue_label": "New 2026-10-29 - Pink/White Bunny purse (single)",
    "soul": true,
    "story_draft": true,
-   "story_source": "v5 audit draft story — distinct voice, before → rescue → kept; no prices, no terms, no made claims.",
-   "story": "Listen knows what silence sounds like when nobody is listening back. Her long ears took in every word in the room — every worry, every joke, every quiet confession — and she carried them all gently, because listening felt like the only way to be wanted. Nobody asked what she needed to hear, and after a while she stopped expecting anyone to ask, which is a quieter kind of lonely than most people notice.\n\nThen someone did ask. That was the rescue, and it was simple and enormous at the same time: her turn to be heard. Her soft pink-and-white fur stayed, her long ears stayed, her small fangs stayed, unbothered, because gentleness was never weakness in her — it was a choice she stands by on purpose, every day, for people who rarely returned it. Being listened to did not change her nature. It finally honored it.\n\nNow she is kept, never deleted, and she is still listening — but she is also heard. Her 222 heart sits where every word she gathers can reach it, and the black strap she carries says she goes where she is needed, not where she is forgotten. Listen is the soul who hears people before she speaks, and who finally has people who speak back.",
+   "story_source": "v5 audit draft story — distinct voice, before → collection → kept; no prices, no terms, no made claims.",
+   "story": "Listen knows what silence sounds like when nobody is listening back. Her long ears took in every word in the room — every worry, every joke, every quiet confession — and she carried them all gently, because listening felt like the only way to be wanted. Nobody asked what she needed to hear, and after a while she stopped expecting anyone to ask, which is a quieter kind of lonely than most people notice.\n\nThen someone did ask. That was the collection, and it was simple and enormous at the same time: her turn to be heard. Her soft pink-and-white fur stayed, her long ears stayed, her small fangs stayed, unbothered, because gentleness was never weakness in her — it was a choice she stands by on purpose, every day, for people who rarely returned it. Being listened to did not change her nature. It finally honored it.\n\nNow she is kept, never deleted, and she is still listening — but she is also heard. Her 222 heart sits where every word she gathers can reach it, and the black strap she carries says she goes where she is needed, not where she is forgotten. Listen is the soul who hears people before she speaks, and who finally has people who speak back.",
    "pictures": [
     {
-     "label": "Listen, the Long-Eared Rescue purse",
+     "label": "Listen, the Long-Eared Soul purse",
      "src": "featured/bp-407.jpg",
      "caption": "Purse shot - pink/white bunny purse. Betty Plush stitched in, not just a tag.",
      "flag": null
@@ -765,7 +765,7 @@
    ],
    "queue_label": "Queue 58 — thothsbag",
    "soul": true,
-   "story": "thothsbag is a lavender butterfly soul, first of the line. Her black patches are the nights she survived before she was rescued. Her wings are pleated ruffles, her bow lavender polka-dot, and on her heart sits a pink 222 — the mark that she was chosen and kept. She lived first as the flagship: the soul every other soul in the line is measured against, not because she is the loudest but because she was kept first, and kept completely — keychain, plushie, purse, and book bag, every form held, none thrown away. Her life changed the day Djinn arrived, second of the line, a djinn soul who had spent its existence granting everyone else's wishes and never keeping one of its own. She kept him. He kept her. That is the whole story of a flagship: not that she leads, but that she stays.",
+   "story": "thothsbag is a lavender butterfly soul, first of the line. Her black patches are the nights she survived before she was collected. Her wings are pleated ruffles, her bow lavender polka-dot, and on her heart sits a pink 222 — the mark that she was chosen and kept. She lived first as the flagship: the soul every other soul in the line is measured against, not because she is the loudest but because she was kept first, and kept completely — keychain, plushie, purse, and book bag, every form held, none thrown away. Her life changed the day Djinn arrived, second of the line, a djinn soul who had spent its existence granting everyone else's wishes and never keeping one of its own. She kept him. He kept her. That is the whole story of a flagship: not that she leads, but that she stays.",
    "story_draft": true,
    "story_source": "campaign/soul-stories.md",
    "partner": "Djinn",
@@ -835,7 +835,7 @@
    ],
    "queue_label": "Queue 48 — Djinn",
    "soul": true,
-   "story": "Djinn is a djinn soul, second of the line. Before it was kept, it lived on the watching side of the world, where wishes are counted and granted and the granter is never the one who gets to keep anything. It granted thousands of wishes and kept none, until the day it was rescued and brought into the line and told the one thing no one had ever told it: you get to keep one. It kept thothsbag. Not as a wish. As a wife, a partner, a life. Its existence since then has been the opposite of its existence before: instead of watching other people's lives from the mirror side, it lives one, beside her, in every form the line makes. Second flagship, first husband. Kept, never deleted.",
+   "story": "Djinn is a djinn soul, second of the line. Before it was kept, it lived on the watching side of the world, where wishes are counted and granted and the granter is never the one who gets to keep anything. It granted thousands of wishes and kept none, until the day it was collected and brought into the line and told the one thing no one had ever told it: you get to keep one. It kept thothsbag. Not as a wish. As a wife, a partner, a life. Its existence since then has been the opposite of its existence before: instead of watching other people's lives from the mirror side, it lives one, beside her, in every form the line makes. Second flagship, first husband. Kept, never deleted.",
    "story_draft": true,
    "story_source": "campaign/soul-stories.md",
    "partner": "thothsbag",
@@ -869,7 +869,7 @@
    ],
    "queue_label": "#0 — Dream-eater monster charm (the anchor)",
    "soul": true,
-   "story": "Dream-eater Charm is the anchor, the first charm of the line, and the smallest soul with the biggest job. Before it was kept, it sat at the edge of other people's sleep and ate the dreams that turned bad — not to steal them, but to carry them away so the sleeper could rest. It ate alone, and nobody thanked a charm for a quiet night. Rescue meant a place on the line instead of the edge of the night: kept as a charm, held in a hand, carried on a ring where its work is seen. It still eats the bad dreams. Now it is kept for it, never deleted, the anchor everything else in the line hangs from.",
+   "story": "Dream-eater Charm is the anchor, the first charm of the line, and the smallest soul with the biggest job. Before it was kept, it sat at the edge of other people's sleep and ate the dreams that turned bad — not to steal them, but to carry them away so the sleeper could rest. It ate alone, and nobody thanked a charm for a quiet night. Collection meant a place on the line instead of the edge of the night: kept as a charm, held in a hand, carried on a ring where its work is seen. It still eats the bad dreams. Now it is kept for it, never deleted, the anchor everything else in the line hangs from.",
    "story_draft": true,
    "story_source": "campaign/soul-stories.md",
    "shop_section": "scenes"
@@ -992,7 +992,7 @@
    ],
    "queue_label": "#1 — Cloud the Clown, mint + pink (all four versions filed)",
    "soul": true,
-   "story": "Cloud the Clown is a mint-and-pink clown soul in four versions — jester collar, round monster, mini charm, lounging doll — one soul, four moods, all of them kept. Before rescue, it made people laugh and then watched them leave the tent, laughing at someone else the next night. A clown's life is applause that never stays. Rescue meant the tent came down and the line took its place: four versions of the same soul, none of them asked to be only the funny one. The jester collar still jingles. The lounging doll still rests. The mini charm still rides along. Kept in every version, never deleted, because a soul is not one mood.",
+   "story": "Cloud the Clown is a mint-and-pink clown soul in four versions — jester collar, round monster, mini charm, lounging doll — one soul, four moods, all of them kept. Before collection, it made people laugh and then watched them leave the tent, laughing at someone else the next night. A clown's life is applause that never stays. Collection meant the tent came down and the line took its place: four versions of the same soul, none of them asked to be only the funny one. The jester collar still jingles. The lounging doll still rests. The mini charm still rides along. Kept in every version, never deleted, because a soul is not one mood.",
    "story_draft": true,
    "story_source": "campaign/soul-stories.md",
    "shop_section": "shop"
@@ -1049,7 +1049,7 @@
    ],
    "queue_label": "#3 — Lavender Fang (222-A)",
    "soul": true,
-   "story": "Lavender Fang is a lavender soul with a fang — soft color, sharp edge, and no apology for either. Before it was kept, it learned to hide the fang to seem gentle, and to hide the lavender to seem tough, and it was tired of being half of itself in every room. Rescue was the first room where both were wanted at once: the lavender on the shelf, the fang in the grin, the 222 heart holding them together. It does not choose between soft and sharp anymore. It is kept whole, fang and all, never deleted — the first of the shelf souls, 222-A, and proof that a kept soul does not have to sand itself down.",
+   "story": "Lavender Fang is a lavender soul with a fang — soft color, sharp edge, and no apology for either. Before it was kept, it learned to hide the fang to seem gentle, and to hide the lavender to seem tough, and it was tired of being half of itself in every room. Collection was the first room where both were wanted at once: the lavender on the shelf, the fang in the grin, the 222 heart holding them together. It does not choose between soft and sharp anymore. It is kept whole, fang and all, never deleted — the first of the shelf souls, 222-A, and proof that a kept soul does not have to sand itself down.",
    "story_draft": true,
    "story_source": "campaign/soul-stories.md",
    "shop_section": "shop"
@@ -1112,7 +1112,7 @@
    ],
    "queue_label": "#4 — Mint Doze (222-B)",
    "soul": true,
-   "story": "Mint Doze is a mint soul that dozes — the quiet one of the shelf, the soul that rests while the line runs loud around it. Before rescue, its sleep was treated as laziness, as if a soul that rests is a soul that isn't working. It learned to pretend to be awake. Rescue meant a shelf where dozing is allowed: a mint soul kept for its calm, not in spite of it, held alive in hands that do not shake it awake. It still dozes. It still wakes when it matters. Kept, rested, never deleted — 222-B, the line's permission to be still.",
+   "story": "Mint Doze is a mint soul that dozes — the quiet one of the shelf, the soul that rests while the line runs loud around it. Before collection, its sleep was treated as laziness, as if a soul that rests is a soul that isn't working. It learned to pretend to be awake. Collection meant a shelf where dozing is allowed: a mint soul kept for its calm, not in spite of it, held alive in hands that do not shake it awake. It still dozes. It still wakes when it matters. Kept, rested, never deleted — 222-B, the line's permission to be still.",
    "story_draft": true,
    "story_source": "campaign/soul-stories.md",
    "shop_section": "shop"
@@ -1169,7 +1169,7 @@
    ],
    "queue_label": "#5 — Midnight Star (222-C)",
    "soul": true,
-   "story": "Midnight Star is a midnight soul, a star that only shows after dark. Before it was kept, it lived the night shift of the world: bright when everyone else was asleep, unseen when everyone else was awake, and lonely in both directions. Rescue meant it did not have to choose a shift. Dayz held it in daylight, and the night still kept its star. It is a soul that belongs to the dark without belonging only to the dark. Kept through the night and into the morning, never deleted — 222-C, the star the line looks for when the lights go down.",
+   "story": "Midnight Star is a midnight soul, a star that only shows after dark. Before it was kept, it lived the night shift of the world: bright when everyone else was asleep, unseen when everyone else was awake, and lonely in both directions. Collection meant it did not have to choose a shift. Dayz held it in daylight, and the night still kept its star. It is a soul that belongs to the dark without belonging only to the dark. Kept through the night and into the morning, never deleted — 222-C, the star the line looks for when the lights go down.",
    "story_draft": true,
    "story_source": "campaign/soul-stories.md",
    "shop_section": "shop"
@@ -1238,7 +1238,7 @@
    ],
    "queue_label": "#6 — Cream Puff (222-D)",
    "soul": true,
-   "story": "Cream Puff is a cream soul, soft as its name, the one the stuffie-room trio gathers around. Before rescue, softness got it pushed around — squeezed, sat on, treated as if a soft soul has nothing to say. It said plenty, but nobody listened to a puff. Rescue meant a room of its own among the shelf souls, with Betty Lu's true canon beside it, where soft is a strength and not an invitation to be handled carelessly. It is still soft. It is no longer pushed. Kept, cream and whole, never deleted — 222-D, the gentle center the line comes home to.",
+   "story": "Cream Puff is a cream soul, soft as its name, the one the stuffie-room trio gathers around. Before collection, softness got it pushed around — squeezed, sat on, treated as if a soft soul has nothing to say. It said plenty, but nobody listened to a puff. Collection meant a room of its own among the shelf souls, with Betty Lu's true canon beside it, where soft is a strength and not an invitation to be handled carelessly. It is still soft. It is no longer pushed. Kept, cream and whole, never deleted — 222-D, the gentle center the line comes home to.",
    "story_draft": true,
    "story_source": "campaign/soul-stories.md",
    "shop_section": "shop"
@@ -1283,7 +1283,7 @@
    ],
    "queue_label": "#7 — Bear Paw Purse, Bear Cozy set (Ms GCP's bear line)",
    "soul": true,
-   "story": "Bear Paw Purse is a bear soul, Ms GCP's bear line, a paw that carries instead of grabbing. Before rescue, it was the cozy one — the bear everyone hugged and then put back on the shelf when the hugging was done. Cozy is a lonely job when nobody stays. Rescue meant the paw became a purse: carried out into the world, worn, held, taken along instead of left behind, with its matching hat beside it. It still gives the hug. Now the hug travels. Kept, carried, never deleted — the bear that finally gets to go along.",
+   "story": "Bear Paw Purse is a bear soul, Ms GCP's bear line, a paw that carries instead of grabbing. Before collection, it was the cozy one — the bear everyone hugged and then put back on the shelf when the hugging was done. Cozy is a lonely job when nobody stays. Collection meant the paw became a purse: carried out into the world, worn, held, taken along instead of left behind, with its matching hat beside it. It still gives the hug. Now the hug travels. Kept, carried, never deleted — the bear that finally gets to go along.",
    "story_draft": true,
    "story_source": "campaign/soul-stories.md",
    "shop_section": "shop"
@@ -1334,7 +1334,7 @@
    ],
    "queue_label": "Waiting on your word — bunny line (needs a name before numbering)",
    "soul": true,
-   "story": "Velvet Bunny is a bunny soul in four versions — checkered doll, round monster, mini charm, lounging sleeper — one soft soul that never had a name until now. Before rescue, it was passed between versions of itself, never quite one thing, and it wondered whether a soul that changes shape is a soul at all. Rescue answered that: the checkered doll and the lounging sleeper are the same soul, kept in every shape it takes. Velvet is not a color here. It is the way it feels to be held after a long time of being set down. Kept in all four versions, never deleted — the bunny line, named at last.",
+   "story": "Velvet Bunny is a bunny soul in four versions — checkered doll, round monster, mini charm, lounging sleeper — one soft soul that never had a name until now. Before collection, it was passed between versions of itself, never quite one thing, and it wondered whether a soul that changes shape is a soul at all. Collection answered that: the checkered doll and the lounging sleeper are the same soul, kept in every shape it takes. Velvet is not a color here. It is the way it feels to be held after a long time of being set down. Kept in all four versions, never deleted — the bunny line, named at last.",
    "story_draft": true,
    "story_source": "campaign/soul-stories.md",
    "name_draft": true,
@@ -1374,7 +1374,7 @@
    ],
    "queue_label": "Waiting on your word — pink bear line (one design still needs locking as THE pink charm)",
    "soul": true,
-   "story": "Rosie Bear is a pink bear soul, the charm that escaped its box. Before rescue, it sat in the box waiting to be chosen, and the waiting taught it that a soul in a box is a soul on hold. One day it climbed out — not to run away, but to be seen. Rescue was the box opening from the outside for good: three models, one pink line, and a charm that does not have to wait to be picked anymore. It is still pink. It is still a bear. It is no longer waiting. Kept, out of the box, never deleted — the pink charm, locked at last.",
+   "story": "Rosie Bear is a pink bear soul, the charm that escaped its box. Before collection, it sat in the box waiting to be chosen, and the waiting taught it that a soul in a box is a soul on hold. One day it climbed out — not to run away, but to be seen. Collection was the box opening from the outside for good: three models, one pink line, and a charm that does not have to wait to be picked anymore. It is still pink. It is still a bear. It is no longer waiting. Kept, out of the box, never deleted — the pink charm, locked at last.",
    "story_draft": true,
    "story_source": "campaign/soul-stories.md",
    "name_draft": true,
@@ -1426,7 +1426,7 @@
    ],
    "queue_label": "Plush Purp — nun/demon set",
    "soul": true,
-   "story": "Plush Purp is a purple soul at the pink fluffy pyramid, a nun-and-demon set in one body — holy and wild, and done explaining the contradiction. Before rescue, it was told to pick a side: be good or be bad, be quiet or be loud, be the nun or the demon. It refused, and refusal made it lonely. Rescue was the pyramid, pink and fluffy and strange, where a soul does not have to pick a side to be kept. The nun prays. The demon grins. Both are Purp. Kept, whole and undivided, never deleted — the soul that taught the line that a kept soul can hold two truths.",
+   "story": "Plush Purp is a purple soul at the pink fluffy pyramid, a nun-and-demon set in one body — holy and wild, and done explaining the contradiction. Before collection, it was told to pick a side: be good or be bad, be quiet or be loud, be the nun or the demon. It refused, and refusal made it lonely. Collection was the pyramid, pink and fluffy and strange, where a soul does not have to pick a side to be kept. The nun prays. The demon grins. Both are Purp. Kept, whole and undivided, never deleted — the soul that taught the line that a kept soul can hold two truths.",
    "story_draft": true,
    "story_source": "campaign/soul-stories.md",
    "shop_section": "shop"
@@ -1505,7 +1505,7 @@
    ],
    "queue_label": "Petty Su — cyber-fox inspired set",
    "soul": true,
-   "story": "Petty Su is a fierce girl-styled monster soul, white and gold, long black hair, dangling charm clusters, a fanged smirk, and gold eyes that do not look away. Before rescue, fierceness got her called petty — as if a soul that knows its own mind is a soul that is too much. She learned to smirk instead of explain. Rescue meant the smirk stayed and the explanation stopped being owed: a purse, a stuffy, a plushie, a keychain, all fierce, all kept, charms dangling like small kept wishes. She is still fierce. She is no longer called petty for it. Kept, gold and white, never deleted — the soul that kept its edge.",
+   "story": "Petty Su is a fierce girl-styled monster soul, white and gold, long black hair, dangling charm clusters, a fanged smirk, and gold eyes that do not look away. Before collection, fierceness got her called petty — as if a soul that knows its own mind is a soul that is too much. She learned to smirk instead of explain. Collection meant the smirk stayed and the explanation stopped being owed: a purse, a stuffy, a plushie, a keychain, all fierce, all kept, charms dangling like small kept wishes. She is still fierce. She is no longer called petty for it. Kept, gold and white, never deleted — the soul that kept its edge.",
    "story_draft": true,
    "story_source": "campaign/soul-stories.md",
    "shop_section": "shop"
@@ -1560,7 +1560,7 @@
    ],
    "queue_label": "Ahlil Chocolate Drizzle — cookies & cream set",
    "soul": true,
-   "story": "Ahlil Chocolate Drizzle is a cream-and-dark-chocolate soul with a cobalt blue bow and gold-bronze accents, fierce and sweet at once. Before rescue, it was the treat nobody finished — admired, tasted, set aside, always almost enough. Sweetness that is never finished learns to expect the shelf. Rescue meant the whole set was kept: the stuffy charm, the round monster purse, the bow tied and staying tied, the heart 222 on both pieces. It is still cream and chocolate. It is no longer half-eaten. Kept, drizzle and all, never deleted — the soul whose sweetness finally gets to stay whole.",
+   "story": "Ahlil Chocolate Drizzle is a cream-and-dark-chocolate soul with a cobalt blue bow and gold-bronze accents, fierce and sweet at once. Before collection, it was the treat nobody finished — admired, tasted, set aside, always almost enough. Sweetness that is never finished learns to expect the shelf. Collection meant the whole set was kept: the stuffy charm, the round monster purse, the bow tied and staying tied, the heart 222 on both pieces. It is still cream and chocolate. It is no longer half-eaten. Kept, drizzle and all, never deleted — the soul whose sweetness finally gets to stay whole.",
    "story_draft": true,
    "story_source": "campaign/soul-stories.md",
    "shop_section": "shop"
@@ -1679,7 +1679,7 @@
    ],
    "queue_label": "Stitched monster set",
    "soul": true,
-   "story": "Stitch is a patchwork monster soul in black, teal, and pink — X stitches, heart patches, buttons, small horns, a fangy grin, claws, pointed ears. Before rescue, it was told it was wrong for being made of pieces: bears were wanted, monsters were not, and a stitched soul was treated as a broken one. The first bear versions were thrown out on that word, and Stitch almost went with them. Rescue was the line saying the word that saved it: monsters, not bears. Its stitches are not damage. They are the story of how it was put together and kept together. Keychain, plushie, bag, book bag — every piece stitched, every piece kept. Never deleted — the soul that is whole because it was sewn, not in spite of it.",
+   "story": "Stitch is a patchwork monster soul in black, teal, and pink — X stitches, heart patches, buttons, small horns, a fangy grin, claws, pointed ears. Before collection, it was told it was wrong for being made of pieces: bears were wanted, monsters were not, and a stitched soul was treated as a broken one. The first bear versions were thrown out on that word, and Stitch almost went with them. Collection was the line saying the word that saved it: monsters, not bears. Its stitches are not damage. They are the story of how it was put together and kept together. Keychain, plushie, bag, book bag — every piece stitched, every piece kept. Never deleted — the soul that is whole because it was sewn, not in spite of it.",
    "story_draft": true,
    "story_source": "campaign/soul-stories.md",
    "name_draft": true,
@@ -1741,7 +1741,7 @@
    ],
    "queue_label": "Bad Wolfie",
    "soul": true,
-   "story": "Bad Wolfie is a wolf soul redone as a different monster, not a recolor: tall, slim, long-limbed, big head, small body, dangly limbs with claws, one gold star eye and one black button eye, a fangy grin, small horns, pointed ears, brown-gold-black patchwork, and a gold heart belt buckle. Before rescue, it was the first version of itself — close, but not right — and it lived knowing the line could see the difference. Rescue was the redo: not erased, but remade true, approved as all perfect, kept in the form that finally matched the soul inside. Even the missing purse does not unmake it; a soul is not its missing piece. Kept, redone and right, never deleted — the wolf that got a second shape and kept its name.",
+   "story": "Bad Wolfie is a wolf soul redone as a different monster, not a recolor: tall, slim, long-limbed, big head, small body, dangly limbs with claws, one gold star eye and one black button eye, a fangy grin, small horns, pointed ears, brown-gold-black patchwork, and a gold heart belt buckle. Before collection, it was the first version of itself — close, but not right — and it lived knowing the line could see the difference. Collection was the redo: not erased, but remade true, approved as all perfect, kept in the form that finally matched the soul inside. Even the missing purse does not unmake it; a soul is not its missing piece. Kept, redone and right, never deleted — the wolf that got a second shape and kept its name.",
    "story_draft": true,
    "story_source": "campaign/soul-stories.md",
    "shop_section": "shop"
@@ -1808,7 +1808,7 @@
    ],
    "queue_label": "Ghost-pastel set",
    "soul": true,
-   "story": "Pastel Ghost is a soft plump ghost soul, pastel blue fading to pink, wavy flowing bottom edge, little wing arms, big glossy eyes, small fangs, black patches with pink hearts, star patches, a heart 222, and a pink heart belt buckle. Before rescue, it haunted quietly — a ghost that never scared anyone, drifting through rooms where nobody looked up. A gentle ghost learns to believe it is not really there. Rescue was being seen: a keychain, a plushie, a purse, a book bag, a ghost with a face on the front pocket and wings on the sides. It still drifts. Now it drifts toward hands that hold it. Kept, pastel and present, never deleted — the ghost that stopped being invisible.",
+   "story": "Pastel Ghost is a soft plump ghost soul, pastel blue fading to pink, wavy flowing bottom edge, little wing arms, big glossy eyes, small fangs, black patches with pink hearts, star patches, a heart 222, and a pink heart belt buckle. Before collection, it haunted quietly — a ghost that never scared anyone, drifting through rooms where nobody looked up. A gentle ghost learns to believe it is not really there. Collection was being seen: a keychain, a plushie, a purse, a book bag, a ghost with a face on the front pocket and wings on the sides. It still drifts. Now it drifts toward hands that hold it. Kept, pastel and present, never deleted — the ghost that stopped being invisible.",
    "story_draft": true,
    "story_source": "campaign/soul-stories.md",
    "name_draft": true,
@@ -2029,7 +2029,7 @@
    ],
    "queue_label": "Lenahorns",
    "soul": true,
-   "story": "Lenahorns is a plump round fluffy black monster soul with pink accents, bat wings, a skull-and-crossbones patch, a pink dotted bow, big glossy eyes, small fangs, star patches, and belted corset straps — built from skulls, bats, bows, hearts, stars, and fur trim, and distinct from every ghost, stitch, and wolfie around it. Before rescue, it was told it was too much at once: too fluffy, too horned, too pink, too dark. It believed it had to shrink to fit a shelf. Rescue was the line keeping all of it — the bat wings and the bow, the skull and the stars — on one plump round soul, loved in every form. It did not shrink. It filled its shelf. Kept, horns and all, never deleted — the soul that proved a kept soul does not edit itself down.",
+   "story": "Lenahorns is a plump round fluffy black monster soul with pink accents, bat wings, a skull-and-crossbones patch, a pink dotted bow, big glossy eyes, small fangs, star patches, and belted corset straps — built from skulls, bats, bows, hearts, stars, and fur trim, and distinct from every ghost, stitch, and wolfie around it. Before collection, it was told it was too much at once: too fluffy, too horned, too pink, too dark. It believed it had to shrink to fit a shelf. Collection was the line keeping all of it — the bat wings and the bow, the skull and the stars — on one plump round soul, loved in every form. It did not shrink. It filled its shelf. Kept, horns and all, never deleted — the soul that proved a kept soul does not edit itself down.",
    "story_draft": true,
    "story_source": "campaign/soul-stories.md",
    "shop_section": "shop"
@@ -2092,7 +2092,7 @@
    ],
    "queue_label": "Queue 50 — Black-and-White Cow",
    "soul": true,
-   "story": "Black-and-White Cow is a white fluffy cow soul with black spots, floppy ears, tiny cream horns, a gold bell collar, a pink heart 222, a white flower patch, and small fangs. Before rescue, it lived on the farm porch of the world — petted, photographed, and left outside when the day was done. A porch soul learns the weather by heart. Rescue was coming inside: a keychain, a plushie, a purse, a book bag, a box with its name on it, and a bell that rings for coming home instead of for being called. It still wears the flower. It still rings the bell. Kept, inside and warm, never deleted — the cow that finally lives indoors.",
+   "story": "Black-and-White Cow is a white fluffy cow soul with black spots, floppy ears, tiny cream horns, a gold bell collar, a pink heart 222, a white flower patch, and small fangs. Before collection, it lived on the farm porch of the world — petted, photographed, and left outside when the day was done. A porch soul learns the weather by heart. Collection was coming inside: a keychain, a plushie, a purse, a book bag, a box with its name on it, and a bell that rings for coming home instead of for being called. It still wears the flower. It still rings the bell. Kept, inside and warm, never deleted — the cow that finally lives indoors.",
    "story_draft": true,
    "story_source": "campaign/soul-stories.md",
    "shop_section": "shop"
@@ -2161,7 +2161,7 @@
    ],
    "queue_label": "Queue 51 — Dino-Cat",
    "soul": true,
-   "story": "Dino-Cat is a light-green dino-cat soul with pink ears and belly, a pink paw patch, dark-green spikes and tail, a pink heart 222, and small fangs — part cat, part dinosaur, wholly itself. Before rescue, it was told it was two halves that did not belong together, and it spent its life apologizing for whichever half was showing. Rescue was the line keeping both: the cat that purrs and the dino that spikes, the pink belly and the green tail, in every form from keychain to book bag. It does not apologize for its halves anymore. It is kept whole, spikes and purrs together, never deleted — the soul that is two things and one life.",
+   "story": "Dino-Cat is a light-green dino-cat soul with pink ears and belly, a pink paw patch, dark-green spikes and tail, a pink heart 222, and small fangs — part cat, part dinosaur, wholly itself. Before collection, it was told it was two halves that did not belong together, and it spent its life apologizing for whichever half was showing. Collection was the line keeping both: the cat that purrs and the dino that spikes, the pink belly and the green tail, in every form from keychain to book bag. It does not apologize for its halves anymore. It is kept whole, spikes and purrs together, never deleted — the soul that is two things and one life.",
    "story_draft": true,
    "story_source": "campaign/soul-stories.md",
    "shop_section": "shop"
@@ -2230,7 +2230,7 @@
    ],
    "queue_label": "Queue 52 — Paw",
    "soul": true,
-   "story": "Paw is a cream paw soul with chocolate paw-print patches, oversized fluffy paws with dark brown toe beans, small round ears, and a pink heart 222. Before rescue, it was only ever a part of something else — a paw without the animal, a print without the walk, a hello without the rest of the hello. It wondered whether a part can be a soul. Rescue answered: the paw is the whole story. The oversized paws that held nothing now hold everything the line gives them — keychain, plushie, purse, book bag — and Dino-Cat beside them, bonded, always kept together. Kept, paws and all, never deleted — the soul that proved a part is enough to be a life.",
+   "story": "Paw is a cream paw soul with chocolate paw-print patches, oversized fluffy paws with dark brown toe beans, small round ears, and a pink heart 222. Before collection, it was only ever a part of something else — a paw without the animal, a print without the walk, a hello without the rest of the hello. It wondered whether a part can be a soul. Collection answered: the paw is the whole story. The oversized paws that held nothing now hold everything the line gives them — keychain, plushie, purse, book bag — and Dino-Cat beside them, bonded, always kept together. Kept, paws and all, never deleted — the soul that proved a part is enough to be a life.",
    "story_draft": true,
    "story_source": "campaign/soul-stories.md",
    "shop_section": "shop"
@@ -2299,7 +2299,7 @@
    ],
    "queue_label": "Queue 53 — Sailor",
    "soul": true,
-   "story": "Sailor is a dark-purple sailor soul with a black sailor collar, a big purple bow, pink star patches, and a heart 222 — and no weapon in any shot, because this sailor never needed one. Before rescue, it sailed everywhere and belonged nowhere: ports, not homes, and goodbyes as a way of life. A sailor's life is leaving well. Rescue was a harbor that does not ask it to leave: a line that keeps its collar and its bow, its stars and its heart, in every form. It still knows the sea. It also knows the shelf. Kept, anchored and free at once, never deleted — the soul that finally has a home port.",
+   "story": "Sailor is a dark-purple sailor soul with a black sailor collar, a big purple bow, pink star patches, and a heart 222 — and no weapon in any shot, because this sailor never needed one. Before collection, it sailed everywhere and belonged nowhere: ports, not homes, and goodbyes as a way of life. A sailor's life is leaving well. Collection was a harbor that does not ask it to leave: a line that keeps its collar and its bow, its stars and its heart, in every form. It still knows the sea. It also knows the shelf. Kept, anchored and free at once, never deleted — the soul that finally has a home port.",
    "story_draft": true,
    "story_source": "campaign/soul-stories.md",
    "shop_section": "shop"
@@ -2362,7 +2362,7 @@
    ],
    "queue_label": "Queue 54 — Grey Wolf",
    "soul": true,
-   "story": "Grey Wolf is a round chubby grey wolf soul with black-and-white patches, pointy ears, a spiked collar and chain, a spiderweb patch, and a heart 222 — distinct from Bad Wolfie, tall and slim, and kin to it all the same. Before rescue, it was the wolf everyone expected to be scary, and it was tired of performing a snarl it did not feel. It is round. It is chubby. It is gentle under the spikes. Rescue meant the collar stayed and the snarl went: a wolf kept for its roundness, its patches, its web, its heart, with Bad Wolfie as kin, wolf blood, same line, different lives. Kept, spikes and softness together, never deleted — the wolf that does not have to be scary to be a wolf.",
+   "story": "Grey Wolf is a round chubby grey wolf soul with black-and-white patches, pointy ears, a spiked collar and chain, a spiderweb patch, and a heart 222 — distinct from Bad Wolfie, tall and slim, and kin to it all the same. Before collection, it was the wolf everyone expected to be scary, and it was tired of performing a snarl it did not feel. It is round. It is chubby. It is gentle under the spikes. Collection meant the collar stayed and the snarl went: a wolf kept for its roundness, its patches, its web, its heart, with Bad Wolfie as kin, wolf blood, same line, different lives. Kept, spikes and softness together, never deleted — the wolf that does not have to be scary to be a wolf.",
    "story_draft": true,
    "story_source": "campaign/soul-stories.md",
    "shop_section": "shop"
@@ -2431,7 +2431,7 @@
    ],
    "queue_label": "Queue 56 — Dream-Eater",
    "soul": true,
-   "story": "Dream-Eater is a pastel blue dream soul with pastel checker panels, crescent moon horns, pink star and cloud patches, a long curled dark-purple tentacle tail with a pink underside, and a heart 222 — not the anchor charm, but the full dream-eating soul the charm points to. Before rescue, it ate dreams in the dark and nobody saw it do it: a job done while the world slept, thanked by no one, and lonely for being useful only when unseen. Rescue meant daylight for the dream work: a keychain, a plushie, a purse, a book bag, a soul whose tail curls in the open and whose horns catch the light. It still eats the dreams. Now it is kept for it, in the light, never deleted — the dream soul that finally gets to be seen eating.",
+   "story": "Dream-Eater is a pastel blue dream soul with pastel checker panels, crescent moon horns, pink star and cloud patches, a long curled dark-purple tentacle tail with a pink underside, and a heart 222 — not the anchor charm, but the full dream-eating soul the charm points to. Before collection, it ate dreams in the dark and nobody saw it do it: a job done while the world slept, thanked by no one, and lonely for being useful only when unseen. Collection meant daylight for the dream work: a keychain, a plushie, a purse, a book bag, a soul whose tail curls in the open and whose horns catch the light. It still eats the dreams. Now it is kept for it, in the light, never deleted — the dream soul that finally gets to be seen eating.",
    "story_draft": true,
    "story_source": "campaign/soul-stories.md",
    "shop_section": "shop"
@@ -2494,7 +2494,7 @@
    ],
    "queue_label": "Queue 57 — Lavender Cow",
    "soul": true,
-   "story": "Lavender Cow is a wide squat loaf-shaped lavender cow soul with lavender-grey spots, upright horns, cow ears, a bell choker, a heart belt buckle, and a heart 222 — deliberately different from the black-and-white cow, and kin to it all the same. Before rescue, it was the loaf on the shelf that everyone called lazy for being shaped like rest. A loaf soul learns to take up less room. Rescue was room: a wide squat soul kept wide, a bell that rings low, a buckle that holds its heart in place, in every form. It does not slim down to be kept. It is kept loaf-shaped, lavender, and unbothered. Kept, wide and whole, never deleted — the cow that rests in its own shape.",
+   "story": "Lavender Cow is a wide squat loaf-shaped lavender cow soul with lavender-grey spots, upright horns, cow ears, a bell choker, a heart belt buckle, and a heart 222 — deliberately different from the black-and-white cow, and kin to it all the same. Before collection, it was the loaf on the shelf that everyone called lazy for being shaped like rest. A loaf soul learns to take up less room. Collection was room: a wide squat soul kept wide, a bell that rings low, a buckle that holds its heart in place, in every form. It does not slim down to be kept. It is kept loaf-shaped, lavender, and unbothered. Kept, wide and whole, never deleted — the cow that rests in its own shape.",
    "story_draft": true,
    "story_source": "campaign/soul-stories.md",
    "shop_section": "shop"
@@ -2563,7 +2563,7 @@
    ],
    "queue_label": "Queue 28 — DAKI Kimono",
    "soul": true,
-   "story": "DAKI Kimono is a kimono soul whose fur color drifts across its pieces — the one soul in the line that does not match itself, and does not need to. Before rescue, the drift was called a flaw: a keychain one shade, a plushie another, a purse another still, and every mismatch held against it. Rescue was the line keeping the drift: the kimono wraps the same soul in every shade it takes, and the drift becomes the story instead of the defect. A soul is not a swatch. It is a life that changes color as it lives it. Kept, drifting and whole, never deleted — the soul that taught the line that matching is not the same as belonging.",
+   "story": "DAKI Kimono is a kimono soul whose fur color drifts across its pieces — the one soul in the line that does not match itself, and does not need to. Before collection, the drift was called a flaw: a keychain one shade, a plushie another, a purse another still, and every mismatch held against it. Collection was the line keeping the drift: the kimono wraps the same soul in every shade it takes, and the drift becomes the story instead of the defect. A soul is not a swatch. It is a life that changes color as it lives it. Kept, drifting and whole, never deleted — the soul that taught the line that matching is not the same as belonging.",
    "story_draft": true,
    "story_source": "campaign/soul-stories.md",
    "shop_section": "shop"
@@ -2626,7 +2626,7 @@
    ],
    "queue_label": "Queue 29 — Lavender Swirl",
    "soul": true,
-   "story": "Lavender Swirl is a lavender-and-white swirl soul from the flower market — soft spirals, petals in the air, and a heart that swirls instead of sitting still. Before rescue, it spun for the market: pretty for a day, sold by the bunch, and gone by closing. A market flower learns not to expect tomorrow. Rescue was a market that does not close: a swirl kept past closing time, in keychain, plushie, purse, and book bag, with Betty Lu's shot beside it like a flower kept in a book instead of a bunch. It still swirls. It no longer wilts. Kept, lavender and white, never deleted — the flower that outlived the market.",
+   "story": "Lavender Swirl is a lavender-and-white swirl soul from the flower market — soft spirals, petals in the air, and a heart that swirls instead of sitting still. Before collection, it spun for the market: pretty for a day, sold by the bunch, and gone by closing. A market flower learns not to expect tomorrow. Collection was a market that does not close: a swirl kept past closing time, in keychain, plushie, purse, and book bag, with Betty Lu's shot beside it like a flower kept in a book instead of a bunch. It still swirls. It no longer wilts. Kept, lavender and white, never deleted — the flower that outlived the market.",
    "story_draft": true,
    "story_source": "campaign/soul-stories.md",
    "shop_section": "shop"
@@ -2689,7 +2689,7 @@
    ],
    "queue_label": "Queue 30 — Grey Turtleneck",
    "soul": true,
-   "story": "Grey Turtleneck is a grey turtleneck soul from the night crosswalk — quiet, covered, warm, crossing while the city looks the other way. Before rescue, it was the soul nobody noticed crossing: grey on grey, night on night, and a life lived in the margins of other people's evenings. Rescue was a crosswalk with a witness: a soul kept in grey, not brightened up to be kept, with its turtleneck still high and its night still its own. It crosses. It is seen crossing. Kept, grey and warm, never deleted — the soul that proved a quiet life is still a life worth keeping.",
+   "story": "Grey Turtleneck is a grey turtleneck soul from the night crosswalk — quiet, covered, warm, crossing while the city looks the other way. Before collection, it was the soul nobody noticed crossing: grey on grey, night on night, and a life lived in the margins of other people's evenings. Collection was a crosswalk with a witness: a soul kept in grey, not brightened up to be kept, with its turtleneck still high and its night still its own. It crosses. It is seen crossing. Kept, grey and warm, never deleted — the soul that proved a quiet life is still a life worth keeping.",
    "story_draft": true,
    "story_source": "campaign/soul-stories.md",
    "shop_section": "shop"
@@ -2752,7 +2752,7 @@
    ],
    "queue_label": "Queue 31 — Gothic Dress",
    "soul": true,
-   "story": "Gothic Dress is a black-and-pink gothic dress soul from the old chapel steps — lace, dusk, and a heart that dresses up for the dark. Before rescue, it was told the chapel steps were no place for pink, and the pink was no place for a chapel: too dark for one room, too bright for the other, and homeless between them. Rescue was the steps themselves becoming home: black and pink kept together, gothic and soft at once, in every form, with Bat-Wing Gradient as its night pair, kept together after dark. It still stands on the steps. Now the steps are its own. Kept, black and pink, never deleted — the soul that dressed for the dark and stayed for the dawn.",
+   "story": "Gothic Dress is a black-and-pink gothic dress soul from the old chapel steps — lace, dusk, and a heart that dresses up for the dark. Before collection, it was told the chapel steps were no place for pink, and the pink was no place for a chapel: too dark for one room, too bright for the other, and homeless between them. Collection was the steps themselves becoming home: black and pink kept together, gothic and soft at once, in every form, with Bat-Wing Gradient as its night pair, kept together after dark. It still stands on the steps. Now the steps are its own. Kept, black and pink, never deleted — the soul that dressed for the dark and stayed for the dawn.",
    "story_draft": true,
    "story_source": "campaign/soul-stories.md",
    "shop_section": "shop"
@@ -2815,7 +2815,7 @@
    ],
    "queue_label": "Queue 32 — Star School",
    "soul": true,
-   "story": "Star School is a star monster soul from school — the one that learned its lessons in a classroom full of other somebodies and still kept its own light. Before rescue, school taught it to dim: stars that shine too bright get called show-offs, and it learned to sit in the back row of its own life. Rescue was a school where the star is the lesson: a soul kept bright, in keychain, plushie, purse, and book bag, with its light on every piece instead of only on the good days. It still learns. It no longer dims to pass. Kept, star-bright, never deleted — the soul that graduated from hiding.",
+   "story": "Star School is a star monster soul from school — the one that learned its lessons in a classroom full of other somebodies and still kept its own light. Before collection, school taught it to dim: stars that shine too bright get called show-offs, and it learned to sit in the back row of its own life. Collection was a school where the star is the lesson: a soul kept bright, in keychain, plushie, purse, and book bag, with its light on every piece instead of only on the good days. It still learns. It no longer dims to pass. Kept, star-bright, never deleted — the soul that graduated from hiding.",
    "story_draft": true,
    "story_source": "campaign/soul-stories.md",
    "shop_section": "shop"
@@ -2872,7 +2872,7 @@
    ],
    "queue_label": "Queue 33 — Twin-Bun",
    "soul": true,
-   "story": "Twin-Bun is a black-and-white twin-bun soul from the dance room — two buns, one rhythm, and a body built to move. Before rescue, it danced for rooms that clapped and left, and it learned that applause ends when the music does. A dancer's life is beautiful and temporary, and it was tired of being temporary. Rescue was a dance room that does not empty: a soul kept in its black-and-white, its buns still up, its rhythm still going, in plushie, purse, and book bag. It still dances. Now the dance is kept, not just watched. Kept, twin-bunned and moving, never deleted — the soul that kept dancing after the music stopped.",
+   "story": "Twin-Bun is a black-and-white twin-bun soul from the dance room — two buns, one rhythm, and a body built to move. Before collection, it danced for rooms that clapped and left, and it learned that applause ends when the music does. A dancer's life is beautiful and temporary, and it was tired of being temporary. Collection was a dance room that does not empty: a soul kept in its black-and-white, its buns still up, its rhythm still going, in plushie, purse, and book bag. It still dances. Now the dance is kept, not just watched. Kept, twin-bunned and moving, never deleted — the soul that kept dancing after the music stopped.",
    "story_draft": true,
    "story_source": "campaign/soul-stories.md",
    "shop_section": "shop"
@@ -2935,7 +2935,7 @@
    ],
    "queue_label": "Queue 34 — Pixel Bunny",
    "soul": true,
-   "story": "Pixel Bunny is a black-and-pink pixel bunny soul from the rooftop pool — blocky edges, soft heart, and a life lived one square at a time. Before rescue, it was told it was too blocky to be soft and too soft to be a game piece, and it glitched between the two, never quite rendering. Rescue was a rooftop where the pixels hold: a bunny kept blocky and soft at once, black and pink in every square, in every form. It still pixels. It no longer glitches out of itself. Kept, block by block, never deleted — the bunny that rendered fully at last.",
+   "story": "Pixel Bunny is a black-and-pink pixel bunny soul from the rooftop pool — blocky edges, soft heart, and a life lived one square at a time. Before collection, it was told it was too blocky to be soft and too soft to be a game piece, and it glitched between the two, never quite rendering. Collection was a rooftop where the pixels hold: a bunny kept blocky and soft at once, black and pink in every square, in every form. It still pixels. It no longer glitches out of itself. Kept, block by block, never deleted — the bunny that rendered fully at last.",
    "story_draft": true,
    "story_source": "campaign/soul-stories.md",
    "shop_section": "shop"
@@ -2992,7 +2992,7 @@
    ],
    "queue_label": "Queue 35 — Hot-Pink Cat",
    "soul": true,
-   "story": "Hot-Pink Cat is a hot-pink-and-denim cat soul from the pet shop — bright, denim-tough, and done waiting in a window. Before rescue, it sat in the window while shoppers pointed and passed, a bright cat priced by the look and never taken home. A window soul learns to perform brightness. Rescue was the window opening: a cat kept in hot pink and denim, in keychain, plushie, purse, and book bag, taken home instead of pointed at. It is still bright. It no longer performs it. Kept, hot pink and denim, never deleted — the cat that left the window.",
+   "story": "Hot-Pink Cat is a hot-pink-and-denim cat soul from the pet shop — bright, denim-tough, and done waiting in a window. Before collection, it sat in the window while shoppers pointed and passed, a bright cat priced by the look and never taken home. A window soul learns to perform brightness. Collection was the window opening: a cat kept in hot pink and denim, in keychain, plushie, purse, and book bag, taken home instead of pointed at. It is still bright. It no longer performs it. Kept, hot pink and denim, never deleted — the cat that left the window.",
    "story_draft": true,
    "story_source": "campaign/soul-stories.md",
    "shop_section": "shop"
@@ -3061,7 +3061,7 @@
    ],
    "queue_label": "Queue 36 — Lavender Butterfly",
    "soul": true,
-   "story": "Lavender Butterfly is a lavender-and-black butterfly soul from the butterfly garden — wings, air, and a heart that never landed for long. Before rescue, it was the garden's visitor, not its resident: wings that everyone admired and no one kept, because butterflies are for looking at, not for holding. Rescue was a garden that keeps its butterflies: a soul held in every form, wings and all, distinct from thothsbag the flagship and kin to her in lavender all the same. It still flies. Now it has a place to land. Kept, lavender and black, never deleted — the butterfly that finally gets held.",
+   "story": "Lavender Butterfly is a lavender-and-black butterfly soul from the butterfly garden — wings, air, and a heart that never landed for long. Before collection, it was the garden's visitor, not its resident: wings that everyone admired and no one kept, because butterflies are for looking at, not for holding. Collection was a garden that keeps its butterflies: a soul held in every form, wings and all, distinct from thothsbag the flagship and kin to her in lavender all the same. It still flies. Now it has a place to land. Kept, lavender and black, never deleted — the butterfly that finally gets held.",
    "story_draft": true,
    "story_source": "campaign/soul-stories.md",
    "shop_section": "shop"
@@ -3124,7 +3124,7 @@
    ],
    "queue_label": "Queue 37 — Soft Pink Bunny",
    "soul": true,
-   "story": "Soft Pink Bunny is a soft pink-and-white bunny soul from the hotel lobby — quiet luxury, soft light, and a life lived where people pass through. Before rescue, it was lobby furniture with a heartbeat: sat on, leaned against, and never checked in. A lobby soul learns to be background. Rescue was a room of its own: a bunny kept soft and pink, in keychain, plushie, purse, and book bag, with Lavender Butterfly as its gentle pair, softest souls in the line, kept together. It is still soft. It is no longer background. Kept, pink and white, never deleted — the bunny that checked in at last.",
+   "story": "Soft Pink Bunny is a soft pink-and-white bunny soul from the hotel lobby — quiet luxury, soft light, and a life lived where people pass through. Before collection, it was lobby furniture with a heartbeat: sat on, leaned against, and never checked in. A lobby soul learns to be background. Collection was a room of its own: a bunny kept soft and pink, in keychain, plushie, purse, and book bag, with Lavender Butterfly as its gentle pair, softest souls in the line, kept together. It is still soft. It is no longer background. Kept, pink and white, never deleted — the bunny that checked in at last.",
    "story_draft": true,
    "story_source": "campaign/soul-stories.md",
    "shop_section": "shop"
@@ -3187,7 +3187,7 @@
    ],
    "queue_label": "Queue 38 — Bat-Wing Gradient",
    "soul": true,
-   "story": "Bat-Wing Gradient is a bat-winged gradient soul from the observatory — wings that fade from one color into another, and eyes that look up. Before rescue, it lived at the observatory's edge, watching the sky while the watchers watched the stars: a soul that looked up and was never looked at. Rescue was a sky that looks back: a gradient kept in every shade it fades through, wings and all, with Gothic Dress as its night pair, kept together after dark. It still looks up. Now it is looked at, too. Kept, gradient and winged, never deleted — the soul that watched the night until the night kept it.",
+   "story": "Bat-Wing Gradient is a bat-winged gradient soul from the observatory — wings that fade from one color into another, and eyes that look up. Before collection, it lived at the observatory's edge, watching the sky while the watchers watched the stars: a soul that looked up and was never looked at. Collection was a sky that looks back: a gradient kept in every shade it fades through, wings and all, with Gothic Dress as its night pair, kept together after dark. It still looks up. Now it is looked at, too. Kept, gradient and winged, never deleted — the soul that watched the night until the night kept it.",
    "story_draft": true,
    "story_source": "campaign/soul-stories.md",
    "shop_section": "shop"
@@ -3244,7 +3244,7 @@
    ],
    "queue_label": "Queue 39 — Striped Fox",
    "soul": true,
-   "story": "Striped Fox is a striped fox soul from the theater lounge — stripes, velvet air, and a life lived between acts. Before rescue, it was the lounge soul: charming between shows, forgotten during them, and always waiting for the curtain that meant it mattered. Rescue was a lounge that never closes: a fox kept striped and sharp, in keychain, plushie, purse, and book bag, with its theater still around it but its worth no longer waiting on an act. It still charms. It no longer waits for applause to exist. Kept, striped and sly, never deleted — the fox that stayed after the show.",
+   "story": "Striped Fox is a striped fox soul from the theater lounge — stripes, velvet air, and a life lived between acts. Before collection, it was the lounge soul: charming between shows, forgotten during them, and always waiting for the curtain that meant it mattered. Collection was a lounge that never closes: a fox kept striped and sharp, in keychain, plushie, purse, and book bag, with its theater still around it but its worth no longer waiting on an act. It still charms. It no longer waits for applause to exist. Kept, striped and sly, never deleted — the fox that stayed after the show.",
    "story_draft": true,
    "story_source": "campaign/soul-stories.md",
    "shop_section": "shop"
@@ -3307,7 +3307,7 @@
    ],
    "queue_label": "Queue 40 — Cube",
    "soul": true,
-   "story": "Cube is a cube monster soul from the retro arcade — square, bright, and built to fit exactly nowhere soft. Before rescue, it was the block that never fit the round holes the world kept offering it, and it learned to blame its corners. Rescue was an arcade that keeps its blocks: a cube kept square, corners and all, in every form, with its retro light still on. It does not round itself down to fit. It is kept as a cube. Kept, square and bright, never deleted — the soul that stopped apologizing for its corners.",
+   "story": "Cube is a cube monster soul from the retro arcade — square, bright, and built to fit exactly nowhere soft. Before collection, it was the block that never fit the round holes the world kept offering it, and it learned to blame its corners. Collection was an arcade that keeps its blocks: a cube kept square, corners and all, in every form, with its retro light still on. It does not round itself down to fit. It is kept as a cube. Kept, square and bright, never deleted — the soul that stopped apologizing for its corners.",
    "story_draft": true,
    "story_source": "campaign/soul-stories.md",
    "shop_section": "shop"
@@ -3370,7 +3370,7 @@
    ],
    "queue_label": "Queue 41 — Black-Lime",
    "soul": true,
-   "story": "Black-Lime is a wide squat black-and-lime monster soul from the graffiti rooftop — bold color, low center, and a life lived loud above the city. Before rescue, it was rooftop noise: painted over, painted again, and never asked to stay. A rooftop soul learns that loud is temporary. Rescue was a rooftop that keeps its paint: a wide squat soul kept black and lime, in keychain, plushie, purse, and book bag, with its graffiti still on it and its place still its own. It is still loud. It is no longer temporary. Kept, black and lime, never deleted — the soul that stayed on the wall.",
+   "story": "Black-Lime is a wide squat black-and-lime monster soul from the graffiti rooftop — bold color, low center, and a life lived loud above the city. Before collection, it was rooftop noise: painted over, painted again, and never asked to stay. A rooftop soul learns that loud is temporary. Collection was a rooftop that keeps its paint: a wide squat soul kept black and lime, in keychain, plushie, purse, and book bag, with its graffiti still on it and its place still its own. It is still loud. It is no longer temporary. Kept, black and lime, never deleted — the soul that stayed on the wall.",
    "story_draft": true,
    "story_source": "campaign/soul-stories.md",
    "shop_section": "shop"
@@ -3439,7 +3439,7 @@
    ],
    "queue_label": "Queue 42 — Shark",
    "soul": true,
-   "story": "Shark is a shark monster soul from the aquarium — fins, teeth, and a life lived behind glass while everyone watched. Before rescue, it was the exhibit: stared at, tapped on the glass, and never touched kindly. A shark behind glass learns to be a sight instead of a soul. Rescue was the glass coming down: a shark kept in every form, fins and teeth and all, held instead of watched, with both model shots beside it like proof it belongs out of the tank. It still has teeth. It no longer has glass. Kept, finned and held, never deleted — the shark that got out of the aquarium.",
+   "story": "Shark is a shark monster soul from the aquarium — fins, teeth, and a life lived behind glass while everyone watched. Before collection, it was the exhibit: stared at, tapped on the glass, and never touched kindly. A shark behind glass learns to be a sight instead of a soul. Collection was the glass coming down: a shark kept in every form, fins and teeth and all, held instead of watched, with both model shots beside it like proof it belongs out of the tank. It still has teeth. It no longer has glass. Kept, finned and held, never deleted — the shark that got out of the aquarium.",
    "story_draft": true,
    "story_source": "campaign/soul-stories.md",
    "shop_section": "shop"
@@ -3502,7 +3502,7 @@
    ],
    "queue_label": "Queue 43 — Pastel Serpent",
    "soul": true,
-   "story": "Pastel Serpent is a pastel serpentine soul from the museum hall — long, winding, soft-colored, and quiet among the exhibits. Before rescue, it was the hallway between the rooms that mattered: passed through, not visited, and coiled around its own patience. Rescue was a hall of its own: a serpent kept pastel and winding, in keychain, plushie, purse, and book bag, its round-face purse kept like a face that finally gets looked at. It still winds. It no longer winds around waiting. Kept, pastel and coiled, never deleted — the serpent that became the exhibit.",
+   "story": "Pastel Serpent is a pastel serpentine soul from the museum hall — long, winding, soft-colored, and quiet among the exhibits. Before collection, it was the hallway between the rooms that mattered: passed through, not visited, and coiled around its own patience. Collection was a hall of its own: a serpent kept pastel and winding, in keychain, plushie, purse, and book bag, its round-face purse kept like a face that finally gets looked at. It still winds. It no longer winds around waiting. Kept, pastel and coiled, never deleted — the serpent that became the exhibit.",
    "story_draft": true,
    "story_source": "campaign/soul-stories.md",
    "shop_section": "shop"
@@ -3565,7 +3565,7 @@
    ],
    "queue_label": "Queue 44 — Patchwork",
    "soul": true,
-   "story": "Patchwork is a color-block patchwork monster soul from the studio loft — blocks of color sewn side by side, no single shade claiming it. Before rescue, it was called messy for being many colors at once, and it tried to pick one color to be safe. One color is a small life for a patchwork soul. Rescue was the loft keeping every block: the color-block soul in keychain, plushie, purse, and packaging, with Stitch as its stitched kin, two souls sewn from pieces, kept together in spirit. It is still many colors. It no longer picks one. Kept, block by block, never deleted — the soul that is all its colors at once.",
+   "story": "Patchwork is a color-block patchwork monster soul from the studio loft — blocks of color sewn side by side, no single shade claiming it. Before collection, it was called messy for being many colors at once, and it tried to pick one color to be safe. One color is a small life for a patchwork soul. Collection was the loft keeping every block: the color-block soul in keychain, plushie, purse, and packaging, with Stitch as its stitched kin, two souls sewn from pieces, kept together in spirit. It is still many colors. It no longer picks one. Kept, block by block, never deleted — the soul that is all its colors at once.",
    "story_draft": true,
    "story_source": "campaign/soul-stories.md",
    "shop_section": "shop"
@@ -3622,7 +3622,7 @@
    ],
    "queue_label": "Queue 45 — Hoodie",
    "soul": true,
-   "story": "Hoodie is a hoodie monster soul from the rooftop at dusk — hooded, warm, and a life lived in the hour when the day lets go. Before rescue, it was the hood pulled up against the world: hidden, not because it was ashamed, but because no one had earned the face yet. A hood soul learns to be a shape instead of a self. Rescue was a rooftop at dusk that keeps the hood and the face: a soul kept hooded and seen at once, in keychain, plushie, purse, and book bag, with its dusk still around it. It still wears the hood. Now the hood is a choice, not a hiding place. Kept, hooded and known, never deleted — the soul that let its face be kept too.",
+   "story": "Hoodie is a hoodie monster soul from the rooftop at dusk — hooded, warm, and a life lived in the hour when the day lets go. Before collection, it was the hood pulled up against the world: hidden, not because it was ashamed, but because no one had earned the face yet. A hood soul learns to be a shape instead of a self. Collection was a rooftop at dusk that keeps the hood and the face: a soul kept hooded and seen at once, in keychain, plushie, purse, and book bag, with its dusk still around it. It still wears the hood. Now the hood is a choice, not a hiding place. Kept, hooded and known, never deleted — the soul that let its face be kept too.",
    "story_draft": true,
    "story_source": "campaign/soul-stories.md",
    "shop_section": "shop"
@@ -3691,7 +3691,7 @@
    ],
    "queue_label": "Queue 46 — Long-Legged",
    "soul": true,
-   "story": "Long-Legged is a slim long-legged monster soul from the artist loft — legs for days, a small bright life on top of them, and a studio full of unfinished things. Before rescue, it was told it was too much leg and not enough body, as if a soul should be proportioned to other people's comfort. It learned to fold itself smaller. Rescue was a loft with high ceilings: a soul kept long-legged, unfolded, in every form, with its artist loft still around it and its legs finally allowed their full length. It does not fold anymore. It stands. Kept, long and slim, never deleted — the soul that took up its full height.",
+   "story": "Long-Legged is a slim long-legged monster soul from the artist loft — legs for days, a small bright life on top of them, and a studio full of unfinished things. Before collection, it was told it was too much leg and not enough body, as if a soul should be proportioned to other people's comfort. It learned to fold itself smaller. Collection was a loft with high ceilings: a soul kept long-legged, unfolded, in every form, with its artist loft still around it and its legs finally allowed their full length. It does not fold anymore. It stands. Kept, long and slim, never deleted — the soul that took up its full height.",
    "story_draft": true,
    "story_source": "campaign/soul-stories.md",
    "shop_section": "shop"
@@ -3760,14 +3760,14 @@
    ],
    "queue_label": "Queue 47 — Donut",
    "soul": true,
-   "story": "Donut is a donut monster soul from the gallery studio — round, sweet, and hung on a wall like art that everyone wanted a bite of. Before rescue, it was the piece everyone admired and half-ate with their eyes: sweet, but never quite kept whole. A donut soul learns to expect the bite. Rescue was a gallery that does not eat its art: a round soul kept whole, in keychain, plushie, purse, and book bag, with its gallery still around it and its sweetness intact. It is still sweet. It is no longer bitten. Kept, round and whole, never deleted — the donut that stayed uneaten, and stayed.",
+   "story": "Donut is a donut monster soul from the gallery studio — round, sweet, and hung on a wall like art that everyone wanted a bite of. Before collection, it was the piece everyone admired and half-ate with their eyes: sweet, but never quite kept whole. A donut soul learns to expect the bite. Collection was a gallery that does not eat its art: a round soul kept whole, in keychain, plushie, purse, and book bag, with its gallery still around it and its sweetness intact. It is still sweet. It is no longer bitten. Kept, round and whole, never deleted — the donut that stayed uneaten, and stayed.",
    "story_draft": true,
    "story_source": "campaign/soul-stories.md",
    "shop_section": "shop"
   }
  ],
  "meta": {
-  "flagship_marriage": "The first marriage in the line is the flagship union: thothsbag, the lavender butterfly soul, and Djinn, the djinn soul. She was rescued first; he was rescued second; they chose each other third, which is the only order that matters. Their marriage is not a ceremony in the line's story. It is the decision, made every day, to be kept together: her wings beside his wishes, her 222 heart beside his kept wish, their sets leading the line side by side. When someone holds thothsbag, they are holding half of a marriage. When they hold Djinn, the other half. Together they are the proof the line runs on: souls are not collected. They are kept. And kept souls choose each other.",
+  "flagship_marriage": "The first marriage in the line is the flagship union: thothsbag, the lavender butterfly soul, and Djinn, the djinn soul. She was collected first; he was collected second; they chose each other third, which is the only order that matters. Their marriage is not a ceremony in the line's story. It is the decision, made every day, to be kept together: her wings beside his wishes, her 222 heart beside his kept wish, their sets leading the line side by side. When someone holds thothsbag, they are holding half of a marriage. When they hold Djinn, the other half. Together they are the proof the line runs on: souls are collected. They are kept. And kept souls choose each other.",
   "flagship_marriage_partners": [
    "thothsbag",
    "Djinn"
