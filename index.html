@@ -1449,7 +1449,7 @@ render = function(data) {
       '<button type="button" id="hgZoomIn" title="Zoom in">\uff0b Zoom in</button>' +
       '<button type="button" id="hgZoomOut" title="Zoom out">\uff0d Zoom out</button>' +
       '<button type="button" id="hgReset" title="Reset the camera">\u27f2 Reset view</button>' +
-      '<span class="hg-hint">Click a node to open its card</span>';
+      '<span class="hg-hint">Click a node to focus it \u00b7 click empty space to clear</span>';
     graphWrap.appendChild(hgBar);
     // items is in closure scope from outer script (line 277)
     const gw = () => canvas.clientWidth || window.innerWidth;
@@ -1819,6 +1819,8 @@ render = function(data) {
       }
     });
     // DNA double-helix links (same language as the model-card strands) — baked static, one draw call
+    // IDEA 22 (Stage 2.2) — the gold-thread LineSegments, zoom-gated in the animate loop.
+    let dnaLines = null, threadOpacity = 0;
     function buildDnaEdges(ep) {
       const pos = [], col = [];
       const A = new V3(), B = new V3(), D = new V3(), U = new V3(), Vv = new V3(), P = new V3(), Q = new V3();
@@ -1865,12 +1867,13 @@ render = function(data) {
       const lines = new LineSegments(g, m);
       lines.frustumCulled = false;
       scene.add(lines);
+      return lines;
     }
     if (edgePositions.length) {
-      try { buildDnaEdges(edgePositions); }
+      try { dnaLines = buildDnaEdges(edgePositions); }
       catch(e) {
         console.warn('DNA links skipped:', e);
-        const eg = new BufferGeometry(); eg.setAttribute('position', new Float32BufferAttribute(edgePositions, 3)); scene.add(new LineSegments(eg, new LineBasicMaterial({ color: 0xF59E0B, transparent: true, opacity: 0.06, blending: AdditiveBlending })));
+        const eg = new BufferGeometry(); eg.setAttribute('position', new Float32BufferAttribute(edgePositions, 3)); dnaLines = new LineSegments(eg, new LineBasicMaterial({ color: 0xF59E0B, transparent: true, opacity: 0.06, blending: AdditiveBlending })); scene.add(dnaLines);
       }
     }
 
@@ -1957,6 +1960,51 @@ render = function(data) {
       ripples.push({ mesh: ring, born: performance.now() });
     }
     function kgHideBeacon() { if (beacon) beacon.visible = false; if (beaconRing) beaconRing.visible = false; }
+
+    // ─── IDEA 13 (Stage 2.2) — CLICK-TO-FOCUS + FOCUSED-NEIGHBOURHOOD FLOW ───
+    // Clicking a node centers the camera on it and dims everything outside
+    // its direct neighbourhood: the node + its top-24 neighbours by True
+    // Value = max 25 nodes in focus (Bible idea 13 cap). The gold flow
+    // particles (the single pulsePts Points system — no new draw call) are
+    // re-pointed at the focused neighbourhood only. Clear the focus by
+    // clicking empty space, the panel X, Reset, or Esc.
+    const adj = new Map();
+    edges.forEach(e => {
+      if (!adj.has(e[0])) adj.set(e[0], []);
+      if (!adj.has(e[1])) adj.set(e[1], []);
+      adj.get(e[0]).push(e[1]); adj.get(e[1]).push(e[0]);
+    });
+    const FOCUS_MAX = 25, FOCUS_CAM_DIST = 4.2;
+    let focusIdx = -1; const focusSet = new Set(); let focusAnim = null;
+    function setFlowPairs(pairs) {
+      if (!pulseGeo || !pulsePts) return;
+      pulsePairs.length = 0; pairs.forEach(p => pulsePairs.push(p));
+      pulsePhases.length = 0; for (let i = 0; i < pulsePairs.length; i++) pulsePhases.push(Math.random());
+      pulseGeo.setAttribute('position', new Float32BufferAttribute(new Float32Array(Math.max(3, pulsePairs.length * 3)), 3));
+    }
+    function focusNode(idx) {
+      const d = nodeData.find(x => x.index === idx);
+      if (!d || !d.pos || !items[idx]) return;
+      const nbrs = (adj.get(idx) || []).filter(n => items[n])
+        .sort((a, b) => tvOf(items[b]) - tvOf(items[a])).slice(0, FOCUS_MAX - 1);
+      focusSet.clear(); focusSet.add(idx); nbrs.forEach(n => focusSet.add(n));
+      focusIdx = idx;
+      // Flow on the focused neighbourhood only, low TV -> high TV.
+      setFlowPairs(nbrs.map(n => {
+        const pa = positions[idx], pb = positions[n];
+        if (!pa || !pb) return null;
+        return tvOf(items[idx]) >= tvOf(items[n]) ? [pb, pa] : [pa, pb];
+      }).filter(Boolean));
+      // Glide the camera onto the node (keeps the current view direction).
+      const dir = camera.position.clone().sub(controls.target).normalize();
+      focusAnim = { fromT: controls.target.clone(), toT: d.pos.clone(), fromP: camera.position.clone(), toP: d.pos.clone().addScaledVector(dir, FOCUS_CAM_DIST), start: performance.now(), dur: 650 };
+      controls.enabled = false;
+    }
+    function clearFocus() {
+      if (focusIdx < 0 && focusSet.size === 0) return;
+      focusIdx = -1; focusSet.clear(); focusAnim = null; controls.enabled = true;
+      setFlowPairs(globalFlowPairs);
+    }
     try {
       const radialCv = document.createElement('canvas'); radialCv.width = radialCv.height = 128;
       const rcx = radialCv.getContext('2d');
@@ -2004,7 +2052,8 @@ render = function(data) {
       edges.forEach((e, ei) => {
         if (ei % 6) return;
         const pa = positions[e[0]], pb = positions[e[1]];
-        if (pa && pb) pulsePairs.push([pa, pb]);
+        // IDEA 22 — flow runs low TV -> high TV: value flows uphill.
+        if (pa && pb) pulsePairs.push(tvOf(items[e[0]]) > tvOf(items[e[1]]) ? [pb, pa] : [pa, pb]);
       });
       if (pulsePairs.length) {
         const dollarCv = document.createElement('canvas'); dollarCv.width = dollarCv.height = 64;
@@ -2022,6 +2071,8 @@ render = function(data) {
         scene.add(pulsePts);
       }
     } catch(e) { console.warn('Graph slice-2 visuals skipped:', e); }
+    // IDEA 22 — the global flow set, restored when a focus clears.
+    const globalFlowPairs = pulsePairs.map(p => p.slice());
     let brandSpr = null, codeTorus = null;
     try {
       const featCv = document.createElement('canvas'); featCv.width = featCv.height = 64;
@@ -2132,15 +2183,20 @@ render = function(data) {
         pt.textContent = item.name; pd.textContent = item.desc || ''; pp.textContent = item.plt ? `PLT: ${item.plt}` : '';
         if (item.file) { pb.textContent = '⬇ Awaken'; pb.style.display = 'inline-block'; pb.onclick = () => { const a = document.createElement('a'); a.href = 'downloads/' + item.file; a.download = item.file; a.click(); pan.classList.remove('active'); }; }
         else if (item.url) { pb.textContent = '▶ Open'; pb.style.display = 'inline-block'; pb.onclick = () => { window.open(item.url, '_blank'); pan.classList.remove('active'); }; }
-        else pb.style.display = 'none'; pan.classList.add('active'); kgSelect(idx); return; }
-      if (pan.classList.contains('active')) { pan.classList.remove('active'); kgHideBeacon(); }
+        else pb.style.display = 'none'; pan.classList.add('active'); kgSelect(idx); focusNode(idx); return; }
+      if (pan.classList.contains('active')) { pan.classList.remove('active'); kgHideBeacon(); clearFocus(); }
+      else clearFocus();
     } catch(e) { console.error('Click error:', e); } });
-    pc.onclick = () => { pan.classList.remove('active'); kgHideBeacon(); };
+    pc.onclick = () => { pan.classList.remove('active'); kgHideBeacon(); clearFocus(); };
+    // IDEA 13 — Esc clears a focus (and the panel) too.
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && focusIdx >= 0) { clearFocus(); pan.classList.remove('active'); kgHideBeacon(); } });
     // Graph internals exposed for read-only overlays (fog / FXAA / bloom / matrix floor)
     window.__soulGraph = { scene, camera, renderer, root, items, nodeData };
     // FIX #2 — wire the control bar (legend is static HTML above; these need camera/controls/nodeData)
     function applyGraphFilter(cat) {
       graphCtl.filter = cat;
+      // IDEA 13 — filtering the focused node out of view clears the focus.
+      if (focusIdx >= 0 && cat !== 'all' && items[focusIdx] && items[focusIdx].type !== cat) clearFocus();
       nodeData.forEach(d => {
         const show = cat === 'all' || (d.item && d.item.type === cat);
         if (d.mesh) d.mesh.visible = show;
@@ -2171,7 +2227,7 @@ render = function(data) {
     const hgZo = document.getElementById('hgZoomOut');
     if (hgZo) hgZo.addEventListener('click', () => hgDolly(1.25));
     const hgRs = document.getElementById('hgReset');
-    if (hgRs) hgRs.addEventListener('click', () => { camera.position.set(0, 3.4, 8); controls.target.set(0, 1.6, 0); applyGraphFilter('all'); if (hgFilter) hgFilter.value = 'all'; });
+    if (hgRs) hgRs.addEventListener('click', () => { clearFocus(); camera.position.set(0, 3.4, 8); controls.target.set(0, 1.6, 0); applyGraphFilter('all'); if (hgFilter) hgFilter.value = 'all'; });
     window.__soulGraph.ctl = graphCtl;
 
     let emaDt = 16, slowFrames = 0, degraded = false, lastT = performance.now();
@@ -2192,10 +2248,31 @@ render = function(data) {
       if (graphCtl.paused && !graphCtl.frozenT) graphCtl.frozenT = t;
       if (!graphCtl.paused) graphCtl.frozenT = 0;
       const TT = (REDUCED || graphCtl.paused) ? (graphCtl.frozenT || 0) : t;
-      controls.autoRotate = !graphCtl.paused;
+      controls.autoRotate = !graphCtl.paused && !focusAnim;
       if (!REDUCED && !graphCtl.paused) { starNear.rotation.y += 0.00006; starFar.rotation.y -= 0.00004; }
       controls.autoRotateSpeed = REDUCED ? 0.8 : 0.8 + Math.sin(t*0.3)*0.3;
+      // IDEA 13 — focus glide: ease the camera onto the focused node.
+      if (focusAnim) {
+        const fp = Math.min(1, (nowMs - focusAnim.start) / focusAnim.dur);
+        const fe = fp * fp * (3 - 2 * fp);
+        controls.target.lerpVectors(focusAnim.fromT, focusAnim.toT, fe);
+        camera.position.lerpVectors(focusAnim.fromP, focusAnim.toP, fe);
+        if (fp >= 1) { focusAnim = null; controls.enabled = true; }
+      }
+      // IDEA 13 + 22 — zoom gates (camera distance to target; home ≈ 8.2).
+      // Non-top-24 labels fade in below 8, full by 6; gold threads + flow
+      // fade in below 7.5, full by 6. Zoomed out the view stays clean.
+      const camDist = camera.position.distanceTo(controls.target);
+      const focusActive = focusIdx >= 0;
+      const labelGate = Math.max(0, Math.min(1, (8 - camDist) / 2));
+      const threadFade = Math.max(0, Math.min(1, (7.5 - camDist) / 1.5));
+      const threadTarget = focusActive ? 0.03 : 0.16 * threadFade;
+      threadOpacity += (threadTarget - threadOpacity) * 0.12;
+      if (dnaLines) { dnaLines.material.opacity = threadOpacity; dnaLines.visible = threadOpacity > 0.01; }
+      const flowFade = focusActive ? 1 : threadFade;
+      if (pulsePts) { pulsePts.material.opacity = 0.8 * flowFade; pulsePts.visible = flowFade > 0.02 && pulsePairs.length > 0; }
       nodeData.forEach(d => { if (d.mesh) {
+        const dimF = (focusActive && !focusSet.has(d.index)) ? 0.12 : 1; // IDEA 13 — dim outside the focus
         const isSpr = !!d.mesh.isSprite;
         const isHov = hoverRef.d && hoverRef.d.index === d.index;
         // Heartbeat lungs — lub-dub thump, phase-offset per node
@@ -2209,7 +2286,7 @@ render = function(data) {
           // Plushie sprite: breathe by scale, bob gently; sprites face camera.
           const s = 0.55 * d.baseScale * br * (0.6 + 0.4 * morphE) * (isHov ? 1.25 : 1);
           d.mesh.scale.set(s, s, 1);
-          d.mesh.material.opacity = 0.95 * morphE;
+          d.mesh.material.opacity = 0.95 * morphE * dimF;
           if (!REDUCED) d.mesh.position.set(d.pos.x, d.pos.y + 0.03 * Math.sin(TT * 1.4 + (d.phase || 0)), d.pos.z);
           else d.mesh.position.copy(d.pos);
         } else if (d.mesh.isMesh) {
@@ -2227,38 +2304,43 @@ render = function(data) {
           const dist = controls.target.distanceTo(d.pos || d.mesh.position);
           const proximity = Math.max(0, 1 - (dist - 0.5) / 4);
           d.mesh.material.emissiveIntensity = Math.min(1.5, 0.3 + proximity * 0.65 + (isHov ? 0.8 : 0) + 0.45 * hb);
-          d.mesh.material.opacity = 0.72 + proximity * 0.25;
+          d.mesh.material.opacity = (0.72 + proximity * 0.25) * dimF;
         }
         // Slice 1: breathing PLT badges + distance-faded labels
           if (d.badge) {
-            d.badge.material.opacity = 0.8 + (REDUCED ? 0 : 0.15 * hb);
+            d.badge.material.opacity = (0.8 + (REDUCED ? 0 : 0.15 * hb)) * dimF;
             const bbs = d.badge.userData.bs || { x: 0.6, y: 0.16 };
             const bbr = 1 + (REDUCED ? 0 : 0.09 * hb);
             d.badge.scale.set(bbs.x*bbr, bbs.y*bbr, 1);
           }
         if (d.label) {
-          // Stage 1.2 — distance-faded labels, never hidden: 0.25 floor at
-          // distance, 0.9 up close. Zoom-gating (hide at distance, top-N
-          // only) is Stage 2.2, not this stage.
+          // IDEA 13 (Stage 2.2) — zoom-gated labels, top-N only: the top-24
+          // by True Value are always on; the rest fade in only when zoomed
+          // in (labelGate: 0 at distance 8, 1 at 6). Out-of-focus labels hide.
           const ld = camera.position.distanceTo(d.label.position);
-          d.label.material.opacity = Math.max(0.25, Math.min(0.9, 1.1 - ld / 18));
+          d.label.material.opacity = Math.max(0.25, Math.min(0.9, 1.1 - ld / 18)) * (d.topLabel ? 1 : labelGate) * (focusActive && !focusSet.has(d.index) ? 0 : 1);
         }
           if (d.aura) {
-            d.aura.material.opacity = 0.28 + (REDUCED ? 0 : 0.2 * hb);
+            d.aura.material.opacity = (0.28 + (REDUCED ? 0 : 0.2 * hb)) * dimF;
             d.aura.scale.setScalar(1.15 + (REDUCED ? 0 : 0.2 * hb));
           }
         if (d.orbiters && !REDUCED) d.orbiters.forEach((o, oi) => {
           o.ang += 0.008 + oi*0.003;
           const ox = d.pos.x + Math.cos(o.ang)*o.r, oz = d.pos.z + Math.sin(o.ang)*o.r;
           const oy = d.pos.y + Math.sin(TT*2 + o.ang)*0.08;
-          if (o.sp) o.sp.position.set(ox, oy, oz);
+          if (o.sp) { o.sp.position.set(ox, oy, oz); o.sp.material.opacity = dimF < 1 ? 0.08 : 0.85; }
           if (o.mesh) { o.mesh.position.set(ox, oy, oz); o.mesh.rotation.y += 0.03; o.mesh.rotation.x += 0.02; }
         });
         if (d.halo && !REDUCED) d.halo.rotation.z += 0.004;
+        if (d.halo) d.halo.material.opacity = 0.5 * dimF;
         if (d.star) d.star.material.size = 0.04 + (REDUCED ? 0 : 0.02 * Math.sin(TT*2.4 + (d.phase||0)));
-        if (d.flare) d.flare.material.opacity = 0.55 + (REDUCED ? 0 : 0.3 * Math.sin(TT*2.4 + (d.phase||0)));
+        if (d.flare) d.flare.material.opacity = (0.55 + (REDUCED ? 0 : 0.3 * Math.sin(TT*2.4 + (d.phase||0)))) * dimF;
+      } else if (d.label) {
+        // Instanced skill nodes have no mesh, so their labels skip the block
+        // above: dim them out of focus, restore them when focus clears.
+        d.label.material.opacity = focusActive ? (focusSet.has(d.index) ? 0.9 : 0) : 0.95;
       } });
-      if (pulsePts && !REDUCED) {
+      if (pulsePts && pulsePts.visible && !REDUCED) {
         const attr = pulseGeo.getAttribute('position');
         for (let pi = 0; pi < pulsePairs.length; pi++) {
           const f = (TT*0.12 + pulsePhases[pi]) % 1;
@@ -2275,7 +2357,9 @@ render = function(data) {
           _m4.makeTranslation(bp.x, bp.y, bp.z);
           _m4.scale(_sv.set(s, s, s));
           sb.setMatrixAt(si, _m4);
-          sb.setColorAt(si, _cc.setHSL(0.10 + 0.02*Math.sin(TT*2 + si*0.35), 0.75, 0.55));
+          // IDEA 13 — instanced skill stars dim outside the focus too.
+          const sDim = (focusActive && !focusSet.has(inst[si].index)) ? 0.15 : 1;
+          sb.setColorAt(si, _cc.setHSL(0.10 + 0.02*Math.sin(TT*2 + si*0.35), 0.75, 0.55).multiplyScalar(sDim));
         }
         sb.instanceMatrix.needsUpdate = true;
         if (sb.instanceColor) sb.instanceColor.needsUpdate = true;
