@@ -189,7 +189,7 @@ body{font-size:17px}
 
 <section class="betty-stage-box" id="bettyStageBox">
 <h2>3D shelf — drag to spin</h2>
-<p>Real 3D boxes on a turning shelf, not flat pictures: each new soul sits on its own pedestal, lit and shadowed, with its photo wrapped around a solid box. Drag sideways to spin the shelf. Tap a piece (without dragging) to open its soul panel.</p>
+<p>Real 3D boxes on a turning shelf, not flat pictures: each new soul sits on its own pedestal, lit and shadowed, with its photo wrapped around every face of a solid box and its name and starting price above it. Drag sideways to spin the shelf. Tap a piece (without dragging) to open its soul panel.</p>
 <canvas id="bettyStage" width="900" height="420"></canvas>
 </section>
 <div class="betty-tabs" role="tablist" aria-label="Shop by piece">
@@ -316,7 +316,17 @@ showBettyTab();
 <script>
 // UPGRADE-V7 3D stage: three r186, WebGLRenderer only (WebGPU/TSL NOT adopted — see changelog).
 // Stage items come from the CATALOG at runtime (bettySets), never from a hardcoded names list.
-// GLB lookup: by the catalog's soul_name field for that item, with catalog-index fallback.
+// GLB lookup: by the catalog's soul_name field for that item ONLY — no catalog-index fallback
+// on the shelf (an index mapping opens the wrong soul's model when catalog order shifts).
+// FIX #3 (2026-11-07): photos on ALL SIX faces of each box (the set's own photos, hero first),
+// real lighting that does not blow the photos near-white (dimmer sun + pink point, capped
+// environment intensity, soft front fill), a name + From-$ price label above each piece
+// (price from the page's own bettyLowestPrice / cheapest-piece helpers — no price invented),
+// reliable tap (pick list holds only objects still on the stage; a tap opens the soul it hit),
+// and no empty pedestal (box built synchronously, textures fill in as they load; shelf tops
+// up to 8 pieces from the catalog when fewer than 8 new souls are present).
+// The hero lips above the shelf are already a true 3D model (ExtrudeGeometry, bettyStartLips) —
+// no photo/SVG lips stand-in needed here; the true model does not wait for Stage 3.
 // No GLB file is invented: if no models/<file>.glb exists, the photo box stays and the note says Photo view.
 // Features: RoomEnvironment + PMREM, MeshPhysicalMaterial sheen, InstancedMesh pedestals + glow rings,
 // one shadow light (PCFSoft, tight frustum, 1024 phone / 2048 desktop), EffectComposer bloom
@@ -336,6 +346,27 @@ function bettyOpenFeatured(i){
     else if(tries>50){ clearInterval(t); }
   },200);
 }
+function bettyStageLabelFor(set){
+  // Name + starting price from the page's own product data — no price invented here.
+  var name=(set.soul_name&&set.soul_name.trim())||set.name||'';
+  var priceText='';
+  if(typeof bettyLowestPrice==='function'){
+    var low=bettyLowestPrice(set);
+    if(isFinite(low)){
+      priceText='From $'+low.toLocaleString('en-US');
+      if(typeof bettyCheapestPieceKey==='function' && typeof bettyPieceInfo==='function'){
+        var info=bettyPieceInfo(set,bettyCheapestPieceKey(set));
+        if(info && info.brand) priceText+=' · '+info.brand;
+      }
+    } else priceText='Not for sale';
+  }
+  return {name:name,price:priceText};
+}
+function bettyStageMakeItem(i,s){
+  var label=bettyStageLabelFor(s);
+  return {catalogIndex:i, soulName:s.soul_name||'', displayName:s.name||'', heroSrc:s.pictures[0].src,
+    pics:s.pictures.map(function(p){return p.src;}), labelName:label.name, labelPrice:label.price};
+}
 function bettyStageFeaturedItems(){
   // Catalog-first: new souls in catalog order, with their catalog index, soul_name, display name, hero photo.
   if(bettySets && bettySets.length){
@@ -343,16 +374,58 @@ function bettyStageFeaturedItems(){
     for(var i=0;i<bettySets.length && items.length<8;i++){
       var s=bettySets[i];
       if(typeof bettyIsNewSet==='function' && !bettyIsNewSet(s)) continue;
-      if(s.pictures && s.pictures.length) items.push({catalogIndex:i, soulName:s.soul_name||'', displayName:s.name||'', heroSrc:s.pictures[0].src});
+      if(s.pictures && s.pictures.length) items.push(bettyStageMakeItem(i,s));
+    }
+    // No empty pedestal: if fewer than 8 new souls are present, top up from the
+    // shop catalog (never scenes — those are not for sale) so every pedestal holds a real piece.
+    for(var k=0;k<bettySets.length && items.length<8;k++){
+      var s2=bettySets[k];
+      if(s2.shop_section==='scenes') continue;
+      var dup=false;
+      for(var m=0;m<items.length;m++){ if(items[m].catalogIndex===k){ dup=true; break; } }
+      if(dup || !s2.pictures || !s2.pictures.length) continue;
+      items.push(bettyStageMakeItem(k,s2));
     }
     if(items.length) return items;
   }
   // Fallback only if the catalog failed to load: index heroes, no names invented.
   var heroes=["featured/bp-378.jpg","featured/bp-380.jpg","featured/bp-384.jpg","featured/bp-388.jpg","featured/bp-394.jpg","featured/bp-398.jpg","featured/bp-402.jpg","featured/bp-407.jpg"];
   var out=[];
-  for(var j=0;j<heroes.length;j++) out.push({catalogIndex:j, soulName:'', displayName:'', heroSrc:heroes[j]});
+  for(var j=0;j<heroes.length;j++) out.push({catalogIndex:j, soulName:'', displayName:'', heroSrc:heroes[j], pics:[heroes[j]], labelName:'', labelPrice:''});
   return out;
 }
+// BoxGeometry material order is [+x,-x,+y,-y,+z,-z]: front (+z) is the hero photo,
+// back (-z) the second photo, sides the next photos, top the fifth — every face a real
+// product photo from this soul's own set, hero repeated only where the set has no photo.
+function bettyStageFaceSrcs(item){
+  var pics=(item.pics && item.pics.length)?item.pics:[item.heroSrc];
+  function at(n){ return pics[n]||pics[0]; }
+  return [at(2),at(3),at(4),at(1),at(0),at(1)];
+}
+function bettyStageLabelSprite(T,name,priceText){
+  var c=document.createElement('canvas'); c.width=512; c.height=160;
+  var ctx=c.getContext('2d');
+  var r=28;
+  ctx.beginPath();
+  ctx.moveTo(r,4); ctx.lineTo(512-r,4); ctx.quadraticCurveTo(508,4,508,r); ctx.lineTo(508,160-r);
+  ctx.quadraticCurveTo(508,156,512-r,156); ctx.lineTo(r,156); ctx.quadraticCurveTo(4,156,4,160-r);
+  ctx.lineTo(4,r); ctx.quadraticCurveTo(4,4,r,4); ctx.closePath();
+  ctx.fillStyle='rgba(10,8,12,0.88)'; ctx.fill();
+  ctx.strokeStyle='rgba(255,107,157,0.8)'; ctx.lineWidth=4; ctx.stroke();
+  ctx.textAlign='center'; ctx.textBaseline='alphabetic';
+  var fs=52; ctx.font='bold '+fs+'px Arial, sans-serif';
+  while(fs>26 && ctx.measureText(name).width>460){ fs-=2; ctx.font='bold '+fs+'px Arial, sans-serif'; }
+  ctx.fillStyle='#ffffff'; ctx.fillText(name,256,70);
+  ctx.fillStyle='#FFB3CD'; ctx.font='bold 40px Arial, sans-serif';
+  ctx.fillText(priceText,256,130);
+  var tex=new T.CanvasTexture(c);
+  if(T.SRGBColorSpace) tex.colorSpace=T.SRGBColorSpace;
+  var spr=new T.Sprite(new T.SpriteMaterial({map:tex,transparent:true,depthWrite:false}));
+  spr.scale.set(2.4,0.75,1);
+  return spr;
+}
+function bettyStageRemoveFromPick(o){ var i=bettyStagePick.indexOf(o); if(i>=0) bettyStagePick.splice(i,1); }
+function bettyStageInScene(o){ while(o){ if(o===bettyStageGroup) return true; o=o.parent; } return false; }
 function bettyStageIndexFromObject(o){
   while(o){ if(o.userData && o.userData.setIndex!=null) return o.userData.setIndex; o=o.parent; }
   return null;
@@ -397,22 +470,26 @@ function bettyStageInit(){
     renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
     renderer.shadowMap.enabled=true; renderer.shadowMap.type=T.PCFSoftShadowMap;
     // r186 modern lighting: no useLegacyLights flag exists anymore. Explicit tone mapping + colour space.
-    renderer.toneMapping=T.ACESFilmicToneMapping; renderer.toneMappingExposure=0.85;
+    renderer.toneMapping=T.ACESFilmicToneMapping; renderer.toneMappingExposure=0.8;
     if(T.SRGBColorSpace) renderer.outputColorSpace=T.SRGBColorSpace;
     var scene=new T.Scene();
     var camera=new T.PerspectiveCamera(42,900/420,0.1,100); camera.position.set(0,2.2,11); camera.lookAt(0,0.6,0);
-    // Environment lighting: RoomEnvironment through PMREM gives plush believable reflections.
+    // FIX #3 lighting: the old setup blew photo faces near-white (sun 1.7 + pink point 18
+    // + full-strength RoomEnvironment on top of ACES). Dimmer key + pink, capped environment,
+    // soft front fill so faces toward the camera read instead of washing out.
     if(RoomEnvironment){
       try{ var pmrem=new T.PMREMGenerator(renderer); scene.environment=pmrem.fromScene(new RoomEnvironment(),0.04).texture; }catch(e){ /* environment is garnish; lights below still work */ }
     }
-    scene.add(new T.HemisphereLight(0xffffff,0x1a0f16,0.35));
+    scene.environmentIntensity=0.45;
+    scene.add(new T.HemisphereLight(0xffffff,0x1a0f16,0.25));
     var isPhone=window.innerWidth<=640;
-    var sun=new T.DirectionalLight(0xffffff,1.7); sun.position.set(4,8,6); sun.castShadow=true;
+    var sun=new T.DirectionalLight(0xffffff,1.15); sun.position.set(4,8,6); sun.castShadow=true;
+    var fill=new T.DirectionalLight(0xfff0f5,0.5); fill.position.set(0,2,8); scene.add(fill);
     sun.shadow.mapSize.set(isPhone?1024:2048,isPhone?1024:2048);
     sun.shadow.camera.left=-7; sun.shadow.camera.right=7; sun.shadow.camera.top=7; sun.shadow.camera.bottom=-7;
     sun.shadow.camera.near=1; sun.shadow.camera.far=25; sun.shadow.bias=-0.0005;
     scene.add(sun);
-    var pink=new T.PointLight(0xff2e88,18,30); pink.position.set(-5,3,5); scene.add(pink);
+    var pink=new T.PointLight(0xff2e88,8,30); pink.position.set(-5,3,5); scene.add(pink);
     var ground=new T.Mesh(new T.PlaneGeometry(30,30), new T.ShadowMaterial({opacity:0.35}));
     ground.rotation.x=-Math.PI/2; ground.position.y=-1.1; ground.receiveShadow=true; scene.add(ground);
     var group=new T.Group(); scene.add(group); bettyStageGroup=group; bettyStageCamera=camera;
@@ -455,21 +532,44 @@ function bettyStageInit(){
       holder.userData.setIndex=item.catalogIndex;
       var boxHolder=new T.Group(); boxHolder.position.y=0.45; holder.add(boxHolder);
       bettyStageHolders.push(holder);
-      loader.load(item.heroSrc, function(tex){
-        if(T.SRGBColorSpace) tex.colorSpace=T.SRGBColorSpace;
-        // Sheen on the photo face: soft fur rim light, pink-tinted, high roughness.
-        var face=new T.MeshPhysicalMaterial({map:tex,roughness:0.85,sheen:1.0,sheenColor:new T.Color(0xff8fb8),sheenRoughness:0.5});
-        var side=new T.MeshPhysicalMaterial({color:0xff2e88,roughness:0.8,sheen:0.6,sheenColor:new T.Color(0xff8fb8),sheenRoughness:0.6});
-        var box=new T.Mesh(new T.BoxGeometry(1.5,1.7,0.7), [side,side,side,side,face,face]);
-        box.castShadow=true; box.userData.setIndex=item.catalogIndex; boxHolder.add(box); bettyStagePick.push(box);
+      // Name + starting-price label above the piece (canvas sprite, always faces camera).
+      // Tapping the label opens this soul too — it carries the same catalog index.
+      if(item.labelName){
+        var label=bettyStageLabelSprite(T,item.labelName,item.labelPrice);
+        label.position.y=1.85; label.userData.setIndex=item.catalogIndex;
+        holder.add(label); bettyStagePick.push(label);
+      }
+      // Photo box, built SYNCHRONOUSLY so a pedestal is never empty: all six faces get a
+      // real photo from this soul's own set (hero on the front), textures filling in as
+      // they load. A failed texture leaves that face its pink material — never a missing box.
+      var faceSrcs=bettyStageFaceSrcs(item);
+      var faceMats=faceSrcs.map(function(){
+        return new T.MeshPhysicalMaterial({color:0xff2e88,roughness:0.85,sheen:0.6,sheenColor:new T.Color(0xff8fb8),sheenRoughness:0.6,envMapIntensity:0.35});
       });
-      var glbFile=(item.soulName && bettyStageGlbBySoulName[item.soulName]) || bettyStageGlbByIndex[item.catalogIndex] || null;
+      var box=new T.Mesh(new T.BoxGeometry(1.5,1.7,0.7), faceMats);
+      box.castShadow=true; box.userData.setIndex=item.catalogIndex; boxHolder.add(box); bettyStagePick.push(box);
+      var maxAniso=1; try{ maxAniso=Math.min(8,renderer.capabilities.getMaxAnisotropy()); }catch(e){}
+      faceSrcs.forEach(function(src,fi){
+        loader.load(src, function(tex){
+          if(T.SRGBColorSpace) tex.colorSpace=T.SRGBColorSpace;
+          tex.anisotropy=maxAniso;
+          faceMats[fi].map=tex; faceMats[fi].needsUpdate=true;
+        }, undefined, function(){ /* face keeps its pink material; pedestal stays filled */ });
+      });
+      // GLB by soul_name ONLY. The old catalog-index fallback could hand a soul another
+      // soul's model (and its tap target) whenever catalog order shifted — that is the
+      // pink-bunny-opens-Ember-Stripe class of bug.
+      var glbFile=(item.soulName && bettyStageGlbBySoulName[item.soulName]) || null;
       if(gltfLoader && glbFile){
         try{
           gltfLoader.load(glbFile, function(glb){
             glb.scene.traverse(function(o){ if(o.isMesh){ o.castShadow=true; if(o.material && o.material.isMeshStandardMaterial){ /* keep model materials; sheen added only if the model has a physical material slot */ } o.userData.setIndex=item.catalogIndex; bettyStagePick.push(o); } });
             glb.scene.scale.setScalar(1.1); glb.scene.position.y=-0.4;
-            var oldBox=boxHolder.children.slice(0); boxHolder.clear(); oldBox.forEach(bettyStageDisposeObject); boxHolder.add(glb.scene);
+            var oldBox=boxHolder.children.slice(0); boxHolder.clear(); oldBox.forEach(bettyStageDisposeObject);
+            // The replaced box must leave the pick list: a removed mesh still raycasts
+            // from its stale matrix and would open this soul from a tap meant for another.
+            oldBox.forEach(bettyStageRemoveFromPick);
+            boxHolder.add(glb.scene);
             var note=document.getElementById('bettyStageNote');
             if(note) note.textContent='3D stage: a real Meshy GLB model is now shown for '+(item.displayName||'this soul')+'. Other souls still use photo-wrapped boxes until their GLB files arrive.';
           }, undefined, function(){
@@ -494,15 +594,21 @@ function bettyStageInit(){
         var rect=canvas.getBoundingClientRect();
         var nx=((e.clientX-rect.left)/rect.width)*2-1, ny=-((e.clientY-rect.top)/rect.height)*2+1;
         bettyStageRaycaster.setFromCamera({x:nx,y:ny},camera);
-        var hits=bettyStageRaycaster.intersectObjects(bettyStagePick,true);
-        if(hits.length){
-          var hitIdx=bettyStageIndexFromObject(hits[0].object);
-          if(hitIdx!=null){
+        // Non-recursive: the pick list holds the meshes/sprites themselves. Take the
+        // nearest hit that is still ON the stage — a stale object (photo box a GLB
+        // replaced) must never win the tap and open the wrong soul's panel.
+        var hits=bettyStageRaycaster.intersectObjects(bettyStagePick,false);
+        var hitIdx=null;
+        for(var hi=0;hi<hits.length;hi++){
+          if(!bettyStageInScene(hits[hi].object)) continue;
+          hitIdx=bettyStageIndexFromObject(hits[hi].object);
+          if(hitIdx!=null) break;
+        }
+        if(hitIdx!=null){
             // Tap squish: gentle scale pulse on the tapped holder, transform only.
             var holder=bettyStageHolders.filter(function(h){return h.userData.setIndex===hitIdx;})[0];
             if(holder) bettyStageSquish.push({holder:holder,t:performance.now()});
             bettyOpenFeatured(hitIdx);
-          }
         }
       }
     }
@@ -533,7 +639,7 @@ function bettyStageInit(){
       }
     })(last);
     // Draw-call budget check for the builder (console only, not shown to shoppers):
-    // renderer.info.render.calls should stay under 60. Pedestals 1 + glows 1 + boxes <=8 + ground 1 + composer passes.
+    // renderer.info.render.calls should stay under 60. Pedestals 1 + glows 1 + boxes <=8 + labels <=8 + ground 1 + composer passes.
   }).catch(function(){ var n=document.getElementById('bettyStageNote'); if(n) n.textContent='3D stage could not start in this browser. The featured row and catalog cards below still work.'; });
 }
 // Lazy-load the stage: do not load three.js until the stage is about to be seen.
