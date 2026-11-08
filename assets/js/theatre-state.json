@@ -192,6 +192,307 @@
     "staticOverrides": {
      "byObject": {}
     }
+   },
+   "Story": {
+    "sequence": {
+     "subUnitsPerUnit": 30,
+     "length": 8,
+     "tracksByObject": {
+      "StoryChoreo": {
+       "trackData": {
+        "trk-orbit": {
+         "type": "BasicKeyframedTrack",
+         "keyframes": [
+          {
+           "id": "o0",
+           "position": 0,
+           "value": 0,
+           "type": "bezier",
+           "handles": [
+            0.5,
+            0,
+            0.5,
+            0
+           ],
+           "connectedRight": true
+          },
+          {
+           "id": "o1",
+           "position": 2,
+           "value": 0.4,
+           "type": "bezier",
+           "handles": [
+            0.5,
+            0,
+            0.5,
+            0
+           ],
+           "connectedRight": true
+          },
+          {
+           "id": "o2",
+           "position": 4,
+           "value": 0.8,
+           "type": "bezier",
+           "handles": [
+            0.5,
+            0,
+            0.5,
+            0
+           ],
+           "connectedRight": true
+          },
+          {
+           "id": "o3",
+           "position": 6,
+           "value": 1.1,
+           "type": "bezier",
+           "handles": [
+            0.5,
+            0,
+            0.5,
+            0
+           ],
+           "connectedRight": true
+          },
+          {
+           "id": "o4",
+           "position": 8,
+           "value": 1.35,
+           "type": "bezier",
+           "handles": [
+            0.5,
+            0,
+            0.5,
+            0
+           ],
+           "connectedRight": false
+          }
+         ]
+        },
+        "trk-dolly": {
+         "type": "BasicKeyframedTrack",
+         "keyframes": [
+          {
+           "id": "d0",
+           "position": 0,
+           "value": 0,
+           "type": "bezier",
+           "handles": [
+            0.5,
+            0,
+            0.5,
+            0
+           ],
+           "connectedRight": true
+          },
+          {
+           "id": "d1",
+           "position": 2,
+           "value": 0.35,
+           "type": "bezier",
+           "handles": [
+            0.5,
+            0,
+            0.5,
+            0
+           ],
+           "connectedRight": true
+          },
+          {
+           "id": "d2",
+           "position": 4,
+           "value": 0.7,
+           "type": "bezier",
+           "handles": [
+            0.5,
+            0,
+            0.5,
+            0
+           ],
+           "connectedRight": true
+          },
+          {
+           "id": "d3",
+           "position": 6,
+           "value": 0.9,
+           "type": "bezier",
+           "handles": [
+            0.5,
+            0,
+            0.5,
+            0
+           ],
+           "connectedRight": true
+          },
+          {
+           "id": "d4",
+           "position": 8,
+           "value": 1,
+           "type": "bezier",
+           "handles": [
+            0.5,
+            0,
+            0.5,
+            0
+           ],
+           "connectedRight": false
+          }
+         ]
+        },
+        "trk-breathe": {
+         "type": "BasicKeyframedTrack",
+         "keyframes": [
+          {
+           "id": "b0",
+           "position": 0,
+           "value": 1.0,
+           "type": "bezier",
+           "handles": [
+            0.5,
+            0,
+            0.5,
+            0
+           ],
+           "connectedRight": true
+          },
+          {
+           "id": "b1",
+           "position": 2,
+           "value": 1.12,
+           "type": "bezier",
+           "handles": [
+            0.5,
+            0,
+            0.5,
+            0
+           ],
+           "connectedRight": true
+          },
+          {
+           "id": "b2",
+           "position": 4,
+           "value": 1.0,
+           "type": "bezier",
+           "handles": [
+            0.5,
+            0,
+            0.5,
+            0
+           ],
+           "connectedRight": true
+          },
+          {
+           "id": "b3",
+           "position": 6,
+           "value": 1.18,
+           "type": "bezier",
+           "handles": [
+            0.5,
+            0,
+            0.5,
+            0
+           ],
+           "connectedRight": true
+          },
+          {
+           "id": "b4",
+           "position": 8,
+           "value": 1.25,
+           "type": "bezier",
+           "handles": [
+            0.5,
+            0,
+            0.5,
+            0
+           ],
+           "connectedRight": false
+          }
+         ]
+        },
+        "trk-glow": {
+         "type": "BasicKeyframedTrack",
+         "keyframes": [
+          {
+           "id": "g0",
+           "position": 0,
+           "value": 0,
+           "type": "bezier",
+           "handles": [
+            0.5,
+            0,
+            0.5,
+            0
+           ],
+           "connectedRight": true
+          },
+          {
+           "id": "g1",
+           "position": 2,
+           "value": 0.25,
+           "type": "bezier",
+           "handles": [
+            0.5,
+            0,
+            0.5,
+            0
+           ],
+           "connectedRight": true
+          },
+          {
+           "id": "g2",
+           "position": 4,
+           "value": 0.6,
+           "type": "bezier",
+           "handles": [
+            0.5,
+            0,
+            0.5,
+            0
+           ],
+           "connectedRight": true
+          },
+          {
+           "id": "g3",
+           "position": 6,
+           "value": 0.85,
+           "type": "bezier",
+           "handles": [
+            0.5,
+            0,
+            0.5,
+            0
+           ],
+           "connectedRight": true
+          },
+          {
+           "id": "g4",
+           "position": 8,
+           "value": 1,
+           "type": "bezier",
+           "handles": [
+            0.5,
+            0,
+            0.5,
+            0
+           ],
+           "connectedRight": false
+          }
+         ]
+        }
+       },
+       "trackIdByPropPath": {
+        "[\"camOrbit\"]": "trk-orbit",
+        "[\"camDolly\"]": "trk-dolly",
+        "[\"orbBreathe\"]": "trk-breathe",
+        "[\"threadGlow\"]": "trk-glow"
+       }
+      }
+     }
+    },
+    "staticOverrides": {
+     "byObject": {}
+    }
    }
   }
  },
@@ -207,6 +508,23 @@
    "camSway": "Camera sway: 0 at 0s, +0.12 at 3s, 0 at 6s, -0.12 at 9s, 0 at 12s \u2014 a slow handheld drift."
   },
   "runtime": "Theatre.js Core 0.7.2 only (assets/js/vendor/theatre-core.mjs). Studio (AGPL) is NOT shipped. If the Core/state load fails, GSAP replays the same 12s loop (see index.html startGsapChoreo).",
-  "crossPage": "The Bible's camera glide hero -> shelf is NOT in this file: the shelf lives in betty-plush.html, which Wave 2h must not touch. That glide belongs to a future betty-plush wave."
+  "crossPage": "The Bible's camera glide hero -> shelf is NOT in this file: the shelf lives in betty-plush.html, which Wave 2h must not touch. That glide belongs to a future betty-plush wave.",
+  "story": {
+   "project": "SoulEconomyHero",
+   "sheet": "Story",
+   "object": "StoryChoreo",
+   "lengthSeconds": 8,
+   "drive": "SCRUBBED by scroll only \u2014 the story section sets sheet.sequence.position = progress * 8. NEVER played (no autoplay, no loop).",
+   "soul": "Architect \u2014 beats are verbatim fragments of its catalog desc + PLT (see index.html #soul-story).",
+   "tracks": {
+    "camOrbit": "Camera orbit offset (radians): 0 at 0s, 0.4 at 2s, 0.8 at 4s, 1.1 at 6s, 1.35 at 8s \u2014 slow circle around the soul.",
+    "camDolly": "Camera dolly-in 0..1: 0 at 0s, 0.35 at 2s, 0.7 at 4s, 0.9 at 6s, 1 at 8s \u2014 closer with every beat.",
+    "orbBreathe": "Soul orb scale: 1.0 at 0s, 1.12 at 2s, 1.0 at 4s, 1.18 at 6s, 1.25 at 8s.",
+    "threadGlow": "Gold thread light-up: 0 at 0s, 0.25 at 2s, 0.6 at 4s, 0.85 at 6s, 1 at 8s \u2014 the modules connect."
+   },
+   "fallback": "If Theatre/state fails to load, index.html interpolates the same keyframe times in plain JS (STORY_KEYS).",
+   "reducedMotion": "Reduced motion skips Theatre + the canvas entirely; the beats read as plain stacked text.",
+   "crossPage": "The Bible's camera glide hero -> shelf is NOT in this file: the shelf lives in betty-plush.html. That glide belongs to a future betty-plush wave."
+  }
  }
 }
