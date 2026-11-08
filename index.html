@@ -59,9 +59,9 @@ button{cursor:pointer;font-family:inherit;border:none;outline:none;background:no
 input{font-family:inherit;outline:none;border:none;background:none}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important}}
 
-#bg-canvas{position:relative;width:100%;height:68vh;min-height:480px;display:block;z-index:0}
+#bg-canvas{position:relative;width:100%;height:68vh;min-height:480px;display:block;z-index:0;background:#07070D}
 /* FIX #2 — hero graph band sits ABOVE the hero headline (was 100vh, cluster over the text) + control bar */
-#hero-graph-wrap{position:relative;width:100%}
+#hero-graph-wrap{position:relative;width:100%;background:radial-gradient(ellipse 90% 75% at 50% 30%,#171006 0%,#0C0C12 55%,#050508 100%)}
 #hero-graph-bar{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);z-index:5;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px 10px;max-width:min(1060px,94%);padding:8px 12px;background:rgba(12,12,18,0.88);border:1px solid rgba(245,158,11,0.35);border-radius:14px;font-size:0.72rem;color:#E8E0CE;box-shadow:0 10px 40px rgba(0,0,0,0.6);pointer-events:auto}
 #hero-graph-bar .hg-legend{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center}
 #hero-graph-bar .hg-legend span{white-space:nowrap}
@@ -1512,10 +1512,13 @@ render = function(data) {
     const { Scene, PerspectiveCamera, WebGLRenderer, Color, AmbientLight, DirectionalLight, MeshPhysicalMaterial, OctahedronGeometry, Mesh, SphereGeometry, MeshBasicMaterial, BufferGeometry, Float32BufferAttribute, PointsMaterial, Points, AdditiveBlending, EdgesGeometry, LineBasicMaterial, LineSegments, Group, Vector2, Raycaster, TetrahedronGeometry, BoxGeometry, InstancedMesh, Matrix4, RingGeometry, CylinderGeometry, DodecahedronGeometry, ConeGeometry, TorusGeometry } = T;
     const { OrbitControls } = await import('three/addons/controls/OrbitControls.js');
 
-    const scene = new Scene(); scene.background = new Color(0x0C0C12);
+    // IDEA 6 (Stage 2.6) — dark universe: base deepened from #0C0C12 to
+    // #07070D (still never pure black); amber/gold nebulae + star shells
+    // below are the atmosphere, labels/controls stay DOM above it.
+    const scene = new Scene(); scene.background = new Color(0x07070D);
     const REDUCED = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const LITE = window.matchMedia && matchMedia('(pointer:coarse)').matches && Math.min(screen.width, screen.height) < 820;
-    scene.fog = new T.FogExp2(0x0C0C12, 0.015);
+    scene.fog = new T.FogExp2(0x07070D, 0.015); // IDEA 6 — fog matches the deepened universe base
     const vig = document.createElement('div');
     vig.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(circle at 50% 42%,transparent 55%,rgba(12,12,18,0.55) 100%)';
     document.body.appendChild(vig);
@@ -1947,6 +1950,35 @@ render = function(data) {
       const wm = new MeshBasicMaterial({ color: si % 2 ? 0xF59E0B : 0xFFD166, wireframe: true, transparent: true, opacity: 0.035, depthWrite: false });
       scene.add(new Mesh(wg, wm));
     });
+    // ─── IDEA 6 (Stage 2.6) — DARK UNIVERSE BACKGROUND ───
+    // The hero graph floats in a dark universe: the scene base above is
+    // deepened to #07070D, and three huge soft amber/gold nebula glows sit
+    // far behind the nodes (3 Sprite draw calls, additive, fog off, very
+    // low opacity — atmosphere only, never over the labels). Amber/gold
+    // only, no purple/cyan (idea 11). The amber star shells + the 2.4
+    // particle field are the stars; the CSS gradient on #hero-graph-wrap
+    // is the poster fallback if WebGL never starts, so the band is never
+    // a silent black canvas.
+    const nebulae = [];
+    try {
+      const nebCv = document.createElement('canvas'); nebCv.width = nebCv.height = 256;
+      const nctx = nebCv.getContext('2d');
+      const ng = nctx.createRadialGradient(128, 128, 8, 128, 128, 128);
+      ng.addColorStop(0, 'rgba(255,255,255,0.55)'); ng.addColorStop(0.45, 'rgba(255,255,255,0.16)'); ng.addColorStop(1, 'rgba(255,255,255,0)');
+      nctx.fillStyle = ng; nctx.fillRect(0, 0, 256, 256);
+      const nebTex = new T.CanvasTexture(nebCv);
+      [
+        { c: 0xF59E0B, o: 0.07, p: [-6, 3.5, -11], s: [22, 13] },
+        { c: 0xFFD166, o: 0.05, p: [5.5, 0.5, -13], s: [17, 10] },
+        { c: 0xB45309, o: 0.06, p: [0, 5.5, -10], s: [26, 15] }
+      ].forEach(nb => {
+        const sm = new T.SpriteMaterial({ map: nebTex, color: nb.c, transparent: true, opacity: nb.o, blending: AdditiveBlending, depthWrite: false, fog: false });
+        const sp = new T.Sprite(sm);
+        sp.position.set(nb.p[0], nb.p[1], nb.p[2]); sp.scale.set(nb.s[0], nb.s[1], 1);
+        sp.userData.y0 = nb.p[1]; sp.userData.o0 = nb.o;
+        scene.add(sp); nebulae.push(sp);
+      });
+    } catch (e) { console.warn('Nebulae skipped:', e); }
     // rising ambient motes
     const moteCount = LITE ? 0 : 24;
     const moteArr = new Float32Array(moteCount * 3);
@@ -2328,6 +2360,7 @@ render = function(data) {
         controls.enabled = false;
       }
       constMoving = true;
+      startDissolve(); // IDEA 16 — nodes dissolve into points, reform as / out of the 222
     }
     // ─── IDEA 14 (Stage 2.3) — LAYOUT SWITCHER: Network / Spiral / Cluster / Planetary ───
     // The switcher lives in the control bar (#hgLayout). Every layout is a set
@@ -2415,9 +2448,94 @@ render = function(data) {
       const cmap = layoutTargetsFor(name);
       nodeData.forEach(d => { if (!d.homePos && d.pos) d.homePos = d.pos.clone(); d.layoutTarget = cmap.has(d.index) ? cmap.get(d.index) : null; });
       layoutMoving = true;
+      startDissolve(); // IDEA 16 — nodes dissolve into points, reform in the new layout
     }
     const hgLayout = document.getElementById('hgLayout');
     if (hgLayout) hgLayout.addEventListener('change', () => setLayout(hgLayout.value));
+
+    // ─── IDEA 16 (Stage 2.5) — POINT CLOUDS DISSOLVE + REFORM ON VIEW SWITCH ───
+    // When the view switches (layout, 222 constellation, Reset) the nodes
+    // dissolve into amber/gold points and reform in the new arrangement —
+    // the same transition language as the 2.4 particle field, not a snap.
+    // ONE shared Points pool (1600 pts ≈ 6 per node, 1 draw call): on a
+    // switch each node bursts into points that drift and fade over 0.9 s
+    // while the nodes themselves fade out over the first 35% of the
+    // transition and fade back in over the rest (dissF in the animate loop).
+    // Whole transition ≤ ~0.9 s (theater open: 1.2 s). Reduced motion:
+    // no dissolve at all — the existing glide is the whole transition.
+    const DISSOLVE_N = 1600, DISSOLVE_PER_NODE = 6, DISSOLVE_LIFE = 0.9;
+    let dissolveDur = 900, dissolveStart = -1, dissolveActive = false, dissolveAlive = false;
+    let dissolveGeo = null, dissolvePts = null;
+    const dissolveLife = new Float32Array(DISSOLVE_N);
+    const dissolveVel = new Float32Array(DISSOLVE_N * 3);
+    const dissolveBase = new Float32Array(DISSOLVE_N * 3);
+    const DISSOLVE_COLS = [[1.0, 0.62, 0.04], [1.0, 0.82, 0.40], [0.98, 0.75, 0.14], [1.0, 0.91, 0.66]];
+    try {
+      const dPos = new Float32Array(DISSOLVE_N * 3), dCol = new Float32Array(DISSOLVE_N * 3);
+      for (let di = 0; di < DISSOLVE_N; di++) dPos[di * 3 + 1] = -999; // parked off-screen
+      dissolveGeo = new BufferGeometry();
+      dissolveGeo.setAttribute('position', new Float32BufferAttribute(dPos, 3));
+      dissolveGeo.setAttribute('color', new Float32BufferAttribute(dCol, 3));
+      const dotCv = document.createElement('canvas'); dotCv.width = dotCv.height = 64;
+      const dctx = dotCv.getContext('2d');
+      const dg = dctx.createRadialGradient(32, 32, 2, 32, 32, 32);
+      dg.addColorStop(0, 'rgba(255,255,255,1)'); dg.addColorStop(0.4, 'rgba(255,255,255,0.6)'); dg.addColorStop(1, 'rgba(255,255,255,0)');
+      dctx.fillStyle = dg; dctx.fillRect(0, 0, 64, 64);
+      dissolvePts = new Points(dissolveGeo, new PointsMaterial({ map: new T.CanvasTexture(dotCv), vertexColors: true, size: 0.09, transparent: true, opacity: 0.95, blending: AdditiveBlending, depthWrite: false }));
+      dissolvePts.frustumCulled = false; scene.add(dissolvePts);
+    } catch (e) { console.warn('Dissolve points skipped:', e); dissolvePts = null; dissolveGeo = null; }
+    function spawnDissolveBurst() {
+      if (!dissolveGeo) return;
+      const pa = dissolveGeo.getAttribute('position'), ca = dissolveGeo.getAttribute('color');
+      let di = 0;
+      nodeData.forEach(d => {
+        if (!d.pos || di >= DISSOLVE_N) return;
+        for (let k = 0; k < DISSOLVE_PER_NODE && di < DISSOLVE_N; k++, di++) {
+          pa.setXYZ(di, d.pos.x + (Math.random() - 0.5) * 0.15, d.pos.y + (Math.random() - 0.5) * 0.15, d.pos.z + (Math.random() - 0.5) * 0.15);
+          const th = Math.random() * Math.PI * 2, ph = Math.acos(2 * Math.random() - 1), sp = 0.4 + Math.random() * 1.0;
+          dissolveVel[di * 3] = Math.sin(ph) * Math.cos(th) * sp;
+          dissolveVel[di * 3 + 1] = Math.cos(ph) * sp * 0.7 + 0.15;
+          dissolveVel[di * 3 + 2] = Math.sin(ph) * Math.sin(th) * sp;
+          const c = DISSOLVE_COLS[(Math.random() * DISSOLVE_COLS.length) | 0];
+          dissolveBase[di * 3] = c[0]; dissolveBase[di * 3 + 1] = c[1]; dissolveBase[di * 3 + 2] = c[2];
+          ca.setXYZ(di, c[0], c[1], c[2]);
+          dissolveLife[di] = DISSOLVE_LIFE;
+        }
+      });
+      // Park any unused tail of the pool (a smaller burst than last time).
+      for (; di < DISSOLVE_N; di++) { if (dissolveLife[di] > 0) { dissolveLife[di] = 0; pa.setXYZ(di, 0, -999, 0); ca.setXYZ(di, 0, 0, 0); } }
+      pa.needsUpdate = true; ca.needsUpdate = true;
+      dissolveAlive = true;
+    }
+    function startDissolve(durMs) {
+      if (REDUCED || dissolveActive) return; // reduced motion: glide only, no dissolve; a running dissolve absorbs re-triggers
+      dissolveDur = durMs || 900;
+      dissolveStart = performance.now(); dissolveActive = true;
+      spawnDissolveBurst();
+    }
+    function endDissolve() {
+      dissolveActive = false; dissolveStart = -1;
+      if (!dissolveGeo) return;
+      const pa = dissolveGeo.getAttribute('position'), ca = dissolveGeo.getAttribute('color');
+      for (let di = 0; di < DISSOLVE_N; di++) { dissolveLife[di] = 0; pa.setXYZ(di, 0, -999, 0); ca.setXYZ(di, 0, 0, 0); }
+      pa.needsUpdate = true; ca.needsUpdate = true; dissolveAlive = false;
+    }
+    function updateDissolvePts(dt) {
+      if (!dissolveAlive || !dissolveGeo) return;
+      const pa = dissolveGeo.getAttribute('position'), ca = dissolveGeo.getAttribute('color');
+      let any = false, dirty = false;
+      for (let di = 0; di < DISSOLVE_N; di++) {
+        if (dissolveLife[di] <= 0) continue;
+        any = true; dirty = true;
+        dissolveLife[di] -= dt;
+        if (dissolveLife[di] <= 0) { pa.setXYZ(di, 0, -999, 0); ca.setXYZ(di, 0, 0, 0); continue; }
+        pa.setXYZ(di, pa.getX(di) + dissolveVel[di * 3] * dt, pa.getY(di) + dissolveVel[di * 3 + 1] * dt, pa.getZ(di) + dissolveVel[di * 3 + 2] * dt);
+        const f = dissolveLife[di] / DISSOLVE_LIFE;
+        ca.setXYZ(di, dissolveBase[di * 3] * f, dissolveBase[di * 3 + 1] * f, dissolveBase[di * 3 + 2] * f);
+      }
+      if (dirty) { pa.needsUpdate = true; ca.needsUpdate = true; }
+      if (!any) dissolveAlive = false;
+    }
 
     try {
       const radialCv = document.createElement('canvas'); radialCv.width = radialCv.height = 128;
@@ -2641,7 +2759,7 @@ render = function(data) {
     const hgZo = document.getElementById('hgZoomOut');
     if (hgZo) hgZo.addEventListener('click', () => hgDolly(1.25));
     const hgRs = document.getElementById('hgReset');
-    if (hgRs) hgRs.addEventListener('click', () => { if (constActive) setConstellation(false); if (layoutName !== 'network') setLayout('network'); clearFocus(); camera.position.set(0, 3.4, 8); controls.target.set(0, 1.6, 0); applyGraphFilter('all'); if (hgFilter) hgFilter.value = 'all'; });
+    if (hgRs) hgRs.addEventListener('click', () => { if (constActive) setConstellation(false); if (layoutName !== 'network') setLayout('network'); startDissolve(); clearFocus(); camera.position.set(0, 3.4, 8); controls.target.set(0, 1.6, 0); applyGraphFilter('all'); if (hgFilter) hgFilter.value = 'all'; });
     // IDEA 28 — toggle between the normal graph and the 222 constellation.
     const hgConst = document.getElementById('hgConst');
     if (hgConst) hgConst.addEventListener('click', () => setConstellation(!constActive));
@@ -2665,6 +2783,17 @@ render = function(data) {
       if (graphCtl.paused && !graphCtl.frozenT) graphCtl.frozenT = t;
       if (!graphCtl.paused) graphCtl.frozenT = 0;
       const TT = (REDUCED || graphCtl.paused) ? (graphCtl.frozenT || 0) : t;
+      // IDEA 16 (Stage 2.5) — dissolve/reform factor: 1 = fully formed,
+      // 0 = fully dissolved into points. Nodes fade out over the first 35%
+      // of the transition and fade back in over the rest; ~0.9 s on a view
+      // switch, 1.2 s for the theater open. Idle outside a transition.
+      let dissF = 1;
+      if (dissolveActive) {
+        const dp = (nowMs - dissolveStart) / dissolveDur;
+        if (dp >= 1) { dissF = 1; dissolveActive = false; dissolveStart = -1; }
+        else if (dp < 0.35) { const q = dp / 0.35; dissF = 1 - q * q * (3 - 2 * q); }
+        else { const q = (dp - 0.35) / 0.65; dissF = q * q * (3 - 2 * q); }
+      }
       controls.autoRotate = !graphCtl.paused && !focusAnim && !constActive && !layoutMoving;
       if (!REDUCED && !graphCtl.paused) { starNear.rotation.y += 0.00006; starFar.rotation.y -= 0.00004; }
       controls.autoRotateSpeed = REDUCED ? 0.8 : 0.8 + Math.sin(t*0.3)*0.3;
@@ -2720,6 +2849,7 @@ render = function(data) {
       nodeData.forEach(d => { if (d.mesh) {
         let dimF = (focusActive && !focusSet.has(d.index)) ? 0.12 : 1; // IDEA 13 — dim outside the focus
         if (constActive && !constSet.has(d.index)) dimF = Math.min(dimF, 0.08); // IDEA 28 — dim outside the 222
+        dimF *= dissF; // IDEA 16 — nodes fade with the dissolve (also gates trail spawning mid-dissolve)
         const isSpr = !!d.mesh.isSprite;
         const isHov = hoverRef.d && hoverRef.d.index === d.index;
         // Heartbeat lungs — lub-dub thump, phase-offset per node
@@ -2731,7 +2861,7 @@ render = function(data) {
         const morphE = morph * morph * (3 - 2 * morph); // smoothstep
         if (isSpr) {
           // Plushie sprite: breathe by scale, bob gently; sprites face camera.
-          const s = 0.55 * d.baseScale * br * (0.6 + 0.4 * morphE) * (isHov ? 1.25 : 1);
+          const s = 0.55 * d.baseScale * br * (0.6 + 0.4 * morphE) * (isHov ? 1.25 : 1) * dissF;
           d.mesh.scale.set(s, s, 1);
           d.mesh.material.opacity = 0.95 * morphE * dimF;
           if (!REDUCED) d.mesh.position.set(d.pos.x, d.pos.y + 0.03 * Math.sin(TT * 1.4 + (d.phase || 0)), d.pos.z);
@@ -2739,7 +2869,7 @@ render = function(data) {
         } else if (d.mesh.isMesh) {
           d.mesh.rotation.x = Math.sin(TT + d.index) * 0.05;
           d.mesh.rotation.y = Math.cos(TT + d.index) * 0.05;
-          d.mesh.scale.setScalar(d.baseScale * br * (isHov ? 1.25 : 1));
+          d.mesh.scale.setScalar(d.baseScale * br * (isHov ? 1.25 : 1) * dissF);
           // bio-swell: the body drifts outward along its radial axis with each beat
           if (!REDUCED) {
             const px = d.pos.x, py = d.pos.y, pz = d.pos.z;
@@ -2765,7 +2895,7 @@ render = function(data) {
           // by True Value are always on; the rest fade in only when zoomed
           // in (labelGate: 0 at distance 8, 1 at 6). Out-of-focus labels hide.
           const ld = camera.position.distanceTo(d.label.position);
-          d.label.material.opacity = Math.max(0.25, Math.min(0.9, 1.1 - ld / 18)) * (d.topLabel ? 1 : labelGate) * (focusActive && !focusSet.has(d.index) ? 0 : 1) * (constActive && !constSet.has(d.index) ? 0 : 1);
+          d.label.material.opacity = Math.max(0.25, Math.min(0.9, 1.1 - ld / 18)) * (d.topLabel ? 1 : labelGate) * (focusActive && !focusSet.has(d.index) ? 0 : 1) * (constActive && !constSet.has(d.index) ? 0 : 1) * dissF;
           // FIX #2 live repair — shrink labels when zoomed out (dense centre
           // overlaps most at distance); full size once zoomed in (camDist <= 6).
           const lsc = camDist >= 8 ? 0.78 : camDist <= 6 ? 1 : 0.78 + (8 - camDist) * 0.11;
@@ -2803,7 +2933,7 @@ render = function(data) {
       } else if (d.label) {
         // Instanced skill nodes have no mesh, so their labels skip the block
         // above: dim them out of focus, restore them when focus clears.
-        d.label.material.opacity = constActive ? 0 : (focusActive ? (focusSet.has(d.index) ? 0.9 : 0) : 0.95);
+        d.label.material.opacity = constActive ? 0 : (focusActive ? (focusSet.has(d.index) ? 0.9 : 0) : 0.95) * dissF;
         // FIX #2 live repair — same zoom-out shrink for instanced skill labels.
         const lsc2 = camDist >= 8 ? 0.78 : camDist <= 6 ? 1 : 0.78 + (8 - camDist) * 0.11;
         const lbs2 = d.label.userData.bs || { x: 0.2, y: 0.025 };
@@ -2822,12 +2952,12 @@ render = function(data) {
         const inst = sb.userData.instances;
         for (let si = 0; si < sb.count; si++) {
           const bp = inst[si].pos;
-          const s = (inst[si].s || 1) * (1 + 0.12 * Math.sin(TT*2.2 + si*0.5));
+          const s = (inst[si].s || 1) * (1 + 0.12 * Math.sin(TT*2.2 + si*0.5)) * dissF;
           _m4.makeTranslation(bp.x, bp.y, bp.z);
           _m4.scale(_sv.set(s, s, s));
           sb.setMatrixAt(si, _m4);
           // IDEA 13 — instanced skill stars dim outside the focus too.
-          const sDim = (constActive || (focusActive && !focusSet.has(inst[si].index))) ? 0.15 : 1;
+          const sDim = ((constActive || (focusActive && !focusSet.has(inst[si].index))) ? 0.15 : 1) * dissF;
           sb.setColorAt(si, _cc.setHSL(0.10 + 0.02*Math.sin(TT*2 + si*0.35), 0.75, 0.55).multiplyScalar(sDim));
         }
         sb.instanceMatrix.needsUpdate = true;
@@ -2843,6 +2973,9 @@ render = function(data) {
         ma.needsUpdate = true;
       }
       if (particleMat) particleMat.uniforms.uTime.value = TT; // IDEA 15 — GPU particle clock
+      // IDEA 6 — nebulae breathe almost imperceptibly (frozen when paused / reduced).
+      if (nebulae.length && !REDUCED && !graphCtl.paused) nebulae.forEach((nb, ni) => { nb.position.y = nb.userData.y0 + Math.sin(TT * 0.12 + ni * 2.1) * 0.25; nb.material.opacity = nb.userData.o0 * (0.9 + 0.1 * Math.sin(TT * 0.2 + ni * 1.3)); });
+      updateDissolvePts(emaDt / 1000); // IDEA 16 — advance + fade the dissolve burst
       for (let ri = ripples.length - 1; ri >= 0; ri--) {
         const rp = ripples[ri];
         const age = (nowMs - rp.born) / 1000;
@@ -2864,6 +2997,27 @@ render = function(data) {
         updateTrails(emaDt / 1000);
       }
       renderer.render(scene, camera);
+    }
+    // ─── IDEA 7 (Stage 2.7) — HOMEPAGE THEATER OPEN ───
+    // First load only: the hero opens like a theater — the nodes start
+    // dissolved into points and reform into the constellation over ~1.2 s,
+    // using the same dissolve language as idea 16 (2.5). Instant on repeat
+    // visits (sessionStorage flag, set before the transition starts);
+    // skipped entirely under prefers-reduced-motion; any click, scroll,
+    // touch, or key ends it at once. The graph is live underneath, so it
+    // never delays time-to-interactive.
+    let theaterOpen = false;
+    try {
+      if (!REDUCED && !sessionStorage.getItem('soulTheaterSeenV1')) {
+        sessionStorage.setItem('soulTheaterSeenV1', '1');
+        theaterOpen = true;
+        dissolveDur = 1200; dissolveStart = performance.now(); dissolveActive = true;
+        spawnDissolveBurst();
+      }
+    } catch (e) { /* storage unavailable — graph opens normally, no theater */ }
+    if (theaterOpen) {
+      const endTheater = () => { if (dissolveActive) endDissolve(); };
+      ['pointerdown', 'wheel', 'touchstart', 'keydown'].forEach(ev => window.addEventListener(ev, endTheater, { once: true, passive: true }));
     }
     animate();
     window.addEventListener('resize', () => { camera.aspect = gw() / gh(); camera.updateProjectionMatrix(); renderer.setSize(gw(), gh()); });
