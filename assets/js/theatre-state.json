@@ -1,0 +1,212 @@
+{
+ "theatre": {
+  "definitionVersion": "0.4.0",
+  "sheetsById": {
+   "Hero": {
+    "sequence": {
+     "subUnitsPerUnit": 30,
+     "length": 12,
+     "tracksByObject": {
+      "Choreo": {
+       "trackData": {
+        "trk-breathe": {
+         "type": "BasicKeyframedTrack",
+         "keyframes": [
+          {
+           "id": "b0",
+           "position": 0,
+           "value": 1.0,
+           "type": "bezier",
+           "handles": [
+            0.5,
+            0,
+            0.5,
+            0
+           ],
+           "connectedRight": true
+          },
+          {
+           "id": "b1",
+           "position": 6,
+           "value": 1.35,
+           "type": "bezier",
+           "handles": [
+            0.5,
+            0,
+            0.5,
+            0
+           ],
+           "connectedRight": true
+          },
+          {
+           "id": "b2",
+           "position": 12,
+           "value": 1.0,
+           "type": "bezier",
+           "handles": [
+            0.5,
+            0,
+            0.5,
+            0
+           ],
+           "connectedRight": false
+          }
+         ]
+        },
+        "trk-glow": {
+         "type": "BasicKeyframedTrack",
+         "keyframes": [
+          {
+           "id": "g0",
+           "position": 0,
+           "value": 0,
+           "type": "bezier",
+           "handles": [
+            0.5,
+            0,
+            0.5,
+            0
+           ],
+           "connectedRight": true
+          },
+          {
+           "id": "g1",
+           "position": 4,
+           "value": 1,
+           "type": "bezier",
+           "handles": [
+            0.5,
+            0,
+            0.5,
+            0
+           ],
+           "connectedRight": true
+          },
+          {
+           "id": "g2",
+           "position": 8,
+           "value": 0,
+           "type": "bezier",
+           "handles": [
+            0.5,
+            0,
+            0.5,
+            0
+           ],
+           "connectedRight": true
+          },
+          {
+           "id": "g3",
+           "position": 12,
+           "value": 0,
+           "type": "bezier",
+           "handles": [
+            0.5,
+            0,
+            0.5,
+            0
+           ],
+           "connectedRight": false
+          }
+         ]
+        },
+        "trk-sway": {
+         "type": "BasicKeyframedTrack",
+         "keyframes": [
+          {
+           "id": "s0",
+           "position": 0,
+           "value": 0,
+           "type": "bezier",
+           "handles": [
+            0.5,
+            0,
+            0.5,
+            0
+           ],
+           "connectedRight": true
+          },
+          {
+           "id": "s1",
+           "position": 3,
+           "value": 0.12,
+           "type": "bezier",
+           "handles": [
+            0.5,
+            0,
+            0.5,
+            0
+           ],
+           "connectedRight": true
+          },
+          {
+           "id": "s2",
+           "position": 6,
+           "value": 0,
+           "type": "bezier",
+           "handles": [
+            0.5,
+            0,
+            0.5,
+            0
+           ],
+           "connectedRight": true
+          },
+          {
+           "id": "s3",
+           "position": 9,
+           "value": -0.12,
+           "type": "bezier",
+           "handles": [
+            0.5,
+            0,
+            0.5,
+            0
+           ],
+           "connectedRight": true
+          },
+          {
+           "id": "s4",
+           "position": 12,
+           "value": 0,
+           "type": "bezier",
+           "handles": [
+            0.5,
+            0,
+            0.5,
+            0
+           ],
+           "connectedRight": false
+          }
+         ]
+        }
+       },
+       "trackIdByPropPath": {
+        "[\"breathe\"]": "trk-breathe",
+        "[\"threadGlow\"]": "trk-glow",
+        "[\"camSway\"]": "trk-sway"
+       }
+      }
+     }
+    },
+    "staticOverrides": {
+     "byObject": {}
+    }
+   }
+  }
+ },
+ "notes": {
+  "project": "SoulEconomyHero",
+  "sheet": "Hero",
+  "object": "Choreo",
+  "lengthSeconds": 12,
+  "loop": "infinite",
+  "tracks": {
+   "breathe": "Node breathing amplitude: 1.0 at 0s, 1.35 at 6s, back to 1.0 at 12s.",
+   "threadGlow": "Thread connect pulse: 0 at 0s, 1 at 4s, 0 at 8s and 12s \u2014 the gold threads flare as nodes connect.",
+   "camSway": "Camera sway: 0 at 0s, +0.12 at 3s, 0 at 6s, -0.12 at 9s, 0 at 12s \u2014 a slow handheld drift."
+  },
+  "runtime": "Theatre.js Core 0.7.2 only (assets/js/vendor/theatre-core.mjs). Studio (AGPL) is NOT shipped. If the Core/state load fails, GSAP replays the same 12s loop (see index.html startGsapChoreo).",
+  "crossPage": "The Bible's camera glide hero -> shelf is NOT in this file: the shelf lives in betty-plush.html, which Wave 2h must not touch. That glide belongs to a future betty-plush wave."
+ }
+}

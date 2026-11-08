@@ -19,6 +19,9 @@
 <link rel="stylesheet" href="css/card-bio.css" />
 <link rel="stylesheet" href="css/treasury.css" />
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@7/dist/fuse.min.js"></script>
+<!-- WAVE 2h (idea 10) — GSAP 3.13.0 + Lenis 1.3.4, vendored under assets/js/vendor/ (self-hosted, idea 20). Theatre.js Core is loaded as a module inside the graph script. -->
+<script src="assets/js/vendor/gsap.min.js"></script>
+<script src="assets/js/vendor/lenis.min.js"></script>
 <script type="importmap">
 {
   "imports": {
@@ -75,6 +78,27 @@ input{font-family:inherit;outline:none;border:none;background:none}
 /* SOUL INFO PANEL */
 #soul-info-panel{position:fixed;right:24px;top:50%;transform:translateY(-50%);z-index:100;width:320px;background:rgba(8,8,8,0.92);backdrop-filter:blur(24px);border:1px solid rgba(139,92,246,0.2);border-radius:20px;padding:28px;opacity:0;pointer-events:none;transform:translateY(-50%) translateX(20px);transition:all 0.4s cubic-bezier(0.22,1,0.36,1);box-shadow:0 0 80px rgba(139,92,246,0.15)}
 #soul-info-panel.active{opacity:1;pointer-events:auto;transform:translateY(-50%) translateX(0)}
+/* WAVE 2h — idea 8 whisper tooltip (text only), idea 25 thread card, idea 19 palette + bottom sheets */
+#hgWhisper{position:absolute;z-index:6;max-width:280px;padding:8px 12px;background:rgba(12,12,18,0.94);border:1px solid rgba(245,158,11,0.55);border-radius:12px;color:#FFE9B0;font-size:0.78rem;line-height:1.45;pointer-events:none;box-shadow:0 8px 30px rgba(0,0,0,0.6)}
+#hgThread{position:absolute;left:12px;top:12px;z-index:6;max-width:300px;padding:12px 14px;background:rgba(12,12,18,0.94);border:1px solid rgba(245,158,11,0.55);border-radius:14px;color:#E8E0CE;font-size:0.8rem;line-height:1.5;box-shadow:0 10px 40px rgba(0,0,0,0.6)}
+#hgThread .hg-bond{font-weight:700}
+#hgThread .hg-thread-x{float:right;color:#B8B8B8;cursor:pointer;font-size:0.9rem}
+#hgThread .hg-thread-plt{display:block;margin-top:6px;color:#B8B8B8;font-size:0.72rem}
+#hgThread .hg-thread-hint{display:block;margin-top:6px;color:#FFD166;font-size:0.72rem}
+#hgPalette{position:fixed;inset:0;z-index:6000;display:flex;align-items:flex-start;justify-content:center;padding:12vh 16px 16px;background:rgba(5,5,10,0.6);backdrop-filter:blur(4px)}
+#hgPalette .hg-pal-box{width:min(560px,100%);background:rgba(12,12,18,0.97);border:1px solid rgba(245,158,11,0.45);border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,0.7);overflow:hidden}
+#hgPaletteInput{width:100%;padding:14px 16px;background:transparent;color:#fff;font-size:1rem;border:none;border-bottom:1px solid rgba(255,255,255,0.08)}
+#hgPaletteList{max-height:320px;overflow:auto;padding:6px}
+.hg-pal-item{padding:9px 12px;border-radius:10px;cursor:pointer;font-size:0.88rem;color:#E8E0CE}
+.hg-pal-item small{display:block;color:#B8B8B8;font-size:0.72rem}
+.hg-pal-item.sel{background:rgba(245,158,11,0.16)}
+#hgPalette .hg-pal-hint{padding:8px 14px;font-size:0.7rem;color:#B8B8B8;border-top:1px solid rgba(255,255,255,0.06)}
+@media (max-width:820px){
+  #soul-info-panel{left:12px;right:12px;top:auto;bottom:0;width:auto;max-height:62vh;overflow:auto;border-radius:20px 20px 0 0;transform:translateY(24px)}
+  #soul-info-panel.active{transform:translateY(0)}
+  #hgPalette{padding:8vh 12px 12px}
+  #hgThread{left:8px;right:8px;top:8px;max-width:none}
+}
 #soul-info-panel .close{position:absolute;top:12px;right:16px;color:var(--text-muted);cursor:pointer;font-size:1.2rem;transition:color 0.2s;background:none;border:none;font-family:inherit}
 #soul-info-panel .close:hover{color:var(--text-white)}
 #soul-info-panel .name{font-size:1.4rem;font-weight:700;margin-bottom:4px;background:linear-gradient(135deg,var(--purple),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
@@ -1502,6 +1526,10 @@ render = function(data) {
       '<button type="button" id="hgZoomOut" title="Zoom out">\uff0d Zoom out</button>' +
       '<button type="button" id="hgReset" title="Reset the camera">\u27f2 Reset view</button>' +
       '<button type="button" id="hgConst" title="Arrange the top souls into a 222 constellation — click a star to open that soul">\u2726 222 Constellation</button>' +
+      '<select id="hgTime" title="Time-of-day lighting — follows your local time, or pick one" aria-label="Time-of-day lighting">' +
+      '<option value="auto">\uD83D\uDD50 Auto time</option><option value="dawn">\uD83C\uDF05 Dawn \u00b7 amber</option><option value="noon">\u2600\uFE0F Noon \u00b7 gold</option><option value="night">\uD83C\uDF19 Night \u00b7 indigo</option>' +
+      '</select>' +
+      '<button type="button" id="hgPaletteBtn" title="Jump to a soul, layout, or view (Cmd/Ctrl+K)">\u2318K Jump</button>' +
       '<span class="hg-hint">Click a node to focus it \u00b7 click empty space to clear</span>';
     graphWrap.appendChild(hgBar);
     // items is in closure scope from outer script (line 277)
@@ -2708,14 +2736,10 @@ render = function(data) {
       }
     });
     document.addEventListener('click', e => { try {
-      if (e.target.closest('#soul-info-panel, #hero-graph-bar, .btn-download, .btn-play, .search-wrapper, .category-tab, .navbar, .nav-links')) return;
+      if (window.__hgSuppressClickUntil && performance.now() < window.__hgSuppressClickUntil) return; // WAVE 2h — a thread drag just ended; not a node click
+      if (e.target.closest('#soul-info-panel, #hero-graph-bar, #hgThread, #hgPalette, .btn-download, .btn-play, .search-wrapper, .category-tab, .navbar, .nav-links')) return;
       const idx = getNearestNode(e.clientX, e.clientY);
-      if (idx >= 0 && items[idx]) {
-        const item = items[idx];
-        pt.textContent = item.name; pd.textContent = item.desc || ''; pp.textContent = item.plt ? `PLT: ${item.plt}` : '';
-        if (item.file) { pb.textContent = '⬇ Awaken'; pb.style.display = 'inline-block'; pb.onclick = () => { const a = document.createElement('a'); a.href = 'downloads/' + item.file; a.download = item.file; a.click(); pan.classList.remove('active'); }; }
-        else if (item.url) { pb.textContent = '▶ Open'; pb.style.display = 'inline-block'; pb.onclick = () => { window.open(item.url, '_blank'); pan.classList.remove('active'); }; }
-        else pb.style.display = 'none'; pan.classList.add('active'); kgSelect(idx); focusNode(idx); return; }
+      if (idx >= 0 && items[idx]) { openSoulPanel(idx); return; } // WAVE 2h — shared open (palette uses it too)
       if (pan.classList.contains('active')) { pan.classList.remove('active'); kgHideBeacon(); clearFocus(); }
       else clearFocus();
     } catch(e) { console.error('Click error:', e); } });
@@ -2765,6 +2789,332 @@ render = function(data) {
     if (hgConst) hgConst.addEventListener('click', () => setConstellation(!constActive));
     window.__soulGraph.ctl = graphCtl;
 
+    // ─── WAVE 2h — IDEAS 8, 9, 10, 25, 30, 19 ───
+    // 8  Hover whispers — TEXT FIRST. A one-line story per soul (from the
+    //    item's own desc, first sentence, never invented) in a tooltip.
+    //    Betty's voice clips do NOT exist yet (Bible idea 29), so there is
+    //    NO audio here, no synthesized placeholder voice, no mute toggle.
+    // 9  Theatre.js choreography — Core runtime only (Studio is AGPL and
+    //    is NOT shipped). The timeline lives in assets/js/theatre-state.json
+    //    (a real Theatre project state, sheet "Hero", object "Choreo"):
+    //    12 s loop — nodes breathe, threads connect-pulse, camera sways.
+    //    The cross-page hero → shelf glide is NOT done here: the shelf
+    //    lives in betty-plush.html, which this wave must not touch — that
+    //    glide belongs to a future betty-plush wave.
+    // 10 GSAP 3.13+ + Lenis — the motion layer under 2.9. Both vendored
+    //    (assets/js/vendor/), self-hosted, no CDN (idea 20). GSAP drives
+    //    the palette open/close and is the choreography fallback if
+    //    Theatre fails to load; Lenis smooths page scroll.
+    // 25 Threads of fate — drag a graph thread to see the relationship.
+    //    Bond rule (from the pair's own PLT values): Tax sum >= 1.2 ->
+    //    grey TAX bond; else Love sum >= 1.6 -> pink LOVE bond; else
+    //    gold FAMILY bond. Built on the existing DNA/gold threads (2d) —
+    //    the baked thread geometry is untouched; this adds one highlight
+    //    line + one bead sprite (+2 draw calls, only while a thread is
+    //    active) and a relationship card.
+    // 30 Time-of-day universe — dawn amber / noon gold / night deep
+    //    indigo; plush lighting follows. Amber/gold/indigo only — no cyan,
+    //    no purple. Night keeps the Wave 2g base #07070D. Follows the
+    //    visitor's local time with a manual override (#hgTime, stored in
+    //    localStorage soulTimeModeV1); default is Auto.
+    // 19 Cmd+K palette + bottom sheets — keyboard palette jumps to souls,
+    //    views, and layouts; the soul panel becomes a bottom sheet on
+    //    mobile. Never hijacks typing in inputs/search fields.
+    const choreo = { breathe: 1, threadGlow: 0, camSway: 0, prevSway: 0 };
+    // IDEA 9 — Theatre.js Core (no Studio). The state file is fetched so
+    // the timeline is data, not code; if either load fails, GSAP replays
+    // the same 12 s loop from the same keyframe times (fallback below).
+    // Reduced motion: no choreography at all — choreo stays at rest.
+    async function startTheatreChoreo() {
+      if (REDUCED) return false;
+      try {
+        const Theatre = (await import('./assets/js/vendor/theatre-core.mjs')).default;
+        const res = await fetch('assets/js/theatre-state.json', { cache: 'reload' });
+        if (!res.ok) throw new Error('theatre-state.json HTTP ' + res.status);
+        const stateDoc = await res.json();
+        const project = Theatre.getProject('SoulEconomyHero', { state: stateDoc.theatre });
+        const sheet = project.sheet('Hero');
+        const obj = sheet.object('Choreo', {
+          breathe: Theatre.types.number(1, { range: [0.5, 2] }),
+          threadGlow: Theatre.types.number(0, { range: [0, 1] }),
+          camSway: Theatre.types.number(0, { range: [-0.5, 0.5] })
+        });
+        obj.onValuesChange(v => { choreo.breathe = v.breathe; choreo.threadGlow = v.threadGlow; choreo.camSway = v.camSway; });
+        await project.ready;
+        sheet.sequence.play({ iterationCount: Infinity, range: [0, 12] });
+        return true;
+      } catch (e) { console.warn('Theatre choreography skipped, GSAP fallback:', e); return false; }
+    }
+    function startGsapChoreo() {
+      if (REDUCED || !window.gsap) return;
+      // Same 12 s loop as theatre-state.json, same keyframe times.
+      window.gsap.to(choreo, { breathe: 1.35, duration: 6, repeat: -1, yoyo: true, ease: 'sine.inOut' });
+      window.gsap.to(choreo, { threadGlow: 1, duration: 4, repeat: -1, yoyo: true, ease: 'sine.inOut' });
+      window.gsap.to(choreo, { camSway: 0.12, duration: 3, repeat: -1, yoyo: true, ease: 'sine.inOut' });
+    }
+    startTheatreChoreo().then(ok => { if (!ok) startGsapChoreo(); });
+    // IDEA 10 — Lenis smooth scroll (page-level; skipped under reduced
+    // motion; never blocks the graph if it fails to load).
+    try {
+      if (window.Lenis && !REDUCED) {
+        const lenis = new window.Lenis({ smoothWheel: true });
+        window.__lenis = lenis;
+        document.documentElement.style.scrollBehavior = 'auto';
+        if (window.gsap && window.gsap.ticker) window.gsap.ticker.add(t => { lenis.raf(t * 1000); });
+        else { const lenisRaf = t => { lenis.raf(t); requestAnimationFrame(lenisRaf); }; requestAnimationFrame(lenisRaf); }
+      }
+    } catch (e) { console.warn('Lenis skipped:', e); }
+    // IDEA 8 — hover whisper tooltip (text only — see header).
+    const whisperEl = document.createElement('div');
+    whisperEl.id = 'hgWhisper'; whisperEl.setAttribute('role', 'status'); whisperEl.style.display = 'none';
+    graphWrap.appendChild(whisperEl);
+    function escH2(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+    function whisperFor(item) {
+      const d = (item.desc || '').trim();
+      let s = d ? d.split('. ')[0] : '';
+      if (s && !/[.!?]$/.test(s)) s += '.';
+      if (!s) s = (item.name || 'Soul') + ' — a ' + (item.type || 'soul') + ' of the Library.';
+      if (s.length > 120) s = s.slice(0, 117) + '...';
+      return s;
+    }
+    document.addEventListener('mousemove', e => {
+      if (e.target && e.target.closest && e.target.closest('#hgPalette, #soul-info-panel, #hgThread')) { whisperEl.style.display = 'none'; return; }
+      const idx = getNearestNode(e.clientX, e.clientY);
+      if (idx < 0 || !items[idx]) { whisperEl.style.display = 'none'; return; }
+      whisperEl.textContent = '✦ ' + whisperFor(items[idx]);
+      const wr = graphWrap.getBoundingClientRect();
+      let x = e.clientX - wr.left + 14, y = e.clientY - wr.top + 18;
+      x = Math.max(8, Math.min(x, wr.width - 220)); y = Math.max(8, Math.min(y, wr.height - 60));
+      whisperEl.style.left = x + 'px'; whisperEl.style.top = y + 'px';
+      whisperEl.style.display = 'block';
+    });
+    // Shared soul-panel open (the document click handler below calls this;
+    // function declarations hoist, so the earlier registration can use it).
+    function openSoulPanel(idx) {
+      const item = items[idx]; if (!item) return;
+      pt.textContent = item.name; pd.textContent = item.desc || ''; pp.textContent = item.plt ? 'PLT: ' + item.plt : '';
+      if (item.file) { pb.textContent = '⬇ Awaken'; pb.style.display = 'inline-block'; pb.onclick = () => { const a = document.createElement('a'); a.href = 'downloads/' + item.file; a.download = item.file; a.click(); pan.classList.remove('active'); }; }
+      else if (item.url) { pb.textContent = '▶ Open'; pb.style.display = 'inline-block'; pb.onclick = () => { window.open(item.url, '_blank'); pan.classList.remove('active'); }; }
+      else pb.style.display = 'none';
+      pan.classList.add('active'); kgSelect(idx); focusNode(idx);
+    }
+    // IDEA 25 — threads of fate: drag a thread to see the relationship.
+    const BOND = {
+      family: { key: 'family', label: 'Family', color: '#FFD166', text: 'Kin in the Library — the same thread, a shared story.' },
+      love: { key: 'love', label: 'Love', color: '#FF5C8A', text: 'Bound by Love — what one feels, the other carries.' },
+      tax: { key: 'tax', label: 'Tax', color: '#9CA3AF', text: 'Bound by Tax — the cost that ties them together.' }
+    };
+    function pltParts(item) { const p = (item.plt || '0.5/0.5/0.5').split('/').map(Number); return { p: p[0] || 0, l: p[1] || 0, t: p[2] || 0 }; }
+    function bondFor(a, b) {
+      const A = pltParts(a), B = pltParts(b);
+      if (A.t + B.t >= 1.2) return BOND.tax;
+      if (A.l + B.l >= 1.6) return BOND.love;
+      return BOND.family;
+    }
+    const threadEl = document.createElement('div');
+    threadEl.id = 'hgThread'; threadEl.style.display = 'none';
+    graphWrap.appendChild(threadEl);
+    let threadLine = null, threadBead = null, threadActive = null, threadDragging = false;
+    function threadPos(idx) { const d = nodeData.find(x => x.index === idx); return d ? (d.pos || null) : null; }
+    function ensureThreadFx() {
+      if (threadLine) return;
+      const g = new BufferGeometry();
+      g.setAttribute('position', new Float32BufferAttribute([0, 0, 0, 0, 0, 0], 3));
+      threadLine = new T.Line(g, new LineBasicMaterial({ color: 0xFFD166, transparent: true, opacity: 0.95 }));
+      threadLine.frustumCulled = false; threadLine.visible = false; scene.add(threadLine);
+      const cv = document.createElement('canvas'); cv.width = cv.height = 64;
+      const cx = cv.getContext('2d');
+      const gr = cx.createRadialGradient(32, 32, 2, 32, 32, 32);
+      gr.addColorStop(0, 'rgba(255,255,255,1)'); gr.addColorStop(0.4, 'rgba(255,255,255,0.7)'); gr.addColorStop(1, 'rgba(255,255,255,0)');
+      cx.fillStyle = gr; cx.fillRect(0, 0, 64, 64);
+      threadBead = new T.Sprite(new T.SpriteMaterial({ map: new T.CanvasTexture(cv), color: 0xFFD166, transparent: true, opacity: 0.95, depthWrite: false }));
+      threadBead.scale.setScalar(0.22); threadBead.visible = false; scene.add(threadBead);
+    }
+    function nearestThread(cx, cy) {
+      const rect = canvas.getBoundingClientRect();
+      let best = null, bestD = 22;
+      for (let ei = 0; ei < edges.length; ei++) {
+        const a = threadPos(edges[ei][0]), b = threadPos(edges[ei][1]);
+        if (!a || !b) continue;
+        const pa = a.clone().project(camera), pb = b.clone().project(camera);
+        if (pa.z > 1 || pb.z > 1) continue;
+        const ax = (pa.x * 0.5 + 0.5) * rect.width + rect.left, ay = (-pa.y * 0.5 + 0.5) * rect.height + rect.top;
+        const bx = (pb.x * 0.5 + 0.5) * rect.width + rect.left, by = (-pb.y * 0.5 + 0.5) * rect.height + rect.top;
+        const dx = bx - ax, dy = by - ay, len2 = dx * dx + dy * dy || 1;
+        let t = ((cx - ax) * dx + (cy - ay) * dy) / len2; t = Math.max(0, Math.min(1, t));
+        const d = Math.hypot(cx - (ax + dx * t), cy - (ay + dy * t));
+        if (d < bestD) { bestD = d; best = { a: edges[ei][0], b: edges[ei][1], t: t, ax: ax, ay: ay, bx: bx, by: by }; }
+      }
+      return best;
+    }
+    function showThread(hit) {
+      const A = items[hit.a], B = items[hit.b];
+      if (!A || !B) return;
+      const bond = bondFor(A, B);
+      ensureThreadFx();
+      threadLine.material.color.set(bond.color);
+      threadBead.material.color.set(bond.color);
+      threadLine.visible = true; threadBead.visible = true;
+      threadEl.innerHTML =
+        '<span class="hg-thread-x" id="hgThreadX" title="Close">✕</span>' +
+        '<strong>' + escH2(A.name) + ' ↔ ' + escH2(B.name) + '</strong><br>' +
+        '<span class="hg-bond" style="color:' + bond.color + '">● ' + bond.label + ' bond</span><br>' +
+        '<span>' + escH2(bond.text) + '</span>' +
+        '<span class="hg-thread-plt">PLT ' + escH2(A.plt || '') + ' · ' + escH2(B.plt || '') + '</span>' +
+        '<span class="hg-thread-hint">Drag along the thread — the bead follows your pull.</span>';
+      threadEl.style.display = 'block';
+      const xBtn = document.getElementById('hgThreadX');
+      if (xBtn) xBtn.addEventListener('click', () => clearThread());
+    }
+    function clearThread() {
+      threadActive = null; threadDragging = false;
+      if (threadLine) threadLine.visible = false;
+      if (threadBead) threadBead.visible = false;
+      threadEl.style.display = 'none';
+    }
+    canvas.addEventListener('pointerdown', e => {
+      const hit = nearestThread(e.clientX, e.clientY);
+      if (!hit) { clearThread(); return; }
+      threadDragging = true; threadActive = hit;
+      controls.enabled = false; // capture phase: stops OrbitControls starting a rotate on this drag
+      showThread(hit);
+      window.__hgSuppressClickUntil = performance.now() + 400;
+    }, true);
+    document.addEventListener('pointermove', e => {
+      if (!threadDragging || !threadActive) return;
+      const rect = canvas.getBoundingClientRect();
+      const dx = threadActive.bx - threadActive.ax, dy = threadActive.by - threadActive.ay, len2 = dx * dx + dy * dy || 1;
+      let t = ((e.clientX - threadActive.ax) * dx + (e.clientY - threadActive.ay) * dy) / len2;
+      threadActive.t = Math.max(0, Math.min(1, t));
+      const pa = threadPos(threadActive.a), pb = threadPos(threadActive.b);
+      if (pa && pb && threadBead) threadBead.position.lerpVectors(pa, pb, threadActive.t);
+    });
+    document.addEventListener('pointerup', () => {
+      if (threadDragging) { threadDragging = false; controls.enabled = true; window.__hgSuppressClickUntil = performance.now() + 350; }
+    });
+    // IDEA 30 — time-of-day universe. Modes follow the visitor's local
+    // time (dawn 05–10, noon 10–17, night otherwise) unless overridden
+    // with #hgTime (stored: localStorage soulTimeModeV1). Amber/gold/
+    // indigo only — no cyan, no purple. Night keeps the Wave 2g base
+    // #07070D, so the dark universe is untouched.
+    const TIME_MODES = {
+      dawn: { label: 'Dawn · amber', bg: 0x171006, amb: 0x3A2A18, ambI: 0.7, keyC: 0xF59E0B, keyI: 2.4, fillC: 0xFFD166, fillI: 0.9, neb: 1.15, part: 0.6, wrap: 'radial-gradient(ellipse 90% 75% at 50% 30%,#241A08 0%,#0C0C12 55%,#050508 100%)' },
+      noon: { label: 'Noon · gold', bg: 0x1A1408, amb: 0x4A3A20, ambI: 0.85, keyC: 0xFFC233, keyI: 3.0, fillC: 0xFFE08A, fillI: 1.2, neb: 1.3, part: 0.7, wrap: 'radial-gradient(ellipse 90% 75% at 50% 30%,#2A2008 0%,#12100A 55%,#07070D 100%)' },
+      night: { label: 'Night · deep indigo', bg: 0x07070D, amb: 0x1E1B4B, ambI: 0.5, keyC: 0xF59E0B, keyI: 1.6, fillC: 0xFFD166, fillI: 0.6, neb: 0.8, part: 0.55, wrap: 'radial-gradient(ellipse 90% 75% at 50% 30%,#171006 0%,#0C0C12 55%,#050508 100%)' }
+    };
+    let timeMode = 'auto';
+    function autoTimeMode() { const h = new Date().getHours(); return (h >= 5 && h < 10) ? 'dawn' : (h >= 10 && h < 17) ? 'noon' : 'night'; }
+    function applyTimeMode(mode, saveIt) {
+      if (TIME_MODES[mode]) timeMode = mode; else timeMode = 'auto';
+      const m = TIME_MODES[timeMode === 'auto' ? autoTimeMode() : timeMode];
+      scene.background.setHex(m.bg);
+      if (scene.fog) scene.fog.color.setHex(m.bg);
+      ambient.color.setHex(m.amb); ambient.intensity = m.ambI;
+      key.color.setHex(m.keyC); key.intensity = m.keyI;
+      fill.color.setHex(m.fillC); fill.intensity = m.fillI;
+      nebulae.forEach(nb => { nb.material.opacity = nb.userData.o0 * m.neb; });
+      if (particleMat) particleMat.uniforms.uOpacity.value = m.part;
+      graphWrap.style.background = m.wrap;
+      const sel = document.getElementById('hgTime'); if (sel) sel.value = timeMode;
+      if (saveIt) { try { localStorage.setItem('soulTimeModeV1', timeMode); } catch (e) {} }
+      return m.label;
+    }
+    try { const stored = localStorage.getItem('soulTimeModeV1'); if (stored && (stored === 'auto' || TIME_MODES[stored])) timeMode = stored; } catch (e) {}
+    applyTimeMode(timeMode, false);
+    const hgTime = document.getElementById('hgTime');
+    if (hgTime) hgTime.addEventListener('change', () => applyTimeMode(hgTime.value, true));
+    // IDEA 19 — Cmd/Ctrl+K palette + bottom sheets (the sheet itself is
+    // the CSS media query in the head — #soul-info-panel becomes a bottom
+    // sheet under 820 px). The palette never hijacks typing: Cmd/Ctrl+K
+    // is ignored while focus is in any input, textarea, select, or
+    // contenteditable element (except the palette's own input, where it
+    // closes the palette).
+    const palWrap = document.createElement('div');
+    palWrap.id = 'hgPalette'; palWrap.style.display = 'none';
+    palWrap.innerHTML = '<div class="hg-pal-box" role="dialog" aria-label="Jump to a soul or view">' +
+      '<input id="hgPaletteInput" type="text" placeholder="Jump to a soul, layout, or view…" autocomplete="off" aria-label="Jump to a soul or view">' +
+      '<div id="hgPaletteList" role="listbox"></div>' +
+      '<div class="hg-pal-hint">↑↓ to move · Enter to jump · Esc to close · ⌘K / Ctrl+K to toggle</div></div>';
+    document.body.appendChild(palWrap);
+    const palInput = document.getElementById('hgPaletteInput');
+    const palList = document.getElementById('hgPaletteList');
+    let palEntries = [], palSel = 0;
+    function palAllEntries() {
+      const list = items.map((it, i) => ({ kind: 'soul', label: it.name || 'Soul', sub: (it.type || '') + ' · PLT ' + (it.plt || ''), idx: i }));
+      list.push(
+        { kind: 'action', label: 'Layout: Network', sub: 'Force-directed home view', run: () => setLayout('network') },
+        { kind: 'action', label: 'Layout: Spiral', sub: 'Golden-angle spiral', run: () => setLayout('spiral') },
+        { kind: 'action', label: 'Layout: Cluster', sub: 'One blob per category', run: () => setLayout('cluster') },
+        { kind: 'action', label: 'Layout: Planetary', sub: 'Orbit rings, highest-TV soul as the sun', run: () => setLayout('planetary') },
+        { kind: 'action', label: '✦ 222 Constellation', sub: 'Hero souls form a 222 — click a star to open it', run: () => setConstellation(!constActive) },
+        { kind: 'action', label: '⟲ Reset view', sub: 'Back to Network, camera home', run: () => { if (constActive) setConstellation(false); if (layoutName !== 'network') setLayout('network'); startDissolve(); clearFocus(); camera.position.set(0, 3.4, 8); controls.target.set(0, 1.6, 0); } },
+        { kind: 'action', label: '🌅 Time: Dawn · amber', sub: 'Time-of-day lighting', run: () => applyTimeMode('dawn', true) },
+        { kind: 'action', label: '☀️ Time: Noon · gold', sub: 'Time-of-day lighting', run: () => applyTimeMode('noon', true) },
+        { kind: 'action', label: '🌙 Time: Night · deep indigo', sub: 'Time-of-day lighting', run: () => applyTimeMode('night', true) },
+        { kind: 'action', label: '🕐 Time: Auto (follow local time)', sub: 'Time-of-day lighting', run: () => applyTimeMode('auto', true) }
+      );
+      return list;
+    }
+    function palRender(q) {
+      const query = (q || '').trim().toLowerCase();
+      palEntries = palAllEntries().filter(en => !query || en.label.toLowerCase().indexOf(query) >= 0 || (en.sub && en.sub.toLowerCase().indexOf(query) >= 0)).slice(0, 10);
+      palSel = 0;
+      palList.innerHTML = palEntries.length ? palEntries.map((en, i) =>
+        '<div class="hg-pal-item' + (i === palSel ? ' sel' : '') + '" data-i="' + i + '" role="option">' + escH2(en.label) + '<small>' + escH2(en.sub || '') + '</small></div>'
+      ).join('') : '<div class="hg-pal-item">No match — try a soul name, a layout, or a time.</div>';
+      palList.querySelectorAll('.hg-pal-item[data-i]').forEach(el => {
+        el.addEventListener('click', () => palActivate(+el.getAttribute('data-i')));
+        el.addEventListener('mousemove', () => palHighlight(+el.getAttribute('data-i')));
+      });
+    }
+    function palHighlight(i) {
+      palSel = i;
+      palList.querySelectorAll('.hg-pal-item').forEach((el, j) => el.classList.toggle('sel', j === i));
+    }
+    function palActivate(i) {
+      const en = palEntries[i]; if (!en) return;
+      closePalette();
+      if (en.kind === 'soul') {
+        graphWrap.scrollIntoView({ behavior: REDUCED ? 'auto' : 'smooth', block: 'start' });
+        openSoulPanel(en.idx);
+      } else if (en.run) en.run();
+    }
+    function openPalette() {
+      palWrap.style.display = 'flex';
+      palRender('');
+      palInput.value = '';
+      palInput.focus();
+      if (window.gsap) window.gsap.fromTo('.hg-pal-box', { y: -12, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, ease: 'power2.out' });
+    }
+    function closePalette() { palWrap.style.display = 'none'; }
+    palInput.addEventListener('input', () => palRender(palInput.value));
+    palInput.addEventListener('keydown', e => {
+      if (e.key === 'ArrowDown') { e.preventDefault(); if (palEntries.length) palHighlight(Math.min(palSel + 1, palEntries.length - 1)); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); if (palEntries.length) palHighlight(Math.max(palSel - 1, 0)); }
+      else if (e.key === 'Enter') { e.preventDefault(); palActivate(palSel); }
+      else if (e.key === 'Escape') { e.preventDefault(); closePalette(); }
+    });
+    palWrap.addEventListener('click', e => { if (e.target === palWrap) closePalette(); });
+    const hgPaletteBtn = document.getElementById('hgPaletteBtn');
+    if (hgPaletteBtn) hgPaletteBtn.addEventListener('click', () => openPalette());
+    document.addEventListener('keydown', e => {
+      const tgt = e.target;
+      const typing = tgt && (tgt.tagName === 'INPUT' || tgt.tagName === 'TEXTAREA' || tgt.tagName === 'SELECT' || tgt.isContentEditable);
+      if ((e.metaKey || e.ctrlKey) && (e.key === 'k' || e.key === 'K')) {
+        if (typing && tgt.id !== 'hgPaletteInput') return; // never hijack typing
+        e.preventDefault();
+        if (palWrap.style.display === 'none') openPalette(); else closePalette();
+        return;
+      }
+      if (e.key === 'Escape' && palWrap.style.display !== 'none') { closePalette(); clearThread(); }
+    });
+    // Wave 2h surface for overlays / debugging (read-only except the setters).
+    window.__soulGraph.setTimeMode = applyTimeMode;
+    window.__soulGraph.openPalette = openPalette;
+    window.__soulGraph.whisperFor = whisperFor;
+    window.__soulGraph.bondFor = bondFor;
+    window.__soulGraph.choreo = choreo;
+
     let emaDt = 16, slowFrames = 0, degraded = false, lastT = performance.now();
     function heartbeat(t, ph) {
       var p1 = Math.pow(Math.max(0, Math.sin(t*2.1 + ph)), 6);
@@ -2775,6 +3125,8 @@ render = function(data) {
     const sb = root.userData._sb;
     function animate() {
       requestAnimationFrame(animate); controls.update();
+      // WAVE 2h (idea 9) — Theatre camera sway: a small post-controls delta, so the choreography never fights OrbitControls.
+      if (choreo.camSway !== choreo.prevSway) { camera.position.x += choreo.camSway - choreo.prevSway; choreo.prevSway = choreo.camSway; }
       const nowMs = performance.now();
       emaDt = emaDt * 0.95 + (nowMs - lastT) * 0.05; lastT = nowMs;
       if (!degraded && emaDt > 40) { if (++slowFrames > 120) { degraded = true; renderer.setPixelRatio(1); starFar.visible = false; Object.values(trailSys).forEach(sy => { sy.pts.visible = false; }); if (particleGeo) particleGeo.setDrawRange(0, Math.floor(particleCount * 0.25)); } } else if (emaDt <= 40) slowFrames = 0;
@@ -2841,7 +3193,7 @@ render = function(data) {
       const focusActive = focusIdx >= 0;
       const labelGate = Math.max(0, Math.min(1, (8 - camDist) / 2));
       const threadFade = Math.max(0, Math.min(1, (7.5 - camDist) / 1.5));
-      const threadTarget = focusActive ? 0.03 : 0.16 * threadFade * (layoutName === 'network' ? 1 : 0); // IDEA 14 — baked threads only match the Network home
+      const threadTarget = Math.min(0.45, (focusActive ? 0.03 : 0.16 * threadFade * (layoutName === 'network' ? 1 : 0)) + 0.3 * choreo.threadGlow); // IDEA 14 — baked threads only match the Network home; WAVE 2h (idea 9) — Theatre connect pulse
       threadOpacity += (threadTarget - threadOpacity) * 0.12;
       if (dnaLines) { dnaLines.material.opacity = threadOpacity; dnaLines.visible = threadOpacity > 0.01; }
       const flowFade = focusActive ? 1 : threadFade;
@@ -2854,7 +3206,7 @@ render = function(data) {
         const isHov = hoverRef.d && hoverRef.d.index === d.index;
         // Heartbeat lungs — lub-dub thump, phase-offset per node
         const hb = REDUCED ? 0 : heartbeat(TT, d.phase || 0);
-        const br = 1 + 0.10 * hb;
+        const br = 1 + 0.10 * hb + 0.12 * (choreo.breathe - 1); // WAVE 2h (idea 9) — Theatre breathing
         // IDEA 12 morph-in: crossfade/scale in from the generic plush orb
         // into the category plushie over the first ~0.9 s after build.
         const morph = d.bornAt ? Math.min(1, (nowMs - d.bornAt) / 900) : 1;
@@ -2996,6 +3348,8 @@ render = function(data) {
         }
         updateTrails(emaDt / 1000);
       }
+      // WAVE 2h (idea 25) — keep the active thread highlight + bead glued to the live node positions while layouts glide.
+      if (threadActive && threadLine && threadLine.visible) { const tpa = threadPos(threadActive.a), tpb = threadPos(threadActive.b); if (tpa && tpb) { const lattr = threadLine.geometry.getAttribute('position'); lattr.setXYZ(0, tpa.x, tpa.y, tpa.z); lattr.setXYZ(1, tpb.x, tpb.y, tpb.z); lattr.needsUpdate = true; if (threadBead) threadBead.position.lerpVectors(tpa, tpb, threadActive.t || 0.5); } }
       renderer.render(scene, camera);
     }
     // ─── IDEA 7 (Stage 2.7) — HOMEPAGE THEATER OPEN ───
