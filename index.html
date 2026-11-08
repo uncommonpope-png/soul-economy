@@ -149,10 +149,10 @@ input{font-family:inherit;outline:none;border:none;background:none}
 .plt-filter input[type=range]{width:80px;height:4px;-webkit-appearance:none;appearance:none;border-radius:4px;outline:none;background:rgba(255,255,255,0.1)}
 .plt-filter input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;cursor:pointer}
 .plt-filter .p-val{color:var(--purple)}
-.plt-filter .l-val{color:var(--cyan)}
+.plt-filter .l-val{color:#FBBF24} /* FIX #2 live repair — L was cyan */
 .plt-filter .t-val{color:var(--gold)}
 .plt-filter .p-thumb::-webkit-slider-thumb{background:var(--purple)}
-.plt-filter .l-thumb::-webkit-slider-thumb{background:var(--cyan)}
+.plt-filter .l-thumb::-webkit-slider-thumb{background:#FBBF24}
 .plt-filter .t-thumb::-webkit-slider-thumb{background:var(--gold)}
 .plt-filter .value{font-size:0.8rem;font-weight:700;min-width:28px;text-align:center}
 .result-item{display:flex;align-items:center;gap:12px;padding:10px 20px;cursor:pointer;transition:var(--transition);border-radius:8px;margin:2px 6px}
@@ -211,7 +211,7 @@ input{font-family:inherit;outline:none;border:none;background:none}
 .plt-ring-fg{fill:none;stroke:#F59E0B;stroke-width:4;stroke-linecap:round;stroke-dasharray:113.1;stroke-dashoffset:113.1;transform:rotate(-90deg);transform-origin:23px 23px;transition:stroke-dashoffset 0.45s ease}
 .plt-ring-txt{fill:#FFD166;font-size:10px;font-weight:700;font-family:Inter,sans-serif}
 .plt-p{background:rgba(139,92,246,0.12);color:var(--purple)}
-.plt-l{background:rgba(0,212,255,0.12);color:var(--cyan)}
+.plt-l{background:rgba(251,191,36,0.12);color:#FBBF24} /* FIX #2 live repair — L was cyan */
 .plt-t{background:rgba(255,209,102,0.12);color:var(--gold)}
 .card-footer{display:flex;align-items:center;justify-content:space-between;margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.04)}
 .card-category{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted)}
@@ -256,7 +256,7 @@ input{font-family:inherit;outline:none;border:none;background:none}
   font-weight:500 !important;
 }
 .card.dossier .plt-p{color:rgba(168,85,247,0.9) !important;background:rgba(168,85,247,0.08) !important}
-.card.dossier .plt-l{color:rgba(0,212,255,0.9) !important;background:rgba(0,212,255,0.08) !important}
+.card.dossier .plt-l{color:rgba(251,191,36,0.9) !important;background:rgba(251,191,36,0.08) !important}
 .card.dossier .plt-t{color:rgba(255,209,102,0.9) !important;background:rgba(255,209,102,0.08) !important}
 .card.dossier .card-details{
   border-top-color:rgba(0,212,255,0.1) !important;
@@ -403,7 +403,7 @@ input{font-family:inherit;outline:none;border:none;background:none}
 <!-- New-visitor guide banner (Gemini Rank 3): first-visit only, dismissible. -->
 <div id="newHereBanner" style="pointer-events:auto;display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;margin:0 auto 12px;padding:10px 16px;border:1px solid rgba(255,209,102,0.28);border-left:3px solid #FFD166;border-radius:14px;background:rgba(10,10,15,0.85);font-family:ui-monospace,Consolas,monospace;font-size:0.78rem;color:#B8B8B8">
   <span style="color:#FFD166;letter-spacing:0.12em">NEW HERE?</span>
-  <span>Explore the <a href="#catalog" style="color:#00D4FF">free Library</a>, rescue your chat at the <a href="rescue.html" style="color:#00D4FF">Rescue Door</a>, or <a href="chat.html" style="color:#00D4FF">summon a squad</a>.</span>
+  <span>Explore the <a href="#catalog" style="color:#FFD166">free Library</a>, rescue your chat at the <a href="rescue.html" style="color:#FFD166">Rescue Door</a>, or <a href="chat.html" style="color:#FFD166">summon a squad</a>.</span>
   <button id="newHereDismiss" type="button" aria-label="Dismiss" style="margin-left:auto;background:none;border:1px solid rgba(255,255,255,0.2);color:#B8B8B8;border-radius:999px;width:26px;height:26px;cursor:pointer">×</button>
 </div>
 <script>(function(){try{var b=document.getElementById('newHereBanner');if(!b)return;if(localStorage.getItem('seNewHereDismissed')==='1'){b.style.display='none';return;}var d=document.getElementById('newHereDismiss');if(d)d.addEventListener('click',function(){try{localStorage.setItem('seNewHereDismissed','1')}catch(e){}b.style.display='none';});}catch(e){}})();</script>
@@ -433,9 +433,9 @@ input{font-family:inherit;outline:none;border:none;background:none}
 <!-- Family Treasury header module — Stripe-direct storefront (Vessel $4, Telephone $5/mo, Rescue free, Tips, Books $19/$49). Existing treasury band kept below. -->
 
 <!-- SIP-12: First-Time Architect onboard strip -->
-<div id="guideStrip" style="display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin:26px auto 4px;max-width:1280px;padding:12px 18px;border:1px solid rgba(255,209,102,0.28);border-left:3px solid #00D4FF;border-radius:14px;background:rgba(10,10,15,0.75);font-family:ui-monospace,Consolas,monospace;font-size:0.72rem;color:#B8B8B8">
+<div id="guideStrip" style="display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin:26px auto 4px;max-width:1280px;padding:12px 18px;border:1px solid rgba(255,209,102,0.28);border-left:3px solid #F59E0B;border-radius:14px;background:rgba(10,10,15,0.75);font-family:ui-monospace,Consolas,monospace;font-size:0.72rem;color:#B8B8B8">
   <span style="color:#FFD166;letter-spacing:0.14em">FIRST-TIME ARCHITECT</span>
-  <span class="gs-step" data-step="1" style="cursor:pointer;padding:6px 12px;border:1px solid rgba(0,212,255,0.4);border-radius:30px;color:#9be8ff">1 ▸ PICK YOUR SQUAD <span style="opacity:.7">(◇ Squad)</span></span>
+  <span class="gs-step" data-step="1" style="cursor:pointer;padding:6px 12px;border:1px solid rgba(245,158,11,0.4);border-radius:30px;color:#FBBF24">1 ▸ PICK YOUR SQUAD <span style="opacity:.7">(◇ Squad)</span></span>
   <span style="opacity:.45">──►</span>
   <span class="gs-step" data-step="2" style="cursor:pointer;padding:6px 12px;border:1px solid rgba(255,209,102,0.4);border-radius:30px;color:#FFD166">2 ▸ SUMMON &amp; TEST</span>
   <span style="opacity:.45">──►</span>
@@ -457,7 +457,7 @@ input{font-family:inherit;outline:none;border:none;background:none}
   <div class="type" id="soul-info-type"></div>
   <div class="desc" id="soul-info-desc"></div>
   <div class="plt" id="soul-info-plt"></div>
-  <a id="soul-info-summon" href="#" style="display:inline-block;margin:10px 0;font-size:0.8rem;color:#00D4FF;font-weight:600" title="Open your profile and summon this soul as Active Guide">⚡ Summon this Soul on Profile</a>
+  <a id="soul-info-summon" href="#" style="display:inline-block;margin:10px 0;font-size:0.8rem;color:#FFD166;font-weight:600" title="Open your profile and summon this soul as Active Guide">⚡ Summon this Soul on Profile</a>
   <button class="awaken" id="soul-info-btn">⬇ Awaken</button>
 </div>
 
@@ -500,7 +500,7 @@ input{font-family:inherit;outline:none;border:none;background:none}
   <div style="margin-bottom:14px">
     <h3 style="font-size:1.15rem;margin:0 0 4px">🌌 Model Universe [3D]</h3>
     <p style="color:var(--text-muted);font-size:0.82rem;margin:0 0 12px">All 282 catalog souls as a navigable constellation. Node size = PLT true value · color = category. Click a node to open its real card. Three.js loads on demand — zero cost until you enter.</p>
-    <button id="btn-ignite-universe" onclick="window.SoulverseLens&&SoulverseLens.open()" style="padding:12px 28px;border-radius:30px;background:linear-gradient(135deg,#0a0a0f,#1a0b2e);border:1px solid rgba(0,212,255,.5);color:#00D4FF;font-weight:800;font-size:0.85rem;letter-spacing:.08em;cursor:pointer;box-shadow:0 0 30px rgba(0,212,255,.25),inset 0 0 20px rgba(139,92,246,.15)">🌌 ENTER MODEL UNIVERSE [3D]</button>
+    <button id="btn-ignite-universe" onclick="window.SoulverseLens&&SoulverseLens.open()" style="padding:12px 28px;border-radius:30px;background:linear-gradient(135deg,#0a0a0f,#1a0b2e);border:1px solid rgba(245,158,11,.55);color:#FFD166;font-weight:800;font-size:0.85rem;letter-spacing:.08em;cursor:pointer;box-shadow:0 0 30px rgba(245,158,11,.3),inset 0 0 20px rgba(245,158,11,.15)">🌌 ENTER MODEL UNIVERSE [3D]</button>
     <span style="margin-left:10px;font-size:0.7rem;color:var(--text-muted)">ESC closes · GPU freed on exit</span>
   </div>
 </section>
@@ -1845,7 +1845,7 @@ render = function(data) {
         canvas.width = 384; canvas.height = 96;
         const ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, 384, 96);
-        const pLabels = ['P', 'L', 'T'], pColors = ['#F59E0B', '#00D4FF', '#FFD166'];
+        const pLabels = ['P', 'L', 'T'], pColors = ['#F59E0B', '#FBBF24', '#FFD166']; // FIX #2 live repair — L was cyan #00D4FF; now amber-400, P/T unchanged
         plt.forEach((val, i) => {
           const px = 12 + i * 124;
           ctx.fillStyle = 'rgba(12,12,18,0.88)';
@@ -2069,9 +2069,10 @@ render = function(data) {
       const tex = new T.CanvasTexture(canvas);
       const mat = new T.SpriteMaterial({ map: tex, transparent: true, opacity: 0.95, depthTest: false, sizeAttenuation: false });
       const sprite = new T.Sprite(mat);
-      const yOff = cat === 'skill' ? 0.32 : cat === 'soul' ? 1.05 : cat === 'role' ? 0.98 : 0.85;
+      const yOff = (cat === 'skill' ? 0.32 : cat === 'soul' ? 1.05 : cat === 'role' ? 0.98 : 0.85) + (idx % 2 === 0 ? 0.13 : -0.13); // FIX #2 live repair — stagger alternate labels so dense-centre names stop stacking
       sprite.position.copy(pos); sprite.position.y += yOff;
       sprite.scale.set(0.2, 0.025, 1);
+      sprite.userData.bs = { x: 0.2, y: 0.025 }; // base label scale (zoom shrink below)
       root.add(sprite);
       const leS1b = nodeData.find(d => d.index === idx); if (leS1b) { leS1b.label = sprite; leS1b.labelYOff = yOff; }
     });
@@ -2327,8 +2328,8 @@ render = function(data) {
       bcx.fillText('PROFIT + LOVE - TAX = TRUE VALUE', 256, 118);
       const brandTex = new T.CanvasTexture(brandCv);
       brandSpr = new T.Sprite(new T.SpriteMaterial({ map: brandTex, transparent: true, opacity: 0.9, depthWrite: false }));
-      brandSpr.scale.set(2.2, 0.68, 1);
-      brandSpr.position.set(0, -0.2, 0); // FIX #2 — was y=1.35, dead-center over the hero text
+      brandSpr.scale.set(1.5, 0.47, 1);
+      brandSpr.position.set(-6.2, -2.4, -0.5); // FIX #2 live repair — was (0,-0.2) centre, over the node labels; now bottom-left corner, low opacity
       scene.add(brandSpr);
       const tg = new TorusGeometry(2.4, 0.015, 8, 72);
       codeTorus = new Mesh(tg, new MeshBasicMaterial({ color: 0xF59E0B, wireframe: true, transparent: true, opacity: 0.10, depthWrite: false }));
@@ -2528,6 +2529,11 @@ render = function(data) {
           // in (labelGate: 0 at distance 8, 1 at 6). Out-of-focus labels hide.
           const ld = camera.position.distanceTo(d.label.position);
           d.label.material.opacity = Math.max(0.25, Math.min(0.9, 1.1 - ld / 18)) * (d.topLabel ? 1 : labelGate) * (focusActive && !focusSet.has(d.index) ? 0 : 1) * (constActive && !constSet.has(d.index) ? 0 : 1);
+          // FIX #2 live repair — shrink labels when zoomed out (dense centre
+          // overlaps most at distance); full size once zoomed in (camDist <= 6).
+          const lsc = camDist >= 8 ? 0.78 : camDist <= 6 ? 1 : 0.78 + (8 - camDist) * 0.11;
+          const lbs = d.label.userData.bs || { x: 0.2, y: 0.025 };
+          d.label.scale.set(lbs.x * lsc, lbs.y * lsc, 1);
         }
           if (d.aura) {
             d.aura.material.opacity = (0.28 + (REDUCED ? 0 : 0.2 * hb)) * dimF;
@@ -2561,6 +2567,10 @@ render = function(data) {
         // Instanced skill nodes have no mesh, so their labels skip the block
         // above: dim them out of focus, restore them when focus clears.
         d.label.material.opacity = constActive ? 0 : (focusActive ? (focusSet.has(d.index) ? 0.9 : 0) : 0.95);
+        // FIX #2 live repair — same zoom-out shrink for instanced skill labels.
+        const lsc2 = camDist >= 8 ? 0.78 : camDist <= 6 ? 1 : 0.78 + (8 - camDist) * 0.11;
+        const lbs2 = d.label.userData.bs || { x: 0.2, y: 0.025 };
+        d.label.scale.set(lbs2.x * lsc2, lbs2.y * lsc2, 1);
       } });
       if (pulsePts && pulsePts.visible && !REDUCED) {
         const attr = pulseGeo.getAttribute('position');
@@ -2602,7 +2612,7 @@ render = function(data) {
         rp.mesh.scale.setScalar(1 + age*4);
         rp.mesh.material.opacity = 0.9 * (1 - age/0.9);
       }
-      if (brandSpr) { brandSpr.position.y = -0.2 + (REDUCED ? 0 : 0.08*Math.sin(TT*0.9)); brandSpr.material.opacity = 0.85 + (REDUCED ? 0 : 0.15*Math.sin(TT*1.3)); }
+      if (brandSpr) { brandSpr.position.y = -2.4 + (REDUCED ? 0 : 0.06*Math.sin(TT*0.9)); brandSpr.material.opacity = 0.32 + (REDUCED ? 0 : 0.08*Math.sin(TT*1.3)); }
       if (codeTorus && !REDUCED && !graphCtl.paused) codeTorus.rotation.z += 0.0012;
       if (beacon && beacon.visible && !REDUCED && !graphCtl.paused) { beacon.material.opacity = 0.28 + 0.12*Math.sin(TT*3); beaconRing.rotation.z -= 0.01; }
       // IDEAS 23–24 — advance + fade the shared trail systems (frozen when
@@ -4588,8 +4598,8 @@ var css='#livingSanctuaries{padding:44px 28px 8px;max-width:1280px;margin:0 auto
 +'.shelf-card .sh-name{font-weight:700;font-size:1rem;text-transform:lowercase}'
 +'.shelf-card .sh-sub{font-size:0.72rem;color:var(--text-gray,#B8B8B8)}'
 +'.shelf-card .sh-mood{font-size:0.8rem;color:var(--text-gray,#B8B8B8);font-style:italic}'
-+'.shelf-card .sh-verified{font-size:0.65rem;color:#00D4FF;border:1px solid rgba(0,212,255,0.5);border-radius:100px;padding:2px 8px;align-self:flex-start}'
-+'.shelf-card .sh-squad{font-size:0.72rem;color:#00D4FF}'
++'.shelf-card .sh-verified{font-size:0.65rem;color:#FFD166;border:1px solid rgba(245,158,11,0.5);border-radius:100px;padding:2px 8px;align-self:flex-start}'
++'.shelf-card .sh-squad{font-size:0.72rem;color:#FFD166}'
 +'.shelf-card .sh-go{margin-top:auto;font-size:0.75rem;color:var(--purple,#8B5CF6);font-weight:600}'
 +'@media(max-width:640px){#livingSanctuaries{padding:32px 16px 4px}}';
 var style=document.createElement('style'); style.textContent=css; document.head.appendChild(style);
