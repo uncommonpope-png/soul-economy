@@ -338,6 +338,16 @@ showBettyTab();
 // reliable tap (pick list holds only objects still on the stage; a tap opens the soul it hit),
 // and no empty pedestal (box built synchronously, textures fill in as they load; shelf tops
 // up to 8 pieces from the catalog when fewer than 8 new souls are present).
+// FIX #3 REPAIR (2026-11-07, live-rendered check 19:38-20:02 CST failed the shelf on 3 points):
+// (a) magenta wash — the box face material base was hot pink 0xff2e88, which MULTIPLIES the
+// photo texture, plus a pink sheen and a pink point light at intensity 8; faces are now a
+// neutral white base with white sheen and the pink point is softer/dimmer, so photos read.
+// (b) labels — all 8 sprites showed at once and stacked; now only front-facing pieces
+// (world z > 0.5, ~3 at once) show a label, each label rides its own holder, fonts/sprite
+// are smaller, and the auto-spin is slower (0.12 -> 0.07). Names/prices unchanged.
+// (c) empty pedestals — pedestals/glows were added to the static SCENE while the boxes live
+// in the spinning GROUP, so boxes turned away from their discs; pedestals/glows now live in
+// the group, same angle + radius 4.6 as their box. Room, lips, ritual, collection untouched.
 // The hero lips above the shelf are already a true 3D model (ExtrudeGeometry, bettyStartLips) —
 // no photo/SVG lips stand-in needed here; the true model does not wait for Stage 3.
 // WAVE 2C (2026-11-07, Bible idea 31): the shelf becomes a room — floor + four walls,
@@ -438,15 +448,15 @@ function bettyStageLabelSprite(T,name,priceText){
   ctx.fillStyle='rgba(10,8,12,0.88)'; ctx.fill();
   ctx.strokeStyle='rgba(255,107,157,0.8)'; ctx.lineWidth=4; ctx.stroke();
   ctx.textAlign='center'; ctx.textBaseline='alphabetic';
-  var fs=52; ctx.font='bold '+fs+'px Arial, sans-serif';
-  while(fs>26 && ctx.measureText(name).width>460){ fs-=2; ctx.font='bold '+fs+'px Arial, sans-serif'; }
+  var fs=44; ctx.font='bold '+fs+'px Arial, sans-serif';
+  while(fs>22 && ctx.measureText(name).width>460){ fs-=2; ctx.font='bold '+fs+'px Arial, sans-serif'; }
   ctx.fillStyle='#ffffff'; ctx.fillText(name,256,70);
-  ctx.fillStyle='#FFB3CD'; ctx.font='bold 40px Arial, sans-serif';
+  ctx.fillStyle='#FFB3CD'; ctx.font='bold 32px Arial, sans-serif';
   ctx.fillText(priceText,256,130);
   var tex=new T.CanvasTexture(c);
   if(T.SRGBColorSpace) tex.colorSpace=T.SRGBColorSpace;
   var spr=new T.Sprite(new T.SpriteMaterial({map:tex,transparent:true,depthWrite:false}));
-  spr.scale.set(2.4,0.75,1);
+  spr.scale.set(1.9,0.6,1);
   return spr;
 }
 function bettyStageRemoveFromPick(o){ var i=bettyStagePick.indexOf(o); if(i>=0) bettyStagePick.splice(i,1); }
@@ -512,12 +522,12 @@ function bettyStageInit(){
     scene.add(new T.HemisphereLight(0xffffff,0x1a0f16,0.25));
     var isPhone=window.innerWidth<=640;
     var sun=new T.DirectionalLight(0xffffff,1.15); sun.position.set(4,8,6); sun.castShadow=true;
-    var fill=new T.DirectionalLight(0xfff0f5,0.5); fill.position.set(0,2,8); scene.add(fill);
+    var fill=new T.DirectionalLight(0xffffff,0.5); fill.position.set(0,2,8); scene.add(fill); // REPAIR: was pink-tinted 0xfff0f5
     sun.shadow.mapSize.set(isPhone?1024:2048,isPhone?1024:2048);
     sun.shadow.camera.left=-7; sun.shadow.camera.right=7; sun.shadow.camera.top=7; sun.shadow.camera.bottom=-7;
     sun.shadow.camera.near=1; sun.shadow.camera.far=25; sun.shadow.bias=-0.0005;
     scene.add(sun);
-    var pink=new T.PointLight(0xff2e88,8,30); pink.position.set(-5,3,5); scene.add(pink);
+    var pink=new T.PointLight(0xff6b9d,2.5,30); pink.position.set(-5,3,5); scene.add(pink); // REPAIR: was hot pink 0xff2e88 at intensity 8
     var ground=new T.Mesh(new T.PlaneGeometry(30,30), new T.ShadowMaterial({opacity:0.35}));
     ground.rotation.x=-Math.PI/2; ground.position.y=-1.1; ground.receiveShadow=true; scene.add(ground);
     var group=new T.Group(); scene.add(group); bettyStageGroup=group; bettyStageCamera=camera;
@@ -534,7 +544,7 @@ function bettyStageInit(){
       dummy.position.set(Math.sin(a)*4.6,-0.95,Math.cos(a)*4.6); dummy.rotation.set(0,0,0); dummy.updateMatrix(); peds.setMatrixAt(idx,dummy.matrix);
       dummy.position.set(Math.sin(a)*4.6,-0.76,Math.cos(a)*4.6); dummy.rotation.set(Math.PI/2,0,0); dummy.updateMatrix(); glows.setMatrixAt(idx,dummy.matrix);
     });
-    peds.receiveShadow=true; scene.add(peds); scene.add(glows);
+    peds.receiveShadow=true; group.add(peds); group.add(glows); // REPAIR: was scene.add — discs stayed static while boxes in the spinning group turned away from them
     // Composer (bloom) is optional garnish: if any composer import failed, render directly.
     var composer=null;
     try{
@@ -565,14 +575,14 @@ function bettyStageInit(){
       if(item.labelName){
         var label=bettyStageLabelSprite(T,item.labelName,item.labelPrice);
         label.position.y=1.85; label.userData.setIndex=item.catalogIndex;
-        holder.add(label); bettyStagePick.push(label);
+        holder.userData.label=label; holder.add(label); bettyStagePick.push(label);
       }
       // Photo box, built SYNCHRONOUSLY so a pedestal is never empty: all six faces get a
       // real photo from this soul's own set (hero on the front), textures filling in as
       // they load. A failed texture leaves that face its pink material — never a missing box.
       var faceSrcs=bettyStageFaceSrcs(item);
       var faceMats=faceSrcs.map(function(){
-        return new T.MeshPhysicalMaterial({color:0xff2e88,roughness:0.85,sheen:0.6,sheenColor:new T.Color(0xff8fb8),sheenRoughness:0.6,envMapIntensity:0.35});
+        return new T.MeshPhysicalMaterial({color:0xffffff,roughness:0.85,sheen:0.25,sheenColor:new T.Color(0xffffff),sheenRoughness:0.6,envMapIntensity:0.35});
       });
       var box=new T.Mesh(new T.BoxGeometry(1.5,1.7,0.7), faceMats);
       box.castShadow=true; box.userData.setIndex=item.catalogIndex; boxHolder.add(box); bettyStagePick.push(box);
@@ -637,7 +647,7 @@ function bettyStageInit(){
     items.forEach(function(item,idx){
       var side=(idx<4)?-1:1;                    // first four souls left wall, rest right wall
       var slot=idx%4, boardY=(slot<2)?0.3:1.7, zPos=(slot%2===0)?-1.3:1.3;
-      var miniMat=new T.MeshPhysicalMaterial({color:0xff2e88,roughness:0.85,sheen:0.6,sheenColor:new T.Color(0xff8fb8),sheenRoughness:0.6,envMapIntensity:0.35});
+      var miniMat=new T.MeshPhysicalMaterial({color:0xffffff,roughness:0.85,sheen:0.25,sheenColor:new T.Color(0xffffff),sheenRoughness:0.6,envMapIntensity:0.35});
       var mini=new T.Mesh(new T.BoxGeometry(0.8,0.9,0.45),miniMat);
       mini.position.set(side*8.35,boardY+0.06+0.45,zPos); mini.rotation.y=side>0?-Math.PI/2:Math.PI/2;
       mini.castShadow=true; mini.userData.setIndex=item.catalogIndex;
@@ -654,7 +664,7 @@ function bettyStageInit(){
     if(!counterItem && items.length) counterItem=items[0];
     if(counterItem){
       var cFaceSrcs=bettyStageFaceSrcs(counterItem);
-      var cFaceMats=cFaceSrcs.map(function(){ return new T.MeshPhysicalMaterial({color:0xff2e88,roughness:0.85,sheen:0.6,sheenColor:new T.Color(0xff8fb8),sheenRoughness:0.6,envMapIntensity:0.35}); });
+      var cFaceMats=cFaceSrcs.map(function(){ return new T.MeshPhysicalMaterial({color:0xffffff,roughness:0.85,sheen:0.25,sheenColor:new T.Color(0xffffff),sheenRoughness:0.6,envMapIntensity:0.35}); });
       var cBox=new T.Mesh(new T.BoxGeometry(1.5,1.7,0.7),cFaceMats);
       cBox.position.set(0,0.75,5.5); cBox.castShadow=true; cBox.userData.setIndex=counterItem.catalogIndex;
       scene.add(cBox); bettyStagePick.push(cBox);
@@ -762,13 +772,14 @@ function bettyStageInit(){
       new IntersectionObserver(function(entries){ bettyStageVisible=entries[0].isIntersecting; },{rootMargin:'100px'}).observe(canvas);
     }
     document.addEventListener('visibilitychange',function(){ bettyStagePaused=document.hidden; });
+    var bettyStageLabelTmp=new T.Vector3();
     var last=performance.now();
     (function loop(now){
       requestAnimationFrame(loop);
       var dt=Math.min(0.05,(now-last)/1000||0.016); last=now;
       if(bettyStageVisible && !bettyStagePaused){
         if(!bettyStageDragging){
-          bettyStageTarget+=dt*0.12; // slow auto-spin
+          bettyStageTarget+=dt*0.07; // slow auto-spin (REPAIR: was 0.12 — slower so labels stay readable)
           bettyStageTarget+=bettyStageVel; bettyStageVel*=0.95; // damped spin: velocity lerps to zero, not a dead stop
         }
         // WAVE 2C: walk in / step back along the camera's facing, clamped to the room.
@@ -779,6 +790,11 @@ function bettyStageInit(){
         }
         bettyStageAngle+=(bettyStageTarget-bettyStageAngle)*Math.min(1,dt*6);
         group.rotation.y=bettyStageAngle;
+        // FIX #3 REPAIR (b): only front-facing pieces show their label (world z > 0.5,
+        // about 3 at once) so names/prices never stack over each other. Each label is a
+        // child of its holder, so it travels with its own box and appears as that piece
+        // turns to the front. Back/side labels hide; the counter plaque is unaffected.
+        for(var li=0;li<bettyStageHolders.length;li++){ var lh=bettyStageHolders[li]; if(lh.userData.label){ lh.getWorldPosition(bettyStageLabelTmp); lh.userData.label.visible=bettyStageLabelTmp.z>0.5; } }
         // Tap squish animation (350ms, transform only).
         var nowMs=performance.now();
         bettyStageSquish=bettyStageSquish.filter(function(s){
