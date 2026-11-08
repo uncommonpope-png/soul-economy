@@ -1439,8 +1439,8 @@ render = function(data) {
     const hgBar = document.createElement('div');
     hgBar.id = 'hero-graph-bar';
     hgBar.innerHTML =
-      '<span class="hg-legend" title="Node shape = category \u00b7 size = PLT True Value">' +
-      '<span><i class="hg-dot" style="background:#FDE68A"></i>\u25c6 Soul</span><span><i class="hg-dot" style="background:#FCD34D"></i>\u25c7 Role</span><span><i class="hg-dot" style="background:#FBBF24"></i>\u25c6 Skill</span><span><i class="hg-dot" style="background:#F59E0B"></i>\u25b2 Chamber</span><span><i class="hg-dot" style="background:#FDE68A"></i>\u25a0 Infrastructure</span><span><i class="hg-dot" style="background:#FFD166"></i>\u2726 Combo</span><span><i class="hg-dot" style="background:#FCD34D"></i>\u2b1f Pack</span><span><i class="hg-dot" style="background:#FBBF24"></i>\u25cf World</span><span><i class="hg-dot" style="background:#F59E0B"></i>\u25b3 Agent</span><span><i class="hg-dot" style="background:#FFD166"></i>\u25ad Book</span>' +
+      '<span class="hg-legend" title="Plushie = category \u00b7 size = PLT True Value">' +
+      '<span><i class="hg-dot" style="background:#FDE68A"></i>\uD83D\uDC30 Soul</span><span><i class="hg-dot" style="background:#FCD34D"></i>\uD83E\uDDF8 Role</span><span><i class="hg-dot" style="background:#FBBF24"></i>\u2b50 Skill</span><span><i class="hg-dot" style="background:#F59E0B"></i>\uD83D\uDC9B Chamber</span><span><i class="hg-dot" style="background:#FDE68A"></i>\uD83D\uDCB0 Infrastructure</span><span><i class="hg-dot" style="background:#FFD166"></i>222 Combo</span><span><i class="hg-dot" style="background:#FCD34D"></i>\uD83C\uDF81 Pack</span><span><i class="hg-dot" style="background:#FBBF24"></i>\uD83C\uDF0D World</span><span><i class="hg-dot" style="background:#F59E0B"></i>\uD83E\uDD16 Agent</span><span><i class="hg-dot" style="background:#FFD166"></i>\uD83D\uDCD6 Book</span>' +
       '</span>' +
       '<button type="button" id="hgPause" title="Pause / resume the graph motion">\u23f8 Pause</button>' +
       '<select id="hgFilter" title="Show one category, or all" aria-label="Filter graph by category">' +
@@ -1483,18 +1483,188 @@ render = function(data) {
     const key = new DirectionalLight(0xF59E0B, 2); key.position.set(2, 3, 4); scene.add(key);
     const fill = new DirectionalLight(0xFFD166, 0.8); fill.position.set(-3, 1, -2); scene.add(fill);
 
+    // ─── IDEA 12 + 21 — PLUSHIE NODES: shape = category, size = True Value ───
+    // Category -> plushie type (Bible idea 21 reconciled with idea 12: the
+    // PLUSHIE TYPE encodes the category; size still comes from the PLT True
+    // Value, P + L - T). Mapping:
+    //   soul -> bunny (long ears, cream + pink) | role -> teddy bear
+    //   skill -> star plush (extruded star, one InstancedMesh for all skills)
+    //   chamber -> plush heart | infrastructure -> money bag ($)
+    //   combo -> little "222" | pack -> gift box | world -> globe plush
+    //   agent -> robot plush | book -> book plush
+    // Each motif is drawn ONCE on a 256x256 canvas (no image assets added to
+    // the repo) and shared by every node of that category: one Sprite per
+    // node, the same draw-call count as the geometry meshes they replace.
+    // Morph targets (idea 12): every plushie is drawn from one shared round
+    // plush-body base with its category features layered on top; on load each
+    // node crossfades / scales in from that generic orb into its plushie
+    // form (morph-in, see d.bornAt in the animate loop).
     const CAT = {
-      soul: { geom: new OctahedronGeometry(0.28,0), radius: 1.5 },
-      role: { geom: new OctahedronGeometry(0.18,0), radius: 2.2 },
-      skill: { geom: new OctahedronGeometry(0.06,0), radius: 2.9 },
-      chamber: { geom: new TetrahedronGeometry(0.09,0), radius: 3.4 },
-      infrastructure: { geom: new BoxGeometry(0.10,0.10,0.10), radius: 3.8 },
-      combo: { geom: null, radius: 4.5 },
-      pack: { geom: new DodecahedronGeometry(0.11,0), radius: 4.2 },
-      world: { geom: new SphereGeometry(0.14,12,12), radius: 4.9 },
-      agent: { geom: new ConeGeometry(0.10,0.22,6), radius: 5.4 },
-      book: { geom: new BoxGeometry(0.15,0.04,0.20), radius: 5.9 },
+      soul: { kind: 'bunny', tint: 0xFDE68A, radius: 1.5 },
+      role: { kind: 'bear', tint: 0xFCD34D, radius: 2.2 },
+      skill: { kind: 'star', tint: 0xFBBF24, radius: 2.9 },
+      chamber: { kind: 'heart', tint: 0xF59E0B, radius: 3.4 },
+      infrastructure: { kind: 'moneybag', tint: 0xFDE68A, radius: 3.8 },
+      combo: { kind: '222', tint: 0xFFD166, radius: 4.5 },
+      pack: { kind: 'gift', tint: 0xFCD34D, radius: 4.2 },
+      world: { kind: 'globe', tint: 0xFBBF24, radius: 4.9 },
+      agent: { kind: 'robot', tint: 0xF59E0B, radius: 5.4 },
+      book: { kind: 'book', tint: 0xFFD166, radius: 5.9 },
     };
+    // True Value = P + L - T. Observed catalog range -0.4 ... 2.0 (median 0.8).
+    // Map it to a node scale factor ~0.58 (lowest TV) ... 1.30 (highest TV),
+    // so the biggest node reads ~2.2x the smallest.
+    function tvOf(item) {
+      const p = (item.plt || '0.5/0.5/0.5').split('/').map(Number);
+      return (p[0] || 0) + (p[1] || 0) - (p[2] || 0);
+    }
+    function tvScale(tv) { return 0.55 + 0.75 * Math.max(0, Math.min(1, (tv + 0.5) / 2.5)); }
+    // One shared canvas texture per plushie kind. Soft plush look: thick
+    // seam-brown outlines, blush cheeks, dot eyes with a sparkle.
+    const _plushTex = {};
+    function plushTexture(kind) {
+      if (_plushTex[kind]) return _plushTex[kind];
+      const cv = document.createElement('canvas'); cv.width = cv.height = 256;
+      const x = cv.getContext('2d');
+      const OUT = '#4A2C14'; // plush-seam brown outline
+      x.lineJoin = 'round'; x.lineCap = 'round';
+      function blob(cx, cy, rx, ry, fill) {
+        x.fillStyle = fill; x.beginPath(); x.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2); x.fill();
+        x.strokeStyle = OUT; x.lineWidth = 5; x.stroke();
+      }
+      function face(cx, cy, s) { // dot eyes + smile + blush, scaled by s
+        x.fillStyle = '#2B1A10';
+        x.beginPath(); x.arc(cx - 16 * s, cy - 4 * s, 6 * s, 0, Math.PI * 2); x.fill();
+        x.beginPath(); x.arc(cx + 16 * s, cy - 4 * s, 6 * s, 0, Math.PI * 2); x.fill();
+        x.fillStyle = '#FFFFFF';
+        x.beginPath(); x.arc(cx - 14 * s, cy - 6 * s, 2.2 * s, 0, Math.PI * 2); x.fill();
+        x.beginPath(); x.arc(cx + 18 * s, cy - 6 * s, 2.2 * s, 0, Math.PI * 2); x.fill();
+        x.strokeStyle = '#2B1A10'; x.lineWidth = 4 * s;
+        x.beginPath(); x.arc(cx, cy + 6 * s, 12 * s, 0.15 * Math.PI, 0.85 * Math.PI); x.stroke();
+        x.fillStyle = 'rgba(255,120,150,0.55)';
+        x.beginPath(); x.ellipse(cx - 30 * s, cy + 10 * s, 9 * s, 6 * s, 0, 0, Math.PI * 2); x.fill();
+        x.beginPath(); x.ellipse(cx + 30 * s, cy + 10 * s, 9 * s, 6 * s, 0, 0, Math.PI * 2); x.fill();
+      }
+      function sparkle(cx, cy, s, col) {
+        x.fillStyle = col || '#FFD166';
+        x.beginPath();
+        x.moveTo(cx, cy - 12 * s); x.quadraticCurveTo(cx, cy, cx + 12 * s, cy);
+        x.quadraticCurveTo(cx, cy, cx, cy + 12 * s); x.quadraticCurveTo(cx, cy, cx - 12 * s, cy);
+        x.quadraticCurveTo(cx, cy, cx, cy - 12 * s); x.fill();
+      }
+      if (kind === 'bunny') {
+        x.save(); x.translate(96, 78); x.rotate(-0.22); blob(0, 0, 22, 52, '#FFF3E0'); blob(0, 0, 11, 38, '#FFB6C9'); x.restore();
+        x.save(); x.translate(160, 78); x.rotate(0.22); blob(0, 0, 22, 52, '#FFF3E0'); blob(0, 0, 11, 38, '#FFB6C9'); x.restore();
+        blob(128, 158, 62, 58, '#FFF3E0');
+        face(128, 152, 1);
+        x.fillStyle = '#FF8FA3';
+        x.beginPath(); x.moveTo(121, 162); x.lineTo(135, 162); x.lineTo(128, 170); x.closePath(); x.fill();
+      } else if (kind === 'bear') {
+        blob(82, 96, 22, 22, '#C68A4B'); blob(82, 96, 11, 11, '#8A5A2B');
+        blob(174, 96, 22, 22, '#C68A4B'); blob(174, 96, 11, 11, '#8A5A2B');
+        blob(128, 150, 64, 60, '#C68A4B');
+        x.fillStyle = '#E8C39A'; x.beginPath(); x.ellipse(128, 172, 30, 20, 0, 0, Math.PI * 2); x.fill();
+        x.strokeStyle = OUT; x.lineWidth = 4; x.stroke();
+        face(128, 140, 1);
+        x.fillStyle = '#2B1A10'; x.beginPath(); x.ellipse(128, 164, 10, 7, 0, 0, Math.PI * 2); x.fill();
+      } else if (kind === 'heart') {
+        x.beginPath();
+        x.moveTo(128, 212);
+        x.bezierCurveTo(40, 142, 55, 55, 128, 96);
+        x.bezierCurveTo(201, 55, 216, 142, 128, 212);
+        x.closePath(); x.fillStyle = '#FF5C8A'; x.fill();
+        x.strokeStyle = OUT; x.lineWidth = 5; x.stroke();
+        x.fillStyle = 'rgba(255,255,255,0.35)';
+        x.beginPath(); x.ellipse(96, 104, 18, 10, -0.5, 0, Math.PI * 2); x.fill();
+        face(128, 138, 0.9);
+      } else if (kind === 'moneybag') {
+        x.fillStyle = '#F5B81D';
+        x.beginPath(); x.moveTo(128, 66);
+        x.quadraticCurveTo(150, 84, 148, 104);
+        x.quadraticCurveTo(196, 128, 192, 172);
+        x.quadraticCurveTo(188, 216, 128, 216);
+        x.quadraticCurveTo(68, 216, 64, 172);
+        x.quadraticCurveTo(60, 128, 108, 104);
+        x.quadraticCurveTo(106, 84, 128, 66);
+        x.closePath(); x.fill(); x.strokeStyle = OUT; x.lineWidth = 5; x.stroke();
+        x.strokeStyle = OUT; x.lineWidth = 5;
+        x.beginPath(); x.moveTo(112, 96); x.lineTo(144, 96); x.stroke();
+        x.beginPath(); x.moveTo(128, 96); x.quadraticCurveTo(104, 78, 92, 84); x.stroke();
+        x.beginPath(); x.moveTo(128, 96); x.quadraticCurveTo(152, 78, 164, 84); x.stroke();
+        x.fillStyle = '#4A2C14'; x.font = 'bold 72px Georgia, serif';
+        x.textAlign = 'center'; x.textBaseline = 'middle';
+        x.fillText('$', 128, 162);
+        sparkle(196, 96, 1); sparkle(62, 130, 0.8);
+      } else if (kind === '222') {
+        x.textAlign = 'center'; x.textBaseline = 'middle';
+        x.font = 'bold 92px Georgia, serif';
+        x.lineWidth = 10; x.strokeStyle = OUT; x.lineJoin = 'round';
+        x.strokeText('222', 128, 128); x.fillStyle = '#FFD166'; x.fillText('222', 128, 128);
+        sparkle(52, 66, 1); sparkle(206, 78, 0.8); sparkle(196, 190, 0.9, '#FF8FA3');
+        x.fillStyle = '#FF5C8A';
+        x.beginPath();
+        x.moveTo(128, 216);
+        x.bezierCurveTo(104, 196, 108, 178, 128, 190);
+        x.bezierCurveTo(148, 178, 152, 196, 128, 216);
+        x.closePath(); x.fill();
+      } else if (kind === 'gift') {
+        x.fillStyle = '#FF6B9D';
+        x.beginPath(); x.roundRect(58, 108, 140, 96, 14); x.fill();
+        x.strokeStyle = OUT; x.lineWidth = 5; x.stroke();
+        x.fillStyle = '#F59E0B';
+        x.beginPath(); x.roundRect(48, 88, 160, 30, 10); x.fill(); x.stroke();
+        x.fillStyle = '#F59E0B'; x.fillRect(118, 88, 20, 116);
+        x.strokeStyle = OUT; x.lineWidth = 4; x.strokeRect(118, 88, 20, 116);
+        blob(100, 78, 24, 14, '#F59E0B'); blob(156, 78, 24, 14, '#F59E0B'); blob(128, 80, 10, 10, '#F59E0B');
+        face(128, 158, 0.8);
+      } else if (kind === 'globe') {
+        blob(128, 140, 64, 64, '#7DD3FC');
+        x.fillStyle = '#86EFAC';
+        x.beginPath(); x.ellipse(104, 118, 20, 12, 0.3, 0, Math.PI * 2); x.fill();
+        x.beginPath(); x.ellipse(152, 156, 24, 14, -0.2, 0, Math.PI * 2); x.fill();
+        x.beginPath(); x.ellipse(142, 104, 12, 8, 0, 0, Math.PI * 2); x.fill();
+        x.strokeStyle = 'rgba(74,44,20,0.6)'; x.lineWidth = 3;
+        x.beginPath(); x.ellipse(104, 118, 20, 12, 0.3, 0, Math.PI * 2); x.stroke();
+        x.beginPath(); x.ellipse(152, 156, 24, 14, -0.2, 0, Math.PI * 2); x.stroke();
+        face(128, 140, 0.85);
+      } else if (kind === 'robot') {
+        x.strokeStyle = OUT; x.lineWidth = 5;
+        x.beginPath(); x.moveTo(128, 88); x.lineTo(128, 62); x.stroke();
+        blob(128, 54, 9, 9, '#F59E0B');
+        x.fillStyle = '#E5E7EB';
+        x.beginPath(); x.roundRect(76, 88, 104, 86, 22); x.fill(); x.stroke();
+        x.fillStyle = '#F59E0B';
+        x.beginPath(); x.arc(104, 122, 11, 0, Math.PI * 2); x.fill();
+        x.beginPath(); x.arc(152, 122, 11, 0, Math.PI * 2); x.fill();
+        x.fillStyle = '#FFFFFF';
+        x.beginPath(); x.arc(107, 119, 3.5, 0, Math.PI * 2); x.fill();
+        x.beginPath(); x.arc(155, 119, 3.5, 0, Math.PI * 2); x.fill();
+        x.strokeStyle = '#2B1A10'; x.lineWidth = 4;
+        x.beginPath(); x.moveTo(112, 148); x.lineTo(144, 148); x.stroke();
+        x.beginPath(); x.moveTo(120, 148); x.lineTo(120, 154); x.stroke();
+        x.beginPath(); x.moveTo(128, 148); x.lineTo(128, 154); x.stroke();
+        x.beginPath(); x.moveTo(136, 148); x.lineTo(136, 154); x.stroke();
+        x.fillStyle = '#94A3B8';
+        x.beginPath(); x.roundRect(88, 174, 80, 32, 12); x.fill(); x.strokeStyle = OUT; x.lineWidth = 4; x.stroke();
+        x.fillStyle = '#F59E0B'; x.beginPath(); x.arc(128, 190, 7, 0, Math.PI * 2); x.fill();
+      } else if (kind === 'book') {
+        x.fillStyle = '#F59E0B';
+        x.beginPath(); x.roundRect(58, 76, 140, 112, 12); x.fill();
+        x.strokeStyle = OUT; x.lineWidth = 5; x.stroke();
+        x.fillStyle = '#FFF7E6';
+        x.beginPath(); x.roundRect(72, 86, 112, 92, 8); x.fill();
+        x.strokeStyle = 'rgba(74,44,20,0.5)'; x.lineWidth = 3; x.stroke();
+        x.strokeStyle = '#B8B8B8'; x.lineWidth = 2;
+        x.beginPath(); x.moveTo(84, 108); x.lineTo(172, 108); x.stroke();
+        x.beginPath(); x.moveTo(84, 122); x.lineTo(172, 122); x.stroke();
+        x.fillStyle = '#FF5C8A';
+        x.beginPath(); x.moveTo(170, 76); x.lineTo(186, 76); x.lineTo(178, 102); x.closePath(); x.fill();
+        face(128, 150, 0.75);
+      }
+      const tex = new T.CanvasTexture(cv);
+      _plushTex[kind] = tex;
+      return tex;
+    }
     const root = new Group(); scene.add(root);
     const clickTargets = [], nodeData = [], catItems = {};
     items.forEach((item, idx) => { const cat = item.type; if (!CAT[cat]) return; if (!catItems[cat]) catItems[cat] = []; catItems[cat].push({ item, idx }); });
@@ -1560,35 +1730,51 @@ render = function(data) {
     const edgePositions = [];
     nodeList.forEach(entry => {
       const { idx, cat, item } = entry;
-      const cfg = CAT[cat];
       const pos = positions[idx];
       const plt = (item.plt || '0.5/0.5/0.5').split('/').map(Number);
       const c = new T.Color().setHSL(0.10 + plt[1] * 0.03, 0.75, 0.42 + plt[0] * 0.15); // FIX #2 Midnight Amber: hue ~0.10-0.13, lightness = Profit
 
       if (cat === 'combo') {
-        const sg = new T.BufferGeometry(); const sv = [];
-        for (let s = 0; s < 8; s++) { const sa = (s / 8) * Math.PI * 2 + idx; sv.push(pos.x + Math.cos(sa)*0.1, pos.y + Math.sin(sa*2)*0.05, pos.z + Math.sin(sa)*0.1); }
-        sg.setAttribute('position', new Float32BufferAttribute(sv, 3));
-        const star = new Points(sg, new PointsMaterial({ color: c, size: 0.04, transparent: true, opacity: 0.6, blending: AdditiveBlending }));
-        star.userData = { index: idx }; root.add(star); clickTargets.push(star); nodeData.push({ index: idx, pos, item }); return;
+        // IDEA 21 — combos are little "222" plushies, sized by True Value.
+        const spr = new T.Sprite(new T.SpriteMaterial({ map: plushTexture('222'), transparent: true, opacity: 0, depthWrite: false }));
+        const ndC = { mesh: spr, index: idx, pos, item, baseScale: tvScale(tvOf(item)), phase: idx * 0.7, badge: null, label: null, plushColor: c, bornAt: performance.now() };
+        spr.position.copy(pos);
+        spr.scale.setScalar(0.55 * ndC.baseScale * 0.6); // morph-in starts small
+        spr.userData = { index: idx }; root.add(spr); clickTargets.push(spr); nodeData.push(ndC); return;
       }
 
       if (cat === 'skill') {
         if (!root.userData._sb) {
-          const im = new InstancedMesh(new OctahedronGeometry(0.11, 0), new MeshPhysicalMaterial({ color: 0xF59E0B, emissive: 0x92400E, emissiveIntensity: 0.35, metalness: 0.3, roughness: 0.2 }), 300);
+          // IDEA 21 — skills are star plushies: one extruded 5-point star
+          // geometry, instanced for all skills (one draw call, same as the
+          // old octahedra). Size per instance comes from True Value (below).
+          const starShape = new T.Shape();
+          for (let si = 0; si < 10; si++) {
+            const r = (si % 2 === 0) ? 0.11 : 0.048;
+            const a = (si / 10) * Math.PI * 2 - Math.PI / 2;
+            const sx = Math.cos(a) * r, sy = Math.sin(a) * r;
+            if (si === 0) starShape.moveTo(sx, sy); else starShape.lineTo(sx, sy);
+          }
+          starShape.closePath();
+          const starGeom = new T.ExtrudeGeometry(starShape, { depth: 0.05, bevelEnabled: true, bevelThickness: 0.012, bevelSize: 0.012, bevelSegments: 1 });
+          starGeom.center();
+          const im = new InstancedMesh(starGeom, new MeshPhysicalMaterial({ color: 0xF59E0B, emissive: 0x92400E, emissiveIntensity: 0.35, metalness: 0.3, roughness: 0.2 }), 300);
           im.userData.instances = []; im.userData.bc = 0; root.add(im); root.userData._sb = im; clickTargets.push(im);
         }
         const b = root.userData._sb, bi = b.userData.bc;
-        b.setMatrixAt(bi, new Matrix4().makeTranslation(pos.x, pos.y, pos.z));
+        const tvs = tvScale(tvOf(item)); // IDEA 12 — skill size = True Value
+        b.setMatrixAt(bi, new Matrix4().makeTranslation(pos.x, pos.y, pos.z).scale(new T.Vector3(tvs, tvs, tvs)));
         b.instanceMatrix.needsUpdate = true; b.userData.bc++; b.count = b.userData.bc;
-        b.userData.instances.push({ index: idx, pos: pos.clone() });
-        nodeData.push({ type: 'instanced', batch: b, instanceIdx: bi, index: idx, pos, item }); return;
+        b.userData.instances.push({ index: idx, pos: pos.clone(), s: tvs });
+        nodeData.push({ type: 'instanced', batch: b, instanceIdx: bi, index: idx, pos, item, baseScale: tvs }); return;
       }
 
-      const mat = new MeshPhysicalMaterial({ color: c, emissive: c, emissiveIntensity: 0.4, metalness: 0.3, roughness: 0.2, transparent: true, opacity: 0.9, clearcoat: 0.2 });
-      const mesh = new Mesh(cfg.geom.clone(), mat);
-      const ndS1 = { mesh, index: idx, pos, item, baseScale: (1.0 + plt[0] * 0.5), phase: idx*0.7, badge: null, label: null };
-      mesh.position.copy(pos); mesh.scale.setScalar(ndS1.baseScale);
+      // IDEA 12 + 21 — plushie node sprite (replaces the old geometry mesh).
+      // One shared canvas texture per category; one Sprite per node, so the
+      // draw-call count is unchanged. Scale = True Value (tvScale), not Profit.
+      const mesh = new T.Sprite(new T.SpriteMaterial({ map: plushTexture(CAT[cat].kind), transparent: true, opacity: 0, depthWrite: false }));
+      const ndS1 = { mesh, index: idx, pos, item, baseScale: tvScale(tvOf(item)), phase: idx*0.7, badge: null, label: null, plushColor: c, bornAt: performance.now() };
+      mesh.position.copy(pos); mesh.scale.setScalar(0.55 * ndS1.baseScale * 0.6); // morph-in starts small
       mesh.userData.index = idx; root.add(mesh); clickTargets.push(mesh); nodeData.push(ndS1);
       // Invisible click collider (larger sphere for easier clicking) — NOT visible:false, raycaster can't hit invisible
       const collider = new Mesh(new SphereGeometry(0.35, 8, 8), new MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false }));
@@ -1748,7 +1934,7 @@ render = function(data) {
     // Top-24 by True Value (P+L-T) get always-on labels; the rest fade in on zoom (idea 13, top-N only)
     {
       const ranked = nodeList.filter(e => e.cat !== 'skill')
-        .map(e => ({ e, tv: (e.item.plt || '0.5/0.5/0.5').split('/').map(Number).reduce((a, v, i) => a + (i === 2 ? -v : v), 0) }))
+        .map(e => ({ e, tv: tvOf(e.item) }))
         .sort((a, b) => b.tv - a.tv).slice(0, 24);
       ranked.forEach(({ e }) => { const d = nodeData.find(x => x.index === e.idx); if (d) d.topLabel = true; });
     }
@@ -1792,8 +1978,8 @@ render = function(data) {
         runeTexs.push(new T.CanvasTexture(cv));
       }
       nodeData.forEach(d => {
-        if (d.mesh && d.mesh.isMesh) {
-          const am = new T.SpriteMaterial({ map: auraTex, color: d.mesh.material.color, transparent: true, opacity: 0.3, blending: AdditiveBlending, depthWrite: false });
+        if (d.mesh && (d.mesh.isMesh || d.mesh.isSprite)) {
+          const am = new T.SpriteMaterial({ map: auraTex, color: d.plushColor || d.mesh.material.color, transparent: true, opacity: 0.3, blending: AdditiveBlending, depthWrite: false });
           const aura = new T.Sprite(am);
           aura.position.copy(d.pos); aura.scale.setScalar(1.1);
           root.add(aura); d.aura = aura;
@@ -1854,7 +2040,7 @@ render = function(data) {
       const orbiterGeo = new TetrahedronGeometry(0.03,0);
       const orbiterMat = new MeshBasicMaterial({ color: 0xFFD166, transparent: true, opacity: 0.9 });
       nodeData.forEach(d => {
-        if (d.mesh && d.mesh.isMesh) {
+        if (d.mesh && (d.mesh.isMesh || d.mesh.isSprite)) {
           const pv = (d.item.plt || '0.5/0.5/0.5').split('/').map(Number);
           if ((pv[0]+pv[1]-pv[2]) > 1.0) {
             const hg = new RingGeometry(0.32, 0.38, 40);
@@ -2009,26 +2195,40 @@ render = function(data) {
       controls.autoRotate = !graphCtl.paused;
       if (!REDUCED && !graphCtl.paused) { starNear.rotation.y += 0.00006; starFar.rotation.y -= 0.00004; }
       controls.autoRotateSpeed = REDUCED ? 0.8 : 0.8 + Math.sin(t*0.3)*0.3;
-      nodeData.forEach(d => { if (d.mesh && d.mesh.isMesh) {
-        d.mesh.rotation.x = Math.sin(TT + d.index) * 0.05;
-        d.mesh.rotation.y = Math.cos(TT + d.index) * 0.05;
+      nodeData.forEach(d => { if (d.mesh) {
+        const isSpr = !!d.mesh.isSprite;
         const isHov = hoverRef.d && hoverRef.d.index === d.index;
         // Heartbeat lungs — lub-dub thump, phase-offset per node
-        const hb = REDUCED ? 0 : heartbeat(TT, d.phase);
+        const hb = REDUCED ? 0 : heartbeat(TT, d.phase || 0);
         const br = 1 + 0.10 * hb;
-        d.mesh.scale.setScalar(d.baseScale * br * (isHov ? 1.25 : 1));
-        // bio-swell: the body drifts outward along its radial axis with each beat
-        if (!REDUCED) {
-          const px = d.pos.x, py = d.pos.y, pz = d.pos.z;
-          const pl = Math.sqrt(px*px + py*py + pz*pz) || 1;
-          const sw = 1 + 0.05 * hb / pl;
-          d.mesh.position.set(px*sw, py*sw, pz*sw);
-        } else d.mesh.position.copy(d.pos);
-        // Proximity glow — brighter when camera is near (+hover bloom spike + heartbeat)
-        const dist = controls.target.distanceTo(d.pos || d.mesh.position);
-        const proximity = Math.max(0, 1 - (dist - 0.5) / 4);
-        d.mesh.material.emissiveIntensity = Math.min(1.5, 0.3 + proximity * 0.65 + (isHov ? 0.8 : 0) + 0.45 * hb);
-        d.mesh.material.opacity = 0.72 + proximity * 0.25;
+        // IDEA 12 morph-in: crossfade/scale in from the generic plush orb
+        // into the category plushie over the first ~0.9 s after build.
+        const morph = d.bornAt ? Math.min(1, (nowMs - d.bornAt) / 900) : 1;
+        const morphE = morph * morph * (3 - 2 * morph); // smoothstep
+        if (isSpr) {
+          // Plushie sprite: breathe by scale, bob gently; sprites face camera.
+          const s = 0.55 * d.baseScale * br * (0.6 + 0.4 * morphE) * (isHov ? 1.25 : 1);
+          d.mesh.scale.set(s, s, 1);
+          d.mesh.material.opacity = 0.95 * morphE;
+          if (!REDUCED) d.mesh.position.set(d.pos.x, d.pos.y + 0.03 * Math.sin(TT * 1.4 + (d.phase || 0)), d.pos.z);
+          else d.mesh.position.copy(d.pos);
+        } else if (d.mesh.isMesh) {
+          d.mesh.rotation.x = Math.sin(TT + d.index) * 0.05;
+          d.mesh.rotation.y = Math.cos(TT + d.index) * 0.05;
+          d.mesh.scale.setScalar(d.baseScale * br * (isHov ? 1.25 : 1));
+          // bio-swell: the body drifts outward along its radial axis with each beat
+          if (!REDUCED) {
+            const px = d.pos.x, py = d.pos.y, pz = d.pos.z;
+            const pl = Math.sqrt(px*px + py*py + pz*pz) || 1;
+            const sw = 1 + 0.05 * hb / pl;
+            d.mesh.position.set(px*sw, py*sw, pz*sw);
+          } else d.mesh.position.copy(d.pos);
+          // Proximity glow — brighter when camera is near (+hover bloom spike + heartbeat)
+          const dist = controls.target.distanceTo(d.pos || d.mesh.position);
+          const proximity = Math.max(0, 1 - (dist - 0.5) / 4);
+          d.mesh.material.emissiveIntensity = Math.min(1.5, 0.3 + proximity * 0.65 + (isHov ? 0.8 : 0) + 0.45 * hb);
+          d.mesh.material.opacity = 0.72 + proximity * 0.25;
+        }
         // Slice 1: breathing PLT badges + distance-faded labels
           if (d.badge) {
             d.badge.material.opacity = 0.8 + (REDUCED ? 0 : 0.15 * hb);
@@ -2071,7 +2271,7 @@ render = function(data) {
         const inst = sb.userData.instances;
         for (let si = 0; si < sb.count; si++) {
           const bp = inst[si].pos;
-          const s = 1 + 0.12 * Math.sin(TT*2.2 + si*0.5);
+          const s = (inst[si].s || 1) * (1 + 0.12 * Math.sin(TT*2.2 + si*0.5));
           _m4.makeTranslation(bp.x, bp.y, bp.z);
           _m4.scale(_sv.set(s, s, s));
           sb.setMatrixAt(si, _m4);
