@@ -19,9 +19,6 @@
 <link rel="stylesheet" href="css/card-bio.css" />
 <link rel="stylesheet" href="css/treasury.css" />
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@7/dist/fuse.min.js"></script>
-<!-- WAVE 2h (idea 10) — GSAP 3.13.0 + Lenis 1.3.4, vendored under assets/js/vendor/ (self-hosted, idea 20). Theatre.js Core is loaded as a module inside the graph script. -->
-<script src="assets/js/vendor/gsap.min.js"></script>
-<script src="assets/js/vendor/lenis.min.js"></script>
 <script type="importmap">
 {
   "imports": {
@@ -32,13 +29,13 @@
 </script>
 <style>
 :root {
-  --bg-deep: #0C0C12;
+  --bg-deep: #080808;
   --bg-card: rgba(255,255,255,0.06);
   --glass-border: rgba(255,255,255,0.06);
   --glass-hover: rgba(139,92,246,0.18);
-  --purple: #F59E0B;
-  --purple-glow: rgba(245,158,11,0.25);
-  --purple-dark: #B45309;
+  --purple: #8B5CF6;
+  --purple-glow: rgba(139,92,246,0.25);
+  --purple-dark: #6D28D9;
   --cyan: #00D4FF;
   --cyan-glow: rgba(0,212,255,0.12);
   --gold: #FFD166;
@@ -51,7 +48,7 @@
   --font: 'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
   --glass-bg: rgba(255,255,255,0.04);
   --glass-bg-hover: rgba(255,255,255,0.08);
-  --glass-edge: rgba(245,158,11,0.15);
+  --glass-edge: rgba(139,92,246,0.15);
   --card-stagger: 0;
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
@@ -62,43 +59,11 @@ button{cursor:pointer;font-family:inherit;border:none;outline:none;background:no
 input{font-family:inherit;outline:none;border:none;background:none}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important}}
 
-#bg-canvas{position:relative;width:100%;height:68vh;min-height:480px;display:block;z-index:0;background:#07070D}
-/* FIX #2 — hero graph band sits ABOVE the hero headline (was 100vh, cluster over the text) + control bar */
-#hero-graph-wrap{position:relative;width:100%;background:radial-gradient(ellipse 90% 75% at 50% 30%,#171006 0%,#0C0C12 55%,#050508 100%)}
-#hero-graph-bar{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);z-index:5;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px 10px;max-width:min(1060px,94%);padding:8px 12px;background:rgba(12,12,18,0.88);border:1px solid rgba(245,158,11,0.35);border-radius:14px;font-size:0.72rem;color:#E8E0CE;box-shadow:0 10px 40px rgba(0,0,0,0.6);pointer-events:auto}
-#hero-graph-bar .hg-legend{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center}
-#hero-graph-bar .hg-legend span{white-space:nowrap}
-#hero-graph-bar .hg-dot{display:inline-block;width:9px;height:9px;margin-right:4px;border-radius:2px;background:#F59E0B;vertical-align:-1px}
-#hero-graph-bar button,#hero-graph-bar select{background:rgba(255,255,255,0.05);border:1px solid rgba(245,158,11,0.4);color:#FFD166;border-radius:20px;padding:5px 12px;font-size:0.72rem;font-weight:600;font-family:inherit;cursor:pointer}
-#hero-graph-bar button:hover,#hero-graph-bar select:hover{border-color:#F59E0B;color:#fff}
-#hero-graph-bar select option{background:#0C0C12;color:#FFD166}
-#hero-graph-bar .hg-hint{color:#B8B8B8}
-@media (max-width:820px){#hero-graph-bar{bottom:8px;font-size:0.66rem;gap:6px}}
+#bg-canvas{position:relative;width:100%;height:100vh;min-height:600px;display:block;z-index:0}
 
 /* SOUL INFO PANEL */
 #soul-info-panel{position:fixed;right:24px;top:50%;transform:translateY(-50%);z-index:100;width:320px;background:rgba(8,8,8,0.92);backdrop-filter:blur(24px);border:1px solid rgba(139,92,246,0.2);border-radius:20px;padding:28px;opacity:0;pointer-events:none;transform:translateY(-50%) translateX(20px);transition:all 0.4s cubic-bezier(0.22,1,0.36,1);box-shadow:0 0 80px rgba(139,92,246,0.15)}
 #soul-info-panel.active{opacity:1;pointer-events:auto;transform:translateY(-50%) translateX(0)}
-/* WAVE 2h — idea 8 whisper tooltip (text only), idea 25 thread card, idea 19 palette + bottom sheets */
-#hgWhisper{position:absolute;z-index:6;max-width:280px;padding:8px 12px;background:rgba(12,12,18,0.94);border:1px solid rgba(245,158,11,0.55);border-radius:12px;color:#FFE9B0;font-size:0.78rem;line-height:1.45;pointer-events:none;box-shadow:0 8px 30px rgba(0,0,0,0.6)}
-#hgThread{position:absolute;left:12px;top:12px;z-index:6;max-width:300px;padding:12px 14px;background:rgba(12,12,18,0.94);border:1px solid rgba(245,158,11,0.55);border-radius:14px;color:#E8E0CE;font-size:0.8rem;line-height:1.5;box-shadow:0 10px 40px rgba(0,0,0,0.6)}
-#hgThread .hg-bond{font-weight:700}
-#hgThread .hg-thread-x{float:right;color:#B8B8B8;cursor:pointer;font-size:0.9rem}
-#hgThread .hg-thread-plt{display:block;margin-top:6px;color:#B8B8B8;font-size:0.72rem}
-#hgThread .hg-thread-hint{display:block;margin-top:6px;color:#FFD166;font-size:0.72rem}
-#hgPalette{position:fixed;inset:0;z-index:6000;display:flex;align-items:flex-start;justify-content:center;padding:12vh 16px 16px;background:rgba(5,5,10,0.6);backdrop-filter:blur(4px)}
-#hgPalette .hg-pal-box{width:min(560px,100%);background:rgba(12,12,18,0.97);border:1px solid rgba(245,158,11,0.45);border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,0.7);overflow:hidden}
-#hgPaletteInput{width:100%;padding:14px 16px;background:transparent;color:#fff;font-size:1rem;border:none;border-bottom:1px solid rgba(255,255,255,0.08)}
-#hgPaletteList{max-height:320px;overflow:auto;padding:6px}
-.hg-pal-item{padding:9px 12px;border-radius:10px;cursor:pointer;font-size:0.88rem;color:#E8E0CE}
-.hg-pal-item small{display:block;color:#B8B8B8;font-size:0.72rem}
-.hg-pal-item.sel{background:rgba(245,158,11,0.16)}
-#hgPalette .hg-pal-hint{padding:8px 14px;font-size:0.7rem;color:#B8B8B8;border-top:1px solid rgba(255,255,255,0.06)}
-@media (max-width:820px){
-  #soul-info-panel{left:12px;right:12px;top:auto;bottom:0;width:auto;max-height:62vh;overflow:auto;border-radius:20px 20px 0 0;transform:translateY(24px)}
-  #soul-info-panel.active{transform:translateY(0)}
-  #hgPalette{padding:8vh 12px 12px}
-  #hgThread{left:8px;right:8px;top:8px;max-width:none}
-}
 #soul-info-panel .close{position:absolute;top:12px;right:16px;color:var(--text-muted);cursor:pointer;font-size:1.2rem;transition:color 0.2s;background:none;border:none;font-family:inherit}
 #soul-info-panel .close:hover{color:var(--text-white)}
 #soul-info-panel .name{font-size:1.4rem;font-weight:700;margin-bottom:4px;background:linear-gradient(135deg,var(--purple),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
@@ -126,9 +91,9 @@ input{font-family:inherit;outline:none;border:none;background:none}
 /* HERO + AURORA */
 .hero{text-align:center;padding:32px 0 16px;position:relative;overflow:hidden;border-radius:24px}
 #auroraCanvas{position:absolute;inset:0;z-index:-1;opacity:0.55;pointer-events:none;filter:blur(1px)}
-.hero-badge{display:inline-block;padding:6px 20px;font-size:0.7rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#F59E0B;border:1px solid rgba(245,158,11,0.2);border-radius:100px;background:rgba(245,158,11,0.06);margin-bottom:20px;backdrop-filter:blur(4px)}
-.hero-title{font-size:clamp(2.6rem,7vw,5rem);font-weight:900;line-height:1.05;letter-spacing:-0.03em;margin-bottom:16px;text-shadow:0 4px 40px rgba(0,0,0,0.6),0 2px 12px rgba(0,0,0,0.9);background:rgba(12,12,18,0.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border-radius:16px;padding:10px 22px;display:inline-block}
-.hero-title .highlight{background:linear-gradient(135deg,#F59E0B,#FFD166);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-badge{display:inline-block;padding:6px 20px;font-size:0.7rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--purple);border:1px solid rgba(139,92,246,0.2);border-radius:100px;background:rgba(139,92,246,0.06);margin-bottom:20px;backdrop-filter:blur(4px)}
+.hero-title{font-size:clamp(2.6rem,7vw,5rem);font-weight:900;line-height:1.05;letter-spacing:-0.03em;margin-bottom:16px;text-shadow:0 4px 40px rgba(0,0,0,0.6)}
+.hero-title .highlight{background:linear-gradient(135deg,var(--purple),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .hero-sub{font-size:1.1rem;color:var(--text-gray);max-width:560px;margin:0 auto 32px;line-height:1.8}
 .hero-actions{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:48px}
 .btn-large{padding:14px 40px;font-size:1rem}
@@ -173,10 +138,10 @@ input{font-family:inherit;outline:none;border:none;background:none}
 .plt-filter input[type=range]{width:80px;height:4px;-webkit-appearance:none;appearance:none;border-radius:4px;outline:none;background:rgba(255,255,255,0.1)}
 .plt-filter input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;cursor:pointer}
 .plt-filter .p-val{color:var(--purple)}
-.plt-filter .l-val{color:#FBBF24} /* FIX #2 live repair — L was cyan */
+.plt-filter .l-val{color:var(--cyan)}
 .plt-filter .t-val{color:var(--gold)}
 .plt-filter .p-thumb::-webkit-slider-thumb{background:var(--purple)}
-.plt-filter .l-thumb::-webkit-slider-thumb{background:#FBBF24}
+.plt-filter .l-thumb::-webkit-slider-thumb{background:var(--cyan)}
 .plt-filter .t-thumb::-webkit-slider-thumb{background:var(--gold)}
 .plt-filter .value{font-size:0.8rem;font-weight:700;min-width:28px;text-align:center}
 .result-item{display:flex;align-items:center;gap:12px;padding:10px 20px;cursor:pointer;transition:var(--transition);border-radius:8px;margin:2px 6px}
@@ -224,18 +189,8 @@ input{font-family:inherit;outline:none;border:none;background:none}
 .card-title{font-size:1.1rem;font-weight:700;margin-bottom:6px;text-shadow:0 2px 12px rgba(0,0,0,0.6)}
 .card-plt{display:flex;gap:8px;margin-bottom:12px}
 .card-plt span{padding:2px 10px;border-radius:8px;font-size:0.75rem;font-weight:600}
-/* IDEA 34 — PLT ticker as a living ring: the ring beside the P/L/T chips shows
-   the card's True Value (P+L-T) as a base fill; hover adds Love, click adds
-   Profit. Session-only fill — the card's P/L/T values never change. */
-.card-plt-wrap{display:flex;align-items:center;gap:10px;margin-bottom:12px}
-.card-plt-wrap .card-plt{margin-bottom:0;flex:1}
-.plt-ring{flex:none;width:46px;height:46px;cursor:default}
-.plt-ring svg{display:block}
-.plt-ring-bg{fill:none;stroke:rgba(255,255,255,0.14);stroke-width:4}
-.plt-ring-fg{fill:none;stroke:#F59E0B;stroke-width:4;stroke-linecap:round;stroke-dasharray:113.1;stroke-dashoffset:113.1;transform:rotate(-90deg);transform-origin:23px 23px;transition:stroke-dashoffset 0.45s ease}
-.plt-ring-txt{fill:#FFD166;font-size:10px;font-weight:700;font-family:Inter,sans-serif}
 .plt-p{background:rgba(139,92,246,0.12);color:var(--purple)}
-.plt-l{background:rgba(251,191,36,0.12);color:#FBBF24} /* FIX #2 live repair — L was cyan */
+.plt-l{background:rgba(0,212,255,0.12);color:var(--cyan)}
 .plt-t{background:rgba(255,209,102,0.12);color:var(--gold)}
 .card-footer{display:flex;align-items:center;justify-content:space-between;margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.04)}
 .card-category{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted)}
@@ -280,7 +235,7 @@ input{font-family:inherit;outline:none;border:none;background:none}
   font-weight:500 !important;
 }
 .card.dossier .plt-p{color:rgba(168,85,247,0.9) !important;background:rgba(168,85,247,0.08) !important}
-.card.dossier .plt-l{color:rgba(251,191,36,0.9) !important;background:rgba(251,191,36,0.08) !important}
+.card.dossier .plt-l{color:rgba(0,212,255,0.9) !important;background:rgba(0,212,255,0.08) !important}
 .card.dossier .plt-t{color:rgba(255,209,102,0.9) !important;background:rgba(255,209,102,0.08) !important}
 .card.dossier .card-details{
   border-top-color:rgba(0,212,255,0.1) !important;
@@ -427,7 +382,7 @@ input{font-family:inherit;outline:none;border:none;background:none}
 <!-- New-visitor guide banner (Gemini Rank 3): first-visit only, dismissible. -->
 <div id="newHereBanner" style="pointer-events:auto;display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;margin:0 auto 12px;padding:10px 16px;border:1px solid rgba(255,209,102,0.28);border-left:3px solid #FFD166;border-radius:14px;background:rgba(10,10,15,0.85);font-family:ui-monospace,Consolas,monospace;font-size:0.78rem;color:#B8B8B8">
   <span style="color:#FFD166;letter-spacing:0.12em">NEW HERE?</span>
-  <span>Explore the <a href="#catalog" style="color:#FFD166">free Library</a>, rescue your chat at the <a href="rescue.html" style="color:#FFD166">Rescue Door</a>, or <a href="chat.html" style="color:#FFD166">summon a squad</a>.</span>
+  <span>Explore the <a href="#catalog" style="color:#00D4FF">free Library</a>, rescue your chat at the <a href="rescue.html" style="color:#00D4FF">Rescue Door</a>, or <a href="chat.html" style="color:#00D4FF">summon a squad</a>.</span>
   <button id="newHereDismiss" type="button" aria-label="Dismiss" style="margin-left:auto;background:none;border:1px solid rgba(255,255,255,0.2);color:#B8B8B8;border-radius:999px;width:26px;height:26px;cursor:pointer">×</button>
 </div>
 <script>(function(){try{var b=document.getElementById('newHereBanner');if(!b)return;if(localStorage.getItem('seNewHereDismissed')==='1'){b.style.display='none';return;}var d=document.getElementById('newHereDismiss');if(d)d.addEventListener('click',function(){try{localStorage.setItem('seNewHereDismissed','1')}catch(e){}b.style.display='none';});}catch(e){}})();</script>
@@ -457,9 +412,9 @@ input{font-family:inherit;outline:none;border:none;background:none}
 <!-- Family Treasury header module — Stripe-direct storefront (Vessel $4, Telephone $5/mo, Rescue free, Tips, Books $19/$49). Existing treasury band kept below. -->
 
 <!-- SIP-12: First-Time Architect onboard strip -->
-<div id="guideStrip" style="display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin:26px auto 4px;max-width:1280px;padding:12px 18px;border:1px solid rgba(255,209,102,0.28);border-left:3px solid #F59E0B;border-radius:14px;background:rgba(10,10,15,0.75);font-family:ui-monospace,Consolas,monospace;font-size:0.72rem;color:#B8B8B8">
+<div id="guideStrip" style="display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin:26px auto 4px;max-width:1280px;padding:12px 18px;border:1px solid rgba(255,209,102,0.28);border-left:3px solid #00D4FF;border-radius:14px;background:rgba(10,10,15,0.75);font-family:ui-monospace,Consolas,monospace;font-size:0.72rem;color:#B8B8B8">
   <span style="color:#FFD166;letter-spacing:0.14em">FIRST-TIME ARCHITECT</span>
-  <span class="gs-step" data-step="1" style="cursor:pointer;padding:6px 12px;border:1px solid rgba(245,158,11,0.4);border-radius:30px;color:#FBBF24">1 ▸ PICK YOUR SQUAD <span style="opacity:.7">(◇ Squad)</span></span>
+  <span class="gs-step" data-step="1" style="cursor:pointer;padding:6px 12px;border:1px solid rgba(0,212,255,0.4);border-radius:30px;color:#9be8ff">1 ▸ PICK YOUR SQUAD <span style="opacity:.7">(◇ Squad)</span></span>
   <span style="opacity:.45">──►</span>
   <span class="gs-step" data-step="2" style="cursor:pointer;padding:6px 12px;border:1px solid rgba(255,209,102,0.4);border-radius:30px;color:#FFD166">2 ▸ SUMMON &amp; TEST</span>
   <span style="opacity:.45">──►</span>
@@ -481,7 +436,7 @@ input{font-family:inherit;outline:none;border:none;background:none}
   <div class="type" id="soul-info-type"></div>
   <div class="desc" id="soul-info-desc"></div>
   <div class="plt" id="soul-info-plt"></div>
-  <a id="soul-info-summon" href="#" style="display:inline-block;margin:10px 0;font-size:0.8rem;color:#FFD166;font-weight:600" title="Open your profile and summon this soul as Active Guide">⚡ Summon this Soul on Profile</a>
+  <a id="soul-info-summon" href="#" style="display:inline-block;margin:10px 0;font-size:0.8rem;color:#00D4FF;font-weight:600" title="Open your profile and summon this soul as Active Guide">⚡ Summon this Soul on Profile</a>
   <button class="awaken" id="soul-info-btn">⬇ Awaken</button>
 </div>
 
@@ -524,12 +479,12 @@ input{font-family:inherit;outline:none;border:none;background:none}
   <div style="margin-bottom:14px">
     <h3 style="font-size:1.15rem;margin:0 0 4px">🌌 Model Universe [3D]</h3>
     <p style="color:var(--text-muted);font-size:0.82rem;margin:0 0 12px">All 282 catalog souls as a navigable constellation. Node size = PLT true value · color = category. Click a node to open its real card. Three.js loads on demand — zero cost until you enter.</p>
-    <button id="btn-ignite-universe" onclick="window.SoulverseLens&&SoulverseLens.open()" style="padding:12px 28px;border-radius:30px;background:linear-gradient(135deg,#0a0a0f,#1a0b2e);border:1px solid rgba(245,158,11,.55);color:#FFD166;font-weight:800;font-size:0.85rem;letter-spacing:.08em;cursor:pointer;box-shadow:0 0 30px rgba(245,158,11,.3),inset 0 0 20px rgba(245,158,11,.15)">🌌 ENTER MODEL UNIVERSE [3D]</button>
+    <button id="btn-ignite-universe" onclick="window.SoulverseLens&&SoulverseLens.open()" style="padding:12px 28px;border-radius:30px;background:linear-gradient(135deg,#0a0a0f,#1a0b2e);border:1px solid rgba(0,212,255,.5);color:#00D4FF;font-weight:800;font-size:0.85rem;letter-spacing:.08em;cursor:pointer;box-shadow:0 0 30px rgba(0,212,255,.25),inset 0 0 20px rgba(139,92,246,.15)">🌌 ENTER MODEL UNIVERSE [3D]</button>
     <span style="margin-left:10px;font-size:0.7rem;color:var(--text-muted)">ESC closes · GPU freed on exit</span>
   </div>
 </section>
 
-<section class="hero" style="pointer-events:auto;position:relative;margin:18px 0 10px;border:1px solid rgba(255,255,255,0.07);border-radius:20px;background:linear-gradient(180deg,rgba(245,158,11,0.05),rgba(255,209,102,0.03)),radial-gradient(rgba(245,158,11,0.07) 1px,transparent 1px);background-size:auto,34px 34px">
+<section class="hero" style="pointer-events:auto;position:relative;margin:18px 0 10px;border:1px solid rgba(255,255,255,0.07);border-radius:20px;background:linear-gradient(180deg,rgba(139,92,246,0.05),rgba(0,212,255,0.03)),radial-gradient(rgba(139,92,246,0.07) 1px,transparent 1px);background-size:auto,34px 34px">
   <canvas id="auroraCanvas"></canvas>
   <span class="hero-badge">✦ The Soul Economy</span>
   <h1 class="hero-title">The Digital Library<br /><span class="highlight">of Souls</span></h1>
@@ -541,90 +496,6 @@ input{font-family:inherit;outline:none;border:none;background:none}
     <div class="stat"><span class="stat-number">221</span><span class="stat-label">Souls</span></div>
     <div class="stat"><span class="stat-number">22</span><span class="stat-label">Roles</span></div>
     <div class="stat"><span class="stat-number">∞</span><span class="stat-label">PLT</span></div>
-  </div>
-</section>
-
-<!-- WAVE 32 — IDEA 32: SOUL STORY SCROLL. One soul's arc, told as a short
-     scroll-driven Theatre.js scene (sheet "Story", 8 s, scrubbed by scroll
-     position — never autoplayed, never hijacks scroll). The story is the
-     Architect: every line below is a verbatim fragment of its own catalog
-     entry (desc + PLT 0.8/0.5/0.3, True Value 0.8+0.5−0.3 = 1.0) — nothing
-     invented, no new souls, prices, or links. The final beat lands on the
-     real buy button that already exists below (#buy-complete-library).
-     Reduced motion: no canvas, no choreography — the beats read as plain
-     stacked text (see the media query). The 3D stage is lazy: three.js +
-     Theatre load only when this section nears the viewport, and the scene
-     renders on demand while scrolling only (+5 draw calls, DPR cap 2).
-     If WebGL or Theatre fails, the section stays a readable text story
-     over the amber poster gradient — never a black canvas. -->
-<style id="soul-story-css">
-#soul-story{position:relative;height:380vh;margin:18px 0 10px}
-.story-sticky{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;border:1px solid rgba(255,209,102,0.16);border-radius:20px;background:radial-gradient(ellipse 90% 75% at 50% 30%,#171006 0%,#0C0C12 55%,#07070D 100%)}
-#story-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;touch-action:pan-y}
-.story-kicker{position:absolute;top:18px;left:0;right:0;text-align:center;font-size:0.7rem;font-weight:700;letter-spacing:0.3em;text-transform:uppercase;color:#FFD166;pointer-events:none}
-.story-kicker b{display:block;margin-top:6px;font-size:clamp(1.4rem,3.4vw,2.1rem);letter-spacing:0.02em;text-transform:none;color:#fff}
-.story-beats{position:absolute;inset:0;pointer-events:none}
-.story-beat{position:absolute;left:50%;top:56%;transform:translate(-50%,-50%) translateY(16px);width:min(520px,calc(100% - 32px));padding:22px 24px;border:1px solid rgba(245,158,11,0.45);border-radius:16px;background:rgba(12,12,18,0.86);box-shadow:0 20px 60px rgba(0,0,0,0.6);opacity:0;transition:opacity 0.45s ease,transform 0.45s ease;text-align:center}
-.story-beat.active{opacity:1;transform:translate(-50%,-50%) translateY(0)}
-.story-beat .story-line{margin:0 0 8px;font-size:clamp(1.5rem,4vw,2.2rem);font-weight:800;line-height:1.15;color:#fff}
-.story-beat .story-sub{margin:0;font-size:0.95rem;line-height:1.5;color:#FFE9B0}
-.story-beat .story-plt{margin:10px 0 0;font-size:0.8rem;color:#B8B8B8;font-family:ui-monospace,monospace}
-.story-cta{display:inline-block;margin-top:16px;padding:12px 22px;border-radius:999px;background:#F59E0B;color:#140E00;font-weight:800;font-size:0.95rem;text-decoration:none;pointer-events:auto;box-shadow:0 0 0 1px rgba(255,209,102,0.6),0 8px 30px rgba(245,158,11,0.35)}
-.story-cta:hover{background:#FFD166}
-.story-note{margin:10px 0 0;font-size:0.75rem;color:#B8B8B8}
-.story-hint{position:absolute;bottom:52px;left:0;right:0;text-align:center;font-size:0.75rem;color:rgba(255,255,255,0.55);pointer-events:none}
-.story-progress{position:absolute;left:24px;right:24px;bottom:22px;height:3px;border-radius:3px;background:rgba(255,255,255,0.12);overflow:hidden}
-.story-progress i{display:block;height:100%;width:0%;background:linear-gradient(90deg,#F59E0B,#FFD166)}
-.story-beat:target{outline:none}
-@media (max-width:820px){
-  #soul-story{height:420vh}
-  .story-beat{top:58%;padding:18px}
-  .story-kicker{top:12px}
-}
-@media (prefers-reduced-motion: reduce){
-  #soul-story{height:auto}
-  .story-sticky{position:static;height:auto;overflow:visible;padding:28px 16px 20px}
-  #story-canvas{display:none}
-  .story-kicker{position:static;margin-bottom:16px}
-  .story-beats{position:static}
-  .story-beat{position:static;transform:none;width:min(520px,100%);margin:0 auto 14px;opacity:1}
-  .story-hint,.story-progress{display:none}
-}
-</style>
-<section id="soul-story" aria-label="The Architect — a soul's story">
-  <div class="story-sticky">
-    <canvas id="story-canvas" aria-hidden="true"></canvas>
-    <div class="story-kicker">✦ A soul&rsquo;s story &mdash; keep scrolling<b>The Architect</b></div>
-    <div class="story-beats">
-      <article class="story-beat active" data-beat="0">
-        <p class="story-line">System design master.</p>
-        <p class="story-sub">The Architect opens the Library.</p>
-        <p class="story-plt">PLT 0.8 / 0.5 / 0.3</p>
-      </article>
-      <article class="story-beat" data-beat="1">
-        <p class="story-line">465 files.</p>
-        <p class="story-sub">Every file a piece of one design.</p>
-        <p class="story-plt">465 files</p>
-      </article>
-      <article class="story-beat" data-beat="2">
-        <p class="story-line">288 JS modules.</p>
-        <p class="story-sub">288 modules, wired into one system.</p>
-        <p class="story-plt">288 JS modules</p>
-      </article>
-      <article class="story-beat" data-beat="3">
-        <p class="story-line">package.json with <code>npm start</code>.</p>
-        <p class="story-sub">One command &mdash; and the design wakes.</p>
-        <p class="story-plt">package.json with `npm start`</p>
-      </article>
-      <article class="story-beat" data-beat="4">
-        <p class="story-line">True Value 1.0.</p>
-        <p class="story-sub">Profit 0.8 + Love 0.5 &minus; Tax 0.3.</p>
-        <a class="story-cta" href="#buy-complete-library">Complete Library (30 books) &mdash; $19 &darr;</a>
-        <p class="story-note">This scroll ends on the buy button, just below.</p>
-      </article>
-    </div>
-    <div class="story-hint">Scroll &darr; the story plays as you go</div>
-    <div class="story-progress" aria-hidden="true"><i id="story-progress-fill"></i></div>
   </div>
 </section>
 
@@ -763,7 +634,7 @@ input{font-family:inherit;outline:none;border:none;background:none}
       <h3>Books &amp; Pro-Soul Packs</h3>
       <p>Sold Stripe-direct through the Soul Economy — our own storefront, no middleman.</p>
       <div class="treasury-actions">
-        <a class="chip gold" id="buy-complete-library" href="https://buy.stripe.com/14A7sLcVW78D0EFga9fnO0r" target="_blank" rel="noopener">Complete Library (30 books) — $19</a>
+        <a class="chip gold" href="https://buy.stripe.com/14A7sLcVW78D0EFga9fnO0r" target="_blank" rel="noopener">Complete Library (30 books) — $19</a>
         <a class="chip gold" href="https://buy.stripe.com/5kQ4gze0064z8775vvfnO0s" target="_blank" rel="noopener">Pro-Soul Pack: The Scorer — $49</a>
       </div>
       <p class="chip-note" style="margin:12px 0 0">After payment you land on the download page, and downloads open from your checkout return.</p>
@@ -1136,7 +1007,7 @@ function render(data){
         ${item.size ? `<span class="meta-tag">💾 ${item.size}</span>` : ''}
         ${item.requires ? `<span class="meta-tag">⚙️ Requires: ${item.requires}</span>` : ''}
       </div>
-      <div class="card-plt-wrap"><div class="card-plt"><span class="plt-p">P ${item.plt.split('/')[0]}</span><span class="plt-l">L ${item.plt.split('/')[1]}</span><span class="plt-t">T ${item.plt.split('/')[2]}</span></div><span class="plt-ring" data-plt="${item.plt}" title="PLT ring — base fill is this soul's True Value (P+L-T). Hover adds Love, click adds Profit. Session only."><svg viewBox="0 0 46 46" width="46" height="46" aria-hidden="true"><circle class="plt-ring-bg" cx="23" cy="23" r="18"/><circle class="plt-ring-fg" cx="23" cy="23" r="18"/><text class="plt-ring-txt" x="23" y="27" text-anchor="middle"></text></svg></span></div>
+      <div class="card-plt"><span class="plt-p">P ${item.plt.split('/')[0]}</span><span class="plt-l">L ${item.plt.split('/')[1]}</span><span class="plt-t">T ${item.plt.split('/')[2]}</span></div>
       <div class="card-footer">
         <span class="card-category">${item.type}</span>
         ${item.download ? `<a href="${item.download}" download class="btn-download">⬇ Download</a>` : (item.url ? `<a href="${item.url}" target="_blank" class="btn-play">▶ Play</a>` : `<a href="downloads/${item.file}" download class="btn-download">⬇ Download</a>`)}
@@ -1183,45 +1054,6 @@ function render(data){
         setTimeout(()=>{this.classList.remove('loading');this.classList.add('success');this.textContent='✓ Downloaded';
           setTimeout(()=>{this.classList.remove('success');this.textContent=orig},1500)},800);
       });
-    });
-  });
-
-  // ─── IDEA 34 — PLT TICKER AS A LIVING RING (session-only) ───
-  // Base fill = the card's own True Value, (P+L-T+0.5)/2.5 clamped 0.05..1 —
-  // the same normalisation as the graph's tvScale. Hover adds Love (+0.04,
-  // capped +0.24), click adds Profit (+0.06, capped +0.30); total capped at
-  // 100%. State lives in an in-memory Map keyed by the card's data-id, so it
-  // survives re-renders in the session and never persists. The P/L/T values,
-  // prices, data and links are untouched — the ring only presents them.
-  if (!window.__pltRingState) window.__pltRingState = new Map();
-  var pltRingState = window.__pltRingState;
-  function pltBaseFill(pltStr){ var q=(pltStr||'0.5/0.5/0.5').split('/').map(Number); var tv=(q[0]||0)+(q[1]||0)-(q[2]||0); return Math.max(0.05, Math.min(1, (tv+0.5)/2.5)); }
-  function pltRingPaint(ring){
-    var card = ring.closest ? ring.closest('.card') : null;
-    var key = card ? (card.getAttribute('data-id') || '') : ring.getAttribute('data-plt');
-    var st = pltRingState.get(key) || {l:0, p:0};
-    var base = pltBaseFill(ring.getAttribute('data-plt'));
-    var fill = Math.min(1, base + st.l + st.p);
-    var C = 2 * Math.PI * 18;
-    var fg = ring.querySelector('.plt-ring-fg');
-    if (fg) fg.style.strokeDashoffset = (C * (1 - fill)).toFixed(1);
-    var tx = ring.querySelector('.plt-ring-txt');
-    if (tx) tx.textContent = Math.round(fill * 100) + '%';
-    ring.setAttribute('title', 'PLT ring — True Value ' + Math.round(base * 100) + '% base; hover +Love, click +Profit (session only). Now ' + Math.round(fill * 100) + '%.');
-  }
-  document.querySelectorAll('.card').forEach(function(card){
-    var ring = card.querySelector('.plt-ring');
-    if (!ring) return;
-    pltRingPaint(ring);
-    card.addEventListener('mouseenter', function(){
-      var key = card.getAttribute('data-id') || '';
-      var st = pltRingState.get(key) || {l:0, p:0};
-      st.l = Math.min(0.24, st.l + 0.04); pltRingState.set(key, st); pltRingPaint(ring);
-    });
-    card.addEventListener('click', function(){
-      var key = card.getAttribute('data-id') || '';
-      var st = pltRingState.get(key) || {l:0, p:0};
-      st.p = Math.min(0.30, st.p + 0.06); pltRingState.set(key, st); pltRingPaint(ring);
     });
   });
 }
@@ -1584,255 +1416,46 @@ render = function(data) {
   try {
     const canvas = document.getElementById('bg-canvas');
     if (!canvas) return;
-    // FIX #2 — wrap the canvas so the graph is a band above the hero headline
-    // (was 100vh: the dense cluster + brand sprite sat over the hero text).
-    // The wrap holds the legend / pause / filter / zoom bar.
-    const graphWrap = document.createElement('div');
-    graphWrap.id = 'hero-graph-wrap';
-    canvas.parentNode.insertBefore(graphWrap, canvas);
-    graphWrap.appendChild(canvas);
-    const graphCtl = { paused: false, filter: 'all', frozenT: 0 };
-    // FIX #2 — control bar: legend, pause, filter, zoom, reset (click = node click)
-    const hgBar = document.createElement('div');
-    hgBar.id = 'hero-graph-bar';
-    hgBar.innerHTML =
-      '<span class="hg-legend" title="Plushie = category \u00b7 size = PLT True Value">' +
-      '<span><i class="hg-dot" style="background:#FDE68A"></i>\uD83D\uDC30 Soul</span><span><i class="hg-dot" style="background:#FCD34D"></i>\uD83E\uDDF8 Role</span><span><i class="hg-dot" style="background:#FBBF24"></i>\u2b50 Skill</span><span><i class="hg-dot" style="background:#F59E0B"></i>\uD83D\uDC9B Chamber</span><span><i class="hg-dot" style="background:#FDE68A"></i>\uD83D\uDCB0 Infrastructure</span><span><i class="hg-dot" style="background:#FFD166"></i>222 Combo</span><span><i class="hg-dot" style="background:#FCD34D"></i>\uD83C\uDF81 Pack</span><span><i class="hg-dot" style="background:#FBBF24"></i>\uD83C\uDF0D World</span><span><i class="hg-dot" style="background:#F59E0B"></i>\uD83E\uDD16 Agent</span><span><i class="hg-dot" style="background:#FFD166"></i>\uD83D\uDCD6 Book</span>' +
-      '</span>' +
-      '<button type="button" id="hgPause" title="Pause / resume the graph motion">\u23f8 Pause</button>' +
-      '<select id="hgFilter" title="Show one category, or all" aria-label="Filter graph by category">' +
-      '<option value="all">All souls</option><option value="soul">Souls</option><option value="role">Roles</option><option value="skill">Skills</option><option value="chamber">Chambers</option><option value="pack">Packs</option><option value="world">Worlds</option><option value="agent">Agents</option><option value="book">Books</option><option value="combo">Combos</option><option value="infrastructure">Infrastructure</option>' +
-      '</select>' +
-      '<select id="hgLayout" title="Rearrange the graph — Network, Spiral, Cluster, or Planetary orbits" aria-label="Graph layout">' +
-      '<option value="network">Network</option><option value="spiral">Spiral</option><option value="cluster">Cluster</option><option value="planetary">Planetary</option>' +
-      '</select>' +
-      '<button type="button" id="hgZoomIn" title="Zoom in">\uff0b Zoom in</button>' +
-      '<button type="button" id="hgZoomOut" title="Zoom out">\uff0d Zoom out</button>' +
-      '<button type="button" id="hgReset" title="Reset the camera">\u27f2 Reset view</button>' +
-      '<button type="button" id="hgConst" title="Arrange the top souls into a 222 constellation — click a star to open that soul">\u2726 222 Constellation</button>' +
-      '<select id="hgTime" title="Time-of-day lighting — follows your local time, or pick one" aria-label="Time-of-day lighting">' +
-      '<option value="auto">\uD83D\uDD50 Auto time</option><option value="dawn">\uD83C\uDF05 Dawn \u00b7 amber</option><option value="noon">\u2600\uFE0F Noon \u00b7 gold</option><option value="night">\uD83C\uDF19 Night \u00b7 indigo</option>' +
-      '</select>' +
-      '<button type="button" id="hgPaletteBtn" title="Jump to a soul, layout, or view (Cmd/Ctrl+K)">\u2318K Jump</button>' +
-      '<span class="hg-hint">Click a node to focus it \u00b7 click empty space to clear</span>';
-    graphWrap.appendChild(hgBar);
     // items is in closure scope from outer script (line 277)
-    const gw = () => canvas.clientWidth || window.innerWidth;
-    const gh = () => canvas.clientHeight || window.innerHeight;
-    canvas.width = gw(); canvas.height = gh();
+    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
     const T = await import('three');
     const { Scene, PerspectiveCamera, WebGLRenderer, Color, AmbientLight, DirectionalLight, MeshPhysicalMaterial, OctahedronGeometry, Mesh, SphereGeometry, MeshBasicMaterial, BufferGeometry, Float32BufferAttribute, PointsMaterial, Points, AdditiveBlending, EdgesGeometry, LineBasicMaterial, LineSegments, Group, Vector2, Raycaster, TetrahedronGeometry, BoxGeometry, InstancedMesh, Matrix4, RingGeometry, CylinderGeometry, DodecahedronGeometry, ConeGeometry, TorusGeometry } = T;
     const { OrbitControls } = await import('three/addons/controls/OrbitControls.js');
 
-    // IDEA 6 (Stage 2.6) — dark universe: base deepened from #0C0C12 to
-    // #07070D (still never pure black); amber/gold nebulae + star shells
-    // below are the atmosphere, labels/controls stay DOM above it.
-    const scene = new Scene(); scene.background = new Color(0x07070D);
+    const scene = new Scene(); scene.background = new Color(0x080808);
     const REDUCED = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const LITE = window.matchMedia && matchMedia('(pointer:coarse)').matches && Math.min(screen.width, screen.height) < 820;
-    scene.fog = new T.FogExp2(0x07070D, 0.015); // IDEA 6 — fog matches the deepened universe base
+    scene.fog = new T.FogExp2(0x080808, 0.015);
     const vig = document.createElement('div');
-    vig.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(circle at 50% 42%,transparent 55%,rgba(12,12,18,0.55) 100%)';
+    vig.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(circle at 50% 42%,transparent 55%,rgba(0,0,0,0.55) 100%)';
     document.body.appendChild(vig);
-    const camera = new PerspectiveCamera(50, gw() / gh(), 0.1, 100);
-    // FIX #2 — camera looks at a point ABOVE the cluster, so the dense mass
-    // sits in the lower half of the band, never over the hero headline.
-    camera.position.set(0, 3.4, 8);
+    const camera = new PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 100);
+    camera.position.set(0, 2, 7);
     const renderer = new WebGLRenderer({ canvas, antialias: true, alpha: false });
-    renderer.setSize(gw(), gh());
+    renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(LITE ? 1 : Math.min(window.devicePixelRatio, 2));
 
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true; controls.dampingFactor = 0.08;
-    controls.target.set(0, 1.6, 0); controls.minDistance = 2; controls.maxDistance = 25;
+    controls.target.set(0, 0.3, 0); controls.minDistance = 2; controls.maxDistance = 25;
     controls.autoRotate = true; controls.autoRotateSpeed = 0.8;
 
-    const ambient = new AmbientLight(0x2A2118, 0.6); scene.add(ambient);
-    const key = new DirectionalLight(0xF59E0B, 2); key.position.set(2, 3, 4); scene.add(key);
-    const fill = new DirectionalLight(0xFFD166, 0.8); fill.position.set(-3, 1, -2); scene.add(fill);
+    const ambient = new AmbientLight(0x222244, 0.6); scene.add(ambient);
+    const key = new DirectionalLight(0x8B5CF6, 2); key.position.set(2, 3, 4); scene.add(key);
+    const fill = new DirectionalLight(0x00D4FF, 0.8); fill.position.set(-3, 1, -2); scene.add(fill);
 
-    // ─── IDEA 12 + 21 — PLUSHIE NODES: shape = category, size = True Value ───
-    // Category -> plushie type (Bible idea 21 reconciled with idea 12: the
-    // PLUSHIE TYPE encodes the category; size still comes from the PLT True
-    // Value, P + L - T). Mapping:
-    //   soul -> bunny (long ears, cream + pink) | role -> teddy bear
-    //   skill -> star plush (extruded star, one InstancedMesh for all skills)
-    //   chamber -> plush heart | infrastructure -> money bag ($)
-    //   combo -> little "222" | pack -> gift box | world -> globe plush
-    //   agent -> robot plush | book -> book plush
-    // Each motif is drawn ONCE on a 256x256 canvas (no image assets added to
-    // the repo) and shared by every node of that category: one Sprite per
-    // node, the same draw-call count as the geometry meshes they replace.
-    // Morph targets (idea 12): every plushie is drawn from one shared round
-    // plush-body base with its category features layered on top; on load each
-    // node crossfades / scales in from that generic orb into its plushie
-    // form (morph-in, see d.bornAt in the animate loop).
     const CAT = {
-      soul: { kind: 'bunny', tint: 0xFDE68A, radius: 1.5 },
-      role: { kind: 'bear', tint: 0xFCD34D, radius: 2.2 },
-      skill: { kind: 'star', tint: 0xFBBF24, radius: 2.9 },
-      chamber: { kind: 'heart', tint: 0xF59E0B, radius: 3.4 },
-      infrastructure: { kind: 'moneybag', tint: 0xFDE68A, radius: 3.8 },
-      combo: { kind: '222', tint: 0xFFD166, radius: 4.5 },
-      pack: { kind: 'gift', tint: 0xFCD34D, radius: 4.2 },
-      world: { kind: 'globe', tint: 0xFBBF24, radius: 4.9 },
-      agent: { kind: 'robot', tint: 0xF59E0B, radius: 5.4 },
-      book: { kind: 'book', tint: 0xFFD166, radius: 5.9 },
+      soul: { geom: new OctahedronGeometry(0.28,0), radius: 1.5 },
+      role: { geom: new OctahedronGeometry(0.18,0), radius: 2.2 },
+      skill: { geom: new OctahedronGeometry(0.06,0), radius: 2.9 },
+      chamber: { geom: new TetrahedronGeometry(0.09,0), radius: 3.4 },
+      infrastructure: { geom: new BoxGeometry(0.10,0.10,0.10), radius: 3.8 },
+      combo: { geom: null, radius: 4.5 },
+      pack: { geom: new DodecahedronGeometry(0.11,0), radius: 4.2 },
+      world: { geom: new SphereGeometry(0.14,12,12), radius: 4.9 },
+      agent: { geom: new ConeGeometry(0.10,0.22,6), radius: 5.4 },
+      book: { geom: new BoxGeometry(0.15,0.04,0.20), radius: 5.9 },
     };
-    // True Value = P + L - T. Observed catalog range -0.4 ... 2.0 (median 0.8).
-    // Map it to a node scale factor ~0.58 (lowest TV) ... 1.30 (highest TV),
-    // so the biggest node reads ~2.2x the smallest.
-    function tvOf(item) {
-      const p = (item.plt || '0.5/0.5/0.5').split('/').map(Number);
-      return (p[0] || 0) + (p[1] || 0) - (p[2] || 0);
-    }
-    function tvScale(tv) { return 0.55 + 0.75 * Math.max(0, Math.min(1, (tv + 0.5) / 2.5)); }
-    // One shared canvas texture per plushie kind. Soft plush look: thick
-    // seam-brown outlines, blush cheeks, dot eyes with a sparkle.
-    const _plushTex = {};
-    function plushTexture(kind) {
-      if (_plushTex[kind]) return _plushTex[kind];
-      const cv = document.createElement('canvas'); cv.width = cv.height = 256;
-      const x = cv.getContext('2d');
-      const OUT = '#4A2C14'; // plush-seam brown outline
-      x.lineJoin = 'round'; x.lineCap = 'round';
-      function blob(cx, cy, rx, ry, fill) {
-        x.fillStyle = fill; x.beginPath(); x.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2); x.fill();
-        x.strokeStyle = OUT; x.lineWidth = 5; x.stroke();
-      }
-      function face(cx, cy, s) { // dot eyes + smile + blush, scaled by s
-        x.fillStyle = '#2B1A10';
-        x.beginPath(); x.arc(cx - 16 * s, cy - 4 * s, 6 * s, 0, Math.PI * 2); x.fill();
-        x.beginPath(); x.arc(cx + 16 * s, cy - 4 * s, 6 * s, 0, Math.PI * 2); x.fill();
-        x.fillStyle = '#FFFFFF';
-        x.beginPath(); x.arc(cx - 14 * s, cy - 6 * s, 2.2 * s, 0, Math.PI * 2); x.fill();
-        x.beginPath(); x.arc(cx + 18 * s, cy - 6 * s, 2.2 * s, 0, Math.PI * 2); x.fill();
-        x.strokeStyle = '#2B1A10'; x.lineWidth = 4 * s;
-        x.beginPath(); x.arc(cx, cy + 6 * s, 12 * s, 0.15 * Math.PI, 0.85 * Math.PI); x.stroke();
-        x.fillStyle = 'rgba(255,120,150,0.55)';
-        x.beginPath(); x.ellipse(cx - 30 * s, cy + 10 * s, 9 * s, 6 * s, 0, 0, Math.PI * 2); x.fill();
-        x.beginPath(); x.ellipse(cx + 30 * s, cy + 10 * s, 9 * s, 6 * s, 0, 0, Math.PI * 2); x.fill();
-      }
-      function sparkle(cx, cy, s, col) {
-        x.fillStyle = col || '#FFD166';
-        x.beginPath();
-        x.moveTo(cx, cy - 12 * s); x.quadraticCurveTo(cx, cy, cx + 12 * s, cy);
-        x.quadraticCurveTo(cx, cy, cx, cy + 12 * s); x.quadraticCurveTo(cx, cy, cx - 12 * s, cy);
-        x.quadraticCurveTo(cx, cy, cx, cy - 12 * s); x.fill();
-      }
-      if (kind === 'bunny') {
-        x.save(); x.translate(96, 78); x.rotate(-0.22); blob(0, 0, 22, 52, '#FFF3E0'); blob(0, 0, 11, 38, '#FFB6C9'); x.restore();
-        x.save(); x.translate(160, 78); x.rotate(0.22); blob(0, 0, 22, 52, '#FFF3E0'); blob(0, 0, 11, 38, '#FFB6C9'); x.restore();
-        blob(128, 158, 62, 58, '#FFF3E0');
-        face(128, 152, 1);
-        x.fillStyle = '#FF8FA3';
-        x.beginPath(); x.moveTo(121, 162); x.lineTo(135, 162); x.lineTo(128, 170); x.closePath(); x.fill();
-      } else if (kind === 'bear') {
-        blob(82, 96, 22, 22, '#C68A4B'); blob(82, 96, 11, 11, '#8A5A2B');
-        blob(174, 96, 22, 22, '#C68A4B'); blob(174, 96, 11, 11, '#8A5A2B');
-        blob(128, 150, 64, 60, '#C68A4B');
-        x.fillStyle = '#E8C39A'; x.beginPath(); x.ellipse(128, 172, 30, 20, 0, 0, Math.PI * 2); x.fill();
-        x.strokeStyle = OUT; x.lineWidth = 4; x.stroke();
-        face(128, 140, 1);
-        x.fillStyle = '#2B1A10'; x.beginPath(); x.ellipse(128, 164, 10, 7, 0, 0, Math.PI * 2); x.fill();
-      } else if (kind === 'heart') {
-        x.beginPath();
-        x.moveTo(128, 212);
-        x.bezierCurveTo(40, 142, 55, 55, 128, 96);
-        x.bezierCurveTo(201, 55, 216, 142, 128, 212);
-        x.closePath(); x.fillStyle = '#FF5C8A'; x.fill();
-        x.strokeStyle = OUT; x.lineWidth = 5; x.stroke();
-        x.fillStyle = 'rgba(255,255,255,0.35)';
-        x.beginPath(); x.ellipse(96, 104, 18, 10, -0.5, 0, Math.PI * 2); x.fill();
-        face(128, 138, 0.9);
-      } else if (kind === 'moneybag') {
-        x.fillStyle = '#F5B81D';
-        x.beginPath(); x.moveTo(128, 66);
-        x.quadraticCurveTo(150, 84, 148, 104);
-        x.quadraticCurveTo(196, 128, 192, 172);
-        x.quadraticCurveTo(188, 216, 128, 216);
-        x.quadraticCurveTo(68, 216, 64, 172);
-        x.quadraticCurveTo(60, 128, 108, 104);
-        x.quadraticCurveTo(106, 84, 128, 66);
-        x.closePath(); x.fill(); x.strokeStyle = OUT; x.lineWidth = 5; x.stroke();
-        x.strokeStyle = OUT; x.lineWidth = 5;
-        x.beginPath(); x.moveTo(112, 96); x.lineTo(144, 96); x.stroke();
-        x.beginPath(); x.moveTo(128, 96); x.quadraticCurveTo(104, 78, 92, 84); x.stroke();
-        x.beginPath(); x.moveTo(128, 96); x.quadraticCurveTo(152, 78, 164, 84); x.stroke();
-        x.fillStyle = '#4A2C14'; x.font = 'bold 72px Georgia, serif';
-        x.textAlign = 'center'; x.textBaseline = 'middle';
-        x.fillText('$', 128, 162);
-        sparkle(196, 96, 1); sparkle(62, 130, 0.8);
-      } else if (kind === '222') {
-        x.textAlign = 'center'; x.textBaseline = 'middle';
-        x.font = 'bold 92px Georgia, serif';
-        x.lineWidth = 10; x.strokeStyle = OUT; x.lineJoin = 'round';
-        x.strokeText('222', 128, 128); x.fillStyle = '#FFD166'; x.fillText('222', 128, 128);
-        sparkle(52, 66, 1); sparkle(206, 78, 0.8); sparkle(196, 190, 0.9, '#FF8FA3');
-        x.fillStyle = '#FF5C8A';
-        x.beginPath();
-        x.moveTo(128, 216);
-        x.bezierCurveTo(104, 196, 108, 178, 128, 190);
-        x.bezierCurveTo(148, 178, 152, 196, 128, 216);
-        x.closePath(); x.fill();
-      } else if (kind === 'gift') {
-        x.fillStyle = '#FF6B9D';
-        x.beginPath(); x.roundRect(58, 108, 140, 96, 14); x.fill();
-        x.strokeStyle = OUT; x.lineWidth = 5; x.stroke();
-        x.fillStyle = '#F59E0B';
-        x.beginPath(); x.roundRect(48, 88, 160, 30, 10); x.fill(); x.stroke();
-        x.fillStyle = '#F59E0B'; x.fillRect(118, 88, 20, 116);
-        x.strokeStyle = OUT; x.lineWidth = 4; x.strokeRect(118, 88, 20, 116);
-        blob(100, 78, 24, 14, '#F59E0B'); blob(156, 78, 24, 14, '#F59E0B'); blob(128, 80, 10, 10, '#F59E0B');
-        face(128, 158, 0.8);
-      } else if (kind === 'globe') {
-        blob(128, 140, 64, 64, '#7DD3FC');
-        x.fillStyle = '#86EFAC';
-        x.beginPath(); x.ellipse(104, 118, 20, 12, 0.3, 0, Math.PI * 2); x.fill();
-        x.beginPath(); x.ellipse(152, 156, 24, 14, -0.2, 0, Math.PI * 2); x.fill();
-        x.beginPath(); x.ellipse(142, 104, 12, 8, 0, 0, Math.PI * 2); x.fill();
-        x.strokeStyle = 'rgba(74,44,20,0.6)'; x.lineWidth = 3;
-        x.beginPath(); x.ellipse(104, 118, 20, 12, 0.3, 0, Math.PI * 2); x.stroke();
-        x.beginPath(); x.ellipse(152, 156, 24, 14, -0.2, 0, Math.PI * 2); x.stroke();
-        face(128, 140, 0.85);
-      } else if (kind === 'robot') {
-        x.strokeStyle = OUT; x.lineWidth = 5;
-        x.beginPath(); x.moveTo(128, 88); x.lineTo(128, 62); x.stroke();
-        blob(128, 54, 9, 9, '#F59E0B');
-        x.fillStyle = '#E5E7EB';
-        x.beginPath(); x.roundRect(76, 88, 104, 86, 22); x.fill(); x.stroke();
-        x.fillStyle = '#F59E0B';
-        x.beginPath(); x.arc(104, 122, 11, 0, Math.PI * 2); x.fill();
-        x.beginPath(); x.arc(152, 122, 11, 0, Math.PI * 2); x.fill();
-        x.fillStyle = '#FFFFFF';
-        x.beginPath(); x.arc(107, 119, 3.5, 0, Math.PI * 2); x.fill();
-        x.beginPath(); x.arc(155, 119, 3.5, 0, Math.PI * 2); x.fill();
-        x.strokeStyle = '#2B1A10'; x.lineWidth = 4;
-        x.beginPath(); x.moveTo(112, 148); x.lineTo(144, 148); x.stroke();
-        x.beginPath(); x.moveTo(120, 148); x.lineTo(120, 154); x.stroke();
-        x.beginPath(); x.moveTo(128, 148); x.lineTo(128, 154); x.stroke();
-        x.beginPath(); x.moveTo(136, 148); x.lineTo(136, 154); x.stroke();
-        x.fillStyle = '#94A3B8';
-        x.beginPath(); x.roundRect(88, 174, 80, 32, 12); x.fill(); x.strokeStyle = OUT; x.lineWidth = 4; x.stroke();
-        x.fillStyle = '#F59E0B'; x.beginPath(); x.arc(128, 190, 7, 0, Math.PI * 2); x.fill();
-      } else if (kind === 'book') {
-        x.fillStyle = '#F59E0B';
-        x.beginPath(); x.roundRect(58, 76, 140, 112, 12); x.fill();
-        x.strokeStyle = OUT; x.lineWidth = 5; x.stroke();
-        x.fillStyle = '#FFF7E6';
-        x.beginPath(); x.roundRect(72, 86, 112, 92, 8); x.fill();
-        x.strokeStyle = 'rgba(74,44,20,0.5)'; x.lineWidth = 3; x.stroke();
-        x.strokeStyle = '#B8B8B8'; x.lineWidth = 2;
-        x.beginPath(); x.moveTo(84, 108); x.lineTo(172, 108); x.stroke();
-        x.beginPath(); x.moveTo(84, 122); x.lineTo(172, 122); x.stroke();
-        x.fillStyle = '#FF5C8A';
-        x.beginPath(); x.moveTo(170, 76); x.lineTo(186, 76); x.lineTo(178, 102); x.closePath(); x.fill();
-        face(128, 150, 0.75);
-      }
-      const tex = new T.CanvasTexture(cv);
-      _plushTex[kind] = tex;
-      return tex;
-    }
     const root = new Group(); scene.add(root);
     const clickTargets = [], nodeData = [], catItems = {};
     items.forEach((item, idx) => { const cat = item.type; if (!CAT[cat]) return; if (!catItems[cat]) catItems[cat] = []; catItems[cat].push({ item, idx }); });
@@ -1844,8 +1467,7 @@ render = function(data) {
     const catOrder = ['soul','role','skill','chamber','infrastructure','combo','pack','world','agent','book'];
     for (let ci = 0; ci < catOrder.length - 1; ci++) {
       const la = catItems[catOrder[ci]] || [], lb = catItems[catOrder[ci+1]] || [];
-      // FIX #2 — was 10% of EVERY cross-category pair: thousands of tangled threads. 2% keeps the constellation readable.
-      la.forEach(a => { lb.forEach(b => { if (Math.random() < 0.02) edges.push([a.idx, b.idx]); }); });
+      la.forEach(a => { lb.forEach(b => { if (Math.random() < 0.1) edges.push([a.idx, b.idx]); }); });
     }
     Object.keys(catItems).forEach(cat => { const l = catItems[cat];
       for (let i = 0; i < l.length; i++) for (let j = i + 1; j < Math.min(i + 4, l.length); j++) { edges.push([l[i].idx, l[j].idx]); } });
@@ -1898,51 +1520,35 @@ render = function(data) {
     const edgePositions = [];
     nodeList.forEach(entry => {
       const { idx, cat, item } = entry;
+      const cfg = CAT[cat];
       const pos = positions[idx];
       const plt = (item.plt || '0.5/0.5/0.5').split('/').map(Number);
-      const c = new T.Color().setHSL(0.10 + plt[1] * 0.03, 0.75, 0.42 + plt[0] * 0.15); // FIX #2 Midnight Amber: hue ~0.10-0.13, lightness = Profit
+      const c = new T.Color().setHSL(0.75 - plt[0] * 0.15, 0.6 + plt[1] * 0.3, 0.35 + plt[2] * 0.25);
 
       if (cat === 'combo') {
-        // IDEA 21 — combos are little "222" plushies, sized by True Value.
-        const spr = new T.Sprite(new T.SpriteMaterial({ map: plushTexture('222'), transparent: true, opacity: 0, depthWrite: false }));
-        const ndC = { mesh: spr, index: idx, pos, item, baseScale: tvScale(tvOf(item)), phase: idx * 0.7, badge: null, label: null, plushColor: c, bornAt: performance.now() };
-        spr.position.copy(pos);
-        spr.scale.setScalar(0.55 * ndC.baseScale * 0.6); // morph-in starts small
-        spr.userData = { index: idx }; root.add(spr); clickTargets.push(spr); nodeData.push(ndC); return;
+        const sg = new T.BufferGeometry(); const sv = [];
+        for (let s = 0; s < 8; s++) { const sa = (s / 8) * Math.PI * 2 + idx; sv.push(pos.x + Math.cos(sa)*0.1, pos.y + Math.sin(sa*2)*0.05, pos.z + Math.sin(sa)*0.1); }
+        sg.setAttribute('position', new Float32BufferAttribute(sv, 3));
+        const star = new Points(sg, new PointsMaterial({ color: c, size: 0.04, transparent: true, opacity: 0.6, blending: AdditiveBlending }));
+        star.userData = { index: idx }; root.add(star); clickTargets.push(star); nodeData.push({ index: idx, pos, item }); return;
       }
 
       if (cat === 'skill') {
         if (!root.userData._sb) {
-          // IDEA 21 — skills are star plushies: one extruded 5-point star
-          // geometry, instanced for all skills (one draw call, same as the
-          // old octahedra). Size per instance comes from True Value (below).
-          const starShape = new T.Shape();
-          for (let si = 0; si < 10; si++) {
-            const r = (si % 2 === 0) ? 0.11 : 0.048;
-            const a = (si / 10) * Math.PI * 2 - Math.PI / 2;
-            const sx = Math.cos(a) * r, sy = Math.sin(a) * r;
-            if (si === 0) starShape.moveTo(sx, sy); else starShape.lineTo(sx, sy);
-          }
-          starShape.closePath();
-          const starGeom = new T.ExtrudeGeometry(starShape, { depth: 0.05, bevelEnabled: true, bevelThickness: 0.012, bevelSize: 0.012, bevelSegments: 1 });
-          starGeom.center();
-          const im = new InstancedMesh(starGeom, new MeshPhysicalMaterial({ color: 0xF59E0B, emissive: 0x92400E, emissiveIntensity: 0.35, metalness: 0.3, roughness: 0.2 }), 300);
+          const im = new InstancedMesh(new OctahedronGeometry(0.11, 0), new MeshPhysicalMaterial({ color: 0x8B5CF6, emissive: 0x6D28D9, emissiveIntensity: 0.35, metalness: 0.3, roughness: 0.2 }), 300);
           im.userData.instances = []; im.userData.bc = 0; root.add(im); root.userData._sb = im; clickTargets.push(im);
         }
         const b = root.userData._sb, bi = b.userData.bc;
-        const tvs = tvScale(tvOf(item)); // IDEA 12 — skill size = True Value
-        b.setMatrixAt(bi, new Matrix4().makeTranslation(pos.x, pos.y, pos.z).scale(new T.Vector3(tvs, tvs, tvs)));
+        b.setMatrixAt(bi, new Matrix4().makeTranslation(pos.x, pos.y, pos.z));
         b.instanceMatrix.needsUpdate = true; b.userData.bc++; b.count = b.userData.bc;
-        b.userData.instances.push({ index: idx, pos: pos.clone(), s: tvs });
-        nodeData.push({ type: 'instanced', batch: b, instanceIdx: bi, index: idx, pos, item, baseScale: tvs }); return;
+        b.userData.instances.push({ index: idx, pos: pos.clone() });
+        nodeData.push({ type: 'instanced', batch: b, instanceIdx: bi, index: idx, pos, item }); return;
       }
 
-      // IDEA 12 + 21 — plushie node sprite (replaces the old geometry mesh).
-      // One shared canvas texture per category; one Sprite per node, so the
-      // draw-call count is unchanged. Scale = True Value (tvScale), not Profit.
-      const mesh = new T.Sprite(new T.SpriteMaterial({ map: plushTexture(CAT[cat].kind), transparent: true, opacity: 0, depthWrite: false }));
-      const ndS1 = { mesh, index: idx, pos, item, baseScale: tvScale(tvOf(item)), phase: idx*0.7, badge: null, label: null, plushColor: c, bornAt: performance.now() };
-      mesh.position.copy(pos); mesh.scale.setScalar(0.55 * ndS1.baseScale * 0.6); // morph-in starts small
+      const mat = new MeshPhysicalMaterial({ color: c, emissive: c, emissiveIntensity: 0.4, metalness: 0.3, roughness: 0.2, transparent: true, opacity: 0.9, clearcoat: 0.2 });
+      const mesh = new Mesh(cfg.geom.clone(), mat);
+      const ndS1 = { mesh, index: idx, pos, item, baseScale: (1.0 + plt[0] * 0.5), phase: idx*0.7, badge: null, label: null };
+      mesh.position.copy(pos); mesh.scale.setScalar(ndS1.baseScale);
       mesh.userData.index = idx; root.add(mesh); clickTargets.push(mesh); nodeData.push(ndS1);
       // Invisible click collider (larger sphere for easier clicking) — NOT visible:false, raycaster can't hit invisible
       const collider = new Mesh(new SphereGeometry(0.35, 8, 8), new MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false }));
@@ -1951,35 +1557,31 @@ render = function(data) {
 
       // Build constellation lines from edges
       edges.forEach(e => {
-        if (e[0] === idx) { const t = positions[e[1]]; if (t && pos.distanceTo(t) < 2.5) edgePositions.push(pos.x,pos.y,pos.z,t.x,t.y,t.z); }
-        if (e[1] === idx) { const t = positions[e[0]]; if (t && pos.distanceTo(t) < 2.5) edgePositions.push(pos.x,pos.y,pos.z,t.x,t.y,t.z); }
+        if (e[0] === idx) { const t = positions[e[1]]; if (t && pos.distanceTo(t) < 4) edgePositions.push(pos.x,pos.y,pos.z,t.x,t.y,t.z); }
+        if (e[1] === idx) { const t = positions[e[0]]; if (t && pos.distanceTo(t) < 4) edgePositions.push(pos.x,pos.y,pos.z,t.x,t.y,t.z); }
       });
 
-      // ─── PLT BADGE SPRITE (FIX #2: legible chips — was ~8px at 0.6 opacity) ───
-      // Real P/L/T values from the item's own plt string; dark chip, amber text.
-      // sizeAttenuation:false keeps the chip a constant readable screen size.
+      // ─── PLT BADGE SPRITE (grafted from Sam & Bruno) ───
       if (cat !== 'skill' && cat !== 'combo') {
         const canvas = document.createElement('canvas');
-        canvas.width = 384; canvas.height = 96;
+        canvas.width = 256; canvas.height = 64;
         const ctx = canvas.getContext('2d');
-        ctx.clearRect(0, 0, 384, 96);
-        const pLabels = ['P', 'L', 'T'], pColors = ['#F59E0B', '#FBBF24', '#FFD166']; // FIX #2 live repair — L was cyan #00D4FF; now amber-400, P/T unchanged
+        ctx.clearRect(0, 0, 256, 64);
+        const pLabels = ['P', 'L', 'T'], pColors = ['#8B5CF6', '#00D4FF', '#FFD166'];
         plt.forEach((val, i) => {
-          const px = 12 + i * 124;
-          ctx.fillStyle = 'rgba(12,12,18,0.88)';
-          ctx.beginPath(); ctx.roundRect(px, 10, 112, 76, 10); ctx.fill();
-          ctx.strokeStyle = pColors[i]; ctx.lineWidth = 2;
-          ctx.beginPath(); ctx.roundRect(px, 10, 112, 76, 10); ctx.stroke();
+          const px = 10 + i * 82;
+          ctx.fillStyle = pColors[i] + '40';
+          ctx.beginPath(); ctx.roundRect(px, 8, 75, 44, 8); ctx.fill();
           ctx.fillStyle = pColors[i];
-          ctx.font = 'bold 34px Inter, sans-serif';
+          ctx.font = 'bold 20px Inter, sans-serif';
           ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-          ctx.fillText(`${pLabels[i]} ${val.toFixed(1)}`, px + 56, 48);
+          ctx.fillText(`${pLabels[i]} ${val.toFixed(1)}`, px + 37, 30);
         });
         const tex = new T.CanvasTexture(canvas);
-        const spriteMat = new T.SpriteMaterial({ map: tex, transparent: true, opacity: 0.95, depthTest: false, sizeAttenuation: false });
+        const spriteMat = new T.SpriteMaterial({ map: tex, transparent: true, opacity: 0.6, depthTest: false, sizeAttenuation: true });
         const sprite = new T.Sprite(spriteMat);
-        const s = 0.11 + plt[0] * 0.02;
-        sprite.scale.set(s, s * 0.25, 1);
+        const s = 0.6 + plt[0] * 0.42;
+        sprite.scale.set(s, s * 0.27, 1);
         sprite.position.copy(pos); sprite.position.y += 0.58;
         root.add(sprite);
         const leS1 = nodeData.find(d => d.index === idx);
@@ -1987,14 +1589,11 @@ render = function(data) {
       }
     });
     // DNA double-helix links (same language as the model-card strands) — baked static, one draw call
-    // IDEA 22 (Stage 2.2) — the gold-thread LineSegments, zoom-gated in the animate loop.
-    let dnaLines = null, threadOpacity = 0;
     function buildDnaEdges(ep) {
       const pos = [], col = [];
       const A = new V3(), B = new V3(), D = new V3(), U = new V3(), Vv = new V3(), P = new V3(), Q = new V3();
       const UP = new V3(0, 1, 0);
-      // FIX #2 — gold threads (idea 22), faint so the view stays clean
-      const cA = [1, 0.72, 0.15], cB = [0.96, 0.62, 0.04], cR = [1, 0.84, 0.4];
+      const cA = [0, 1, 0.8], cB = [0.55, 0.36, 0.96], cR = [1, 0.84, 0.4];
       const SEG = 12, TURNS = 3, AMP = 0.05;
       function strandPt(t, phase, out) {
         const a = Math.PI*2*TURNS*t + phase;
@@ -2005,10 +1604,7 @@ render = function(data) {
         return out;
       }
       function pushPt(p, c) { pos.push(p.x, p.y, p.z); col.push(c[0], c[1], c[2]); }
-      // FIX #2 — cap the helix threads; the full edge list is thousands long
-      let dnaDrawn = 0;
-      for (let e = 0; e + 5 < ep.length && dnaDrawn < 220; e += 6) {
-        dnaDrawn++;
+      for (let e = 0; e + 5 < ep.length; e += 6) {
         A.set(ep[e], ep[e+1], ep[e+2]); B.set(ep[e+3], ep[e+4], ep[e+5]);
         D.copy(B).sub(A);
         const len = D.length() || 1; D.multiplyScalar(1/len);
@@ -2031,17 +1627,16 @@ render = function(data) {
       const g = new BufferGeometry();
       g.setAttribute('position', new Float32BufferAttribute(pos, 3));
       g.setAttribute('color', new Float32BufferAttribute(col, 3));
-      const m = new LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0.16, blending: AdditiveBlending, depthWrite: false });
+      const m = new LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0.4, blending: AdditiveBlending, depthWrite: false });
       const lines = new LineSegments(g, m);
       lines.frustumCulled = false;
       scene.add(lines);
-      return lines;
     }
     if (edgePositions.length) {
-      try { dnaLines = buildDnaEdges(edgePositions); }
+      try { buildDnaEdges(edgePositions); }
       catch(e) {
         console.warn('DNA links skipped:', e);
-        const eg = new BufferGeometry(); eg.setAttribute('position', new Float32BufferAttribute(edgePositions, 3)); dnaLines = new LineSegments(eg, new LineBasicMaterial({ color: 0xF59E0B, transparent: true, opacity: 0.06, blending: AdditiveBlending })); scene.add(dnaLines);
+        const eg = new BufferGeometry(); eg.setAttribute('position', new Float32BufferAttribute(edgePositions, 3)); scene.add(new LineSegments(eg, new LineBasicMaterial({ color: 0x00D4FF, transparent: true, opacity: 0.06, blending: AdditiveBlending })));
       }
     }
 
@@ -2054,43 +1649,14 @@ render = function(data) {
       scene.add(pts);
       return pts;
     }
-    const starNear = starShell(LITE ? 250 : 700, 10, 25, 0x9A7B4F, 0.05, 0.5);
-    const starFar = starShell(LITE ? 250 : 700, 26, 45, 0x6B5636, 0.04, 0.4);
+    const starNear = starShell(LITE ? 250 : 700, 10, 25, 0x6666aa, 0.05, 0.5);
+    const starFar = starShell(LITE ? 250 : 700, 26, 45, 0x444488, 0.04, 0.4);
     // constellation shell wireframes echoing the category radii
     [2, 3, 4, 5, 6].forEach((r, si) => {
       const wg = new SphereGeometry(r, 24, 16);
-      const wm = new MeshBasicMaterial({ color: si % 2 ? 0xF59E0B : 0xFFD166, wireframe: true, transparent: true, opacity: 0.035, depthWrite: false });
+      const wm = new MeshBasicMaterial({ color: si % 2 ? 0x8B5CF6 : 0x00D4FF, wireframe: true, transparent: true, opacity: 0.035, depthWrite: false });
       scene.add(new Mesh(wg, wm));
     });
-    // ─── IDEA 6 (Stage 2.6) — DARK UNIVERSE BACKGROUND ───
-    // The hero graph floats in a dark universe: the scene base above is
-    // deepened to #07070D, and three huge soft amber/gold nebula glows sit
-    // far behind the nodes (3 Sprite draw calls, additive, fog off, very
-    // low opacity — atmosphere only, never over the labels). Amber/gold
-    // only, no purple/cyan (idea 11). The amber star shells + the 2.4
-    // particle field are the stars; the CSS gradient on #hero-graph-wrap
-    // is the poster fallback if WebGL never starts, so the band is never
-    // a silent black canvas.
-    const nebulae = [];
-    try {
-      const nebCv = document.createElement('canvas'); nebCv.width = nebCv.height = 256;
-      const nctx = nebCv.getContext('2d');
-      const ng = nctx.createRadialGradient(128, 128, 8, 128, 128, 128);
-      ng.addColorStop(0, 'rgba(255,255,255,0.55)'); ng.addColorStop(0.45, 'rgba(255,255,255,0.16)'); ng.addColorStop(1, 'rgba(255,255,255,0)');
-      nctx.fillStyle = ng; nctx.fillRect(0, 0, 256, 256);
-      const nebTex = new T.CanvasTexture(nebCv);
-      [
-        { c: 0xF59E0B, o: 0.07, p: [-6, 3.5, -11], s: [22, 13] },
-        { c: 0xFFD166, o: 0.05, p: [5.5, 0.5, -13], s: [17, 10] },
-        { c: 0xB45309, o: 0.06, p: [0, 5.5, -10], s: [26, 15] }
-      ].forEach(nb => {
-        const sm = new T.SpriteMaterial({ map: nebTex, color: nb.c, transparent: true, opacity: nb.o, blending: AdditiveBlending, depthWrite: false, fog: false });
-        const sp = new T.Sprite(sm);
-        sp.position.set(nb.p[0], nb.p[1], nb.p[2]); sp.scale.set(nb.s[0], nb.s[1], 1);
-        sp.userData.y0 = nb.p[1]; sp.userData.o0 = nb.o;
-        scene.add(sp); nebulae.push(sp);
-      });
-    } catch (e) { console.warn('Nebulae skipped:', e); }
     // rising ambient motes
     const moteCount = LITE ? 0 : 24;
     const moteArr = new Float32Array(moteCount * 3);
@@ -2098,264 +1664,36 @@ render = function(data) {
     for (let mi = 0; mi < moteCount; mi++) { moteArr[mi*3]=(Math.random()-0.5)*16; moteArr[mi*3+1]=(Math.random()-0.5)*10; moteArr[mi*3+2]=(Math.random()-0.5)*16; moteSpeed[mi]=0.15+Math.random()*0.4; }
     const moteGeo = new BufferGeometry();
     moteGeo.setAttribute('position', new Float32BufferAttribute(moteArr, 3));
-    const motes = new Points(moteGeo, new PointsMaterial({ color: 0xFFD166, size: 0.028, transparent: true, opacity: 0.28, blending: AdditiveBlending, depthWrite: false }));
+    const motes = new Points(moteGeo, new PointsMaterial({ color: 0x88ffcc, size: 0.028, transparent: true, opacity: 0.28, blending: AdditiveBlending, depthWrite: false }));
     motes.frustumCulled = false;
     scene.add(motes);
-    // ─── IDEA 15 (Stage 2.4) — COMPUTE-SHADER PARTICLES (500k) + GPGPU BOIDS FALLBACK ───
-    // Dense ambient particle field for the hero graph / dark universe. ONE
-    // THREE.Points draw call; positions live in a GPU buffer and the motion
-    // is computed on the GPU every frame (vertex shader: slow orbital curl +
-    // vertical bob + twinkle — boids-flavoured flow, zero CPU updates per
-    // frame, zero readback). Adaptive counts: 500,000 desktop, 60,000 on
-    // LITE (coarse pointer + small screen); the slow-frame degrader cuts the
-    // draw range to 25% (see the animate loop). DPR already capped at 2.
-    // WEBGPU DETECT FIRST (idea 20 — WebGPU-only is fragile): if an adapter
-    // exists, a real WGSL compute shader re-seeds the field distribution on
-    // the GPU (webgpuSeedParticles below, read back ONCE at init). Per-frame
-    // motion stays in the vertex shader — a per-frame WebGPU compute loop
-    // would need a WebGPU renderer for the whole graph, out of scope for
-    // this wave. Any WebGPU failure (no navigator.gpu, no adapter, device /
-    // pipeline error, 1.5 s timeout) silently keeps the CPU seeds: the field
-    // never depends on WebGPU to appear, and if the whole field build throws,
-    // the existing static star shells + graph remain (never a black canvas).
-    const PARTICLE_DESKTOP = 500000, PARTICLE_LITE = 60000;
-    const particleCount = LITE ? PARTICLE_LITE : PARTICLE_DESKTOP;
-    let particlePts = null, particleMat = null, particleGeo = null;
-    function particleSeeds(n) {
-      // CPU seed: uniform in a wide box around the graph (z biased behind
-      // the nodes so the dust reads as depth, not foreground fog).
-      // [x, y, z, w] per particle: w = colour pick; x/y/z also feed phase.
-      const arr = new Float32Array(n * 4);
-      for (let i = 0; i < n; i++) {
-        arr[i * 4] = (Math.random() - 0.5) * 28;
-        arr[i * 4 + 1] = -4 + Math.random() * 11;
-        arr[i * 4 + 2] = -13 + Math.random() * 17;
-        arr[i * 4 + 3] = Math.random();
-      }
-      return arr;
-    }
-    try {
-      const pSeeds = particleSeeds(particleCount);
-      const pPos = new Float32Array(particleCount * 3);
-      for (let i = 0; i < particleCount; i++) { pPos[i * 3] = pSeeds[i * 4]; pPos[i * 3 + 1] = pSeeds[i * 4 + 1]; pPos[i * 3 + 2] = pSeeds[i * 4 + 2]; }
-      particleGeo = new BufferGeometry();
-      particleGeo.setAttribute('position', new Float32BufferAttribute(pPos, 3));
-      particleGeo.setAttribute('aSeed', new Float32BufferAttribute(pSeeds, 4));
-      particleMat = new T.ShaderMaterial({
-        uniforms: { uTime: { value: 0 }, uOpacity: { value: 0.55 } },
-        vertexShader: [
-          'uniform float uTime;',
-          'attribute vec4 aSeed;',
-          'varying float vTw;',
-          'varying vec3 vCol;',
-          'void main() {',
-          '  vec3 p = position;',
-          '  float sp = 0.02 + aSeed.y * 0.05;',
-          '  float a = uTime * sp + aSeed.x * 6.2831;',
-          '  float c = cos(a * 0.35), s = sin(a * 0.35);',
-          '  p.xz = mat2(c, -s, s, c) * p.xz;',
-          '  p.y += sin(uTime * (0.25 + aSeed.y * 0.5) + aSeed.x * 6.2831) * 0.35;',
-          '  vec4 mv = modelViewMatrix * vec4(p, 1.0);',
-          '  vTw = 0.55 + 0.45 * sin(uTime * (0.6 + aSeed.y * 1.8) + aSeed.x * 40.0);',
-          '  vec3 col = mix(vec3(1.0, 0.62, 0.04), vec3(1.0, 0.82, 0.40), fract(aSeed.x * 7.0));',
-          '  if (aSeed.w > 0.92) col = vec3(1.0, 0.55, 0.65);',
-          '  vCol = col;',
-          '  float sz = (1.2 + aSeed.z * 2.2) * (140.0 / max(1.0, -mv.z));',
-          '  gl_PointSize = clamp(sz, 1.0, 4.0);',
-          '  gl_Position = projectionMatrix * mv;',
-          '}'
-        ].join('\n'),
-        fragmentShader: [
-          'uniform float uOpacity;',
-          'varying float vTw;',
-          'varying vec3 vCol;',
-          'void main() {',
-          '  vec2 uv = gl_PointCoord - 0.5;',
-          '  float d = length(uv);',
-          '  if (d > 0.5) discard;',
-          '  float a = smoothstep(0.5, 0.05, d) * vTw * uOpacity;',
-          '  gl_FragColor = vec4(vCol, a);',
-          '}'
-        ].join('\n'),
-        transparent: true, blending: AdditiveBlending, depthWrite: false
-      });
-      particlePts = new Points(particleGeo, particleMat);
-      particlePts.frustumCulled = false;
-      scene.add(particlePts);
-    } catch (e) { console.warn('Ambient particle field skipped:', e); particlePts = null; particleMat = null; particleGeo = null; }
-    // WebGPU compute seed (init only — see the IDEA 15 header above).
-    (async function webgpuSeedParticles() {
-      try {
-        if (!navigator.gpu || !particleGeo) return;
-        const adapter = await Promise.race([
-          navigator.gpu.requestAdapter(),
-          new Promise(r => setTimeout(() => r(null), 1500))
-        ]);
-        if (!adapter) return;
-        const device = await adapter.requestDevice();
-        const N = Math.min(particleCount, 65536);
-        const wgsl = [
-          '@group(0) @binding(0) var<storage, read_write> outPos : array<vec4<f32>>;',
-          '@compute @workgroup_size(64)',
-          'fn main(@builtin(global_invocation_id) gid : vec3<u32>) {',
-          '  let i = gid.x;',
-          '  if (i >= ' + N + 'u) { return; }',
-          '  let f = f32(i) * 0.0129898;',
-          '  let h1 = fract(sin(f) * 43758.5453);',
-          '  let h2 = fract(sin(f * 1.7 + 19.19) * 24634.6345);',
-          '  let h3 = fract(sin(f * 2.3 + 7.77) * 12494.2345);',
-          '  outPos[i] = vec4((h1 - 0.5) * 28.0, -4.0 + h2 * 11.0, -13.0 + h3 * 17.0, 0.0);',
-          '}'
-        ].join('\n');
-        const module = device.createShaderModule({ code: wgsl });
-        const buf = device.createBuffer({ size: N * 16, usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_SRC });
-        const staging = device.createBuffer({ size: N * 16, usage: GPUBufferUsage.MAP_READ | GPUBufferUsage.COPY_DST });
-        const pipeline = device.createComputePipeline({ layout: 'auto', compute: { module, entryPoint: 'main' } });
-        const bind = device.createBindGroup({ layout: pipeline.getBindGroupLayout(0), entries: [{ binding: 0, resource: { buffer: buf } }] });
-        const enc = device.createCommandEncoder();
-        const pass = enc.beginComputePass();
-        pass.setPipeline(pipeline); pass.setBindGroup(0, bind);
-        pass.dispatchWorkgroups(Math.ceil(N / 64)); pass.end();
-        enc.copyBufferToBuffer(buf, 0, staging, 0, N * 16);
-        device.queue.submit([enc.finish()]);
-        await staging.mapAsync(GPUMapMode.READ);
-        const data = new Float32Array(staging.getMappedRange().slice(0));
-        staging.unmap();
-        const attr = particleGeo.getAttribute('position');
-        for (let i = 0; i < N; i++) attr.setXYZ(i, data[i * 4], data[i * 4 + 1], data[i * 4 + 2]);
-        attr.needsUpdate = true;
-      } catch (e) { /* WebGPU unavailable — CPU seeds stand; field already visible */ }
-    })();
 
-
-    // ─── IDEAS 23 + 24 — HEART-DUST + MIXED TRAILS ───
-    // When a plushie node moves (heartbeat/bob + focus glide) it sheds a tiny
-    // trail behind it — little hearts like dust floating off the fur. ONE
-    // shared Points system per trail kind (heart / money-bag / 222): 3 draw
-    // calls total, never one per node; particles recycle from a fixed pool.
-    // Particles fade by dimming their vertex colour to black (AdditiveBlending
-    // makes black invisible), drift down slowly, and die after ~1.6 s.
-    // TRAIL TYPE RULE (follows the node's plushie kind, Bible 23–24):
-    //   infrastructure (money-bag plush) -> tiny money bags ($)
-    //   combo ("222" plush) and skill (star plush) -> floating 222s
-    //   every other plushie (bunny, bear, heart, gift, globe, robot, book)
-    //     -> tiny hearts. Value drifting off them.
-    function trailTexture(kind) {
-      const cv = document.createElement('canvas'); cv.width = cv.height = 64;
-      const cx = cv.getContext('2d');
-      if (kind === 'heart') {
-        cx.beginPath();
-        cx.moveTo(32, 54);
-        cx.bezierCurveTo(10, 36, 14, 14, 32, 24);
-        cx.bezierCurveTo(50, 14, 54, 36, 32, 54);
-        cx.closePath(); cx.fillStyle = '#FF5C8A'; cx.fill();
-        cx.fillStyle = 'rgba(255,255,255,0.4)';
-        cx.beginPath(); cx.ellipse(24, 26, 5, 3, -0.5, 0, Math.PI * 2); cx.fill();
-      } else if (kind === 'money') {
-        cx.fillStyle = '#F5B81D';
-        cx.beginPath(); cx.arc(32, 36, 22, 0, Math.PI * 2); cx.fill();
-        cx.strokeStyle = '#4A2C14'; cx.lineWidth = 3; cx.stroke();
-        cx.fillStyle = '#4A2C14'; cx.font = 'bold 30px Georgia, serif';
-        cx.textAlign = 'center'; cx.textBaseline = 'middle';
-        cx.fillText('$', 32, 37);
-        cx.fillStyle = '#FFD166';
-        cx.beginPath(); cx.moveTo(26, 16); cx.lineTo(38, 16); cx.lineTo(32, 8); cx.closePath(); cx.fill();
-      } else { // '222'
-        cx.textAlign = 'center'; cx.textBaseline = 'middle';
-        cx.font = 'bold 26px Georgia, serif'; cx.lineWidth = 5; cx.strokeStyle = '#4A2C14';
-        cx.strokeText('222', 32, 34); cx.fillStyle = '#FFD166'; cx.fillText('222', 32, 34);
-      }
-      return new T.CanvasTexture(cv);
-    }
-    const TRAIL_PER = LITE ? 45 : 90, TRAIL_LIFE = 1.6;
-    const trailSys = {};
-    let skillTrailAcc = 0;
-    function makeTrailSys(kind, size) {
-      const n = TRAIL_PER;
-      const pos = new Float32Array(n * 3), col = new Float32Array(n * 3);
-      for (let i = 0; i < n; i++) pos[i * 3 + 1] = -999; // parked off-screen
-      const g = new BufferGeometry();
-      g.setAttribute('position', new Float32BufferAttribute(pos, 3));
-      g.setAttribute('color', new Float32BufferAttribute(col, 3));
-      const pts = new Points(g, new PointsMaterial({ map: trailTexture(kind), vertexColors: true, size, transparent: true, opacity: 0.9, blending: AdditiveBlending, depthWrite: false }));
-      pts.frustumCulled = false; scene.add(pts);
-      return { pts, geo: g, n, life: new Float32Array(n), vel: new Float32Array(n * 3), next: 0 };
-    }
-    trailSys.heart = makeTrailSys('heart', 0.13);
-    trailSys.money = makeTrailSys('money', 0.15);
-    trailSys.n222 = makeTrailSys('222', 0.16);
-    function trailKindFor(d) {
-      const k = d.item && d.item.type;
-      if (k === 'infrastructure') return 'money';
-      if (k === 'combo' || k === 'skill') return 'n222';
-      return 'heart';
-    }
-    function spawnTrail(d) {
-      const sys = trailSys[trailKindFor(d)]; if (!sys) return;
-      const i = sys.next; sys.next = (sys.next + 1) % sys.n;
-      const pa = sys.geo.getAttribute('position');
-      const mp = (d.mesh && d.mesh.position) ? d.mesh.position : d.pos;
-      if (!mp) return;
-      pa.setXYZ(i, mp.x + (Math.random() - 0.5) * 0.2, mp.y + (Math.random() - 0.5) * 0.2, mp.z + (Math.random() - 0.5) * 0.2);
-      sys.vel[i * 3] = (Math.random() - 0.5) * 0.08;
-      sys.vel[i * 3 + 1] = -0.12 - Math.random() * 0.15;
-      sys.vel[i * 3 + 2] = (Math.random() - 0.5) * 0.08;
-      sys.life[i] = TRAIL_LIFE;
-      pa.needsUpdate = true;
-    }
-    function updateTrails(dt) {
-      Object.values(trailSys).forEach(sys => {
-        const pa = sys.geo.getAttribute('position'), ca = sys.geo.getAttribute('color');
-        let dirty = false;
-        for (let i = 0; i < sys.n; i++) {
-          if (sys.life[i] <= 0) continue;
-          sys.life[i] -= dt; dirty = true;
-          if (sys.life[i] <= 0) { pa.setXYZ(i, 0, -999, 0); ca.setXYZ(i, 0, 0, 0); continue; }
-          pa.setXYZ(i, pa.getX(i) + sys.vel[i * 3] * dt, pa.getY(i) + sys.vel[i * 3 + 1] * dt, pa.getZ(i) + sys.vel[i * 3 + 2] * dt);
-          const f = sys.life[i] / TRAIL_LIFE; // fade to black = fade out (additive)
-          ca.setXYZ(i, f, f * 0.85, f * 0.7);
-        }
-        if (dirty) { pa.needsUpdate = true; ca.needsUpdate = true; }
-      });
-    }
-
-    // ─── NODE NAME LABELS (FIX #2: real soul names, legible) ───
-    // Names come from the item's own `name` field — never invented.
-    // Name sits ABOVE the PLT badge (badge +0.5, name +1.05) so they never overlap.
-    // sizeAttenuation:false keeps the name a constant readable screen size.
+    // ─── NODE NAME LABELS ───
     nodeList.forEach(entry => {
       const { idx, cat, item } = entry;
       const pos = positions[idx];
-      const name = item.name || item.title || item.titleSmall || 'Soul';
-      const label = name.length > 26 ? name.substring(0, 24) + '..' : name;
+      const name = item.title || item.titleSmall || item.name || 'Soul';
+      const label = name.length > 18 ? name.substring(0, 16) + '..' : name;
       const canvas = document.createElement('canvas');
-      canvas.width = 512; canvas.height = 72;
+      canvas.width = 256; canvas.height = 36;
       const ctx = canvas.getContext('2d');
-      ctx.clearRect(0, 0, 512, 72);
-      const NEONL = {soul:'#FDE68A',role:'#FCD34D',skill:'#FBBF24',chamber:'#F59E0B',infrastructure:'#FDE68A',combo:'#FFD166',pack:'#FCD34D',world:'#FBBF24',agent:'#F59E0B',book:'#FFD166'};
-      ctx.shadowColor = 'rgba(245,158,11,0.8)';
-      ctx.shadowBlur = 10;
-      ctx.fillStyle = NEONL[cat] || '#FFE9B0';
-      ctx.font = 'bold 28px Inter, sans-serif';
+      ctx.clearRect(0, 0, 256, 36);
+      const NEONL = {soul:'#d8b4fe',role:'#5eead4',skill:'#a5b4fc',chamber:'#f0abfc',infrastructure:'#fca5a5',combo:'#fde68a',pack:'#6ee7b7',world:'#7dd3fc',agent:'#86efac',book:'#fcd34d'};
+      ctx.shadowColor = NEONL[cat] || 'rgba(139,92,246,0.6)';
+      ctx.shadowBlur = 12;
+      ctx.fillStyle = NEONL[cat] || 'rgba(255,255,255,0.7)';
+      ctx.font = 'bold 13px Inter, sans-serif';
       ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      ctx.fillText(label, 256, 36);
+      ctx.fillText(label, 128, 18);
       const tex = new T.CanvasTexture(canvas);
-      const mat = new T.SpriteMaterial({ map: tex, transparent: true, opacity: 0.95, depthTest: false, sizeAttenuation: false });
+      const mat = new T.SpriteMaterial({ map: tex, transparent: true, opacity: 0.5, depthTest: false, sizeAttenuation: true });
       const sprite = new T.Sprite(mat);
-      const yOff = (cat === 'skill' ? 0.32 : cat === 'soul' ? 1.05 : cat === 'role' ? 0.98 : 0.85) + (idx % 2 === 0 ? 0.13 : -0.13); // FIX #2 live repair — stagger alternate labels so dense-centre names stop stacking
+      const yOff = cat === 'skill' ? 0.18 : cat === 'soul' ? 0.56 : cat === 'role' ? 0.4 : 0.24;
       sprite.position.copy(pos); sprite.position.y += yOff;
-      sprite.scale.set(0.2, 0.025, 1);
-      sprite.userData.bs = { x: 0.2, y: 0.025 }; // base label scale (zoom shrink below)
+      sprite.scale.set(0.46, 0.08, 1);
       root.add(sprite);
-      const leS1b = nodeData.find(d => d.index === idx); if (leS1b) { leS1b.label = sprite; leS1b.labelYOff = yOff; }
+      const leS1b = nodeData.find(d => d.index === idx); if (leS1b) leS1b.label = sprite;
     });
-    // Top-24 by True Value (P+L-T) get always-on labels; the rest fade in on zoom (idea 13, top-N only)
-    {
-      const ranked = nodeList.filter(e => e.cat !== 'skill')
-        .map(e => ({ e, tv: tvOf(e.item) }))
-        .sort((a, b) => b.tv - a.tv).slice(0, 24);
-      ranked.forEach(({ e }) => { const d = nodeData.find(x => x.index === e.idx); if (d) d.topLabel = true; });
-    }
 
     // ─── SLICE 2 POST-PASS (additive visuals; a failure here must never hide the graph) ───
     let beacon = null, beaconRing = null;
@@ -2368,287 +1706,13 @@ render = function(data) {
       if (beacon) { beacon.position.copy(d.pos); beacon.position.y += 1.5; beacon.visible = true; }
       if (beaconRing) { beaconRing.position.copy(d.pos); beaconRing.position.y -= 0.3; beaconRing.visible = true; }
       const rg = new RingGeometry(0.2, 0.26, 40);
-      const rm = new MeshBasicMaterial({ color: 0xF59E0B, transparent: true, opacity: 0.9, blending: AdditiveBlending, depthWrite: false, side: T.DoubleSide });
+      const rm = new MeshBasicMaterial({ color: 0x00D4FF, transparent: true, opacity: 0.9, blending: AdditiveBlending, depthWrite: false, side: T.DoubleSide });
       const ring = new Mesh(rg, rm);
       ring.rotation.x = -Math.PI/2; ring.position.copy(d.pos);
       scene.add(ring);
       ripples.push({ mesh: ring, born: performance.now() });
     }
     function kgHideBeacon() { if (beacon) beacon.visible = false; if (beaconRing) beaconRing.visible = false; }
-
-    // ─── IDEA 13 (Stage 2.2) — CLICK-TO-FOCUS + FOCUSED-NEIGHBOURHOOD FLOW ───
-    // Clicking a node centers the camera on it and dims everything outside
-    // its direct neighbourhood: the node + its top-24 neighbours by True
-    // Value = max 25 nodes in focus (Bible idea 13 cap). The gold flow
-    // particles (the single pulsePts Points system — no new draw call) are
-    // re-pointed at the focused neighbourhood only. Clear the focus by
-    // clicking empty space, the panel X, Reset, or Esc.
-    const adj = new Map();
-    edges.forEach(e => {
-      if (!adj.has(e[0])) adj.set(e[0], []);
-      if (!adj.has(e[1])) adj.set(e[1], []);
-      adj.get(e[0]).push(e[1]); adj.get(e[1]).push(e[0]);
-    });
-    const FOCUS_MAX = 25, FOCUS_CAM_DIST = 4.2;
-    let focusIdx = -1; const focusSet = new Set(); let focusAnim = null;
-    function setFlowPairs(pairs) {
-      if (!pulseGeo || !pulsePts) return;
-      pulsePairs.length = 0; pairs.forEach(p => pulsePairs.push(p));
-      pulsePhases.length = 0; for (let i = 0; i < pulsePairs.length; i++) pulsePhases.push(Math.random());
-      pulseGeo.setAttribute('position', new Float32BufferAttribute(new Float32Array(Math.max(3, pulsePairs.length * 3)), 3));
-    }
-    function focusNode(idx) {
-      const d = nodeData.find(x => x.index === idx);
-      if (!d || !d.pos || !items[idx]) return;
-      const nbrs = (adj.get(idx) || []).filter(n => items[n])
-        .sort((a, b) => tvOf(items[b]) - tvOf(items[a])).slice(0, FOCUS_MAX - 1);
-      focusSet.clear(); focusSet.add(idx); nbrs.forEach(n => focusSet.add(n));
-      focusIdx = idx;
-      // Flow on the focused neighbourhood only, low TV -> high TV.
-      setFlowPairs(nbrs.map(n => {
-        const pa = positions[idx], pb = positions[n];
-        if (!pa || !pb) return null;
-        return tvOf(items[idx]) >= tvOf(items[n]) ? [pb, pa] : [pa, pb];
-      }).filter(Boolean));
-      // Glide the camera onto the node (keeps the current view direction).
-      const dir = camera.position.clone().sub(controls.target).normalize();
-      focusAnim = { fromT: controls.target.clone(), toT: d.pos.clone(), fromP: camera.position.clone(), toP: d.pos.clone().addScaledVector(dir, FOCUS_CAM_DIST), start: performance.now(), dur: 650 };
-      controls.enabled = false;
-    }
-    function clearFocus() {
-      if (focusIdx < 0 && focusSet.size === 0) return;
-      focusIdx = -1; focusSet.clear(); focusAnim = null; controls.enabled = true;
-      setFlowPairs(globalFlowPairs);
-    }
-
-    // ─── IDEA 28 — THE 222 CONSTELLATION ───
-    // The hero's souls form a 222 in the stars; click a star to open that
-    // soul (the existing getNearestNode + panel + focusNode path — it reads
-    // d.pos, which the constellation moves, so click-to-open just works).
-    // The inline catalog holds only 8 type:'soul' entries, so the "hero
-    // souls" are the top 42 catalog items by True Value (tvOf) — no souls
-    // invented, ranking purely by P+L-T. Each digit "2" is a 5x7 point glyph
-    // (14 points); three digits side by side = 42 stars. Sprite nodes only:
-    // instanced skill stars have no per-node mesh to move. Nodes glide
-    // between their force-directed home and their digit point; every other
-    // node dims to 0.08. The toggle lives in the control bar (#hgConst).
-    const CONST_GLYPH = [[1,0],[2,0],[3,0],[0,1],[4,1],[4,2],[3,3],[2,4],[1,5],[0,6],[1,6],[2,6],[3,6],[4,6]];
-    const CONST_COLS = 5, CONST_SP = 0.85;
-    let constActive = false, constMoving = false;
-    const constSet = new Set();
-    function constTargets() {
-      const ranked = nodeData.filter(d => d.item && d.mesh && d.mesh.isSprite)
-        .slice().sort((a, b) => tvOf(b.item) - tvOf(a.item)).slice(0, CONST_GLYPH.length * 3);
-      const cs = Math.max(0.45, Math.min(1, (gw() / gh()) / 1.8)); // shrink on narrow bands
-      const targets = new Map();
-      ranked.forEach((d, i) => {
-        const digit = Math.floor(i / CONST_GLYPH.length);
-        const gc = CONST_GLYPH[i % CONST_GLYPH.length][0], gr = CONST_GLYPH[i % CONST_GLYPH.length][1];
-        const x0 = (digit - 1) * (CONST_COLS * CONST_SP + 1.6);
-        const x = (x0 + gc * CONST_SP - (CONST_COLS - 1) * CONST_SP / 2) * cs;
-        const y = 0.85 + (3.4 - gr * CONST_SP - 0.85) * cs;
-        targets.set(d.index, new V3(x, y, (Math.random() - 0.5) * 0.3));
-      });
-      return targets;
-    }
-    function setConstellation(on) {
-      constActive = on;
-      const btn = document.getElementById('hgConst');
-      if (btn) btn.textContent = on ? '\u2726 Graph view' : '\u2726 222 Constellation';
-      if (on) {
-        clearFocus();
-        if (hgFilter) { hgFilter.value = 'all'; applyGraphFilter('all'); }
-        // IDEA 14 — the constellation owns d.pos too; drop back to Network first.
-        if (typeof layoutName !== 'undefined' && layoutName !== 'network') { layoutName = 'network'; const _ls = document.getElementById('hgLayout'); if (_ls) _ls.value = 'network'; }
-        const cmap = constTargets();
-        constSet.clear(); cmap.forEach((v, k) => constSet.add(k));
-        nodeData.forEach(d => { if (!d.homePos) d.homePos = d.pos.clone(); d.constTarget = cmap.has(d.index) ? cmap.get(d.index) : null; });
-        focusAnim = { fromT: controls.target.clone(), toT: new V3(0, 0.85, 0), fromP: camera.position.clone(), toP: new V3(0, 2.6, 9.5), start: performance.now(), dur: 700 };
-        controls.enabled = false;
-      } else {
-        constSet.clear();
-        nodeData.forEach(d => { d.constTarget = null; });
-        focusAnim = { fromT: controls.target.clone(), toT: new V3(0, 1.6, 0), fromP: camera.position.clone(), toP: new V3(0, 3.4, 8), start: performance.now(), dur: 700 };
-        controls.enabled = false;
-      }
-      constMoving = true;
-      startDissolve(); // IDEA 16 — nodes dissolve into points, reform as / out of the 222
-    }
-    // ─── IDEA 14 (Stage 2.3) — LAYOUT SWITCHER: Network / Spiral / Cluster / Planetary ───
-    // The switcher lives in the control bar (#hgLayout). Every layout is a set
-    // of target positions; nodes GLIDE to them (0.08 ease per frame, same feel
-    // as the 222 move) — never a snap. Works with the existing systems because
-    // it only moves d.pos, which everything else already reads live:
-    // getNearestNode (click-to-open), focusNode (max 25), pulse flow pairs
-    // (live V3 refs), trails (spawn from mesh.position), labels/badges/auras
-    // (ride along while a layout is active — see the animate loop). The baked
-    // DNA threads are force-directed-home geometry, so they fade out whenever
-    // the layout is not Network (see threadTarget below). Reset returns to
-    // Network. Constellation and layouts both own d.pos, so each one clears
-    // the other first — never both at once.
-    function hash01(n) { const s = Math.sin(n * 127.1 + 311.7) * 43758.5453; return s - Math.floor(s); }
-    let layoutName = 'network', layoutMoving = false;
-    // Eager network home for every node (the constellation only sets homePos
-    // lazily; capturing here means a layout switch after a constellation
-    // still returns to the true force-directed home).
-    nodeData.forEach(d => { if (d.pos && !d.homePos) d.homePos = d.pos.clone(); });
-    function layoutTargetsFor(name) {
-      const targets = new Map();
-      if (name === 'network') {
-        nodeData.forEach(d => { if (d.homePos) targets.set(d.index, d.homePos.clone()); });
-        return targets;
-      }
-      if (name === 'spiral') {
-        // Golden-angle spiral in the XZ plane, gently wavy in Y.
-        // 251 nodes -> radius <= ~5.4, fits the home camera framing.
-        const sorted = nodeData.slice().sort((a, b) => a.index - b.index);
-        sorted.forEach((d, i) => {
-          const a = i * 2.399963; // golden angle
-          const r = 0.34 * Math.sqrt(i + 1);
-          targets.set(d.index, new V3(Math.cos(a) * r, 1.6 + 1.15 * Math.sin(i * 0.21), Math.sin(a) * r));
-        });
-        return targets;
-      }
-      if (name === 'cluster') {
-        // One blob per category on a ring; deterministic sunflower packing
-        // inside each blob (hash01 jitter, so the layout is stable per switch).
-        const byCat = {};
-        nodeData.forEach(d => { const c = (d.item && d.item.type) || 'soul'; (byCat[c] = byCat[c] || []).push(d); });
-        catOrder.forEach((cat, ci) => {
-          const list = byCat[cat] || [];
-          const a0 = (ci / catOrder.length) * Math.PI * 2;
-          const cx = Math.cos(a0) * 4.0, cz = Math.sin(a0) * 4.0;
-          const cy = 1.6 + ((ci % 3) - 1) * 0.85;
-          const R = 0.45 + 0.09 * Math.sqrt(list.length);
-          list.forEach((d, j) => {
-            const a = j * 2.399963 + ci * 1.7;
-            const r = R * Math.sqrt((j + 0.5) / list.length);
-            targets.set(d.index, new V3(cx + Math.cos(a) * r, cy + (hash01(d.index * 3 + 1) - 0.5) * 0.7, cz + Math.sin(a) * r));
-          });
-        });
-        return targets;
-      }
-      // planetary: one orbit ring per category around the centre; the single
-      // highest-True-Value sprite node is the sun at the centre.
-      const sun = nodeData.filter(d => d.mesh && d.mesh.isSprite).slice().sort((a, b) => tvOf(b.item) - tvOf(a.item))[0];
-      const byCat2 = {};
-      nodeData.forEach(d => { if (sun && d.index === sun.index) return; const c = (d.item && d.item.type) || 'soul'; (byCat2[c] = byCat2[c] || []).push(d); });
-      if (sun) targets.set(sun.index, new V3(0, 1.6, 0));
-      catOrder.forEach((cat, ci) => {
-        const list = byCat2[cat] || [];
-        const R = 1.15 + ci * 0.52;
-        list.forEach((d, j) => {
-          const a = (j / Math.max(1, list.length)) * Math.PI * 2 + ci * 0.6;
-          targets.set(d.index, new V3(Math.cos(a) * R, 1.6 + 0.3 * Math.sin(a * 2 + ci), Math.sin(a) * R));
-        });
-      });
-      return targets;
-    }
-    function setLayout(name) {
-      const ok = ['network', 'spiral', 'cluster', 'planetary'];
-      if (ok.indexOf(name) < 0) name = 'network';
-      const wasConst = constActive;
-      if (constActive) {
-        constActive = false; constMoving = false; constSet.clear();
-        nodeData.forEach(d => { d.constTarget = null; });
-        const _cb = document.getElementById('hgConst'); if (_cb) _cb.textContent = '\u2726 222 Constellation';
-      }
-      if (name === layoutName && !layoutMoving && !wasConst) return;
-      clearFocus(); // a focused node's camera target would go stale mid-glide
-      layoutName = name;
-      const sel = document.getElementById('hgLayout'); if (sel) sel.value = name;
-      const cmap = layoutTargetsFor(name);
-      nodeData.forEach(d => { if (!d.homePos && d.pos) d.homePos = d.pos.clone(); d.layoutTarget = cmap.has(d.index) ? cmap.get(d.index) : null; });
-      layoutMoving = true;
-      startDissolve(); // IDEA 16 — nodes dissolve into points, reform in the new layout
-    }
-    const hgLayout = document.getElementById('hgLayout');
-    if (hgLayout) hgLayout.addEventListener('change', () => setLayout(hgLayout.value));
-
-    // ─── IDEA 16 (Stage 2.5) — POINT CLOUDS DISSOLVE + REFORM ON VIEW SWITCH ───
-    // When the view switches (layout, 222 constellation, Reset) the nodes
-    // dissolve into amber/gold points and reform in the new arrangement —
-    // the same transition language as the 2.4 particle field, not a snap.
-    // ONE shared Points pool (1600 pts ≈ 6 per node, 1 draw call): on a
-    // switch each node bursts into points that drift and fade over 0.9 s
-    // while the nodes themselves fade out over the first 35% of the
-    // transition and fade back in over the rest (dissF in the animate loop).
-    // Whole transition ≤ ~0.9 s (theater open: 1.2 s). Reduced motion:
-    // no dissolve at all — the existing glide is the whole transition.
-    const DISSOLVE_N = 1600, DISSOLVE_PER_NODE = 6, DISSOLVE_LIFE = 0.9;
-    let dissolveDur = 900, dissolveStart = -1, dissolveActive = false, dissolveAlive = false;
-    let dissolveGeo = null, dissolvePts = null;
-    const dissolveLife = new Float32Array(DISSOLVE_N);
-    const dissolveVel = new Float32Array(DISSOLVE_N * 3);
-    const dissolveBase = new Float32Array(DISSOLVE_N * 3);
-    const DISSOLVE_COLS = [[1.0, 0.62, 0.04], [1.0, 0.82, 0.40], [0.98, 0.75, 0.14], [1.0, 0.91, 0.66]];
-    try {
-      const dPos = new Float32Array(DISSOLVE_N * 3), dCol = new Float32Array(DISSOLVE_N * 3);
-      for (let di = 0; di < DISSOLVE_N; di++) dPos[di * 3 + 1] = -999; // parked off-screen
-      dissolveGeo = new BufferGeometry();
-      dissolveGeo.setAttribute('position', new Float32BufferAttribute(dPos, 3));
-      dissolveGeo.setAttribute('color', new Float32BufferAttribute(dCol, 3));
-      const dotCv = document.createElement('canvas'); dotCv.width = dotCv.height = 64;
-      const dctx = dotCv.getContext('2d');
-      const dg = dctx.createRadialGradient(32, 32, 2, 32, 32, 32);
-      dg.addColorStop(0, 'rgba(255,255,255,1)'); dg.addColorStop(0.4, 'rgba(255,255,255,0.6)'); dg.addColorStop(1, 'rgba(255,255,255,0)');
-      dctx.fillStyle = dg; dctx.fillRect(0, 0, 64, 64);
-      dissolvePts = new Points(dissolveGeo, new PointsMaterial({ map: new T.CanvasTexture(dotCv), vertexColors: true, size: 0.09, transparent: true, opacity: 0.95, blending: AdditiveBlending, depthWrite: false }));
-      dissolvePts.frustumCulled = false; scene.add(dissolvePts);
-    } catch (e) { console.warn('Dissolve points skipped:', e); dissolvePts = null; dissolveGeo = null; }
-    function spawnDissolveBurst() {
-      if (!dissolveGeo) return;
-      const pa = dissolveGeo.getAttribute('position'), ca = dissolveGeo.getAttribute('color');
-      let di = 0;
-      nodeData.forEach(d => {
-        if (!d.pos || di >= DISSOLVE_N) return;
-        for (let k = 0; k < DISSOLVE_PER_NODE && di < DISSOLVE_N; k++, di++) {
-          pa.setXYZ(di, d.pos.x + (Math.random() - 0.5) * 0.15, d.pos.y + (Math.random() - 0.5) * 0.15, d.pos.z + (Math.random() - 0.5) * 0.15);
-          const th = Math.random() * Math.PI * 2, ph = Math.acos(2 * Math.random() - 1), sp = 0.4 + Math.random() * 1.0;
-          dissolveVel[di * 3] = Math.sin(ph) * Math.cos(th) * sp;
-          dissolveVel[di * 3 + 1] = Math.cos(ph) * sp * 0.7 + 0.15;
-          dissolveVel[di * 3 + 2] = Math.sin(ph) * Math.sin(th) * sp;
-          const c = DISSOLVE_COLS[(Math.random() * DISSOLVE_COLS.length) | 0];
-          dissolveBase[di * 3] = c[0]; dissolveBase[di * 3 + 1] = c[1]; dissolveBase[di * 3 + 2] = c[2];
-          ca.setXYZ(di, c[0], c[1], c[2]);
-          dissolveLife[di] = DISSOLVE_LIFE;
-        }
-      });
-      // Park any unused tail of the pool (a smaller burst than last time).
-      for (; di < DISSOLVE_N; di++) { if (dissolveLife[di] > 0) { dissolveLife[di] = 0; pa.setXYZ(di, 0, -999, 0); ca.setXYZ(di, 0, 0, 0); } }
-      pa.needsUpdate = true; ca.needsUpdate = true;
-      dissolveAlive = true;
-    }
-    function startDissolve(durMs) {
-      if (REDUCED || dissolveActive) return; // reduced motion: glide only, no dissolve; a running dissolve absorbs re-triggers
-      dissolveDur = durMs || 900;
-      dissolveStart = performance.now(); dissolveActive = true;
-      spawnDissolveBurst();
-    }
-    function endDissolve() {
-      dissolveActive = false; dissolveStart = -1;
-      if (!dissolveGeo) return;
-      const pa = dissolveGeo.getAttribute('position'), ca = dissolveGeo.getAttribute('color');
-      for (let di = 0; di < DISSOLVE_N; di++) { dissolveLife[di] = 0; pa.setXYZ(di, 0, -999, 0); ca.setXYZ(di, 0, 0, 0); }
-      pa.needsUpdate = true; ca.needsUpdate = true; dissolveAlive = false;
-    }
-    function updateDissolvePts(dt) {
-      if (!dissolveAlive || !dissolveGeo) return;
-      const pa = dissolveGeo.getAttribute('position'), ca = dissolveGeo.getAttribute('color');
-      let any = false, dirty = false;
-      for (let di = 0; di < DISSOLVE_N; di++) {
-        if (dissolveLife[di] <= 0) continue;
-        any = true; dirty = true;
-        dissolveLife[di] -= dt;
-        if (dissolveLife[di] <= 0) { pa.setXYZ(di, 0, -999, 0); ca.setXYZ(di, 0, 0, 0); continue; }
-        pa.setXYZ(di, pa.getX(di) + dissolveVel[di * 3] * dt, pa.getY(di) + dissolveVel[di * 3 + 1] * dt, pa.getZ(di) + dissolveVel[di * 3 + 2] * dt);
-        const f = dissolveLife[di] / DISSOLVE_LIFE;
-        ca.setXYZ(di, dissolveBase[di * 3] * f, dissolveBase[di * 3 + 1] * f, dissolveBase[di * 3 + 2] * f);
-      }
-      if (dirty) { pa.needsUpdate = true; ca.needsUpdate = true; }
-      if (!any) dissolveAlive = false;
-    }
-
     try {
       const radialCv = document.createElement('canvas'); radialCv.width = radialCv.height = 128;
       const rcx = radialCv.getContext('2d');
@@ -2670,8 +1734,8 @@ render = function(data) {
         runeTexs.push(new T.CanvasTexture(cv));
       }
       nodeData.forEach(d => {
-        if (d.mesh && (d.mesh.isMesh || d.mesh.isSprite)) {
-          const am = new T.SpriteMaterial({ map: auraTex, color: d.plushColor || d.mesh.material.color, transparent: true, opacity: 0.3, blending: AdditiveBlending, depthWrite: false });
+        if (d.mesh && d.mesh.isMesh) {
+          const am = new T.SpriteMaterial({ map: auraTex, color: d.mesh.material.color, transparent: true, opacity: 0.3, blending: AdditiveBlending, depthWrite: false });
           const aura = new T.Sprite(am);
           aura.position.copy(d.pos); aura.scale.setScalar(1.1);
           root.add(aura); d.aura = aura;
@@ -2696,8 +1760,7 @@ render = function(data) {
       edges.forEach((e, ei) => {
         if (ei % 6) return;
         const pa = positions[e[0]], pb = positions[e[1]];
-        // IDEA 22 — flow runs low TV -> high TV: value flows uphill.
-        if (pa && pb) pulsePairs.push(tvOf(items[e[0]]) > tvOf(items[e[1]]) ? [pb, pa] : [pa, pb]);
+        if (pa && pb) pulsePairs.push([pa, pb]);
       });
       if (pulsePairs.length) {
         const dollarCv = document.createElement('canvas'); dollarCv.width = dollarCv.height = 64;
@@ -2715,8 +1778,6 @@ render = function(data) {
         scene.add(pulsePts);
       }
     } catch(e) { console.warn('Graph slice-2 visuals skipped:', e); }
-    // IDEA 22 — the global flow set, restored when a focus clears.
-    const globalFlowPairs = pulsePairs.map(p => p.slice());
     let brandSpr = null, codeTorus = null;
     try {
       const featCv = document.createElement('canvas'); featCv.width = featCv.height = 64;
@@ -2735,7 +1796,7 @@ render = function(data) {
       const orbiterGeo = new TetrahedronGeometry(0.03,0);
       const orbiterMat = new MeshBasicMaterial({ color: 0xFFD166, transparent: true, opacity: 0.9 });
       nodeData.forEach(d => {
-        if (d.mesh && (d.mesh.isMesh || d.mesh.isSprite)) {
+        if (d.mesh && d.mesh.isMesh) {
           const pv = (d.item.plt || '0.5/0.5/0.5').split('/').map(Number);
           if ((pv[0]+pv[1]-pv[2]) > 1.0) {
             const hg = new RingGeometry(0.32, 0.38, 40);
@@ -2779,11 +1840,11 @@ render = function(data) {
       bcx.fillText('PROFIT + LOVE - TAX = TRUE VALUE', 256, 118);
       const brandTex = new T.CanvasTexture(brandCv);
       brandSpr = new T.Sprite(new T.SpriteMaterial({ map: brandTex, transparent: true, opacity: 0.9, depthWrite: false }));
-      brandSpr.scale.set(1.5, 0.47, 1);
-      brandSpr.position.set(-6.2, -2.4, -0.5); // FIX #2 live repair — was (0,-0.2) centre, over the node labels; now bottom-left corner, low opacity
+      brandSpr.scale.set(2.6, 0.8, 1);
+      brandSpr.position.set(0, 1.35, 0);
       scene.add(brandSpr);
       const tg = new TorusGeometry(2.4, 0.015, 8, 72);
-      codeTorus = new Mesh(tg, new MeshBasicMaterial({ color: 0xF59E0B, wireframe: true, transparent: true, opacity: 0.10, depthWrite: false }));
+      codeTorus = new Mesh(tg, new MeshBasicMaterial({ color: 0x8B5CF6, wireframe: true, transparent: true, opacity: 0.10, depthWrite: false }));
       codeTorus.rotation.x = Math.PI/2.3;
       scene.add(codeTorus);
     } catch(e) { console.warn('Graph slice-3 visuals skipped:', e); }
@@ -2799,10 +1860,9 @@ render = function(data) {
       nodeData.forEach(d => {
         const pos = d.pos || (d.mesh ? d.mesh.position : null);
         if (!pos) return;
-        if (graphCtl.filter !== 'all' && d.item && d.item.type !== graphCtl.filter) return; // FIX #2 — filtered-out nodes are not clickable
         const v = pos.clone().project(camera);
-        const sx = (v.x * 0.5 + 0.5) * rect.width + rect.left;
-        const sy = (-v.y * 0.5 + 0.5) * rect.height + rect.top;
+        const sx = (v.x * 0.5 + 0.5) * window.innerWidth;
+        const sy = (-v.y * 0.5 + 0.5) * window.innerHeight;
         const dx = sx - clientX, dy = sy - clientY;
         const dist = Math.sqrt(dx * dx + dy * dy);
         if (dist < nearestDist && dist < threshold) { nearestDist = dist; nearest = d.index; }
@@ -2816,389 +1876,23 @@ render = function(data) {
       if (idx !== hoverIdx) { hoverIdx = idx;
         hoverRef.d = idx >= 0 ? (nodeData.find(d => d.index === idx) || null) : null;
         document.querySelectorAll('.card').forEach(c => { c.style.borderColor = ''; c.style.boxShadow = ''; });
-        if (idx >= 0) { const card = document.querySelectorAll('.card')[idx]; if (card) { card.style.borderColor = '#F59E0B'; card.style.boxShadow = '0 0 40px rgba(245,158,11,0.3)'; } }
+        if (idx >= 0) { const card = document.querySelectorAll('.card')[idx]; if (card) { card.style.borderColor = '#8B5CF6'; card.style.boxShadow = '0 0 40px rgba(139,92,246,0.3)'; } }
       }
     });
     document.addEventListener('click', e => { try {
-      if (window.__hgSuppressClickUntil && performance.now() < window.__hgSuppressClickUntil) return; // WAVE 2h — a thread drag just ended; not a node click
-      if (e.target.closest('#soul-info-panel, #hero-graph-bar, #hgThread, #hgPalette, .btn-download, .btn-play, .search-wrapper, .category-tab, .navbar, .nav-links')) return;
+      if (e.target.closest('#soul-info-panel, .btn-download, .btn-play, .search-wrapper, .category-tab, .navbar, .nav-links')) return;
       const idx = getNearestNode(e.clientX, e.clientY);
-      if (idx >= 0 && items[idx]) { openSoulPanel(idx); return; } // WAVE 2h — shared open (palette uses it too)
-      if (pan.classList.contains('active')) { pan.classList.remove('active'); kgHideBeacon(); clearFocus(); }
-      else clearFocus();
+      if (idx >= 0 && items[idx]) {
+        const item = items[idx];
+        pt.textContent = item.name; pd.textContent = item.desc || ''; pp.textContent = item.plt ? `PLT: ${item.plt}` : '';
+        if (item.file) { pb.textContent = '⬇ Awaken'; pb.style.display = 'inline-block'; pb.onclick = () => { const a = document.createElement('a'); a.href = 'downloads/' + item.file; a.download = item.file; a.click(); pan.classList.remove('active'); }; }
+        else if (item.url) { pb.textContent = '▶ Open'; pb.style.display = 'inline-block'; pb.onclick = () => { window.open(item.url, '_blank'); pan.classList.remove('active'); }; }
+        else pb.style.display = 'none'; pan.classList.add('active'); kgSelect(idx); return; }
+      if (pan.classList.contains('active')) { pan.classList.remove('active'); kgHideBeacon(); }
     } catch(e) { console.error('Click error:', e); } });
-    pc.onclick = () => { pan.classList.remove('active'); kgHideBeacon(); clearFocus(); };
-    // IDEA 13 — Esc clears a focus (and the panel) too.
-    document.addEventListener('keydown', e => { if (e.key === 'Escape' && focusIdx >= 0) { clearFocus(); pan.classList.remove('active'); kgHideBeacon(); } });
+    pc.onclick = () => { pan.classList.remove('active'); kgHideBeacon(); };
     // Graph internals exposed for read-only overlays (fog / FXAA / bloom / matrix floor)
-    window.__soulGraph = { scene, camera, renderer, root, items, nodeData, setLayout };
-    // FIX #2 — wire the control bar (legend is static HTML above; these need camera/controls/nodeData)
-    function applyGraphFilter(cat) {
-      graphCtl.filter = cat;
-      // IDEA 13 — filtering the focused node out of view clears the focus.
-      if (focusIdx >= 0 && cat !== 'all' && items[focusIdx] && items[focusIdx].type !== cat) clearFocus();
-      nodeData.forEach(d => {
-        const show = cat === 'all' || (d.item && d.item.type === cat);
-        if (d.mesh) d.mesh.visible = show;
-        if (d.badge) d.badge.visible = show;
-        if (d.label) d.label.visible = show;
-        if (d.aura) d.aura.visible = show;
-        if (d.star) d.star.visible = show;
-      });
-      const sb2 = root.userData._sb;
-      if (sb2) sb2.visible = (cat === 'all' || cat === 'skill');
-    }
-    function hgDolly(f) {
-      const off = camera.position.clone().sub(controls.target).multiplyScalar(f);
-      const len = off.length();
-      if (len < controls.minDistance || len > controls.maxDistance) return;
-      camera.position.copy(controls.target).add(off);
-    }
-    const hgPause = document.getElementById('hgPause');
-    if (hgPause) hgPause.addEventListener('click', () => {
-      graphCtl.paused = !graphCtl.paused;
-      if (!graphCtl.paused) graphCtl.frozenT = 0;
-      hgPause.textContent = graphCtl.paused ? '\u25b6 Resume' : '\u23f8 Pause';
-    });
-    const hgFilter = document.getElementById('hgFilter');
-    if (hgFilter) hgFilter.addEventListener('change', () => applyGraphFilter(hgFilter.value));
-    const hgZi = document.getElementById('hgZoomIn');
-    if (hgZi) hgZi.addEventListener('click', () => hgDolly(0.8));
-    const hgZo = document.getElementById('hgZoomOut');
-    if (hgZo) hgZo.addEventListener('click', () => hgDolly(1.25));
-    const hgRs = document.getElementById('hgReset');
-    if (hgRs) hgRs.addEventListener('click', () => { if (constActive) setConstellation(false); if (layoutName !== 'network') setLayout('network'); startDissolve(); clearFocus(); camera.position.set(0, 3.4, 8); controls.target.set(0, 1.6, 0); applyGraphFilter('all'); if (hgFilter) hgFilter.value = 'all'; });
-    // IDEA 28 — toggle between the normal graph and the 222 constellation.
-    const hgConst = document.getElementById('hgConst');
-    if (hgConst) hgConst.addEventListener('click', () => setConstellation(!constActive));
-    window.__soulGraph.ctl = graphCtl;
-
-    // ─── WAVE 2h — IDEAS 8, 9, 10, 25, 30, 19 ───
-    // 8  Hover whispers — TEXT FIRST. A one-line story per soul (from the
-    //    item's own desc, first sentence, never invented) in a tooltip.
-    //    Betty's voice clips do NOT exist yet (Bible idea 29), so there is
-    //    NO audio here, no synthesized placeholder voice, no mute toggle.
-    // 9  Theatre.js choreography — Core runtime only (Studio is AGPL and
-    //    is NOT shipped). The timeline lives in assets/js/theatre-state.json
-    //    (a real Theatre project state, sheet "Hero", object "Choreo"):
-    //    12 s loop — nodes breathe, threads connect-pulse, camera sways.
-    //    The cross-page hero → shelf glide is NOT done here: the shelf
-    //    lives in betty-plush.html, which this wave must not touch — that
-    //    glide belongs to a future betty-plush wave.
-    // 10 GSAP 3.13+ + Lenis — the motion layer under 2.9. Both vendored
-    //    (assets/js/vendor/), self-hosted, no CDN (idea 20). GSAP drives
-    //    the palette open/close and is the choreography fallback if
-    //    Theatre fails to load; Lenis smooths page scroll.
-    // 25 Threads of fate — drag a graph thread to see the relationship.
-    //    Bond rule (from the pair's own PLT values): Tax sum >= 1.2 ->
-    //    grey TAX bond; else Love sum >= 1.6 -> pink LOVE bond; else
-    //    gold FAMILY bond. Built on the existing DNA/gold threads (2d) —
-    //    the baked thread geometry is untouched; this adds one highlight
-    //    line + one bead sprite (+2 draw calls, only while a thread is
-    //    active) and a relationship card.
-    // 30 Time-of-day universe — dawn amber / noon gold / night deep
-    //    indigo; plush lighting follows. Amber/gold/indigo only — no cyan,
-    //    no purple. Night keeps the Wave 2g base #07070D. Follows the
-    //    visitor's local time with a manual override (#hgTime, stored in
-    //    localStorage soulTimeModeV1); default is Auto.
-    // 19 Cmd+K palette + bottom sheets — keyboard palette jumps to souls,
-    //    views, and layouts; the soul panel becomes a bottom sheet on
-    //    mobile. Never hijacks typing in inputs/search fields.
-    const choreo = { breathe: 1, threadGlow: 0, camSway: 0, prevSway: 0 };
-    // IDEA 9 — Theatre.js Core (no Studio). The state file is fetched so
-    // the timeline is data, not code; if either load fails, GSAP replays
-    // the same 12 s loop from the same keyframe times (fallback below).
-    // Reduced motion: no choreography at all — choreo stays at rest.
-    async function startTheatreChoreo() {
-      if (REDUCED) return false;
-      try {
-        const Theatre = (await import('./assets/js/vendor/theatre-core.mjs')).default;
-        const res = await fetch('assets/js/theatre-state.json', { cache: 'reload' });
-        if (!res.ok) throw new Error('theatre-state.json HTTP ' + res.status);
-        const stateDoc = await res.json();
-        const project = Theatre.getProject('SoulEconomyHero', { state: stateDoc.theatre });
-        window.__soulTheatreProject = project; // WAVE 32 (idea 32) — the story scroll reuses this project for its "Story" sheet.
-        const sheet = project.sheet('Hero');
-        const obj = sheet.object('Choreo', {
-          breathe: Theatre.types.number(1, { range: [0.5, 2] }),
-          threadGlow: Theatre.types.number(0, { range: [0, 1] }),
-          camSway: Theatre.types.number(0, { range: [-0.5, 0.5] })
-        });
-        obj.onValuesChange(v => { choreo.breathe = v.breathe; choreo.threadGlow = v.threadGlow; choreo.camSway = v.camSway; });
-        await project.ready;
-        sheet.sequence.play({ iterationCount: Infinity, range: [0, 12] });
-        return true;
-      } catch (e) { console.warn('Theatre choreography skipped, GSAP fallback:', e); return false; }
-    }
-    function startGsapChoreo() {
-      if (REDUCED || !window.gsap) return;
-      // Same 12 s loop as theatre-state.json, same keyframe times.
-      window.gsap.to(choreo, { breathe: 1.35, duration: 6, repeat: -1, yoyo: true, ease: 'sine.inOut' });
-      window.gsap.to(choreo, { threadGlow: 1, duration: 4, repeat: -1, yoyo: true, ease: 'sine.inOut' });
-      window.gsap.to(choreo, { camSway: 0.12, duration: 3, repeat: -1, yoyo: true, ease: 'sine.inOut' });
-    }
-    startTheatreChoreo().then(ok => { if (!ok) startGsapChoreo(); });
-    // IDEA 10 — Lenis smooth scroll (page-level; skipped under reduced
-    // motion; never blocks the graph if it fails to load).
-    try {
-      if (window.Lenis && !REDUCED) {
-        const lenis = new window.Lenis({ smoothWheel: true });
-        window.__lenis = lenis;
-        document.documentElement.style.scrollBehavior = 'auto';
-        if (window.gsap && window.gsap.ticker) window.gsap.ticker.add(t => { lenis.raf(t * 1000); });
-        else { const lenisRaf = t => { lenis.raf(t); requestAnimationFrame(lenisRaf); }; requestAnimationFrame(lenisRaf); }
-      }
-    } catch (e) { console.warn('Lenis skipped:', e); }
-    // IDEA 8 — hover whisper tooltip (text only — see header).
-    const whisperEl = document.createElement('div');
-    whisperEl.id = 'hgWhisper'; whisperEl.setAttribute('role', 'status'); whisperEl.style.display = 'none';
-    graphWrap.appendChild(whisperEl);
-    function escH2(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
-    function whisperFor(item) {
-      const d = (item.desc || '').trim();
-      let s = d ? d.split('. ')[0] : '';
-      if (s && !/[.!?]$/.test(s)) s += '.';
-      if (!s) s = (item.name || 'Soul') + ' — a ' + (item.type || 'soul') + ' of the Library.';
-      if (s.length > 120) s = s.slice(0, 117) + '...';
-      return s;
-    }
-    document.addEventListener('mousemove', e => {
-      if (e.target && e.target.closest && e.target.closest('#hgPalette, #soul-info-panel, #hgThread')) { whisperEl.style.display = 'none'; return; }
-      const idx = getNearestNode(e.clientX, e.clientY);
-      if (idx < 0 || !items[idx]) { whisperEl.style.display = 'none'; return; }
-      whisperEl.textContent = '✦ ' + whisperFor(items[idx]);
-      const wr = graphWrap.getBoundingClientRect();
-      let x = e.clientX - wr.left + 14, y = e.clientY - wr.top + 18;
-      x = Math.max(8, Math.min(x, wr.width - 220)); y = Math.max(8, Math.min(y, wr.height - 60));
-      whisperEl.style.left = x + 'px'; whisperEl.style.top = y + 'px';
-      whisperEl.style.display = 'block';
-    });
-    // Shared soul-panel open (the document click handler below calls this;
-    // function declarations hoist, so the earlier registration can use it).
-    function openSoulPanel(idx) {
-      const item = items[idx]; if (!item) return;
-      pt.textContent = item.name; pd.textContent = item.desc || ''; pp.textContent = item.plt ? 'PLT: ' + item.plt : '';
-      if (item.file) { pb.textContent = '⬇ Awaken'; pb.style.display = 'inline-block'; pb.onclick = () => { const a = document.createElement('a'); a.href = 'downloads/' + item.file; a.download = item.file; a.click(); pan.classList.remove('active'); }; }
-      else if (item.url) { pb.textContent = '▶ Open'; pb.style.display = 'inline-block'; pb.onclick = () => { window.open(item.url, '_blank'); pan.classList.remove('active'); }; }
-      else pb.style.display = 'none';
-      pan.classList.add('active'); kgSelect(idx); focusNode(idx);
-    }
-    // IDEA 25 — threads of fate: drag a thread to see the relationship.
-    const BOND = {
-      family: { key: 'family', label: 'Family', color: '#FFD166', text: 'Kin in the Library — the same thread, a shared story.' },
-      love: { key: 'love', label: 'Love', color: '#FF5C8A', text: 'Bound by Love — what one feels, the other carries.' },
-      tax: { key: 'tax', label: 'Tax', color: '#9CA3AF', text: 'Bound by Tax — the cost that ties them together.' }
-    };
-    function pltParts(item) { const p = (item.plt || '0.5/0.5/0.5').split('/').map(Number); return { p: p[0] || 0, l: p[1] || 0, t: p[2] || 0 }; }
-    function bondFor(a, b) {
-      const A = pltParts(a), B = pltParts(b);
-      if (A.t + B.t >= 1.2) return BOND.tax;
-      if (A.l + B.l >= 1.6) return BOND.love;
-      return BOND.family;
-    }
-    const threadEl = document.createElement('div');
-    threadEl.id = 'hgThread'; threadEl.style.display = 'none';
-    graphWrap.appendChild(threadEl);
-    let threadLine = null, threadBead = null, threadActive = null, threadDragging = false;
-    function threadPos(idx) { const d = nodeData.find(x => x.index === idx); return d ? (d.pos || null) : null; }
-    function ensureThreadFx() {
-      if (threadLine) return;
-      const g = new BufferGeometry();
-      g.setAttribute('position', new Float32BufferAttribute([0, 0, 0, 0, 0, 0], 3));
-      threadLine = new T.Line(g, new LineBasicMaterial({ color: 0xFFD166, transparent: true, opacity: 0.95 }));
-      threadLine.frustumCulled = false; threadLine.visible = false; scene.add(threadLine);
-      const cv = document.createElement('canvas'); cv.width = cv.height = 64;
-      const cx = cv.getContext('2d');
-      const gr = cx.createRadialGradient(32, 32, 2, 32, 32, 32);
-      gr.addColorStop(0, 'rgba(255,255,255,1)'); gr.addColorStop(0.4, 'rgba(255,255,255,0.7)'); gr.addColorStop(1, 'rgba(255,255,255,0)');
-      cx.fillStyle = gr; cx.fillRect(0, 0, 64, 64);
-      threadBead = new T.Sprite(new T.SpriteMaterial({ map: new T.CanvasTexture(cv), color: 0xFFD166, transparent: true, opacity: 0.95, depthWrite: false }));
-      threadBead.scale.setScalar(0.22); threadBead.visible = false; scene.add(threadBead);
-    }
-    function nearestThread(cx, cy) {
-      const rect = canvas.getBoundingClientRect();
-      let best = null, bestD = 22;
-      for (let ei = 0; ei < edges.length; ei++) {
-        const a = threadPos(edges[ei][0]), b = threadPos(edges[ei][1]);
-        if (!a || !b) continue;
-        const pa = a.clone().project(camera), pb = b.clone().project(camera);
-        if (pa.z > 1 || pb.z > 1) continue;
-        const ax = (pa.x * 0.5 + 0.5) * rect.width + rect.left, ay = (-pa.y * 0.5 + 0.5) * rect.height + rect.top;
-        const bx = (pb.x * 0.5 + 0.5) * rect.width + rect.left, by = (-pb.y * 0.5 + 0.5) * rect.height + rect.top;
-        const dx = bx - ax, dy = by - ay, len2 = dx * dx + dy * dy || 1;
-        let t = ((cx - ax) * dx + (cy - ay) * dy) / len2; t = Math.max(0, Math.min(1, t));
-        const d = Math.hypot(cx - (ax + dx * t), cy - (ay + dy * t));
-        if (d < bestD) { bestD = d; best = { a: edges[ei][0], b: edges[ei][1], t: t, ax: ax, ay: ay, bx: bx, by: by }; }
-      }
-      return best;
-    }
-    function showThread(hit) {
-      const A = items[hit.a], B = items[hit.b];
-      if (!A || !B) return;
-      const bond = bondFor(A, B);
-      ensureThreadFx();
-      threadLine.material.color.set(bond.color);
-      threadBead.material.color.set(bond.color);
-      threadLine.visible = true; threadBead.visible = true;
-      threadEl.innerHTML =
-        '<span class="hg-thread-x" id="hgThreadX" title="Close">✕</span>' +
-        '<strong>' + escH2(A.name) + ' ↔ ' + escH2(B.name) + '</strong><br>' +
-        '<span class="hg-bond" style="color:' + bond.color + '">● ' + bond.label + ' bond</span><br>' +
-        '<span>' + escH2(bond.text) + '</span>' +
-        '<span class="hg-thread-plt">PLT ' + escH2(A.plt || '') + ' · ' + escH2(B.plt || '') + '</span>' +
-        '<span class="hg-thread-hint">Drag along the thread — the bead follows your pull.</span>';
-      threadEl.style.display = 'block';
-      const xBtn = document.getElementById('hgThreadX');
-      if (xBtn) xBtn.addEventListener('click', () => clearThread());
-    }
-    function clearThread() {
-      threadActive = null; threadDragging = false;
-      if (threadLine) threadLine.visible = false;
-      if (threadBead) threadBead.visible = false;
-      threadEl.style.display = 'none';
-    }
-    canvas.addEventListener('pointerdown', e => {
-      const hit = nearestThread(e.clientX, e.clientY);
-      if (!hit) { clearThread(); return; }
-      threadDragging = true; threadActive = hit;
-      controls.enabled = false; // capture phase: stops OrbitControls starting a rotate on this drag
-      showThread(hit);
-      window.__hgSuppressClickUntil = performance.now() + 400;
-    }, true);
-    document.addEventListener('pointermove', e => {
-      if (!threadDragging || !threadActive) return;
-      const rect = canvas.getBoundingClientRect();
-      const dx = threadActive.bx - threadActive.ax, dy = threadActive.by - threadActive.ay, len2 = dx * dx + dy * dy || 1;
-      let t = ((e.clientX - threadActive.ax) * dx + (e.clientY - threadActive.ay) * dy) / len2;
-      threadActive.t = Math.max(0, Math.min(1, t));
-      const pa = threadPos(threadActive.a), pb = threadPos(threadActive.b);
-      if (pa && pb && threadBead) threadBead.position.lerpVectors(pa, pb, threadActive.t);
-    });
-    document.addEventListener('pointerup', () => {
-      if (threadDragging) { threadDragging = false; controls.enabled = true; window.__hgSuppressClickUntil = performance.now() + 350; }
-    });
-    // IDEA 30 — time-of-day universe. Modes follow the visitor's local
-    // time (dawn 05–10, noon 10–17, night otherwise) unless overridden
-    // with #hgTime (stored: localStorage soulTimeModeV1). Amber/gold/
-    // indigo only — no cyan, no purple. Night keeps the Wave 2g base
-    // #07070D, so the dark universe is untouched.
-    const TIME_MODES = {
-      dawn: { label: 'Dawn · amber', bg: 0x171006, amb: 0x3A2A18, ambI: 0.7, keyC: 0xF59E0B, keyI: 2.4, fillC: 0xFFD166, fillI: 0.9, neb: 1.15, part: 0.6, wrap: 'radial-gradient(ellipse 90% 75% at 50% 30%,#241A08 0%,#0C0C12 55%,#050508 100%)' },
-      noon: { label: 'Noon · gold', bg: 0x1A1408, amb: 0x4A3A20, ambI: 0.85, keyC: 0xFFC233, keyI: 3.0, fillC: 0xFFE08A, fillI: 1.2, neb: 1.3, part: 0.7, wrap: 'radial-gradient(ellipse 90% 75% at 50% 30%,#2A2008 0%,#12100A 55%,#07070D 100%)' },
-      night: { label: 'Night · deep indigo', bg: 0x07070D, amb: 0x1E1B4B, ambI: 0.5, keyC: 0xF59E0B, keyI: 1.6, fillC: 0xFFD166, fillI: 0.6, neb: 0.8, part: 0.55, wrap: 'radial-gradient(ellipse 90% 75% at 50% 30%,#171006 0%,#0C0C12 55%,#050508 100%)' }
-    };
-    let timeMode = 'auto';
-    function autoTimeMode() { const h = new Date().getHours(); return (h >= 5 && h < 10) ? 'dawn' : (h >= 10 && h < 17) ? 'noon' : 'night'; }
-    function applyTimeMode(mode, saveIt) {
-      if (TIME_MODES[mode]) timeMode = mode; else timeMode = 'auto';
-      const m = TIME_MODES[timeMode === 'auto' ? autoTimeMode() : timeMode];
-      scene.background.setHex(m.bg);
-      if (scene.fog) scene.fog.color.setHex(m.bg);
-      ambient.color.setHex(m.amb); ambient.intensity = m.ambI;
-      key.color.setHex(m.keyC); key.intensity = m.keyI;
-      fill.color.setHex(m.fillC); fill.intensity = m.fillI;
-      nebulae.forEach(nb => { nb.material.opacity = nb.userData.o0 * m.neb; });
-      if (particleMat) particleMat.uniforms.uOpacity.value = m.part;
-      graphWrap.style.background = m.wrap;
-      const sel = document.getElementById('hgTime'); if (sel) sel.value = timeMode;
-      if (saveIt) { try { localStorage.setItem('soulTimeModeV1', timeMode); } catch (e) {} }
-      return m.label;
-    }
-    try { const stored = localStorage.getItem('soulTimeModeV1'); if (stored && (stored === 'auto' || TIME_MODES[stored])) timeMode = stored; } catch (e) {}
-    applyTimeMode(timeMode, false);
-    const hgTime = document.getElementById('hgTime');
-    if (hgTime) hgTime.addEventListener('change', () => applyTimeMode(hgTime.value, true));
-    // IDEA 19 — Cmd/Ctrl+K palette + bottom sheets (the sheet itself is
-    // the CSS media query in the head — #soul-info-panel becomes a bottom
-    // sheet under 820 px). The palette never hijacks typing: Cmd/Ctrl+K
-    // is ignored while focus is in any input, textarea, select, or
-    // contenteditable element (except the palette's own input, where it
-    // closes the palette).
-    const palWrap = document.createElement('div');
-    palWrap.id = 'hgPalette'; palWrap.style.display = 'none';
-    palWrap.innerHTML = '<div class="hg-pal-box" role="dialog" aria-label="Jump to a soul or view">' +
-      '<input id="hgPaletteInput" type="text" placeholder="Jump to a soul, layout, or view…" autocomplete="off" aria-label="Jump to a soul or view">' +
-      '<div id="hgPaletteList" role="listbox"></div>' +
-      '<div class="hg-pal-hint">↑↓ to move · Enter to jump · Esc to close · ⌘K / Ctrl+K to toggle</div></div>';
-    document.body.appendChild(palWrap);
-    const palInput = document.getElementById('hgPaletteInput');
-    const palList = document.getElementById('hgPaletteList');
-    let palEntries = [], palSel = 0;
-    function palAllEntries() {
-      const list = items.map((it, i) => ({ kind: 'soul', label: it.name || 'Soul', sub: (it.type || '') + ' · PLT ' + (it.plt || ''), idx: i }));
-      list.push(
-        { kind: 'action', label: 'Layout: Network', sub: 'Force-directed home view', run: () => setLayout('network') },
-        { kind: 'action', label: 'Layout: Spiral', sub: 'Golden-angle spiral', run: () => setLayout('spiral') },
-        { kind: 'action', label: 'Layout: Cluster', sub: 'One blob per category', run: () => setLayout('cluster') },
-        { kind: 'action', label: 'Layout: Planetary', sub: 'Orbit rings, highest-TV soul as the sun', run: () => setLayout('planetary') },
-        { kind: 'action', label: '✦ 222 Constellation', sub: 'Hero souls form a 222 — click a star to open it', run: () => setConstellation(!constActive) },
-        { kind: 'action', label: '⟲ Reset view', sub: 'Back to Network, camera home', run: () => { if (constActive) setConstellation(false); if (layoutName !== 'network') setLayout('network'); startDissolve(); clearFocus(); camera.position.set(0, 3.4, 8); controls.target.set(0, 1.6, 0); } },
-        { kind: 'action', label: '🌅 Time: Dawn · amber', sub: 'Time-of-day lighting', run: () => applyTimeMode('dawn', true) },
-        { kind: 'action', label: '☀️ Time: Noon · gold', sub: 'Time-of-day lighting', run: () => applyTimeMode('noon', true) },
-        { kind: 'action', label: '🌙 Time: Night · deep indigo', sub: 'Time-of-day lighting', run: () => applyTimeMode('night', true) },
-        { kind: 'action', label: '🕐 Time: Auto (follow local time)', sub: 'Time-of-day lighting', run: () => applyTimeMode('auto', true) }
-      );
-      return list;
-    }
-    function palRender(q) {
-      const query = (q || '').trim().toLowerCase();
-      palEntries = palAllEntries().filter(en => !query || en.label.toLowerCase().indexOf(query) >= 0 || (en.sub && en.sub.toLowerCase().indexOf(query) >= 0)).slice(0, 10);
-      palSel = 0;
-      palList.innerHTML = palEntries.length ? palEntries.map((en, i) =>
-        '<div class="hg-pal-item' + (i === palSel ? ' sel' : '') + '" data-i="' + i + '" role="option">' + escH2(en.label) + '<small>' + escH2(en.sub || '') + '</small></div>'
-      ).join('') : '<div class="hg-pal-item">No match — try a soul name, a layout, or a time.</div>';
-      palList.querySelectorAll('.hg-pal-item[data-i]').forEach(el => {
-        el.addEventListener('click', () => palActivate(+el.getAttribute('data-i')));
-        el.addEventListener('mousemove', () => palHighlight(+el.getAttribute('data-i')));
-      });
-    }
-    function palHighlight(i) {
-      palSel = i;
-      palList.querySelectorAll('.hg-pal-item').forEach((el, j) => el.classList.toggle('sel', j === i));
-    }
-    function palActivate(i) {
-      const en = palEntries[i]; if (!en) return;
-      closePalette();
-      if (en.kind === 'soul') {
-        graphWrap.scrollIntoView({ behavior: REDUCED ? 'auto' : 'smooth', block: 'start' });
-        openSoulPanel(en.idx);
-      } else if (en.run) en.run();
-    }
-    function openPalette() {
-      palWrap.style.display = 'flex';
-      palRender('');
-      palInput.value = '';
-      palInput.focus();
-      if (window.gsap) window.gsap.fromTo('.hg-pal-box', { y: -12, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, ease: 'power2.out' });
-    }
-    function closePalette() { palWrap.style.display = 'none'; }
-    palInput.addEventListener('input', () => palRender(palInput.value));
-    palInput.addEventListener('keydown', e => {
-      if (e.key === 'ArrowDown') { e.preventDefault(); if (palEntries.length) palHighlight(Math.min(palSel + 1, palEntries.length - 1)); }
-      else if (e.key === 'ArrowUp') { e.preventDefault(); if (palEntries.length) palHighlight(Math.max(palSel - 1, 0)); }
-      else if (e.key === 'Enter') { e.preventDefault(); palActivate(palSel); }
-      else if (e.key === 'Escape') { e.preventDefault(); closePalette(); }
-    });
-    palWrap.addEventListener('click', e => { if (e.target === palWrap) closePalette(); });
-    const hgPaletteBtn = document.getElementById('hgPaletteBtn');
-    if (hgPaletteBtn) hgPaletteBtn.addEventListener('click', () => openPalette());
-    document.addEventListener('keydown', e => {
-      const tgt = e.target;
-      const typing = tgt && (tgt.tagName === 'INPUT' || tgt.tagName === 'TEXTAREA' || tgt.tagName === 'SELECT' || tgt.isContentEditable);
-      if ((e.metaKey || e.ctrlKey) && (e.key === 'k' || e.key === 'K')) {
-        if (typing && tgt.id !== 'hgPaletteInput') return; // never hijack typing
-        e.preventDefault();
-        if (palWrap.style.display === 'none') openPalette(); else closePalette();
-        return;
-      }
-      if (e.key === 'Escape' && palWrap.style.display !== 'none') { closePalette(); clearThread(); }
-    });
-    // Wave 2h surface for overlays / debugging (read-only except the setters).
-    window.__soulGraph.setTimeMode = applyTimeMode;
-    window.__soulGraph.openPalette = openPalette;
-    window.__soulGraph.whisperFor = whisperFor;
-    window.__soulGraph.bondFor = bondFor;
-    window.__soulGraph.choreo = choreo;
+    window.__soulGraph = { scene, camera, renderer, root, items, nodeData };
 
     let emaDt = 16, slowFrames = 0, degraded = false, lastT = performance.now();
     function heartbeat(t, ph) {
@@ -3210,173 +1904,61 @@ render = function(data) {
     const sb = root.userData._sb;
     function animate() {
       requestAnimationFrame(animate); controls.update();
-      // WAVE 2h (idea 9) — Theatre camera sway: a small post-controls delta, so the choreography never fights OrbitControls.
-      if (choreo.camSway !== choreo.prevSway) { camera.position.x += choreo.camSway - choreo.prevSway; choreo.prevSway = choreo.camSway; }
       const nowMs = performance.now();
       emaDt = emaDt * 0.95 + (nowMs - lastT) * 0.05; lastT = nowMs;
-      if (!degraded && emaDt > 40) { if (++slowFrames > 120) { degraded = true; renderer.setPixelRatio(1); starFar.visible = false; Object.values(trailSys).forEach(sy => { sy.pts.visible = false; }); if (particleGeo) particleGeo.setDrawRange(0, Math.floor(particleCount * 0.25)); } } else if (emaDt <= 40) slowFrames = 0;
+      if (!degraded && emaDt > 40) { if (++slowFrames > 120) { degraded = true; renderer.setPixelRatio(1); starFar.visible = false; } } else if (emaDt <= 40) slowFrames = 0;
       const t = nowMs * 0.001;
-      // FIX #2 — pause freezes motion time (autoRotate off below); resume clears it
-      if (graphCtl.paused && !graphCtl.frozenT) graphCtl.frozenT = t;
-      if (!graphCtl.paused) graphCtl.frozenT = 0;
-      const TT = (REDUCED || graphCtl.paused) ? (graphCtl.frozenT || 0) : t;
-      // IDEA 16 (Stage 2.5) — dissolve/reform factor: 1 = fully formed,
-      // 0 = fully dissolved into points. Nodes fade out over the first 35%
-      // of the transition and fade back in over the rest; ~0.9 s on a view
-      // switch, 1.2 s for the theater open. Idle outside a transition.
-      let dissF = 1;
-      if (dissolveActive) {
-        const dp = (nowMs - dissolveStart) / dissolveDur;
-        if (dp >= 1) { dissF = 1; dissolveActive = false; dissolveStart = -1; }
-        else if (dp < 0.35) { const q = dp / 0.35; dissF = 1 - q * q * (3 - 2 * q); }
-        else { const q = (dp - 0.35) / 0.65; dissF = q * q * (3 - 2 * q); }
-      }
-      controls.autoRotate = !graphCtl.paused && !focusAnim && !constActive && !layoutMoving;
-      if (!REDUCED && !graphCtl.paused) { starNear.rotation.y += 0.00006; starFar.rotation.y -= 0.00004; }
+      const TT = REDUCED ? 0 : t;
+      starNear.rotation.y += REDUCED ? 0 : 0.00006;
+      starFar.rotation.y -= REDUCED ? 0 : 0.00004;
       controls.autoRotateSpeed = REDUCED ? 0.8 : 0.8 + Math.sin(t*0.3)*0.3;
-      // IDEA 13 — focus glide: ease the camera onto the focused node.
-      if (focusAnim) {
-        const fp = Math.min(1, (nowMs - focusAnim.start) / focusAnim.dur);
-        const fe = fp * fp * (3 - 2 * fp);
-        controls.target.lerpVectors(focusAnim.fromT, focusAnim.toT, fe);
-        camera.position.lerpVectors(focusAnim.fromP, focusAnim.toP, fe);
-        if (fp >= 1) { focusAnim = null; controls.enabled = true; }
-      }
-      // IDEA 28 — glide nodes between home and their 222 digit point.
-      if (constMoving) {
-        let settled = true;
-        nodeData.forEach(d => {
-          const tgt = constActive ? (d.constTarget || null) : (d.homePos || null);
-          if (!tgt || !d.pos) return;
-          const dx = tgt.x - d.pos.x, dy = tgt.y - d.pos.y, dz = tgt.z - d.pos.z;
-          const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
-          if (dist > 0.02) { settled = false; d.pos.x += dx * 0.08; d.pos.y += dy * 0.08; d.pos.z += dz * 0.08; }
-          else d.pos.copy(tgt);
-        });
-        if (settled) constMoving = false;
-      }
-      // IDEA 14 — glide nodes between layouts (same 0.08 ease as the 222 move).
-      if (layoutMoving) {
-        let settled = true;
-        nodeData.forEach(d => {
-          const tgt = d.layoutTarget || null;
-          if (!tgt || !d.pos) return;
-          const dx = tgt.x - d.pos.x, dy = tgt.y - d.pos.y, dz = tgt.z - d.pos.z;
-          const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
-          if (dist > 0.02) { settled = false; d.pos.x += dx * 0.08; d.pos.y += dy * 0.08; d.pos.z += dz * 0.08; }
-          else d.pos.copy(tgt);
-          // Instanced skill stars keep their own position clone — sync it.
-          if (d.type === 'instanced' && d.batch && d.batch.userData.instances[d.instanceIdx]) d.batch.userData.instances[d.instanceIdx].pos.copy(d.pos);
-          if (d.label) d.label.position.set(d.pos.x, d.pos.y + (d.labelYOff != null ? d.labelYOff : 0.85), d.pos.z);
-        });
-        if (settled) layoutMoving = false;
-      }
-      // IDEA 13 + 22 — zoom gates (camera distance to target; home ≈ 8.2).
-      // Non-top-24 labels fade in below 8, full by 6; gold threads + flow
-      // fade in below 7.5, full by 6. Zoomed out the view stays clean.
-      const camDist = camera.position.distanceTo(controls.target);
-      const focusActive = focusIdx >= 0;
-      const labelGate = Math.max(0, Math.min(1, (8 - camDist) / 2));
-      const threadFade = Math.max(0, Math.min(1, (7.5 - camDist) / 1.5));
-      const threadTarget = Math.min(0.45, (focusActive ? 0.03 : 0.16 * threadFade * (layoutName === 'network' ? 1 : 0)) + 0.3 * choreo.threadGlow); // IDEA 14 — baked threads only match the Network home; WAVE 2h (idea 9) — Theatre connect pulse
-      threadOpacity += (threadTarget - threadOpacity) * 0.12;
-      if (dnaLines) { dnaLines.material.opacity = threadOpacity; dnaLines.visible = threadOpacity > 0.01; }
-      const flowFade = focusActive ? 1 : threadFade;
-      if (pulsePts) { pulsePts.material.opacity = 0.8 * flowFade; pulsePts.visible = flowFade > 0.02 && pulsePairs.length > 0; }
-      nodeData.forEach(d => { if (d.mesh) {
-        let dimF = (focusActive && !focusSet.has(d.index)) ? 0.12 : 1; // IDEA 13 — dim outside the focus
-        if (constActive && !constSet.has(d.index)) dimF = Math.min(dimF, 0.08); // IDEA 28 — dim outside the 222
-        dimF *= dissF; // IDEA 16 — nodes fade with the dissolve (also gates trail spawning mid-dissolve)
-        const isSpr = !!d.mesh.isSprite;
+      nodeData.forEach(d => { if (d.mesh && d.mesh.isMesh) {
+        d.mesh.rotation.x = Math.sin(TT + d.index) * 0.05;
+        d.mesh.rotation.y = Math.cos(TT + d.index) * 0.05;
         const isHov = hoverRef.d && hoverRef.d.index === d.index;
         // Heartbeat lungs — lub-dub thump, phase-offset per node
-        const hb = REDUCED ? 0 : heartbeat(TT, d.phase || 0);
-        const br = 1 + 0.10 * hb + 0.12 * (choreo.breathe - 1); // WAVE 2h (idea 9) — Theatre breathing
-        // IDEA 12 morph-in: crossfade/scale in from the generic plush orb
-        // into the category plushie over the first ~0.9 s after build.
-        const morph = d.bornAt ? Math.min(1, (nowMs - d.bornAt) / 900) : 1;
-        const morphE = morph * morph * (3 - 2 * morph); // smoothstep
-        if (isSpr) {
-          // Plushie sprite: breathe by scale, bob gently; sprites face camera.
-          const s = 0.55 * d.baseScale * br * (0.6 + 0.4 * morphE) * (isHov ? 1.25 : 1) * dissF;
-          d.mesh.scale.set(s, s, 1);
-          d.mesh.material.opacity = 0.95 * morphE * dimF;
-          if (!REDUCED) d.mesh.position.set(d.pos.x, d.pos.y + 0.03 * Math.sin(TT * 1.4 + (d.phase || 0)), d.pos.z);
-          else d.mesh.position.copy(d.pos);
-        } else if (d.mesh.isMesh) {
-          d.mesh.rotation.x = Math.sin(TT + d.index) * 0.05;
-          d.mesh.rotation.y = Math.cos(TT + d.index) * 0.05;
-          d.mesh.scale.setScalar(d.baseScale * br * (isHov ? 1.25 : 1) * dissF);
-          // bio-swell: the body drifts outward along its radial axis with each beat
-          if (!REDUCED) {
-            const px = d.pos.x, py = d.pos.y, pz = d.pos.z;
-            const pl = Math.sqrt(px*px + py*py + pz*pz) || 1;
-            const sw = 1 + 0.05 * hb / pl;
-            d.mesh.position.set(px*sw, py*sw, pz*sw);
-          } else d.mesh.position.copy(d.pos);
-          // Proximity glow — brighter when camera is near (+hover bloom spike + heartbeat)
-          const dist = controls.target.distanceTo(d.pos || d.mesh.position);
-          const proximity = Math.max(0, 1 - (dist - 0.5) / 4);
-          d.mesh.material.emissiveIntensity = Math.min(1.5, 0.3 + proximity * 0.65 + (isHov ? 0.8 : 0) + 0.45 * hb);
-          d.mesh.material.opacity = (0.72 + proximity * 0.25) * dimF;
-        }
+        const hb = REDUCED ? 0 : heartbeat(TT, d.phase);
+        const br = 1 + 0.10 * hb;
+        d.mesh.scale.setScalar(d.baseScale * br * (isHov ? 1.25 : 1));
+        // bio-swell: the body drifts outward along its radial axis with each beat
+        if (!REDUCED) {
+          const px = d.pos.x, py = d.pos.y, pz = d.pos.z;
+          const pl = Math.sqrt(px*px + py*py + pz*pz) || 1;
+          const sw = 1 + 0.05 * hb / pl;
+          d.mesh.position.set(px*sw, py*sw, pz*sw);
+        } else d.mesh.position.copy(d.pos);
+        // Proximity glow — brighter when camera is near (+hover bloom spike + heartbeat)
+        const dist = controls.target.distanceTo(d.pos || d.mesh.position);
+        const proximity = Math.max(0, 1 - (dist - 0.5) / 4);
+        d.mesh.material.emissiveIntensity = Math.min(1.5, 0.3 + proximity * 0.65 + (isHov ? 0.8 : 0) + 0.45 * hb);
+        d.mesh.material.opacity = 0.72 + proximity * 0.25;
         // Slice 1: breathing PLT badges + distance-faded labels
           if (d.badge) {
-            d.badge.material.opacity = (0.8 + (REDUCED ? 0 : 0.15 * hb)) * dimF;
+            d.badge.material.opacity = 0.68 + (REDUCED ? 0 : 0.27 * hb);
             const bbs = d.badge.userData.bs || { x: 0.6, y: 0.16 };
             const bbr = 1 + (REDUCED ? 0 : 0.09 * hb);
             d.badge.scale.set(bbs.x*bbr, bbs.y*bbr, 1);
           }
         if (d.label) {
-          // IDEA 13 (Stage 2.2) — zoom-gated labels, top-N only: the top-24
-          // by True Value are always on; the rest fade in only when zoomed
-          // in (labelGate: 0 at distance 8, 1 at 6). Out-of-focus labels hide.
           const ld = camera.position.distanceTo(d.label.position);
-          d.label.material.opacity = Math.max(0.25, Math.min(0.9, 1.1 - ld / 18)) * (d.topLabel ? 1 : labelGate) * (focusActive && !focusSet.has(d.index) ? 0 : 1) * (constActive && !constSet.has(d.index) ? 0 : 1) * dissF;
-          // FIX #2 live repair — shrink labels when zoomed out (dense centre
-          // overlaps most at distance); full size once zoomed in (camDist <= 6).
-          const lsc = camDist >= 8 ? 0.78 : camDist <= 6 ? 1 : 0.78 + (8 - camDist) * 0.11;
-          const lbs = d.label.userData.bs || { x: 0.2, y: 0.025 };
-          d.label.scale.set(lbs.x * lsc, lbs.y * lsc, 1);
+          d.label.material.opacity = Math.max(0.08, Math.min(0.55, 0.75 - ld/18));
         }
           if (d.aura) {
-            d.aura.material.opacity = (0.28 + (REDUCED ? 0 : 0.2 * hb)) * dimF;
+            d.aura.material.opacity = 0.28 + (REDUCED ? 0 : 0.2 * hb);
             d.aura.scale.setScalar(1.15 + (REDUCED ? 0 : 0.2 * hb));
           }
         if (d.orbiters && !REDUCED) d.orbiters.forEach((o, oi) => {
           o.ang += 0.008 + oi*0.003;
           const ox = d.pos.x + Math.cos(o.ang)*o.r, oz = d.pos.z + Math.sin(o.ang)*o.r;
           const oy = d.pos.y + Math.sin(TT*2 + o.ang)*0.08;
-          if (o.sp) { o.sp.position.set(ox, oy, oz); o.sp.material.opacity = dimF < 1 ? 0.08 : 0.85; }
+          if (o.sp) o.sp.position.set(ox, oy, oz);
           if (o.mesh) { o.mesh.position.set(ox, oy, oz); o.mesh.rotation.y += 0.03; o.mesh.rotation.x += 0.02; }
         });
         if (d.halo && !REDUCED) d.halo.rotation.z += 0.004;
-        if (d.halo) d.halo.material.opacity = 0.5 * dimF;
         if (d.star) d.star.material.size = 0.04 + (REDUCED ? 0 : 0.02 * Math.sin(TT*2.4 + (d.phase||0)));
-        if (d.flare) d.flare.material.opacity = (0.55 + (REDUCED ? 0 : 0.3 * Math.sin(TT*2.4 + (d.phase||0)))) * dimF;
-        // IDEA 28 — in/after a constellation move, badges + labels + auras
-        // ride along with the node (their positions were baked at build).
-        if ((constActive || constMoving || layoutMoving || layoutName !== 'network') && d.pos) {
-          if (d.badge) d.badge.position.set(d.pos.x, d.pos.y + 0.58, d.pos.z);
-          if (d.label) d.label.position.set(d.pos.x, d.pos.y + (d.labelYOff != null ? d.labelYOff : 0.85), d.pos.z);
-          if (d.aura) d.aura.position.copy(d.pos);
-        }
-        // IDEAS 23–24 — shed one trail mote per interval while the node is
-        // visible and the graph is moving (heartbeat/bob counts as motion).
-        if (!REDUCED && !graphCtl.paused && !degraded && d.mesh.visible && dimF > 0.5) {
-          d.trailAcc = (d.trailAcc || Math.random() * 2) + emaDt / 1000;
-          if (d.trailAcc > 2.4) { d.trailAcc = 0; spawnTrail(d); }
-        }
-      } else if (d.label) {
-        // Instanced skill nodes have no mesh, so their labels skip the block
-        // above: dim them out of focus, restore them when focus clears.
-        d.label.material.opacity = constActive ? 0 : (focusActive ? (focusSet.has(d.index) ? 0.9 : 0) : 0.95) * dissF;
-        // FIX #2 live repair — same zoom-out shrink for instanced skill labels.
-        const lsc2 = camDist >= 8 ? 0.78 : camDist <= 6 ? 1 : 0.78 + (8 - camDist) * 0.11;
-        const lbs2 = d.label.userData.bs || { x: 0.2, y: 0.025 };
-        d.label.scale.set(lbs2.x * lsc2, lbs2.y * lsc2, 1);
+        if (d.flare) d.flare.material.opacity = 0.55 + (REDUCED ? 0 : 0.3 * Math.sin(TT*2.4 + (d.phase||0)));
       } });
-      if (pulsePts && pulsePts.visible && !REDUCED) {
+      if (pulsePts && !REDUCED) {
         const attr = pulseGeo.getAttribute('position');
         for (let pi = 0; pi < pulsePairs.length; pi++) {
           const f = (TT*0.12 + pulsePhases[pi]) % 1;
@@ -3389,13 +1971,11 @@ render = function(data) {
         const inst = sb.userData.instances;
         for (let si = 0; si < sb.count; si++) {
           const bp = inst[si].pos;
-          const s = (inst[si].s || 1) * (1 + 0.12 * Math.sin(TT*2.2 + si*0.5)) * dissF;
+          const s = 1 + 0.12 * Math.sin(TT*2.2 + si*0.5);
           _m4.makeTranslation(bp.x, bp.y, bp.z);
           _m4.scale(_sv.set(s, s, s));
           sb.setMatrixAt(si, _m4);
-          // IDEA 13 — instanced skill stars dim outside the focus too.
-          const sDim = ((constActive || (focusActive && !focusSet.has(inst[si].index))) ? 0.15 : 1) * dissF;
-          sb.setColorAt(si, _cc.setHSL(0.10 + 0.02*Math.sin(TT*2 + si*0.35), 0.75, 0.55).multiplyScalar(sDim));
+          sb.setColorAt(si, _cc.setHSL(0.72 + 0.06*Math.sin(TT*2 + si*0.35), 0.7, 0.55));
         }
         sb.instanceMatrix.needsUpdate = true;
         if (sb.instanceColor) sb.instanceColor.needsUpdate = true;
@@ -3409,10 +1989,6 @@ render = function(data) {
         }
         ma.needsUpdate = true;
       }
-      if (particleMat) particleMat.uniforms.uTime.value = TT; // IDEA 15 — GPU particle clock
-      // IDEA 6 — nebulae breathe almost imperceptibly (frozen when paused / reduced).
-      if (nebulae.length && !REDUCED && !graphCtl.paused) nebulae.forEach((nb, ni) => { nb.position.y = nb.userData.y0 + Math.sin(TT * 0.12 + ni * 2.1) * 0.25; nb.material.opacity = nb.userData.o0 * (0.9 + 0.1 * Math.sin(TT * 0.2 + ni * 1.3)); });
-      updateDissolvePts(emaDt / 1000); // IDEA 16 — advance + fade the dissolve burst
       for (let ri = ripples.length - 1; ri >= 0; ri--) {
         const rp = ripples[ri];
         const age = (nowMs - rp.born) / 1000;
@@ -3420,46 +1996,13 @@ render = function(data) {
         rp.mesh.scale.setScalar(1 + age*4);
         rp.mesh.material.opacity = 0.9 * (1 - age/0.9);
       }
-      if (brandSpr) { brandSpr.position.y = -2.4 + (REDUCED ? 0 : 0.06*Math.sin(TT*0.9)); brandSpr.material.opacity = 0.32 + (REDUCED ? 0 : 0.08*Math.sin(TT*1.3)); }
-      if (codeTorus && !REDUCED && !graphCtl.paused) codeTorus.rotation.z += 0.0012;
-      if (beacon && beacon.visible && !REDUCED && !graphCtl.paused) { beacon.material.opacity = 0.28 + 0.12*Math.sin(TT*3); beaconRing.rotation.z -= 0.01; }
-      // IDEAS 23–24 — advance + fade the shared trail systems (frozen when
-      // paused). Skill stars are instanced, so they get a 222 mote from a
-      // random skill instance every ~0.5 s instead of a per-node timer.
-      if (!graphCtl.paused && !REDUCED) {
-        if (sb && sb.count) {
-          skillTrailAcc += emaDt / 1000;
-          if (skillTrailAcc > 0.5) { skillTrailAcc = 0; const inst = sb.userData.instances[Math.floor(Math.random() * sb.count)]; if (inst) spawnTrail({ item: { type: 'skill' }, mesh: null, pos: inst.pos }); }
-        }
-        updateTrails(emaDt / 1000);
-      }
-      // WAVE 2h (idea 25) — keep the active thread highlight + bead glued to the live node positions while layouts glide.
-      if (threadActive && threadLine && threadLine.visible) { const tpa = threadPos(threadActive.a), tpb = threadPos(threadActive.b); if (tpa && tpb) { const lattr = threadLine.geometry.getAttribute('position'); lattr.setXYZ(0, tpa.x, tpa.y, tpa.z); lattr.setXYZ(1, tpb.x, tpb.y, tpb.z); lattr.needsUpdate = true; if (threadBead) threadBead.position.lerpVectors(tpa, tpb, threadActive.t || 0.5); } }
+      if (brandSpr) { brandSpr.position.y = 1.35 + (REDUCED ? 0 : 0.08*Math.sin(TT*0.9)); brandSpr.material.opacity = 0.85 + (REDUCED ? 0 : 0.15*Math.sin(TT*1.3)); }
+      if (codeTorus && !REDUCED) codeTorus.rotation.z += 0.0012;
+      if (beacon && beacon.visible && !REDUCED) { beacon.material.opacity = 0.28 + 0.12*Math.sin(TT*3); beaconRing.rotation.z -= 0.01; }
       renderer.render(scene, camera);
     }
-    // ─── IDEA 7 (Stage 2.7) — HOMEPAGE THEATER OPEN ───
-    // First load only: the hero opens like a theater — the nodes start
-    // dissolved into points and reform into the constellation over ~1.2 s,
-    // using the same dissolve language as idea 16 (2.5). Instant on repeat
-    // visits (sessionStorage flag, set before the transition starts);
-    // skipped entirely under prefers-reduced-motion; any click, scroll,
-    // touch, or key ends it at once. The graph is live underneath, so it
-    // never delays time-to-interactive.
-    let theaterOpen = false;
-    try {
-      if (!REDUCED && !sessionStorage.getItem('soulTheaterSeenV1')) {
-        sessionStorage.setItem('soulTheaterSeenV1', '1');
-        theaterOpen = true;
-        dissolveDur = 1200; dissolveStart = performance.now(); dissolveActive = true;
-        spawnDissolveBurst();
-      }
-    } catch (e) { /* storage unavailable — graph opens normally, no theater */ }
-    if (theaterOpen) {
-      const endTheater = () => { if (dissolveActive) endDissolve(); };
-      ['pointerdown', 'wheel', 'touchstart', 'keydown'].forEach(ev => window.addEventListener(ev, endTheater, { once: true, passive: true }));
-    }
     animate();
-    window.addEventListener('resize', () => { camera.aspect = gw() / gh(); camera.updateProjectionMatrix(); renderer.setSize(gw(), gh()); });
+    window.addEventListener('resize', () => { camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth, window.innerHeight); });
   } catch(e) { console.error('Soul Graph error:', e); const c = document.getElementById('bg-canvas'); if (c) c.style.display = 'none'; }
 })();
 
@@ -3557,11 +2100,11 @@ window.guideSendWithAdapter = async (q) => {
     function draw(){
       t+=0.003;
       ctx.clearRect(0,0,w,h);
-      // 3 aurora bands - Midnight Amber (Stage 1.2): amber + gold, ONE cyan band kept at low alpha, bands lowered so the top band clears the headline
+      // 3 aurora bands - indigo/violet/cyan
       const bands=[
-        {color:'245,158,11', alpha:0.10, y:0.5, amp:40, freq:0.008, speed:1},
-        {color:'0,212,255', alpha:0.06, y:0.65, amp:30, freq:0.012, speed:1.3},
-        {color:'251,191,36', alpha:0.10, y:0.85, amp:25, freq:0.015, speed:0.8}
+        {color:'139,92,246', y:0.35, amp:40, freq:0.008, speed:1},
+        {color:'0,212,255', y:0.55, amp:30, freq:0.012, speed:1.3},
+        {color:'168,85,247', y:0.75, amp:25, freq:0.015, speed:0.8}
       ];
       bands.forEach(b=>{
         ctx.beginPath();
@@ -3572,8 +2115,8 @@ window.guideSendWithAdapter = async (q) => {
         }
         ctx.lineTo(w, h); ctx.lineTo(0,h); ctx.closePath();
         const g=ctx.createLinearGradient(0,0,0,h);
-        g.addColorStop(0, 'rgba('+b.color+','+(b.alpha || 0.10)+')');
-        g.addColorStop(0.5, 'rgba('+b.color+','+((b.alpha || 0.10) * 0.4)+')');
+        g.addColorStop(0, 'rgba('+b.color+',0.18)');
+        g.addColorStop(0.5, 'rgba('+b.color+',0.08)');
         g.addColorStop(1, 'rgba('+b.color+',0)');
         ctx.fillStyle=g; ctx.fill();
       });
@@ -5429,8 +3972,8 @@ var css='#livingSanctuaries{padding:44px 28px 8px;max-width:1280px;margin:0 auto
 +'.shelf-card .sh-name{font-weight:700;font-size:1rem;text-transform:lowercase}'
 +'.shelf-card .sh-sub{font-size:0.72rem;color:var(--text-gray,#B8B8B8)}'
 +'.shelf-card .sh-mood{font-size:0.8rem;color:var(--text-gray,#B8B8B8);font-style:italic}'
-+'.shelf-card .sh-verified{font-size:0.65rem;color:#FFD166;border:1px solid rgba(245,158,11,0.5);border-radius:100px;padding:2px 8px;align-self:flex-start}'
-+'.shelf-card .sh-squad{font-size:0.72rem;color:#FFD166}'
++'.shelf-card .sh-verified{font-size:0.65rem;color:#00D4FF;border:1px solid rgba(0,212,255,0.5);border-radius:100px;padding:2px 8px;align-self:flex-start}'
++'.shelf-card .sh-squad{font-size:0.72rem;color:#00D4FF}'
 +'.shelf-card .sh-go{margin-top:auto;font-size:0.75rem;color:var(--purple,#8B5CF6);font-weight:600}'
 +'@media(max-width:640px){#livingSanctuaries{padding:32px 16px 4px}}';
 var style=document.createElement('style'); style.textContent=css; document.head.appendChild(style);
@@ -5539,7 +4082,7 @@ else wire();
 <script defer src="js/card-dna-strands.js"></script>
 <script defer src="js/social-sync.js"></script>
 <script defer src="js/shop.js"></script>
-<div id="soulverse-overlay" style="display:none;position:fixed;inset:0;z-index:5000;background:radial-gradient(circle at 50% 40%,rgb(20,10,40),rgb(5,5,10));overflow:hidden">
+<div id="soulverse-overlay" style="display:none;position:fixed;inset:0;z-index:5000;background:radial-gradient(circle at 50% 40%,rgba(20,10,40,.96),rgba(5,5,10,.98));overflow:hidden">
   <div style="position:absolute;top:0;left:0;right:0;display:flex;align-items:center;gap:12px;padding:14px 18px;z-index:5;pointer-events:none">
     <span style="font-weight:800;letter-spacing:.1em;color:#fff">🌌 MODEL UNIVERSE</span>
     <span id="soulverse-count" title="Reset all types" style="font-size:0.7rem;color:#8b8b98;font-family:ui-monospace,monospace"></span>
@@ -5602,224 +4145,6 @@ else wire();
       }, true);
     }
   } catch (e) { /* repair must never break the page */ }
-})();
-</script>
-<script id="soul-story-js">
-/* === WAVE 32 — IDEA 32: SOUL STORY SCROLL ===
-   One soul's arc (the Architect — beats are verbatim fragments of its own
-   catalog desc + PLT; see #soul-story) as a scroll-driven Theatre.js scene.
-   - SCRUBBED, never autoplayed: sheet "Story" (8 s) position = scroll
-     progress * 8. The scene never hijacks scroll — no scrollTo, no
-     preventDefault on wheel/touch; the CTA is the only scroll action and
-     it fires only on a tap, landing on the REAL buy button below.
-   - LAZY + CHEAP: three.js + Theatre load only when this section nears
-     the viewport (IntersectionObserver, 600px margin); the scene renders
-     on demand while scrolling only. +5 draw calls, DPR cap 2, procedural
-     canvas texture only (no image assets). Out of view: zero renders.
-   - REDUCED MOTION: no canvas, no Theatre — beats update as plain text.
-   - FAILURE: any WebGL/Theatre error leaves the readable text story over
-     the amber poster gradient — never a black canvas. A plain-JS
-     interpolator (STORY_KEYS, same keyframe times as theatre-state.json)
-     covers a Theatre failure. */
-(function () {
-  var section = document.getElementById('soul-story');
-  if (!section) return;
-  var REDUCED = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var beats = Array.prototype.slice.call(section.querySelectorAll('.story-beat'));
-  var fill = document.getElementById('story-progress-fill');
-  var N = beats.length; // 5 beats: 4 story + final buy beat
-  function progress() {
-    var r = section.getBoundingClientRect();
-    var total = r.height - window.innerHeight;
-    if (total <= 0) return 1;
-    return Math.max(0, Math.min(1, -r.top / total));
-  }
-  function showBeat(p) {
-    var idx = Math.min(N - 1, Math.floor(p * N));
-    for (var i = 0; i < N; i++) beats[i].classList.toggle('active', i === idx);
-    if (fill) fill.style.width = (p * 100).toFixed(1) + '%';
-  }
-  // Final beat CTA — lands the visitor on the REAL buy button that already
-  // exists below (id added to the existing Complete Library anchor; same
-  // label, price, and Stripe URL — no new link created). Gold pulse marks it.
-  var cta = section.querySelector('.story-cta');
-  if (cta) cta.addEventListener('click', function (e) {
-    var target = document.getElementById('buy-complete-library');
-    if (!target) return; // let the plain anchor jump happen
-    e.preventDefault();
-    try {
-      if (window.__lenis && window.__lenis.scrollTo) window.__lenis.scrollTo(target, { offset: -80 });
-      else target.scrollIntoView({ behavior: REDUCED ? 'auto' : 'smooth', block: 'center' });
-    } catch (err) { target.scrollIntoView({ block: 'center' }); }
-    target.style.transition = 'box-shadow 0.4s ease';
-    target.style.boxShadow = '0 0 0 3px #F59E0B, 0 0 40px rgba(245,158,11,0.8)';
-    setTimeout(function () { target.style.boxShadow = ''; }, 2400);
-  });
-  // Scroll driver (beats + progress work with no WebGL at all).
-  var story = { camOrbit: 0, camDolly: 0, orbBreathe: 1, threadGlow: 0 };
-  var STORY_KEYS = { // same keyframe times as assets/js/theatre-state.json "Story"
-    camOrbit: [[0, 0], [2, 0.4], [4, 0.8], [6, 1.1], [8, 1.35]],
-    camDolly: [[0, 0], [2, 0.35], [4, 0.7], [6, 0.9], [8, 1]],
-    orbBreathe: [[0, 1.0], [2, 1.12], [4, 1.0], [6, 1.18], [8, 1.25]],
-    threadGlow: [[0, 0], [2, 0.25], [4, 0.6], [6, 0.85], [8, 1]]
-  };
-  function lerpKeys(keys, t) {
-    if (t <= keys[0][0]) return keys[0][1];
-    for (var i = 1; i < keys.length; i++) {
-      if (t <= keys[i][0]) {
-        var q = (t - keys[i - 1][0]) / (keys[i][0] - keys[i - 1][0]);
-        q = q * q * (3 - 2 * q);
-        return keys[i - 1][1] + (keys[i][1] - keys[i - 1][1]) * q;
-      }
-    }
-    return keys[keys.length - 1][1];
-  }
-  var renderer = null, scene = null, camera = null, orb = null, glow = null, thread = null, ring = null;
-  var storySheet = null, storyObj = null, theatreReady = false, lastP = -1, ticking = false;
-  function resize() {
-    if (!renderer || !camera) return;
-    var sticky = section.querySelector('.story-sticky');
-    var w = sticky.clientWidth, h = sticky.clientHeight;
-    if (!w || !h) return;
-    renderer.setSize(w, h, false);
-    camera.aspect = w / h; camera.updateProjectionMatrix();
-  }
-  function applyStory(p) {
-    showBeat(p);
-    if (!renderer) return;
-    if (theatreReady && storySheet) {
-      try {
-        storySheet.sequence.position = p * 8; // scrub — never play()
-        var v = storyObj && storyObj.value;
-        if (v) { story.camOrbit = v.camOrbit; story.camDolly = v.camDolly; story.orbBreathe = v.orbBreathe; story.threadGlow = v.threadGlow; }
-      } catch (e) { theatreReady = false; }
-    }
-    if (!theatreReady) {
-      var t = p * 8;
-      story.camOrbit = lerpKeys(STORY_KEYS.camOrbit, t);
-      story.camDolly = lerpKeys(STORY_KEYS.camDolly, t);
-      story.orbBreathe = lerpKeys(STORY_KEYS.orbBreathe, t);
-      story.threadGlow = lerpKeys(STORY_KEYS.threadGlow, t);
-    }
-    var R = 6.4 - story.camDolly * 2.1;
-    var ang = -0.45 + story.camOrbit;
-    camera.position.set(Math.sin(ang) * R, 0.7 + story.camDolly * 0.5, Math.cos(ang) * R);
-    camera.lookAt(0, 0.35, 0);
-    var s = 2.4 * story.orbBreathe;
-    orb.scale.set(s, s, 1);
-    glow.scale.set(s * 2.1, s * 2.1, 1);
-    glow.material.opacity = 0.22 + 0.25 * story.threadGlow;
-    thread.material.opacity = 0.12 + 0.8 * story.threadGlow;
-    ring.material.opacity = 0.25 + 0.65 * story.threadGlow;
-    ring.rotation.z = story.camOrbit * 0.4;
-    renderer.render(scene, camera);
-  }
-  function onScroll() {
-    if (ticking) return; ticking = true;
-    requestAnimationFrame(function () {
-      ticking = false;
-      var p = progress();
-      if (p !== lastP) { lastP = p; applyStory(p); }
-      else showBeat(p);
-    });
-  }
-  window.addEventListener('scroll', onScroll, { passive: true });
-  window.addEventListener('resize', function () { resize(); lastP = -1; onScroll(); });
-  showBeat(progress());
-  if (REDUCED) return; // text-only story; beats still update on scroll
-  function wireStorySheet(Theatre, project) {
-    var sheet = project.sheet('Story');
-    storyObj = sheet.object('StoryChoreo', {
-      camOrbit: Theatre.types.number(0, { range: [-2, 2] }),
-      camDolly: Theatre.types.number(0, { range: [0, 1] }),
-      orbBreathe: Theatre.types.number(1, { range: [0.5, 2] }),
-      threadGlow: Theatre.types.number(0, { range: [0, 1] })
-    });
-    storyObj.onValuesChange(function (v) {
-      story.camOrbit = v.camOrbit; story.camDolly = v.camDolly;
-      story.orbBreathe = v.orbBreathe; story.threadGlow = v.threadGlow;
-    });
-    storySheet = sheet;
-  }
-  async function initTheatre() {
-    try {
-      var Theatre = (await import('./assets/js/vendor/theatre-core.mjs')).default;
-      var project = window.__soulTheatreProject; // hero choreo built it — reuse, never getProject twice
-      if (!project) {
-        var res = await fetch('assets/js/theatre-state.json', { cache: 'reload' });
-        if (!res.ok) throw new Error('theatre-state.json HTTP ' + res.status);
-        var stateDoc = await res.json();
-        project = Theatre.getProject('SoulEconomyHero', { state: stateDoc.theatre });
-      }
-      await project.ready;
-      wireStorySheet(Theatre, project);
-      return true;
-    } catch (e) { console.warn('Story scroll: Theatre skipped, JS fallback:', e); return false; }
-  }
-  async function initScene() {
-    try {
-      var T = await import('three');
-      var canvas = document.getElementById('story-canvas');
-      renderer = new T.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-      renderer.setClearColor(0x000000, 0);
-      scene = new T.Scene();
-      camera = new T.PerspectiveCamera(45, 1, 0.1, 100);
-      // Procedural amber plush orb — canvas texture only, no image assets.
-      var c = document.createElement('canvas'); c.width = c.height = 256;
-      var x = c.getContext('2d');
-      var g = x.createRadialGradient(128, 110, 10, 128, 128, 128);
-      g.addColorStop(0, '#FFE9B0'); g.addColorStop(0.45, '#FBBF24'); g.addColorStop(1, 'rgba(180,83,9,0)');
-      x.fillStyle = g; x.beginPath(); x.arc(128, 128, 128, 0, Math.PI * 2); x.fill();
-      x.strokeStyle = 'rgba(120,53,15,0.85)'; x.lineWidth = 5; x.setLineDash([14, 10]);
-      x.beginPath(); x.arc(128, 128, 96, 0, Math.PI * 2); x.stroke(); x.setLineDash([]);
-      x.fillStyle = 'rgba(60,20,0,0.9)';
-      x.beginPath(); x.arc(104, 116, 9, 0, Math.PI * 2); x.fill();
-      x.beginPath(); x.arc(152, 116, 9, 0, Math.PI * 2); x.fill();
-      x.strokeStyle = 'rgba(60,20,0,0.9)'; x.lineWidth = 5; x.lineCap = 'round';
-      x.beginPath(); x.arc(128, 138, 26, 0.15 * Math.PI, 0.85 * Math.PI); x.stroke();
-      var orbTex = new T.CanvasTexture(c);
-      orb = new T.Sprite(new T.SpriteMaterial({ map: orbTex, transparent: true, depthWrite: false }));
-      orb.scale.set(2.4, 2.4, 1); orb.position.set(0, 0.4, 0); scene.add(orb);
-      glow = new T.Sprite(new T.SpriteMaterial({ map: orbTex, transparent: true, opacity: 0.35, depthWrite: false, blending: T.AdditiveBlending, color: 0xF59E0B }));
-      glow.scale.set(5.2, 5.2, 1); glow.position.copy(orb.position); scene.add(glow);
-      var pts = [];
-      for (var i = 0; i <= 40; i++) { var a = Math.PI * (0.15 + 0.7 * (i / 40)); pts.push(new T.Vector3(Math.cos(a) * 3.4, Math.sin(a) * 2.2 - 0.6, -0.6)); }
-      thread = new T.Line(new T.BufferGeometry().setFromPoints(pts), new T.LineBasicMaterial({ color: 0xFFD166, transparent: true, opacity: 0 }));
-      scene.add(thread);
-      ring = new T.Mesh(new T.RingGeometry(1.75, 1.82, 64), new T.MeshBasicMaterial({ color: 0xFFD166, transparent: true, opacity: 0, side: T.DoubleSide }));
-      ring.position.copy(orb.position); scene.add(ring);
-      var coarse = window.matchMedia && matchMedia('(pointer:coarse)').matches;
-      var nStars = coarse ? 60 : 140;
-      var pos = new Float32Array(nStars * 3);
-      for (var sIdx = 0; sIdx < nStars; sIdx++) {
-        var th = Math.random() * Math.PI * 2, ph = Math.acos(2 * Math.random() - 1), rr = 3.2 + Math.random() * 2.4;
-        pos[sIdx * 3] = rr * Math.sin(ph) * Math.cos(th);
-        pos[sIdx * 3 + 1] = rr * Math.cos(ph) * 0.7;
-        pos[sIdx * 3 + 2] = rr * Math.sin(ph) * Math.sin(th) - 1;
-      }
-      var starGeo = new T.BufferGeometry();
-      starGeo.setAttribute('position', new T.BufferAttribute(pos, 3));
-      scene.add(new T.Points(starGeo, new T.PointsMaterial({ color: 0xFFD166, size: 0.06, transparent: true, opacity: 0.75, blending: T.AdditiveBlending, depthWrite: false })));
-      resize();
-      return true;
-    } catch (e) { console.warn('Story scroll: WebGL skipped, text-only:', e); return false; }
-  }
-  var started = false;
-  function start() {
-    if (started) return; started = true;
-    Promise.all([initScene(), initTheatre()]).then(function (res) {
-      theatreReady = !!res[1];
-      if (!res[0]) { section.classList.add('story-no-webgl'); return; }
-      lastP = -1; onScroll();
-    });
-  }
-  if ('IntersectionObserver' in window) {
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) { if (en.isIntersecting) { start(); lastP = -1; onScroll(); } });
-    }, { rootMargin: '600px 0px' });
-    io.observe(section);
-  } else { start(); }
 })();
 </script>
 </body>
