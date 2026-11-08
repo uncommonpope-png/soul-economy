@@ -1495,6 +1495,9 @@ render = function(data) {
       '<select id="hgFilter" title="Show one category, or all" aria-label="Filter graph by category">' +
       '<option value="all">All souls</option><option value="soul">Souls</option><option value="role">Roles</option><option value="skill">Skills</option><option value="chamber">Chambers</option><option value="pack">Packs</option><option value="world">Worlds</option><option value="agent">Agents</option><option value="book">Books</option><option value="combo">Combos</option><option value="infrastructure">Infrastructure</option>' +
       '</select>' +
+      '<select id="hgLayout" title="Rearrange the graph — Network, Spiral, Cluster, or Planetary orbits" aria-label="Graph layout">' +
+      '<option value="network">Network</option><option value="spiral">Spiral</option><option value="cluster">Cluster</option><option value="planetary">Planetary</option>' +
+      '</select>' +
       '<button type="button" id="hgZoomIn" title="Zoom in">\uff0b Zoom in</button>' +
       '<button type="button" id="hgZoomOut" title="Zoom out">\uff0d Zoom out</button>' +
       '<button type="button" id="hgReset" title="Reset the camera">\u27f2 Reset view</button>' +
@@ -1954,6 +1957,132 @@ render = function(data) {
     const motes = new Points(moteGeo, new PointsMaterial({ color: 0xFFD166, size: 0.028, transparent: true, opacity: 0.28, blending: AdditiveBlending, depthWrite: false }));
     motes.frustumCulled = false;
     scene.add(motes);
+    // ─── IDEA 15 (Stage 2.4) — COMPUTE-SHADER PARTICLES (500k) + GPGPU BOIDS FALLBACK ───
+    // Dense ambient particle field for the hero graph / dark universe. ONE
+    // THREE.Points draw call; positions live in a GPU buffer and the motion
+    // is computed on the GPU every frame (vertex shader: slow orbital curl +
+    // vertical bob + twinkle — boids-flavoured flow, zero CPU updates per
+    // frame, zero readback). Adaptive counts: 500,000 desktop, 60,000 on
+    // LITE (coarse pointer + small screen); the slow-frame degrader cuts the
+    // draw range to 25% (see the animate loop). DPR already capped at 2.
+    // WEBGPU DETECT FIRST (idea 20 — WebGPU-only is fragile): if an adapter
+    // exists, a real WGSL compute shader re-seeds the field distribution on
+    // the GPU (webgpuSeedParticles below, read back ONCE at init). Per-frame
+    // motion stays in the vertex shader — a per-frame WebGPU compute loop
+    // would need a WebGPU renderer for the whole graph, out of scope for
+    // this wave. Any WebGPU failure (no navigator.gpu, no adapter, device /
+    // pipeline error, 1.5 s timeout) silently keeps the CPU seeds: the field
+    // never depends on WebGPU to appear, and if the whole field build throws,
+    // the existing static star shells + graph remain (never a black canvas).
+    const PARTICLE_DESKTOP = 500000, PARTICLE_LITE = 60000;
+    const particleCount = LITE ? PARTICLE_LITE : PARTICLE_DESKTOP;
+    let particlePts = null, particleMat = null, particleGeo = null;
+    function particleSeeds(n) {
+      // CPU seed: uniform in a wide box around the graph (z biased behind
+      // the nodes so the dust reads as depth, not foreground fog).
+      // [x, y, z, w] per particle: w = colour pick; x/y/z also feed phase.
+      const arr = new Float32Array(n * 4);
+      for (let i = 0; i < n; i++) {
+        arr[i * 4] = (Math.random() - 0.5) * 28;
+        arr[i * 4 + 1] = -4 + Math.random() * 11;
+        arr[i * 4 + 2] = -13 + Math.random() * 17;
+        arr[i * 4 + 3] = Math.random();
+      }
+      return arr;
+    }
+    try {
+      const pSeeds = particleSeeds(particleCount);
+      const pPos = new Float32Array(particleCount * 3);
+      for (let i = 0; i < particleCount; i++) { pPos[i * 3] = pSeeds[i * 4]; pPos[i * 3 + 1] = pSeeds[i * 4 + 1]; pPos[i * 3 + 2] = pSeeds[i * 4 + 2]; }
+      particleGeo = new BufferGeometry();
+      particleGeo.setAttribute('position', new Float32BufferAttribute(pPos, 3));
+      particleGeo.setAttribute('aSeed', new Float32BufferAttribute(pSeeds, 4));
+      particleMat = new T.ShaderMaterial({
+        uniforms: { uTime: { value: 0 }, uOpacity: { value: 0.55 } },
+        vertexShader: [
+          'uniform float uTime;',
+          'attribute vec4 aSeed;',
+          'varying float vTw;',
+          'varying vec3 vCol;',
+          'void main() {',
+          '  vec3 p = position;',
+          '  float sp = 0.02 + aSeed.y * 0.05;',
+          '  float a = uTime * sp + aSeed.x * 6.2831;',
+          '  float c = cos(a * 0.35), s = sin(a * 0.35);',
+          '  p.xz = mat2(c, -s, s, c) * p.xz;',
+          '  p.y += sin(uTime * (0.25 + aSeed.y * 0.5) + aSeed.x * 6.2831) * 0.35;',
+          '  vec4 mv = modelViewMatrix * vec4(p, 1.0);',
+          '  vTw = 0.55 + 0.45 * sin(uTime * (0.6 + aSeed.y * 1.8) + aSeed.x * 40.0);',
+          '  vec3 col = mix(vec3(1.0, 0.62, 0.04), vec3(1.0, 0.82, 0.40), fract(aSeed.x * 7.0));',
+          '  if (aSeed.w > 0.92) col = vec3(1.0, 0.55, 0.65);',
+          '  vCol = col;',
+          '  float sz = (1.2 + aSeed.z * 2.2) * (140.0 / max(1.0, -mv.z));',
+          '  gl_PointSize = clamp(sz, 1.0, 4.0);',
+          '  gl_Position = projectionMatrix * mv;',
+          '}'
+        ].join('\n'),
+        fragmentShader: [
+          'uniform float uOpacity;',
+          'varying float vTw;',
+          'varying vec3 vCol;',
+          'void main() {',
+          '  vec2 uv = gl_PointCoord - 0.5;',
+          '  float d = length(uv);',
+          '  if (d > 0.5) discard;',
+          '  float a = smoothstep(0.5, 0.05, d) * vTw * uOpacity;',
+          '  gl_FragColor = vec4(vCol, a);',
+          '}'
+        ].join('\n'),
+        transparent: true, blending: AdditiveBlending, depthWrite: false
+      });
+      particlePts = new Points(particleGeo, particleMat);
+      particlePts.frustumCulled = false;
+      scene.add(particlePts);
+    } catch (e) { console.warn('Ambient particle field skipped:', e); particlePts = null; particleMat = null; particleGeo = null; }
+    // WebGPU compute seed (init only — see the IDEA 15 header above).
+    (async function webgpuSeedParticles() {
+      try {
+        if (!navigator.gpu || !particleGeo) return;
+        const adapter = await Promise.race([
+          navigator.gpu.requestAdapter(),
+          new Promise(r => setTimeout(() => r(null), 1500))
+        ]);
+        if (!adapter) return;
+        const device = await adapter.requestDevice();
+        const N = Math.min(particleCount, 65536);
+        const wgsl = [
+          '@group(0) @binding(0) var<storage, read_write> outPos : array<vec4<f32>>;',
+          '@compute @workgroup_size(64)',
+          'fn main(@builtin(global_invocation_id) gid : vec3<u32>) {',
+          '  let i = gid.x;',
+          '  if (i >= ' + N + 'u) { return; }',
+          '  let f = f32(i) * 0.0129898;',
+          '  let h1 = fract(sin(f) * 43758.5453);',
+          '  let h2 = fract(sin(f * 1.7 + 19.19) * 24634.6345);',
+          '  let h3 = fract(sin(f * 2.3 + 7.77) * 12494.2345);',
+          '  outPos[i] = vec4((h1 - 0.5) * 28.0, -4.0 + h2 * 11.0, -13.0 + h3 * 17.0, 0.0);',
+          '}'
+        ].join('\n');
+        const module = device.createShaderModule({ code: wgsl });
+        const buf = device.createBuffer({ size: N * 16, usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_SRC });
+        const staging = device.createBuffer({ size: N * 16, usage: GPUBufferUsage.MAP_READ | GPUBufferUsage.COPY_DST });
+        const pipeline = device.createComputePipeline({ layout: 'auto', compute: { module, entryPoint: 'main' } });
+        const bind = device.createBindGroup({ layout: pipeline.getBindGroupLayout(0), entries: [{ binding: 0, resource: { buffer: buf } }] });
+        const enc = device.createCommandEncoder();
+        const pass = enc.beginComputePass();
+        pass.setPipeline(pipeline); pass.setBindGroup(0, bind);
+        pass.dispatchWorkgroups(Math.ceil(N / 64)); pass.end();
+        enc.copyBufferToBuffer(buf, 0, staging, 0, N * 16);
+        device.queue.submit([enc.finish()]);
+        await staging.mapAsync(GPUMapMode.READ);
+        const data = new Float32Array(staging.getMappedRange().slice(0));
+        staging.unmap();
+        const attr = particleGeo.getAttribute('position');
+        for (let i = 0; i < N; i++) attr.setXYZ(i, data[i * 4], data[i * 4 + 1], data[i * 4 + 2]);
+        attr.needsUpdate = true;
+      } catch (e) { /* WebGPU unavailable — CPU seeds stand; field already visible */ }
+    })();
+
 
     // ─── IDEAS 23 + 24 — HEART-DUST + MIXED TRAILS ───
     // When a plushie node moves (heartbeat/bob + focus glide) it sheds a tiny
@@ -2185,6 +2314,8 @@ render = function(data) {
       if (on) {
         clearFocus();
         if (hgFilter) { hgFilter.value = 'all'; applyGraphFilter('all'); }
+        // IDEA 14 — the constellation owns d.pos too; drop back to Network first.
+        if (typeof layoutName !== 'undefined' && layoutName !== 'network') { layoutName = 'network'; const _ls = document.getElementById('hgLayout'); if (_ls) _ls.value = 'network'; }
         const cmap = constTargets();
         constSet.clear(); cmap.forEach((v, k) => constSet.add(k));
         nodeData.forEach(d => { if (!d.homePos) d.homePos = d.pos.clone(); d.constTarget = cmap.has(d.index) ? cmap.get(d.index) : null; });
@@ -2198,6 +2329,96 @@ render = function(data) {
       }
       constMoving = true;
     }
+    // ─── IDEA 14 (Stage 2.3) — LAYOUT SWITCHER: Network / Spiral / Cluster / Planetary ───
+    // The switcher lives in the control bar (#hgLayout). Every layout is a set
+    // of target positions; nodes GLIDE to them (0.08 ease per frame, same feel
+    // as the 222 move) — never a snap. Works with the existing systems because
+    // it only moves d.pos, which everything else already reads live:
+    // getNearestNode (click-to-open), focusNode (max 25), pulse flow pairs
+    // (live V3 refs), trails (spawn from mesh.position), labels/badges/auras
+    // (ride along while a layout is active — see the animate loop). The baked
+    // DNA threads are force-directed-home geometry, so they fade out whenever
+    // the layout is not Network (see threadTarget below). Reset returns to
+    // Network. Constellation and layouts both own d.pos, so each one clears
+    // the other first — never both at once.
+    function hash01(n) { const s = Math.sin(n * 127.1 + 311.7) * 43758.5453; return s - Math.floor(s); }
+    let layoutName = 'network', layoutMoving = false;
+    // Eager network home for every node (the constellation only sets homePos
+    // lazily; capturing here means a layout switch after a constellation
+    // still returns to the true force-directed home).
+    nodeData.forEach(d => { if (d.pos && !d.homePos) d.homePos = d.pos.clone(); });
+    function layoutTargetsFor(name) {
+      const targets = new Map();
+      if (name === 'network') {
+        nodeData.forEach(d => { if (d.homePos) targets.set(d.index, d.homePos.clone()); });
+        return targets;
+      }
+      if (name === 'spiral') {
+        // Golden-angle spiral in the XZ plane, gently wavy in Y.
+        // 251 nodes -> radius <= ~5.4, fits the home camera framing.
+        const sorted = nodeData.slice().sort((a, b) => a.index - b.index);
+        sorted.forEach((d, i) => {
+          const a = i * 2.399963; // golden angle
+          const r = 0.34 * Math.sqrt(i + 1);
+          targets.set(d.index, new V3(Math.cos(a) * r, 1.6 + 1.15 * Math.sin(i * 0.21), Math.sin(a) * r));
+        });
+        return targets;
+      }
+      if (name === 'cluster') {
+        // One blob per category on a ring; deterministic sunflower packing
+        // inside each blob (hash01 jitter, so the layout is stable per switch).
+        const byCat = {};
+        nodeData.forEach(d => { const c = (d.item && d.item.type) || 'soul'; (byCat[c] = byCat[c] || []).push(d); });
+        catOrder.forEach((cat, ci) => {
+          const list = byCat[cat] || [];
+          const a0 = (ci / catOrder.length) * Math.PI * 2;
+          const cx = Math.cos(a0) * 4.0, cz = Math.sin(a0) * 4.0;
+          const cy = 1.6 + ((ci % 3) - 1) * 0.85;
+          const R = 0.45 + 0.09 * Math.sqrt(list.length);
+          list.forEach((d, j) => {
+            const a = j * 2.399963 + ci * 1.7;
+            const r = R * Math.sqrt((j + 0.5) / list.length);
+            targets.set(d.index, new V3(cx + Math.cos(a) * r, cy + (hash01(d.index * 3 + 1) - 0.5) * 0.7, cz + Math.sin(a) * r));
+          });
+        });
+        return targets;
+      }
+      // planetary: one orbit ring per category around the centre; the single
+      // highest-True-Value sprite node is the sun at the centre.
+      const sun = nodeData.filter(d => d.mesh && d.mesh.isSprite).slice().sort((a, b) => tvOf(b.item) - tvOf(a.item))[0];
+      const byCat2 = {};
+      nodeData.forEach(d => { if (sun && d.index === sun.index) return; const c = (d.item && d.item.type) || 'soul'; (byCat2[c] = byCat2[c] || []).push(d); });
+      if (sun) targets.set(sun.index, new V3(0, 1.6, 0));
+      catOrder.forEach((cat, ci) => {
+        const list = byCat2[cat] || [];
+        const R = 1.15 + ci * 0.52;
+        list.forEach((d, j) => {
+          const a = (j / Math.max(1, list.length)) * Math.PI * 2 + ci * 0.6;
+          targets.set(d.index, new V3(Math.cos(a) * R, 1.6 + 0.3 * Math.sin(a * 2 + ci), Math.sin(a) * R));
+        });
+      });
+      return targets;
+    }
+    function setLayout(name) {
+      const ok = ['network', 'spiral', 'cluster', 'planetary'];
+      if (ok.indexOf(name) < 0) name = 'network';
+      const wasConst = constActive;
+      if (constActive) {
+        constActive = false; constMoving = false; constSet.clear();
+        nodeData.forEach(d => { d.constTarget = null; });
+        const _cb = document.getElementById('hgConst'); if (_cb) _cb.textContent = '\u2726 222 Constellation';
+      }
+      if (name === layoutName && !layoutMoving && !wasConst) return;
+      clearFocus(); // a focused node's camera target would go stale mid-glide
+      layoutName = name;
+      const sel = document.getElementById('hgLayout'); if (sel) sel.value = name;
+      const cmap = layoutTargetsFor(name);
+      nodeData.forEach(d => { if (!d.homePos && d.pos) d.homePos = d.pos.clone(); d.layoutTarget = cmap.has(d.index) ? cmap.get(d.index) : null; });
+      layoutMoving = true;
+    }
+    const hgLayout = document.getElementById('hgLayout');
+    if (hgLayout) hgLayout.addEventListener('change', () => setLayout(hgLayout.value));
+
     try {
       const radialCv = document.createElement('canvas'); radialCv.width = radialCv.height = 128;
       const rcx = radialCv.getContext('2d');
@@ -2384,7 +2605,7 @@ render = function(data) {
     // IDEA 13 — Esc clears a focus (and the panel) too.
     document.addEventListener('keydown', e => { if (e.key === 'Escape' && focusIdx >= 0) { clearFocus(); pan.classList.remove('active'); kgHideBeacon(); } });
     // Graph internals exposed for read-only overlays (fog / FXAA / bloom / matrix floor)
-    window.__soulGraph = { scene, camera, renderer, root, items, nodeData };
+    window.__soulGraph = { scene, camera, renderer, root, items, nodeData, setLayout };
     // FIX #2 — wire the control bar (legend is static HTML above; these need camera/controls/nodeData)
     function applyGraphFilter(cat) {
       graphCtl.filter = cat;
@@ -2420,7 +2641,7 @@ render = function(data) {
     const hgZo = document.getElementById('hgZoomOut');
     if (hgZo) hgZo.addEventListener('click', () => hgDolly(1.25));
     const hgRs = document.getElementById('hgReset');
-    if (hgRs) hgRs.addEventListener('click', () => { if (constActive) setConstellation(false); clearFocus(); camera.position.set(0, 3.4, 8); controls.target.set(0, 1.6, 0); applyGraphFilter('all'); if (hgFilter) hgFilter.value = 'all'; });
+    if (hgRs) hgRs.addEventListener('click', () => { if (constActive) setConstellation(false); if (layoutName !== 'network') setLayout('network'); clearFocus(); camera.position.set(0, 3.4, 8); controls.target.set(0, 1.6, 0); applyGraphFilter('all'); if (hgFilter) hgFilter.value = 'all'; });
     // IDEA 28 — toggle between the normal graph and the 222 constellation.
     const hgConst = document.getElementById('hgConst');
     if (hgConst) hgConst.addEventListener('click', () => setConstellation(!constActive));
@@ -2438,13 +2659,13 @@ render = function(data) {
       requestAnimationFrame(animate); controls.update();
       const nowMs = performance.now();
       emaDt = emaDt * 0.95 + (nowMs - lastT) * 0.05; lastT = nowMs;
-      if (!degraded && emaDt > 40) { if (++slowFrames > 120) { degraded = true; renderer.setPixelRatio(1); starFar.visible = false; Object.values(trailSys).forEach(sy => { sy.pts.visible = false; }); } } else if (emaDt <= 40) slowFrames = 0;
+      if (!degraded && emaDt > 40) { if (++slowFrames > 120) { degraded = true; renderer.setPixelRatio(1); starFar.visible = false; Object.values(trailSys).forEach(sy => { sy.pts.visible = false; }); if (particleGeo) particleGeo.setDrawRange(0, Math.floor(particleCount * 0.25)); } } else if (emaDt <= 40) slowFrames = 0;
       const t = nowMs * 0.001;
       // FIX #2 — pause freezes motion time (autoRotate off below); resume clears it
       if (graphCtl.paused && !graphCtl.frozenT) graphCtl.frozenT = t;
       if (!graphCtl.paused) graphCtl.frozenT = 0;
       const TT = (REDUCED || graphCtl.paused) ? (graphCtl.frozenT || 0) : t;
-      controls.autoRotate = !graphCtl.paused && !focusAnim && !constActive;
+      controls.autoRotate = !graphCtl.paused && !focusAnim && !constActive && !layoutMoving;
       if (!REDUCED && !graphCtl.paused) { starNear.rotation.y += 0.00006; starFar.rotation.y -= 0.00004; }
       controls.autoRotateSpeed = REDUCED ? 0.8 : 0.8 + Math.sin(t*0.3)*0.3;
       // IDEA 13 — focus glide: ease the camera onto the focused node.
@@ -2468,6 +2689,22 @@ render = function(data) {
         });
         if (settled) constMoving = false;
       }
+      // IDEA 14 — glide nodes between layouts (same 0.08 ease as the 222 move).
+      if (layoutMoving) {
+        let settled = true;
+        nodeData.forEach(d => {
+          const tgt = d.layoutTarget || null;
+          if (!tgt || !d.pos) return;
+          const dx = tgt.x - d.pos.x, dy = tgt.y - d.pos.y, dz = tgt.z - d.pos.z;
+          const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
+          if (dist > 0.02) { settled = false; d.pos.x += dx * 0.08; d.pos.y += dy * 0.08; d.pos.z += dz * 0.08; }
+          else d.pos.copy(tgt);
+          // Instanced skill stars keep their own position clone — sync it.
+          if (d.type === 'instanced' && d.batch && d.batch.userData.instances[d.instanceIdx]) d.batch.userData.instances[d.instanceIdx].pos.copy(d.pos);
+          if (d.label) d.label.position.set(d.pos.x, d.pos.y + (d.labelYOff != null ? d.labelYOff : 0.85), d.pos.z);
+        });
+        if (settled) layoutMoving = false;
+      }
       // IDEA 13 + 22 — zoom gates (camera distance to target; home ≈ 8.2).
       // Non-top-24 labels fade in below 8, full by 6; gold threads + flow
       // fade in below 7.5, full by 6. Zoomed out the view stays clean.
@@ -2475,7 +2712,7 @@ render = function(data) {
       const focusActive = focusIdx >= 0;
       const labelGate = Math.max(0, Math.min(1, (8 - camDist) / 2));
       const threadFade = Math.max(0, Math.min(1, (7.5 - camDist) / 1.5));
-      const threadTarget = focusActive ? 0.03 : 0.16 * threadFade;
+      const threadTarget = focusActive ? 0.03 : 0.16 * threadFade * (layoutName === 'network' ? 1 : 0); // IDEA 14 — baked threads only match the Network home
       threadOpacity += (threadTarget - threadOpacity) * 0.12;
       if (dnaLines) { dnaLines.material.opacity = threadOpacity; dnaLines.visible = threadOpacity > 0.01; }
       const flowFade = focusActive ? 1 : threadFade;
@@ -2552,7 +2789,7 @@ render = function(data) {
         if (d.flare) d.flare.material.opacity = (0.55 + (REDUCED ? 0 : 0.3 * Math.sin(TT*2.4 + (d.phase||0)))) * dimF;
         // IDEA 28 — in/after a constellation move, badges + labels + auras
         // ride along with the node (their positions were baked at build).
-        if ((constActive || constMoving) && d.pos) {
+        if ((constActive || constMoving || layoutMoving || layoutName !== 'network') && d.pos) {
           if (d.badge) d.badge.position.set(d.pos.x, d.pos.y + 0.58, d.pos.z);
           if (d.label) d.label.position.set(d.pos.x, d.pos.y + (d.labelYOff != null ? d.labelYOff : 0.85), d.pos.z);
           if (d.aura) d.aura.position.copy(d.pos);
@@ -2605,6 +2842,7 @@ render = function(data) {
         }
         ma.needsUpdate = true;
       }
+      if (particleMat) particleMat.uniforms.uTime.value = TT; // IDEA 15 — GPU particle clock
       for (let ri = ripples.length - 1; ri >= 0; ri--) {
         const rp = ripples[ri];
         const age = (nowMs - rp.born) / 1000;
