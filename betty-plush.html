@@ -212,7 +212,6 @@ body{font-size:17px}
 <div class="betty-section-box" id="bettyPreorder">
 <h2>Preorder — launch is March 25, 2027</h2>
 <p><strong>Launch date: March 25, 2027.</strong> Preordered souls ship in order at launch.</p>
-<p>Launch is March 25, 2027. No pieces exist yet — each one is made to order once a sample is approved and a maker quote is in writing, so we can't promise an exact ship date until launch. If the collection is ever cancelled and your piece never ships, you get your preorder money back in full.</p>
 <p>Pick a soul and a piece below. Before any buy completes, a window will pop up with the preorder details — tap to accept to continue.</p>
 <p class="betty-draft-note">Live checkout: the buttons below open the disclaimer window. After you tap "I understand — continue", you go to secure Stripe checkout for that exact piece and price. Prefer to reserve without paying now? Use the waitlist form below.</p>
 <div class="betty-preorder-list">
@@ -578,7 +577,7 @@ function bettyStageInit(){
 <aside id="bettyCartDrawer" class="betty-cart-drawer" aria-label="Preorder cart">
 <button type="button" class="betty-fund-btn" onclick="bettyCartClose()">✕ Close cart</button>
 <h2>🛒 Preorder cart</h2>
-<p><strong>None made yet</strong> — every piece in this cart is made to order after a sample is approved and a maker quote is in writing. Launch is <strong>March 25, 2027</strong>. No exact ship date is promised until launch. If the collection is cancelled and your piece never ships, you get your preorder money back in full.</p>
+<p style="font-size:0.9rem">Preorder — ships after March 25, 2027. Full refund if your piece never ships.</p>
 <div id="bettyCartLines"></div>
 <p id="bettyCartSubtotal"></p>
 <div id="bettyCartCheckout"></div>
@@ -589,7 +588,7 @@ function bettyStageInit(){
 <div class="betty-modal-box">
 <h3 id="bettyPreorderModalTitle">Preorder — please read first</h3>
 <p id="bettyPreorderModalItem"></p>
-<p>Preorder — launch is March 25, 2027. Your piece is made to order after a sample is approved and a maker quote is in writing, so we can't promise an exact ship date until launch. If the collection is cancelled and your piece never ships, you get your preorder money back in full.</p>
+<p style="font-size:0.9rem">Preorder — ships after March 25, 2027. Full refund if your piece never ships.</p>
 <div id="bettyPreorderModalStep"></div>
 <p><button class="betty-fund-btn" type="button" onclick="bettyPreorderAccept()">I understand — continue</button> <button class="betty-fund-btn" type="button" onclick="bettyPreorderClose()">Cancel</button></p>
 </div>
@@ -622,14 +621,14 @@ if(!bettyCart.length){linesEl.innerHTML='<p>Your cart is empty. Tap “Add to ca
 var linesHtml='';for(var i=0;i<bettyCart.length;i++){var l=bettyCart[i];linesHtml+='<div class="betty-cart-line"><b>'+bettyEsc(l.soul)+'</b><br>'+bettyEsc(l.brand)+' — '+bettyEsc(l.plain)+' — $'+l.price.toLocaleString('en-US')+' each<br><span class="betty-cart-qty"><button type="button" onclick="bettyCartQty(\''+bettyEsc(l.id).replace(/'/g,"\\'")+'\',-1)">−</button> '+l.qty+' <button type="button" onclick="bettyCartQty(\''+bettyEsc(l.id).replace(/'/g,"\\'")+'\',1)">+</button></span> <button type="button" class="betty-add-btn" onclick="bettyCartRemove(\''+bettyEsc(l.id).replace(/'/g,"\\'")+'\')">Remove</button><br>Line total: $'+(l.price*l.qty).toLocaleString('en-US')+'</div>';}
 linesEl.innerHTML=linesHtml;
 subEl.innerHTML='<strong>Cart subtotal: $'+bettyCartTotal().toLocaleString('en-US')+' ('+bettyCartCount()+' item'+(bettyCartCount()===1?'':'s')+').</strong> This subtotal is a preorder total only — it is NOT charged as one payment (see the checkout note below).';
-if(!bettyCartAccepted){coEl.innerHTML='<p><strong>Preorder disclaimer — read first:</strong> Preorder — launch is March 25, 2027. We can\'t promise an exact ship date until launch. Your piece is made to order after a sample is approved and a maker quote is in writing. No exact ship date is promised until launch. If the collection is cancelled and your piece never ships, you get your preorder money back in full. None made yet.</p><p><button type="button" class="betty-fund-btn" onclick="bettyCartAccept()">I understand — show checkout</button></p>';return;}
+if(!bettyCartAccepted){coEl.innerHTML='<p style="font-size:0.9rem"><strong>Preorder disclaimer — read first:</strong> Preorder — ships after March 25, 2027. Full refund if your piece never ships.</p><p><button type="button" class="betty-fund-btn" onclick="bettyCartAccept()">I understand — show checkout</button></p>';return;}
 var byPrice={};var order=[];var noLink=[];
 for(var j=0;j<bettyCart.length;j++){var li=bettyCart[j];var url=bettyStripeLinks[li.price];if(!url){noLink.push(li);continue;}if(!byPrice[li.price]){byPrice[li.price]={url:url,label:li.brand+' — '+li.plain,qty:0};order.push(li.price);}byPrice[li.price].qty+=li.qty;}
 var payHtml='<p><strong>Pay by piece (separate Stripe checkouts):</strong> each link below pays for ONE piece at that exact price. If your cart has more than one piece at the same price, complete that checkout once per piece, or use “Reserve whole cart by email” below for the full quantity in one message.</p>';
 for(var k=0;k<order.length;k++){var pr=order[k];var bp=byPrice[pr];payHtml+='<p><a class="betty-fund-btn" href="'+bp.url+'">Pay $'+pr.toLocaleString('en-US')+' — '+bettyEsc(bp.label)+' × '+bp.qty+' (separate checkout, one piece per checkout)</a></p>';}
 for(var m=0;m<noLink.length;m++){var nl=noLink[m];payHtml+='<p><strong>'+bettyEsc(nl.soul)+' — '+bettyEsc(nl.brand)+' $'+nl.price.toLocaleString('en-US')+': no Stripe preorder link yet.</strong> This price has no Stripe preorder link yet, so this line cannot be paid by link. Use “Reserve whole cart by email” below for it — never a link for the wrong price.</p>';}
 var bodyLines=[];for(var n=0;n<bettyCart.length;n++){var cl=bettyCart[n];bodyLines.push(cl.soul+' — '+cl.brand+' ('+cl.plain+') × '+cl.qty+' — $'+cl.price+' each — line total $'+(cl.price*cl.qty));}
-bodyLines.push('');bodyLines.push('Cart subtotal: $'+bettyCartTotal()+' ('+bettyCartCount()+' items)');bodyLines.push('Launch: March 25, 2027. None made yet — made to order after a sample is approved and a maker quote is in writing. No exact ship date until launch. Full refund if cancelled and never ships.');
+bodyLines.push('');bodyLines.push('Cart subtotal: $'+bettyCartTotal()+' ('+bettyCartCount()+' items)');bodyLines.push('Preorder — ships after March 25, 2027. Full refund if your piece never ships.');
 var mailto='mailto:uncommonpope@gmail.com?subject='+encodeURIComponent('Betty Plush preorder cart reserve — $'+bettyCartTotal())+'&body='+encodeURIComponent(bodyLines.join('\n'));
 payHtml+='<p><a class="betty-fund-btn" href="'+mailto+'">Reserve whole cart by email →</a></p>';
 payHtml+='<p style="font-size:0.9rem">You accepted the preorder disclaimer above in this session. Cart checkout does not skip it: the disclaimer is shown before any Stripe link appears here, and the same disclaimer also appears on every single-piece preorder button.</p>';
