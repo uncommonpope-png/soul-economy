@@ -192,6 +192,12 @@ body{font-size:17px}
 <p>Real 3D boxes on a turning shelf, not flat pictures: each new soul sits on its own pedestal, lit and shadowed, with its photo wrapped around every face of a solid box and its name and starting price above it. Drag sideways to spin the shelf. Tap a piece (without dragging) to open its soul panel.</p>
 <canvas id="bettyStage" width="900" height="420"></canvas>
 </section>
+<section class="betty-section-box" id="bettyCollectionBox">
+<h2>Souls Collected — your shelf</h2>
+<p>Visit a soul&rsquo;s panel and it joins your shelf here. Stored only in this browser — nothing leaves your device, no account, no server. Visit all 8 new souls and the full set glows gold.</p>
+<div id="bettyCollectionShelf" class="betty-collection-shelf"></div>
+<p id="bettyCollectionNote" class="betty-collection-note"></p>
+</section>
 <div class="betty-tabs" role="tablist" aria-label="Shop by piece">
 <button type="button" role="tab" aria-selected="true" class="betty-tab betty-tab-active" data-betty-tab="all" onclick="bettySetTab('all')">All Souls<span data-betty-tab-count="all"></span></button>
 <button type="button" role="tab" aria-selected="false" class="betty-tab" data-betty-tab="full" onclick="bettySetTab('full')">Full Soul Collection Sets<span data-betty-tab-count="full"></span></button>
@@ -286,10 +292,10 @@ function bettyFromPriceHTML(set){var t=bettyTypesPresent(set);var opts=[];if(t.k
 function bettyCardHTML(set,i){var hero=set.pictures.length?set.pictures[0]:null;var h='<article class="card" style="animation-delay:'+Math.min(i*0.04,2).toFixed(2)+'s">';if(bettyIsNewSet(set))h+='<span class="betty-preorder-stamp">PREORDER</span>';h+=bettyAlbumHTML(set,i);h+='<h3 class="card-title">'+bettyEsc(set.name)+'</h3>';if(set.shop_section==='scenes')h+='<p class="betty-scene-tag">Stories &amp; Scenes — not for sale</p>';h+='<div class="card-desc">'+bettyEsc(set.desc||'From the Betty Plush Bible catalog.')+'</div>';if(set.stitch)h+='<div class="card-meta">Stitch: '+bettyEsc(set.stitch)+'</div>';h+='<div class="card-plt">'+bettyBadgesHTML(set)+'</div>';if(set.shop_section!=='scenes'){h+=bettyFromPriceHTML(set);h+='<p class="betty-card-cta-note">Story, full price table, and manifest live in the soul panel — one tap away.</p>';if(bettyIsNewSet(set))h+='<p><button type="button" class="betty-pre-btn betty-card-cta" onclick="bettyPreorderCheapest('+i+')">Preorder this soul →</button></p>';else h+='<button class="betty-view-btn betty-card-cta" data-betty-view="'+i+'">✦ Open soul panel</button>';}else{h+='<button class="betty-view-btn betty-card-cta" data-betty-view="'+i+'">✦ Open soul panel</button>';}h+='</article>';return h;}
 
 function bettyLowestPrice(set){var t=bettyTypesPresent(set);var prices=[];if(t.keychain)prices.push(100);if(t.plushie)prices.push(400);if(t.purse)prices.push(set.flagship?1000:800);if(t.bookbag)prices.push(650);return prices.length?Math.min.apply(null,prices):Infinity;}
-function bettyRender(){var grid=document.getElementById('bettyGrid');var sceneGrid=document.getElementById('bettySceneGrid');var scenesBox=document.getElementById('bettyScenes');if(!grid||!bettySets)return;bettyUpdateTabCounts();var qEl=document.getElementById('searchInput');var q=qEl&&qEl.value?qEl.value.toLowerCase():'';var sortEl=document.getElementById('bettySort');var sort=sortEl?sortEl.value:'featured';var shopItems=[],sceneItems=[];for(var i=0;i<bettySets.length;i++){var s=bettySets[i];if(!bettyTabMatches(s,bettyActiveTab))continue;if(q){var hay=(s.name+' '+(s.desc||'')+' '+(s.story||'')+' '+s.pictures.map(function(p){return p.label;}).join(' ')).toLowerCase();if(hay.indexOf(q)<0)continue;}if(s.shop_section==='scenes'){sceneItems.push({set:s,idx:i});}else{shopItems.push({set:s,idx:i});}}function sortItems(items){if(sort==='name-az')items.sort(function(a,b){return a.set.name.localeCompare(b.set.name);});else if(sort==='name-za')items.sort(function(a,b){return b.set.name.localeCompare(a.set.name);});else if(sort==='price-low')items.sort(function(a,b){return bettyLowestPrice(a.set)-bettyLowestPrice(b.set);});else if(sort==='price-high')items.sort(function(a,b){return bettyLowestPrice(b.set)-bettyLowestPrice(a.set);});}sortItems(shopItems);sortItems(sceneItems);var shopHtml='',sceneHtml='';for(var a=0;a<shopItems.length;a++)shopHtml+=bettyCardHTML(shopItems[a].set,shopItems[a].idx);for(var b=0;b<sceneItems.length;b++)sceneHtml+=bettyCardHTML(sceneItems[b].set,sceneItems[b].idx);var count=shopItems.length,sceneCount=sceneItems.length;grid.innerHTML=shopHtml;if(sceneGrid)sceneGrid.innerHTML=sceneHtml;if(scenesBox)scenesBox.style.display=(bettyActiveTab==='all'||bettyActiveTab==='scenes')?'block':'none';grid.style.display=(bettyActiveTab==='scenes')?'none':'grid';bettyStartAlbums();var st=document.getElementById('bettyStatus');if(st){if(bettyActiveTab==='scenes'){st.textContent=sceneCount+' story/scene sets in this tab — not for sale.';}else if(count===0&&sceneCount===0){st.textContent='No Betty Plush souls match this tab and search.';}else if(bettyActiveTab==='all'){st.textContent=count+' shop souls — tap a piece on the 3D shelf above, or open a card, to see its full manifest. '+sceneCount+' more sets live in Stories & Scenes below the shop.';}else{st.textContent=count+' souls in this tab match. Search filters within the active tab.';}}}
+function bettyRender(){var grid=document.getElementById('bettyGrid');var sceneGrid=document.getElementById('bettySceneGrid');var scenesBox=document.getElementById('bettyScenes');if(!grid||!bettySets)return;bettyUpdateTabCounts();var qEl=document.getElementById('searchInput');var q=qEl&&qEl.value?qEl.value.toLowerCase():'';var sortEl=document.getElementById('bettySort');var sort=sortEl?sortEl.value:'featured';var shopItems=[],sceneItems=[];for(var i=0;i<bettySets.length;i++){var s=bettySets[i];if(!bettyTabMatches(s,bettyActiveTab))continue;if(q){var hay=(s.name+' '+(s.desc||'')+' '+(s.story||'')+' '+s.pictures.map(function(p){return p.label;}).join(' ')).toLowerCase();if(hay.indexOf(q)<0)continue;}if(s.shop_section==='scenes'){sceneItems.push({set:s,idx:i});}else{shopItems.push({set:s,idx:i});}}function sortItems(items){if(sort==='name-az')items.sort(function(a,b){return a.set.name.localeCompare(b.set.name);});else if(sort==='name-za')items.sort(function(a,b){return b.set.name.localeCompare(a.set.name);});else if(sort==='price-low')items.sort(function(a,b){return bettyLowestPrice(a.set)-bettyLowestPrice(b.set);});else if(sort==='price-high')items.sort(function(a,b){return bettyLowestPrice(b.set)-bettyLowestPrice(a.set);});}sortItems(shopItems);sortItems(sceneItems);var shopHtml='',sceneHtml='';for(var a=0;a<shopItems.length;a++)shopHtml+=bettyCardHTML(shopItems[a].set,shopItems[a].idx);for(var b=0;b<sceneItems.length;b++)sceneHtml+=bettyCardHTML(sceneItems[b].set,sceneItems[b].idx);var count=shopItems.length,sceneCount=sceneItems.length;grid.innerHTML=shopHtml;if(sceneGrid)sceneGrid.innerHTML=sceneHtml;if(scenesBox)scenesBox.style.display=(bettyActiveTab==='all'||bettyActiveTab==='scenes')?'block':'none';grid.style.display=(bettyActiveTab==='scenes')?'none':'grid';bettyStartAlbums();if(typeof bettyCollectionRender==='function')bettyCollectionRender();var st=document.getElementById('bettyStatus');if(st){if(bettyActiveTab==='scenes'){st.textContent=sceneCount+' story/scene sets in this tab — not for sale.';}else if(count===0&&sceneCount===0){st.textContent='No Betty Plush souls match this tab and search.';}else if(bettyActiveTab==='all'){st.textContent=count+' shop souls — tap a piece on the 3D shelf above, or open a card, to see its full manifest. '+sceneCount+' more sets live in Stories & Scenes below the shop.';}else{st.textContent=count+' souls in this tab match. Search filters within the active tab.';}}}
 function bettyPanelHTML(set,idx){var hero=set.pictures.length?set.pictures[0]:null;var h='';if(hero)h+='<img id="bettyPanelHero" class="betty-panel-hero" src="'+bettyEsc(hero.src)+'" alt="'+bettyEsc(hero.label)+'">';h+='<div id="bettyPanelStageWrap" style="display:none"><canvas id="bettyPanelStage" width="320" height="200" style="width:100%;height:200px;border-radius:12px;background:rgba(0,0,0,0.35)"></canvas><p id="bettyPanelStageNote" style="color:#FFB3CD;font-size:0.85rem">3D model view</p></div>';if(set.pictures.length>1){h+='<div class="betty-panel-album">';for(var ai=0;ai<set.pictures.length;ai++){var ap=set.pictures[ai];h+='<img src="'+bettyEsc(ap.src)+'" alt="'+bettyEsc(ap.label)+'" data-full="'+bettyEsc(ap.src)+'" onclick="bettyPanelAlbumSwap(this)" onkeydown="if(event.key===\'Enter\'||event.key===\' \')bettyPanelAlbumSwap(this)" tabindex="0" role="button" loading="lazy">';}h+='</div><p style="color:#bbb;font-size:0.8rem">Tap any picture to view it in the album.</p>';}h+='<h3>'+bettyEsc(set.name)+'</h3>';h+='<div style="margin-bottom:10px">'+bettyBadgesHTML(set)+'</div>';h+='<p>'+bettyEsc(set.desc||'From the Betty Plush Bible catalog.')+'</p>';if(set.stitch)h+='<p><em>Stitch: '+bettyEsc(set.stitch)+'</em></p>';h+=bettyStoryHTML(set);if(set.shop_section==='scenes')h+='<p class="betty-scene-tag">Stories &amp; Scenes — not for sale</p>';if(set.shop_section!=='scenes'&&set.product)h+=bettyPriceRowsHTML(set,idx);if(set.flagship)h+='<p class="betty-flag-note">Flagship tier: Carry Soul $1,000 / Full Soul Collection Set $2,150 — see the pricing section above the shop. Flagship pieces check out by card from your cart.</p>';if(bettyIsNewSet(set))h+='<p><button type="button" class="betty-pre-btn" onclick="bettyClosePanel();bettyPreorderCheapest('+idx+')">Preorder this soul →</button></p>';h+=bettyManifestHTML(set);if(set.shop_section!=='scenes'&&set.product){var _ck=bettyCheapestPieceKey(set);if(bettyIsNewSet(set))h+='<div class="betty-panel-cta"><span>'+bettyFromPriceHTML(set).replace(/<[^>]+>/g,'')+'</span><button type="button" class="betty-fund-btn" onclick="bettyClosePanel();bettyPreorderCheapest('+idx+')">Preorder this soul →</button></div>';else if(_ck)h+='<div class="betty-panel-cta"><span>'+bettyFromPriceHTML(set).replace(/<[^>]+>/g,'')+'</span><button type="button" class="betty-fund-btn" onclick="bettyCartAddByIndex('+idx+',\''+_ck+'\')">Add to cart</button></div>';}return h;}
 function bettyCheapestPieceKey(set){var t=bettyTypesPresent(set);if(t.keychain)return 'keychain';if(t.plushie)return 'plushie';if(t.bookbag)return 'bookbag';if(t.purse)return 'purse';return null;}
-function bettyOpenPanel(idx){if(!bettySets||!bettySets[idx])return;var body=document.getElementById('bettyPanelBody');if(body)body.innerHTML=bettyPanelHTML(bettySets[idx],idx);var p=document.getElementById('bettyPanel');var b=document.getElementById('bettyBackdrop');if(p){p.classList.add('betty-open');p.setAttribute('aria-hidden','false');}if(b){b.style.display='block';b.classList.add('betty-open');}document.body.style.overflow='hidden';}
+function bettyOpenPanel(idx){if(!bettySets||!bettySets[idx])return;if(typeof bettyCollectVisit==='function')bettyCollectVisit(idx);var body=document.getElementById('bettyPanelBody');if(body)body.innerHTML=bettyPanelHTML(bettySets[idx],idx);var p=document.getElementById('bettyPanel');var b=document.getElementById('bettyBackdrop');if(p){p.classList.add('betty-open');p.setAttribute('aria-hidden','false');}if(b){b.style.display='block';b.classList.add('betty-open');}document.body.style.overflow='hidden';}
 function bettyClosePanel(){var p=document.getElementById('bettyPanel');var b=document.getElementById('bettyBackdrop');if(p){p.classList.remove('betty-open');p.setAttribute('aria-hidden','true');}if(b){b.classList.remove('betty-open');b.style.display='none';}document.body.style.overflow='';}
 function bettyRainResize(){var c=document.getElementById('bettyRain');if(!c)return;var dpr=Math.min(window.devicePixelRatio||1,2);bettyRainW=c.clientWidth;bettyRainH=c.clientHeight;c.width=Math.max(1,Math.round(bettyRainW*dpr));c.height=Math.max(1,Math.round(bettyRainH*dpr));bettyRainCtx=c.getContext('2d');bettyRainCtx.setTransform(dpr,0,0,dpr,0,0);}
 function bettyRainInit(){bettyRainParts=[];var hearts=['#FF6B9D','#FF2E88','#FFB3CD','#FFFFFF'];for(var i=0;i<30;i++){bettyRainParts.push({kind:'heart',x:Math.random(),y:Math.random()*1.2-0.2,vy:30+Math.random()*60,size:10+Math.random()*14,rot:Math.random()*6.28,vr:(Math.random()-0.5)*1.2,alpha:0.5+Math.random()*0.5,color:hearts[i%hearts.length],phase:Math.random()*6.28});}for(var j=0;j<18;j++){bettyRainParts.push({kind:'dollar',x:Math.random(),y:Math.random()*1.2-0.2,vy:25+Math.random()*45,size:14+Math.random()*12,rot:(Math.random()-0.5)*0.6,vr:(Math.random()-0.5)*0.6,alpha:0.6+Math.random()*0.4,color:'#FFD166',phase:Math.random()*6.28});}}
@@ -335,7 +341,7 @@ showBettyTab();
 // Code review only — no browser test here. Live-browser checks are listed in V7-CHANGELOG.md.
 var bettyStageTarget=0, bettyStageAngle=0, bettyStageVel=0, bettyStageDragging=false, bettyStageLastX=0, bettyStageMoved=0;
 var bettyStageRaycaster=null, bettyStageCamera=null, bettyStageGroup=null, bettyStagePick=[], bettyStageHolders=[];
-var bettyStageVisible=true, bettyStagePaused=false, bettyStageSquish=[];
+var bettyStageVisible=true, bettyStagePaused=false, bettyStageSquish=[], bettyStageRitual=[];
 var bettyStageGlbBySoulName={"Drippy":"models/pink-drip-bunny.glb","Mendie":"models/button-gingham-monster.glb","Patch":"models/denim-patchwork-monster.glb","Ember Stripe":"models/red-black-stripe-cat-fox.glb","Pixel":"models/black-pink-pixel-bunny.glb","Paws":"models/black-paw-monster.glb","Nightwing Dawn":"models/bat-monster.glb","Listen":"models/pink-white-bunny-purse.glb"};
 var bettyStageGlbByIndex=["models/pink-drip-bunny.glb","models/button-gingham-monster.glb","models/denim-patchwork-monster.glb","models/red-black-stripe-cat-fox.glb","models/black-pink-pixel-bunny.glb","models/black-paw-monster.glb","models/bat-monster.glb","models/pink-white-bunny-purse.glb"];
 function bettyOpenFeatured(i){
@@ -635,6 +641,11 @@ function bettyStageInit(){
           var p=(nowMs-s.t)/350; if(p>=1){ s.holder.scale.set(1,1,1); return false; }
           var k=Math.sin(Math.PI*p); s.holder.scale.set(1+0.05*k,1-0.10*k,1+0.05*k); return true;
         });
+        // WAVE 2A ritual (Bible idea 27): lift + one full spin, transform only — no new draw calls.
+        bettyStageRitual=bettyStageRitual.filter(function(r){
+          var p=(nowMs-r.t)/1100; if(p>=1){ r.holder.position.y=r.baseY; r.holder.rotation.y=r.baseRot; return false; }
+          r.holder.position.y=r.baseY+1.5*Math.sin(Math.PI*p); r.holder.rotation.y=r.baseRot+Math.PI*2*p; return true;
+        });
         renderStage();
       }
     })(last);
@@ -712,7 +723,7 @@ function bettyPieceInfo(set,key){var t=bettyTypesPresent(set);if(key==='keychain
 function bettyCartSave(){try{localStorage.setItem('bettyPlushCartV6',JSON.stringify(bettyCart));}catch(e){}}
 function bettyCartCount(){var n=0;for(var i=0;i<bettyCart.length;i++)n+=bettyCart[i].qty;return n;}
 function bettyCartTotal(){var n=0;for(var i=0;i<bettyCart.length;i++)n+=bettyCart[i].price*bettyCart[i].qty;return n;}
-function bettyCartAddByIndex(idx,key){if(!bettySets||!bettySets[idx])return;var set=bettySets[idx];var info=bettyPieceInfo(set,key);if(!info)return;var id=set.name+'|'+key;var line=null;for(var i=0;i<bettyCart.length;i++){if(bettyCart[i].id===id)line=bettyCart[i];}if(line){line.qty++;}else{bettyCart.push({id:id,soul:set.name,brand:info.brand,plain:info.plain,key:key,price:info.price,qty:1});}bettyCartSave();bettyCartRender();bettyCartToast(set.name+' — '+info.brand+' added to cart');}
+function bettyCartAddByIndex(idx,key){if(!bettySets||!bettySets[idx])return;var set=bettySets[idx];var info=bettyPieceInfo(set,key);if(!info)return;var id=set.name+'|'+key;var line=null;for(var i=0;i<bettyCart.length;i++){if(bettyCart[i].id===id)line=bettyCart[i];}if(line){line.qty++;}else{bettyCart.push({id:id,soul:set.name,brand:info.brand,plain:info.plain,key:key,price:info.price,qty:1});}bettyCartSave();bettyCartRender();bettyCartToast(set.name+' — '+info.brand+' added to cart');if(typeof bettyRitual==='function')bettyRitual(idx);}
 function bettyCartQty(id,d){for(var i=0;i<bettyCart.length;i++){if(bettyCart[i].id===id){bettyCart[i].qty+=d;if(bettyCart[i].qty<=0)bettyCart.splice(i,1);break;}}bettyCartSave();bettyCartRender();}
 function bettyCartRemove(id){for(var i=0;i<bettyCart.length;i++){if(bettyCart[i].id===id){bettyCart.splice(i,1);break;}}bettyCartSave();bettyCartRender();}
 function bettyCartClear(){bettyCart=[];bettyCartSave();bettyCartRender();}
@@ -747,6 +758,8 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')bettyCartClo
 var bettyPendingPreorder=null;
 function bettyPreorderCheapest(idx){if(!bettySets||!bettySets[idx]){location.hash='#bettyPreorder';return;}var set=bettySets[idx];var k=bettyCheapestPieceKey(set);if(!k){location.hash='#bettyPreorder';return;}var info=bettyPieceInfo(set,k);if(!info){location.hash='#bettyPreorder';return;}var plain=info.plain.charAt(0).toUpperCase()+info.plain.slice(1);bettyPreorderBuy(set.name,info.brand+' ('+plain+')',info.price);}
 function bettyPreorderBuy(soul,piece,price){
+  // WAVE 2A ritual (Bible idea 27): presentation only — the modal below opens exactly as before.
+  if(bettySets && typeof bettyRitual==='function'){for(var _ri=0;_ri<bettySets.length;_ri++){if(bettySets[_ri].name===soul){bettyRitual(_ri);break;}}}
   bettyPendingPreorder={soul:soul,piece:piece,price:price};
   var item=document.getElementById('bettyPreorderModalItem');
   if(item) item.textContent=soul+' — '+piece+' — $'+price.toLocaleString('en-US');
@@ -838,6 +851,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
 }
 </style>
 <div id="bettyToast" role="status" aria-live="polite"></div>
+<div id="bettyRitualBox" role="status" aria-live="polite"></div>
 <script>
 // UPGRADE-V7 (DRAFT): toast, tab arrow keys, focus trap for drawer/modal/panel. Code review only — no browser test yet.
 var bettyToastTimer=0;
@@ -878,7 +892,7 @@ function bettyPanelStageTry(idx){
   var wrap=document.getElementById('bettyPanelStageWrap');
   if(!wrap || !bettySets || !bettySets[idx]) return;
   var set=bettySets[idx];
-  var file=(set.soul_name && bettyStageGlbBySoulName[set.soul_name]) || bettyStageGlbByIndex[idx] || null;
+  var file=(set.soul_name && bettyStageGlbBySoulName[set.soul_name]) || null; // WAVE 2A: soul_name ONLY — no catalog-index fallback (same wrong-model hazard Fix #3 removed from the shelf)
   if(!file) return; // no GLB known for this soul: photo hero only, no fake model
   bettyPanelStageDispose();
   var canvas=document.getElementById('bettyPanelStage');
@@ -907,6 +921,99 @@ function bettyPanelStageTry(idx){
   bettyOpenPanel=function(idx){ _origOpen(idx); setTimeout(function(){ bettyPanelStageTry(idx); },50); };
   bettyClosePanel=function(){ bettyPanelStageDispose(); _origClose(); };
 })();
+</script>
+<style>
+/* WAVE 2A — Bible ideas 27 (buy-flow ritual) + 33 (local collection shelf). DOM/CSS only for the
+   velvet box and the shelf; the shelf lift+spin is a transform on the existing stage holder (no new draw calls). */
+#bettyRitualBox{position:fixed;z-index:10020;right:16px;top:80px;display:flex;align-items:center;gap:10px;background:linear-gradient(160deg,#4a0e2e,#2a0818);border:2px solid #FFD166;border-radius:14px;padding:10px 14px 10px 10px;box-shadow:0 8px 30px rgba(0,0,0,0.6);opacity:0;pointer-events:none;transform:translateY(-6px) scale(0.96);transition:opacity 0.25s,transform 0.25s;max-width:min(320px,86vw);color:#fff;font-size:0.9rem}
+#bettyRitualBox.betty-show{opacity:1;transform:none;animation:bettyGoldPulse 1.6s ease-in-out}
+#bettyRitualBox img{width:56px;height:56px;object-fit:cover;border-radius:10px;border:1px solid rgba(255,209,102,0.7);flex:0 0 auto}
+@keyframes bettyGoldPulse{0%,100%{box-shadow:0 8px 30px rgba(0,0,0,0.6),0 0 0 0 rgba(255,209,102,0.55)}50%{box-shadow:0 8px 30px rgba(0,0,0,0.6),0 0 26px 6px rgba(255,209,102,0.55)}}
+.betty-cart-btn.betty-cart-gold{animation:bettyGoldPulse 1.6s ease-in-out}
+.betty-collection-shelf{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:12px}
+@media(max-width:640px){.betty-collection-shelf{grid-template-columns:repeat(2,1fr)}}
+.betty-collection-slot{border:1px solid rgba(255,107,157,0.35);border-radius:14px;padding:10px;background:rgba(0,0,0,0.35);color:#fff;cursor:pointer;text-align:left;font-family:inherit}
+.betty-collection-slot img{width:100%;height:110px;object-fit:cover;border-radius:10px;filter:grayscale(0.9) brightness(0.6)}
+.betty-collection-slot.betty-collected{border-color:#FFD166}
+.betty-collection-slot.betty-collected img{filter:none}
+.betty-collection-name{display:block;font-weight:700;font-size:0.9rem;margin-top:8px;line-height:1.35}
+.betty-collection-state{display:block;font-size:0.8rem;color:#bbb;margin-top:2px}
+.betty-collection-slot.betty-collected .betty-collection-state{color:#FFD166}
+.betty-collection-shelf.betty-collected-full{animation:bettyGoldPulse 2.4s ease-in-out infinite}
+.betty-collection-note{color:#FFB3CD;font-size:0.9rem;margin-top:10px}
+</style>
+<script>
+// WAVE 2A — Bible idea 27 (buy flow as a ritual) + idea 33 (collection shelf).
+// Idea 27: tap Preorder (bettyPreorderBuy) or Add to cart (bettyCartAddByIndex) and the soul's
+// shelf holder lifts and spins once in the EXISTING stage scene (transform only, no new draw
+// calls — the loop processes bettyStageRitual next to the tap-squish), while a little velvet
+// box with a soft gold pulse appears at the cart button. Presentation layer only: cart,
+// prices, Stripe links, buy modal, and preorder flow behave exactly as before.
+// Idea 33: visiting = opening a soul's panel (bettyOpenPanel — the same call a shelf tap,
+// a featured card, and a grid card all make). Visits live in localStorage only
+// (bettyPlushCollectedV1) — nothing leaves the browser, no server, no account. The shelf
+// lists the page's own 8 new souls from the catalog (bettyIsNewSet) — no names invented.
+// When all 8 are visited the shelf gets the gold-glow class.
+var bettyRitualTimer=0;
+function bettyRitual(idx){
+  // Shelf part: lift + one full spin on this soul's existing holder (skip if the stage
+  // never started or is off-screen — the velvet box below still shows).
+  if(typeof bettyStageHolders!=='undefined' && bettyStageHolders.length && typeof bettyStageVisible!=='undefined' && bettyStageVisible && typeof bettyStageRitual!=='undefined'){
+    for(var h=0;h<bettyStageHolders.length;h++){
+      var holder=bettyStageHolders[h];
+      if(holder.userData.setIndex===idx){
+        var busy=false;
+        for(var q=0;q<bettyStageRitual.length;q++){ if(bettyStageRitual[q].holder===holder){ busy=true; break; } }
+        if(!busy) bettyStageRitual.push({holder:holder,t:performance.now(),baseRot:holder.rotation.y,baseY:holder.position.y});
+        break;
+      }
+    }
+  }
+  // Velvet box + gold pulse at the cart button (DOM only — no 3D cost).
+  var box=document.getElementById('bettyRitualBox'); if(!box) return;
+  var set=(bettySets && bettySets[idx])?bettySets[idx]:null;
+  var hero=(set && set.pictures && set.pictures.length)?set.pictures[0].src:'';
+  var name=set?set.name:'Your soul';
+  box.innerHTML=(hero?'<img src="'+bettyEsc(hero)+'" alt="">':'<span aria-hidden="true">\uD83D\uDC97</span>')+'<span>'+bettyEsc(name)+' \u2014 wrapped in velvet</span>';
+  var btn=document.querySelector('.betty-cart-btn');
+  if(btn){var r=btn.getBoundingClientRect();box.style.top=Math.min(window.innerHeight-90,(r.bottom+10))+'px';box.style.right=Math.max(8,(window.innerWidth-r.right))+'px';box.style.left='auto';}
+  box.classList.add('betty-show');
+  if(btn){btn.classList.add('betty-cart-gold');setTimeout(function(){btn.classList.remove('betty-cart-gold');},1900);}
+  if(bettyRitualTimer)clearTimeout(bettyRitualTimer);
+  bettyRitualTimer=setTimeout(function(){box.classList.remove('betty-show');},1900);
+}
+var bettyCollectionKey='bettyPlushCollectedV1';
+function bettyCollectionLoad(){try{var v=JSON.parse(localStorage.getItem(bettyCollectionKey)||'[]');return Array.isArray(v)?v:[];}catch(e){return [];}}
+function bettyCollectionSave(list){try{localStorage.setItem(bettyCollectionKey,JSON.stringify(list));}catch(e){}}
+function bettyCollectVisit(idx){
+  if(!bettySets||!bettySets[idx])return;
+  var set=bettySets[idx];
+  if(typeof bettyIsNewSet!=='function'||!bettyIsNewSet(set))return;
+  var list=bettyCollectionLoad();
+  if(list.indexOf(set.name)<0){list.push(set.name);bettyCollectionSave(list);}
+  bettyCollectionRender();
+}
+function bettyCollectionRender(){
+  var shelf=document.getElementById('bettyCollectionShelf'); if(!shelf)return;
+  if(!bettySets||!bettySets.length){shelf.innerHTML='';return;}
+  var collected=bettyCollectionLoad();
+  var items=[];
+  for(var i=0;i<bettySets.length;i++){if(typeof bettyIsNewSet==='function'&&bettyIsNewSet(bettySets[i]))items.push({set:bettySets[i],idx:i});}
+  var h='';
+  for(var j=0;j<items.length;j++){
+    var it=items[j]; var got=collected.indexOf(it.set.name)>=0;
+    var hero=(it.set.pictures&&it.set.pictures.length)?it.set.pictures[0].src:'';
+    h+='<button type="button" class="betty-collection-slot'+(got?' betty-collected':'')+'" onclick="bettyOpenPanel('+it.idx+')" aria-label="'+bettyEsc(it.set.name)+(got?' \u2014 collected':' \u2014 not visited yet')+'">';
+    if(hero)h+='<img src="'+bettyEsc(hero)+'" alt="'+bettyEsc(it.set.name)+'" loading="lazy">';
+    h+='<span class="betty-collection-name">'+bettyEsc(it.set.name)+'</span>';
+    h+='<span class="betty-collection-state">'+(got?'\u2713 Collected':'Not visited yet')+'</span></button>';
+  }
+  shelf.innerHTML=h;
+  var full=items.length>0&&items.every(function(it){return collected.indexOf(it.set.name)>=0;});
+  shelf.classList.toggle('betty-collected-full',full);
+  var note=document.getElementById('bettyCollectionNote');
+  if(note)note.textContent=full?'\u2728 Full set \u2014 all '+items.length+' new souls visited. Your shelf glows gold.':collected.length+' of '+items.length+' new souls collected \u2014 open a soul\u2019s panel to collect it.';
+}
 </script>
 </body>
 </html>
