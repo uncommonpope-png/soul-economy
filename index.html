@@ -200,6 +200,16 @@ input{font-family:inherit;outline:none;border:none;background:none}
 .card-title{font-size:1.1rem;font-weight:700;margin-bottom:6px;text-shadow:0 2px 12px rgba(0,0,0,0.6)}
 .card-plt{display:flex;gap:8px;margin-bottom:12px}
 .card-plt span{padding:2px 10px;border-radius:8px;font-size:0.75rem;font-weight:600}
+/* IDEA 34 — PLT ticker as a living ring: the ring beside the P/L/T chips shows
+   the card's True Value (P+L-T) as a base fill; hover adds Love, click adds
+   Profit. Session-only fill — the card's P/L/T values never change. */
+.card-plt-wrap{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.card-plt-wrap .card-plt{margin-bottom:0;flex:1}
+.plt-ring{flex:none;width:46px;height:46px;cursor:default}
+.plt-ring svg{display:block}
+.plt-ring-bg{fill:none;stroke:rgba(255,255,255,0.14);stroke-width:4}
+.plt-ring-fg{fill:none;stroke:#F59E0B;stroke-width:4;stroke-linecap:round;stroke-dasharray:113.1;stroke-dashoffset:113.1;transform:rotate(-90deg);transform-origin:23px 23px;transition:stroke-dashoffset 0.45s ease}
+.plt-ring-txt{fill:#FFD166;font-size:10px;font-weight:700;font-family:Inter,sans-serif}
 .plt-p{background:rgba(139,92,246,0.12);color:var(--purple)}
 .plt-l{background:rgba(0,212,255,0.12);color:var(--cyan)}
 .plt-t{background:rgba(255,209,102,0.12);color:var(--gold)}
@@ -1018,7 +1028,7 @@ function render(data){
         ${item.size ? `<span class="meta-tag">💾 ${item.size}</span>` : ''}
         ${item.requires ? `<span class="meta-tag">⚙️ Requires: ${item.requires}</span>` : ''}
       </div>
-      <div class="card-plt"><span class="plt-p">P ${item.plt.split('/')[0]}</span><span class="plt-l">L ${item.plt.split('/')[1]}</span><span class="plt-t">T ${item.plt.split('/')[2]}</span></div>
+      <div class="card-plt-wrap"><div class="card-plt"><span class="plt-p">P ${item.plt.split('/')[0]}</span><span class="plt-l">L ${item.plt.split('/')[1]}</span><span class="plt-t">T ${item.plt.split('/')[2]}</span></div><span class="plt-ring" data-plt="${item.plt}" title="PLT ring — base fill is this soul's True Value (P+L-T). Hover adds Love, click adds Profit. Session only."><svg viewBox="0 0 46 46" width="46" height="46" aria-hidden="true"><circle class="plt-ring-bg" cx="23" cy="23" r="18"/><circle class="plt-ring-fg" cx="23" cy="23" r="18"/><text class="plt-ring-txt" x="23" y="27" text-anchor="middle"></text></svg></span></div>
       <div class="card-footer">
         <span class="card-category">${item.type}</span>
         ${item.download ? `<a href="${item.download}" download class="btn-download">⬇ Download</a>` : (item.url ? `<a href="${item.url}" target="_blank" class="btn-play">▶ Play</a>` : `<a href="downloads/${item.file}" download class="btn-download">⬇ Download</a>`)}
@@ -1065,6 +1075,45 @@ function render(data){
         setTimeout(()=>{this.classList.remove('loading');this.classList.add('success');this.textContent='✓ Downloaded';
           setTimeout(()=>{this.classList.remove('success');this.textContent=orig},1500)},800);
       });
+    });
+  });
+
+  // ─── IDEA 34 — PLT TICKER AS A LIVING RING (session-only) ───
+  // Base fill = the card's own True Value, (P+L-T+0.5)/2.5 clamped 0.05..1 —
+  // the same normalisation as the graph's tvScale. Hover adds Love (+0.04,
+  // capped +0.24), click adds Profit (+0.06, capped +0.30); total capped at
+  // 100%. State lives in an in-memory Map keyed by the card's data-id, so it
+  // survives re-renders in the session and never persists. The P/L/T values,
+  // prices, data and links are untouched — the ring only presents them.
+  if (!window.__pltRingState) window.__pltRingState = new Map();
+  var pltRingState = window.__pltRingState;
+  function pltBaseFill(pltStr){ var q=(pltStr||'0.5/0.5/0.5').split('/').map(Number); var tv=(q[0]||0)+(q[1]||0)-(q[2]||0); return Math.max(0.05, Math.min(1, (tv+0.5)/2.5)); }
+  function pltRingPaint(ring){
+    var card = ring.closest ? ring.closest('.card') : null;
+    var key = card ? (card.getAttribute('data-id') || '') : ring.getAttribute('data-plt');
+    var st = pltRingState.get(key) || {l:0, p:0};
+    var base = pltBaseFill(ring.getAttribute('data-plt'));
+    var fill = Math.min(1, base + st.l + st.p);
+    var C = 2 * Math.PI * 18;
+    var fg = ring.querySelector('.plt-ring-fg');
+    if (fg) fg.style.strokeDashoffset = (C * (1 - fill)).toFixed(1);
+    var tx = ring.querySelector('.plt-ring-txt');
+    if (tx) tx.textContent = Math.round(fill * 100) + '%';
+    ring.setAttribute('title', 'PLT ring — True Value ' + Math.round(base * 100) + '% base; hover +Love, click +Profit (session only). Now ' + Math.round(fill * 100) + '%.');
+  }
+  document.querySelectorAll('.card').forEach(function(card){
+    var ring = card.querySelector('.plt-ring');
+    if (!ring) return;
+    pltRingPaint(ring);
+    card.addEventListener('mouseenter', function(){
+      var key = card.getAttribute('data-id') || '';
+      var st = pltRingState.get(key) || {l:0, p:0};
+      st.l = Math.min(0.24, st.l + 0.04); pltRingState.set(key, st); pltRingPaint(ring);
+    });
+    card.addEventListener('click', function(){
+      var key = card.getAttribute('data-id') || '';
+      var st = pltRingState.get(key) || {l:0, p:0};
+      st.p = Math.min(0.30, st.p + 0.06); pltRingState.set(key, st); pltRingPaint(ring);
     });
   });
 }
@@ -1449,6 +1498,7 @@ render = function(data) {
       '<button type="button" id="hgZoomIn" title="Zoom in">\uff0b Zoom in</button>' +
       '<button type="button" id="hgZoomOut" title="Zoom out">\uff0d Zoom out</button>' +
       '<button type="button" id="hgReset" title="Reset the camera">\u27f2 Reset view</button>' +
+      '<button type="button" id="hgConst" title="Arrange the top souls into a 222 constellation — click a star to open that soul">\u2726 222 Constellation</button>' +
       '<span class="hg-hint">Click a node to focus it \u00b7 click empty space to clear</span>';
     graphWrap.appendChild(hgBar);
     // items is in closure scope from outer script (line 277)
@@ -1905,6 +1955,97 @@ render = function(data) {
     motes.frustumCulled = false;
     scene.add(motes);
 
+    // ─── IDEAS 23 + 24 — HEART-DUST + MIXED TRAILS ───
+    // When a plushie node moves (heartbeat/bob + focus glide) it sheds a tiny
+    // trail behind it — little hearts like dust floating off the fur. ONE
+    // shared Points system per trail kind (heart / money-bag / 222): 3 draw
+    // calls total, never one per node; particles recycle from a fixed pool.
+    // Particles fade by dimming their vertex colour to black (AdditiveBlending
+    // makes black invisible), drift down slowly, and die after ~1.6 s.
+    // TRAIL TYPE RULE (follows the node's plushie kind, Bible 23–24):
+    //   infrastructure (money-bag plush) -> tiny money bags ($)
+    //   combo ("222" plush) and skill (star plush) -> floating 222s
+    //   every other plushie (bunny, bear, heart, gift, globe, robot, book)
+    //     -> tiny hearts. Value drifting off them.
+    function trailTexture(kind) {
+      const cv = document.createElement('canvas'); cv.width = cv.height = 64;
+      const cx = cv.getContext('2d');
+      if (kind === 'heart') {
+        cx.beginPath();
+        cx.moveTo(32, 54);
+        cx.bezierCurveTo(10, 36, 14, 14, 32, 24);
+        cx.bezierCurveTo(50, 14, 54, 36, 32, 54);
+        cx.closePath(); cx.fillStyle = '#FF5C8A'; cx.fill();
+        cx.fillStyle = 'rgba(255,255,255,0.4)';
+        cx.beginPath(); cx.ellipse(24, 26, 5, 3, -0.5, 0, Math.PI * 2); cx.fill();
+      } else if (kind === 'money') {
+        cx.fillStyle = '#F5B81D';
+        cx.beginPath(); cx.arc(32, 36, 22, 0, Math.PI * 2); cx.fill();
+        cx.strokeStyle = '#4A2C14'; cx.lineWidth = 3; cx.stroke();
+        cx.fillStyle = '#4A2C14'; cx.font = 'bold 30px Georgia, serif';
+        cx.textAlign = 'center'; cx.textBaseline = 'middle';
+        cx.fillText('$', 32, 37);
+        cx.fillStyle = '#FFD166';
+        cx.beginPath(); cx.moveTo(26, 16); cx.lineTo(38, 16); cx.lineTo(32, 8); cx.closePath(); cx.fill();
+      } else { // '222'
+        cx.textAlign = 'center'; cx.textBaseline = 'middle';
+        cx.font = 'bold 26px Georgia, serif'; cx.lineWidth = 5; cx.strokeStyle = '#4A2C14';
+        cx.strokeText('222', 32, 34); cx.fillStyle = '#FFD166'; cx.fillText('222', 32, 34);
+      }
+      return new T.CanvasTexture(cv);
+    }
+    const TRAIL_PER = LITE ? 45 : 90, TRAIL_LIFE = 1.6;
+    const trailSys = {};
+    let skillTrailAcc = 0;
+    function makeTrailSys(kind, size) {
+      const n = TRAIL_PER;
+      const pos = new Float32Array(n * 3), col = new Float32Array(n * 3);
+      for (let i = 0; i < n; i++) pos[i * 3 + 1] = -999; // parked off-screen
+      const g = new BufferGeometry();
+      g.setAttribute('position', new Float32BufferAttribute(pos, 3));
+      g.setAttribute('color', new Float32BufferAttribute(col, 3));
+      const pts = new Points(g, new PointsMaterial({ map: trailTexture(kind), vertexColors: true, size, transparent: true, opacity: 0.9, blending: AdditiveBlending, depthWrite: false }));
+      pts.frustumCulled = false; scene.add(pts);
+      return { pts, geo: g, n, life: new Float32Array(n), vel: new Float32Array(n * 3), next: 0 };
+    }
+    trailSys.heart = makeTrailSys('heart', 0.13);
+    trailSys.money = makeTrailSys('money', 0.15);
+    trailSys.n222 = makeTrailSys('222', 0.16);
+    function trailKindFor(d) {
+      const k = d.item && d.item.type;
+      if (k === 'infrastructure') return 'money';
+      if (k === 'combo' || k === 'skill') return 'n222';
+      return 'heart';
+    }
+    function spawnTrail(d) {
+      const sys = trailSys[trailKindFor(d)]; if (!sys) return;
+      const i = sys.next; sys.next = (sys.next + 1) % sys.n;
+      const pa = sys.geo.getAttribute('position');
+      const mp = (d.mesh && d.mesh.position) ? d.mesh.position : d.pos;
+      if (!mp) return;
+      pa.setXYZ(i, mp.x + (Math.random() - 0.5) * 0.2, mp.y + (Math.random() - 0.5) * 0.2, mp.z + (Math.random() - 0.5) * 0.2);
+      sys.vel[i * 3] = (Math.random() - 0.5) * 0.08;
+      sys.vel[i * 3 + 1] = -0.12 - Math.random() * 0.15;
+      sys.vel[i * 3 + 2] = (Math.random() - 0.5) * 0.08;
+      sys.life[i] = TRAIL_LIFE;
+      pa.needsUpdate = true;
+    }
+    function updateTrails(dt) {
+      Object.values(trailSys).forEach(sys => {
+        const pa = sys.geo.getAttribute('position'), ca = sys.geo.getAttribute('color');
+        let dirty = false;
+        for (let i = 0; i < sys.n; i++) {
+          if (sys.life[i] <= 0) continue;
+          sys.life[i] -= dt; dirty = true;
+          if (sys.life[i] <= 0) { pa.setXYZ(i, 0, -999, 0); ca.setXYZ(i, 0, 0, 0); continue; }
+          pa.setXYZ(i, pa.getX(i) + sys.vel[i * 3] * dt, pa.getY(i) + sys.vel[i * 3 + 1] * dt, pa.getZ(i) + sys.vel[i * 3 + 2] * dt);
+          const f = sys.life[i] / TRAIL_LIFE; // fade to black = fade out (additive)
+          ca.setXYZ(i, f, f * 0.85, f * 0.7);
+        }
+        if (dirty) { pa.needsUpdate = true; ca.needsUpdate = true; }
+      });
+    }
+
     // ─── NODE NAME LABELS (FIX #2: real soul names, legible) ───
     // Names come from the item's own `name` field — never invented.
     // Name sits ABOVE the PLT badge (badge +0.5, name +1.05) so they never overlap.
@@ -1932,7 +2073,7 @@ render = function(data) {
       sprite.position.copy(pos); sprite.position.y += yOff;
       sprite.scale.set(0.2, 0.025, 1);
       root.add(sprite);
-      const leS1b = nodeData.find(d => d.index === idx); if (leS1b) leS1b.label = sprite;
+      const leS1b = nodeData.find(d => d.index === idx); if (leS1b) { leS1b.label = sprite; leS1b.labelYOff = yOff; }
     });
     // Top-24 by True Value (P+L-T) get always-on labels; the rest fade in on zoom (idea 13, top-N only)
     {
@@ -2004,6 +2145,57 @@ render = function(data) {
       if (focusIdx < 0 && focusSet.size === 0) return;
       focusIdx = -1; focusSet.clear(); focusAnim = null; controls.enabled = true;
       setFlowPairs(globalFlowPairs);
+    }
+
+    // ─── IDEA 28 — THE 222 CONSTELLATION ───
+    // The hero's souls form a 222 in the stars; click a star to open that
+    // soul (the existing getNearestNode + panel + focusNode path — it reads
+    // d.pos, which the constellation moves, so click-to-open just works).
+    // The inline catalog holds only 8 type:'soul' entries, so the "hero
+    // souls" are the top 42 catalog items by True Value (tvOf) — no souls
+    // invented, ranking purely by P+L-T. Each digit "2" is a 5x7 point glyph
+    // (14 points); three digits side by side = 42 stars. Sprite nodes only:
+    // instanced skill stars have no per-node mesh to move. Nodes glide
+    // between their force-directed home and their digit point; every other
+    // node dims to 0.08. The toggle lives in the control bar (#hgConst).
+    const CONST_GLYPH = [[1,0],[2,0],[3,0],[0,1],[4,1],[4,2],[3,3],[2,4],[1,5],[0,6],[1,6],[2,6],[3,6],[4,6]];
+    const CONST_COLS = 5, CONST_SP = 0.85;
+    let constActive = false, constMoving = false;
+    const constSet = new Set();
+    function constTargets() {
+      const ranked = nodeData.filter(d => d.item && d.mesh && d.mesh.isSprite)
+        .slice().sort((a, b) => tvOf(b.item) - tvOf(a.item)).slice(0, CONST_GLYPH.length * 3);
+      const cs = Math.max(0.45, Math.min(1, (gw() / gh()) / 1.8)); // shrink on narrow bands
+      const targets = new Map();
+      ranked.forEach((d, i) => {
+        const digit = Math.floor(i / CONST_GLYPH.length);
+        const gc = CONST_GLYPH[i % CONST_GLYPH.length][0], gr = CONST_GLYPH[i % CONST_GLYPH.length][1];
+        const x0 = (digit - 1) * (CONST_COLS * CONST_SP + 1.6);
+        const x = (x0 + gc * CONST_SP - (CONST_COLS - 1) * CONST_SP / 2) * cs;
+        const y = 0.85 + (3.4 - gr * CONST_SP - 0.85) * cs;
+        targets.set(d.index, new V3(x, y, (Math.random() - 0.5) * 0.3));
+      });
+      return targets;
+    }
+    function setConstellation(on) {
+      constActive = on;
+      const btn = document.getElementById('hgConst');
+      if (btn) btn.textContent = on ? '\u2726 Graph view' : '\u2726 222 Constellation';
+      if (on) {
+        clearFocus();
+        if (hgFilter) { hgFilter.value = 'all'; applyGraphFilter('all'); }
+        const cmap = constTargets();
+        constSet.clear(); cmap.forEach((v, k) => constSet.add(k));
+        nodeData.forEach(d => { if (!d.homePos) d.homePos = d.pos.clone(); d.constTarget = cmap.has(d.index) ? cmap.get(d.index) : null; });
+        focusAnim = { fromT: controls.target.clone(), toT: new V3(0, 0.85, 0), fromP: camera.position.clone(), toP: new V3(0, 2.6, 9.5), start: performance.now(), dur: 700 };
+        controls.enabled = false;
+      } else {
+        constSet.clear();
+        nodeData.forEach(d => { d.constTarget = null; });
+        focusAnim = { fromT: controls.target.clone(), toT: new V3(0, 1.6, 0), fromP: camera.position.clone(), toP: new V3(0, 3.4, 8), start: performance.now(), dur: 700 };
+        controls.enabled = false;
+      }
+      constMoving = true;
     }
     try {
       const radialCv = document.createElement('canvas'); radialCv.width = radialCv.height = 128;
@@ -2227,7 +2419,10 @@ render = function(data) {
     const hgZo = document.getElementById('hgZoomOut');
     if (hgZo) hgZo.addEventListener('click', () => hgDolly(1.25));
     const hgRs = document.getElementById('hgReset');
-    if (hgRs) hgRs.addEventListener('click', () => { clearFocus(); camera.position.set(0, 3.4, 8); controls.target.set(0, 1.6, 0); applyGraphFilter('all'); if (hgFilter) hgFilter.value = 'all'; });
+    if (hgRs) hgRs.addEventListener('click', () => { if (constActive) setConstellation(false); clearFocus(); camera.position.set(0, 3.4, 8); controls.target.set(0, 1.6, 0); applyGraphFilter('all'); if (hgFilter) hgFilter.value = 'all'; });
+    // IDEA 28 — toggle between the normal graph and the 222 constellation.
+    const hgConst = document.getElementById('hgConst');
+    if (hgConst) hgConst.addEventListener('click', () => setConstellation(!constActive));
     window.__soulGraph.ctl = graphCtl;
 
     let emaDt = 16, slowFrames = 0, degraded = false, lastT = performance.now();
@@ -2242,13 +2437,13 @@ render = function(data) {
       requestAnimationFrame(animate); controls.update();
       const nowMs = performance.now();
       emaDt = emaDt * 0.95 + (nowMs - lastT) * 0.05; lastT = nowMs;
-      if (!degraded && emaDt > 40) { if (++slowFrames > 120) { degraded = true; renderer.setPixelRatio(1); starFar.visible = false; } } else if (emaDt <= 40) slowFrames = 0;
+      if (!degraded && emaDt > 40) { if (++slowFrames > 120) { degraded = true; renderer.setPixelRatio(1); starFar.visible = false; Object.values(trailSys).forEach(sy => { sy.pts.visible = false; }); } } else if (emaDt <= 40) slowFrames = 0;
       const t = nowMs * 0.001;
       // FIX #2 — pause freezes motion time (autoRotate off below); resume clears it
       if (graphCtl.paused && !graphCtl.frozenT) graphCtl.frozenT = t;
       if (!graphCtl.paused) graphCtl.frozenT = 0;
       const TT = (REDUCED || graphCtl.paused) ? (graphCtl.frozenT || 0) : t;
-      controls.autoRotate = !graphCtl.paused && !focusAnim;
+      controls.autoRotate = !graphCtl.paused && !focusAnim && !constActive;
       if (!REDUCED && !graphCtl.paused) { starNear.rotation.y += 0.00006; starFar.rotation.y -= 0.00004; }
       controls.autoRotateSpeed = REDUCED ? 0.8 : 0.8 + Math.sin(t*0.3)*0.3;
       // IDEA 13 — focus glide: ease the camera onto the focused node.
@@ -2258,6 +2453,19 @@ render = function(data) {
         controls.target.lerpVectors(focusAnim.fromT, focusAnim.toT, fe);
         camera.position.lerpVectors(focusAnim.fromP, focusAnim.toP, fe);
         if (fp >= 1) { focusAnim = null; controls.enabled = true; }
+      }
+      // IDEA 28 — glide nodes between home and their 222 digit point.
+      if (constMoving) {
+        let settled = true;
+        nodeData.forEach(d => {
+          const tgt = constActive ? (d.constTarget || null) : (d.homePos || null);
+          if (!tgt || !d.pos) return;
+          const dx = tgt.x - d.pos.x, dy = tgt.y - d.pos.y, dz = tgt.z - d.pos.z;
+          const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
+          if (dist > 0.02) { settled = false; d.pos.x += dx * 0.08; d.pos.y += dy * 0.08; d.pos.z += dz * 0.08; }
+          else d.pos.copy(tgt);
+        });
+        if (settled) constMoving = false;
       }
       // IDEA 13 + 22 — zoom gates (camera distance to target; home ≈ 8.2).
       // Non-top-24 labels fade in below 8, full by 6; gold threads + flow
@@ -2272,7 +2480,8 @@ render = function(data) {
       const flowFade = focusActive ? 1 : threadFade;
       if (pulsePts) { pulsePts.material.opacity = 0.8 * flowFade; pulsePts.visible = flowFade > 0.02 && pulsePairs.length > 0; }
       nodeData.forEach(d => { if (d.mesh) {
-        const dimF = (focusActive && !focusSet.has(d.index)) ? 0.12 : 1; // IDEA 13 — dim outside the focus
+        let dimF = (focusActive && !focusSet.has(d.index)) ? 0.12 : 1; // IDEA 13 — dim outside the focus
+        if (constActive && !constSet.has(d.index)) dimF = Math.min(dimF, 0.08); // IDEA 28 — dim outside the 222
         const isSpr = !!d.mesh.isSprite;
         const isHov = hoverRef.d && hoverRef.d.index === d.index;
         // Heartbeat lungs — lub-dub thump, phase-offset per node
@@ -2318,7 +2527,7 @@ render = function(data) {
           // by True Value are always on; the rest fade in only when zoomed
           // in (labelGate: 0 at distance 8, 1 at 6). Out-of-focus labels hide.
           const ld = camera.position.distanceTo(d.label.position);
-          d.label.material.opacity = Math.max(0.25, Math.min(0.9, 1.1 - ld / 18)) * (d.topLabel ? 1 : labelGate) * (focusActive && !focusSet.has(d.index) ? 0 : 1);
+          d.label.material.opacity = Math.max(0.25, Math.min(0.9, 1.1 - ld / 18)) * (d.topLabel ? 1 : labelGate) * (focusActive && !focusSet.has(d.index) ? 0 : 1) * (constActive && !constSet.has(d.index) ? 0 : 1);
         }
           if (d.aura) {
             d.aura.material.opacity = (0.28 + (REDUCED ? 0 : 0.2 * hb)) * dimF;
@@ -2335,10 +2544,23 @@ render = function(data) {
         if (d.halo) d.halo.material.opacity = 0.5 * dimF;
         if (d.star) d.star.material.size = 0.04 + (REDUCED ? 0 : 0.02 * Math.sin(TT*2.4 + (d.phase||0)));
         if (d.flare) d.flare.material.opacity = (0.55 + (REDUCED ? 0 : 0.3 * Math.sin(TT*2.4 + (d.phase||0)))) * dimF;
+        // IDEA 28 — in/after a constellation move, badges + labels + auras
+        // ride along with the node (their positions were baked at build).
+        if ((constActive || constMoving) && d.pos) {
+          if (d.badge) d.badge.position.set(d.pos.x, d.pos.y + 0.58, d.pos.z);
+          if (d.label) d.label.position.set(d.pos.x, d.pos.y + (d.labelYOff != null ? d.labelYOff : 0.85), d.pos.z);
+          if (d.aura) d.aura.position.copy(d.pos);
+        }
+        // IDEAS 23–24 — shed one trail mote per interval while the node is
+        // visible and the graph is moving (heartbeat/bob counts as motion).
+        if (!REDUCED && !graphCtl.paused && !degraded && d.mesh.visible && dimF > 0.5) {
+          d.trailAcc = (d.trailAcc || Math.random() * 2) + emaDt / 1000;
+          if (d.trailAcc > 2.4) { d.trailAcc = 0; spawnTrail(d); }
+        }
       } else if (d.label) {
         // Instanced skill nodes have no mesh, so their labels skip the block
         // above: dim them out of focus, restore them when focus clears.
-        d.label.material.opacity = focusActive ? (focusSet.has(d.index) ? 0.9 : 0) : 0.95;
+        d.label.material.opacity = constActive ? 0 : (focusActive ? (focusSet.has(d.index) ? 0.9 : 0) : 0.95);
       } });
       if (pulsePts && pulsePts.visible && !REDUCED) {
         const attr = pulseGeo.getAttribute('position');
@@ -2358,7 +2580,7 @@ render = function(data) {
           _m4.scale(_sv.set(s, s, s));
           sb.setMatrixAt(si, _m4);
           // IDEA 13 — instanced skill stars dim outside the focus too.
-          const sDim = (focusActive && !focusSet.has(inst[si].index)) ? 0.15 : 1;
+          const sDim = (constActive || (focusActive && !focusSet.has(inst[si].index))) ? 0.15 : 1;
           sb.setColorAt(si, _cc.setHSL(0.10 + 0.02*Math.sin(TT*2 + si*0.35), 0.75, 0.55).multiplyScalar(sDim));
         }
         sb.instanceMatrix.needsUpdate = true;
@@ -2383,6 +2605,16 @@ render = function(data) {
       if (brandSpr) { brandSpr.position.y = -0.2 + (REDUCED ? 0 : 0.08*Math.sin(TT*0.9)); brandSpr.material.opacity = 0.85 + (REDUCED ? 0 : 0.15*Math.sin(TT*1.3)); }
       if (codeTorus && !REDUCED && !graphCtl.paused) codeTorus.rotation.z += 0.0012;
       if (beacon && beacon.visible && !REDUCED && !graphCtl.paused) { beacon.material.opacity = 0.28 + 0.12*Math.sin(TT*3); beaconRing.rotation.z -= 0.01; }
+      // IDEAS 23–24 — advance + fade the shared trail systems (frozen when
+      // paused). Skill stars are instanced, so they get a 222 mote from a
+      // random skill instance every ~0.5 s instead of a per-node timer.
+      if (!graphCtl.paused && !REDUCED) {
+        if (sb && sb.count) {
+          skillTrailAcc += emaDt / 1000;
+          if (skillTrailAcc > 0.5) { skillTrailAcc = 0; const inst = sb.userData.instances[Math.floor(Math.random() * sb.count)]; if (inst) spawnTrail({ item: { type: 'skill' }, mesh: null, pos: inst.pos }); }
+        }
+        updateTrails(emaDt / 1000);
+      }
       renderer.render(scene, camera);
     }
     animate();
