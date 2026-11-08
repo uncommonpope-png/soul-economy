@@ -111,7 +111,7 @@ body{font-size:17px}
 .betty-stage-box{border:1px solid rgba(255,107,157,0.5);border-radius:16px;padding:18px;margin:0 0 18px;background:rgba(0,0,0,0.3)}
 .betty-stage-box h2{font-size:1.5rem;margin:0 0 6px}
 .betty-stage-box p{color:#ddd;line-height:1.55}
-#bettyStage{width:100%;height:420px;display:block;border-radius:12px;background:radial-gradient(circle at 50% 30%,rgba(255,107,157,0.25),rgba(0,0,0,0.6));touch-action:pan-y;cursor:grab}
+#bettyStage{width:100%;height:420px;display:block;border-radius:12px;background:radial-gradient(circle at 50% 30%,rgba(255,107,157,0.25),rgba(0,0,0,0.6));touch-action:none;cursor:grab}
 #bettyStage:active{cursor:grabbing}
 .betty-stage-note{text-align:center;color:#FFB3CD;font-size:0.95rem;margin-top:8px}
 .fund-goal{border:1px solid rgba(255,209,102,0.5);border-radius:12px;padding:14px;margin:12px 0;background:rgba(255,209,102,0.08)}
@@ -179,18 +179,25 @@ body{font-size:17px}
 <p class="betty-tag">Luxury plush monsters, collected and kept — keychain, plushie, purse, and book bag.</p>
 <p class="betty-creed-banner"><strong>Betty Plush / 222 / Soul Collection Agency / A.G.M / PLT · Collected and kept, never deleted.</strong> Every sellable piece carries “Betty Plush” stitched in, not just a tag. A soul is not merchandise: it is a life kept in your hands. Pocket Soul, Keeper Soul, Carry Soul, Journey Soul — one soul, kept four ways, or all together in a Full Soul Collection Set.</p>
 <canvas id="bettyLips" width="720" height="240"></canvas>
-<p class="betty-scene-note">The lips are our mark — the 3D shelf below is our products. Drag it to spin, tap a piece to open its soul.</p>
+<p class="betty-scene-note">The lips are our mark — the 3D room below is our products. Walk through it, tap a piece to open its soul.</p>
 </div>
 </div>
 <h2>Shop — souls for preorder</h2>
-<p>Search and the 3D shelf are shop tools: search the shop below, drag the shelf to spin it, tap a piece to open its soul panel. Only product sets are in this grid. Story and scene sets live in “Stories &amp; Scenes — not for sale” below the shop.</p>
+<p>Search and the 3D room are shop tools: search the shop below, walk through the room and tap a piece to open its soul panel. Only product sets are in this grid. Story and scene sets live in “Stories &amp; Scenes — not for sale” below the shop.</p>
 <input id="searchInput" class="world-search" type="text" placeholder="Search souls, stories, and pieces…" aria-label="Search souls, stories, and pieces" />
 <label class="betty-sort-label" for="bettySort">Sort: <select id="bettySort" aria-label="Sort souls"><option value="featured">Featured order</option><option value="name-az">Name A–Z</option><option value="name-za">Name Z–A</option><option value="price-low">Price: low to high</option><option value="price-high">Price: high to low</option></select></label>
 
 <section class="betty-stage-box" id="bettyStageBox">
-<h2>3D shelf — drag to spin</h2>
-<p>Real 3D boxes on a turning shelf, not flat pictures: each new soul sits on its own pedestal, lit and shadowed, with its photo wrapped around every face of a solid box and its name and starting price above it. Drag sideways to spin the shelf. Tap a piece (without dragging) to open its soul panel.</p>
-<canvas id="bettyStage" width="900" height="420"></canvas>
+<h2>3D room — walk through the shelf</h2>
+<p>The shelf is a room now: the new souls turn on pedestals in the middle, more pieces line the shelves on both side walls, Drippy the pink bunny waits on the counter in front, and the mirror on the back wall shows your own soul card. Drag to look around, walk in or step back with the buttons or the W/S keys, and tap a piece (without dragging) to open its soul panel.</p>
+<canvas id="bettyStage" width="900" height="420" tabindex="0" aria-label="3D room: drag to look around, W and S keys to walk"></canvas>
+<p id="bettyRoomHint" class="betty-stage-note">You are standing in the room — drag to look around, walk in or step back, tap a piece to open its soul. The mirror shows your soul card.</p>
+<p id="bettyStageNote" class="betty-stage-note"></p>
+<div class="betty-room-controls" role="group" aria-label="Walk through the room">
+<button type="button" id="bettyRoomIn">▲ Walk in</button>
+<button type="button" id="bettyRoomOut">▼ Step back</button>
+<button type="button" id="bettyRoomReset">Reset view</button>
+</div>
 </section>
 <section class="betty-section-box" id="bettyCollectionBox">
 <h2>Souls Collected — your shelf</h2>
@@ -333,6 +340,15 @@ showBettyTab();
 // up to 8 pieces from the catalog when fewer than 8 new souls are present).
 // The hero lips above the shelf are already a true 3D model (ExtrudeGeometry, bettyStartLips) —
 // no photo/SVG lips stand-in needed here; the true model does not wait for Stage 3.
+// WAVE 2C (2026-11-07, Bible idea 31): the shelf becomes a room — floor + four walls,
+// wall shelves on BOTH side walls (single-material photo minis, 1 draw call each),
+// Drippy the pink bunny on a front counter (full 6-face photo box + plaque, same build as
+// the shelf pieces), a mirror on the back wall showing the visitor's own soul card
+// (first collected soul from bettyPlushCollectedV1, else Drippy — never an invented name),
+// drag-to-look (yaw/pitch) + walk in/out buttons and W/S keys, camera clamped to the room.
+// The ring shelf itself is unchanged (Fix #3 boxes/plaques/tap + Wave 2a ritual still run
+// on it); the room is built in the same scene, NOT in the spinning group. Tap raycast,
+// buy ritual, collection shelf, prices, Stripe links and preorder flow are untouched.
 // No GLB file is invented: if no models/<file>.glb exists, the photo box stays and the note says Photo view.
 // Features: RoomEnvironment + PMREM, MeshPhysicalMaterial sheen, InstancedMesh pedestals + glow rings,
 // one shadow light (PCFSoft, tight frustum, 1024 phone / 2048 desktop), EffectComposer bloom
@@ -344,6 +360,9 @@ var bettyStageRaycaster=null, bettyStageCamera=null, bettyStageGroup=null, betty
 var bettyStageVisible=true, bettyStagePaused=false, bettyStageSquish=[], bettyStageRitual=[];
 var bettyStageGlbBySoulName={"Drippy":"models/pink-drip-bunny.glb","Mendie":"models/button-gingham-monster.glb","Patch":"models/denim-patchwork-monster.glb","Ember Stripe":"models/red-black-stripe-cat-fox.glb","Pixel":"models/black-pink-pixel-bunny.glb","Paws":"models/black-paw-monster.glb","Nightwing Dawn":"models/bat-monster.glb","Listen":"models/pink-white-bunny-purse.glb"};
 var bettyStageGlbByIndex=["models/pink-drip-bunny.glb","models/button-gingham-monster.glb","models/denim-patchwork-monster.glb","models/red-black-stripe-cat-fox.glb","models/black-pink-pixel-bunny.glb","models/black-paw-monster.glb","models/bat-monster.glb","models/pink-white-bunny-purse.glb"];
+// WAVE 2C room state: camera yaw/pitch (drag-to-look), walk direction (+1 in / -1 back, 0 still),
+// drag Y tracker, and the mirror refresh hook (assigned inside bettyStageInit, called by bettyCollectVisit).
+var bettyRoomYaw=0, bettyRoomPitch=0, bettyRoomMove=0, bettyStageLastY=0, bettyRoomMirrorRefresh=null;
 function bettyOpenFeatured(i){
   if(bettySets && bettySets[i]){ bettyOpenPanel(i); return; }
   if(!bettyLoading){ showBettyTab(); }
@@ -431,7 +450,10 @@ function bettyStageLabelSprite(T,name,priceText){
   return spr;
 }
 function bettyStageRemoveFromPick(o){ var i=bettyStagePick.indexOf(o); if(i>=0) bettyStagePick.splice(i,1); }
-function bettyStageInScene(o){ while(o){ if(o===bettyStageGroup) return true; o=o.parent; } return false; }
+function bettyStageInScene(o){ while(o){ if(o===bettyStageGroup) return true; if(bettyStageGroup && o===bettyStageGroup.parent) return true; o=o.parent; } return false; }
+// WAVE 2C: the room pieces (wall minis, counter bunny, mirror) hang off the SCENE, not the
+// spinning group — so in-scene means reaching the group OR the scene (the group's parent).
+// A stale removed box still fails: its parent chain ends at itself, never the scene.
 function bettyStageIndexFromObject(o){
   while(o){ if(o.userData && o.userData.setIndex!=null) return o.userData.setIndex; o=o.parent; }
   return null;
@@ -479,7 +501,7 @@ function bettyStageInit(){
     renderer.toneMapping=T.ACESFilmicToneMapping; renderer.toneMappingExposure=0.8;
     if(T.SRGBColorSpace) renderer.outputColorSpace=T.SRGBColorSpace;
     var scene=new T.Scene();
-    var camera=new T.PerspectiveCamera(42,900/420,0.1,100); camera.position.set(0,2.2,11); camera.lookAt(0,0.6,0);
+    var camera=new T.PerspectiveCamera(55,900/420,0.1,100); camera.position.set(0,2.2,7.5); camera.rotation.order='YXZ'; camera.rotation.set(0,0,0); // WAVE 2C: visitor stands inside the room (door end, z 7.5) looking in at the ring, counter and mirror; drag sets yaw/pitch on this rotation.
     // FIX #3 lighting: the old setup blew photo faces near-white (sun 1.7 + pink point 18
     // + full-strength RoomEnvironment on top of ACES). Dimmer key + pink, capped environment,
     // soft front fill so faces toward the camera read instead of washing out.
@@ -586,14 +608,130 @@ function bettyStageInit(){
       }
       group.add(holder);
     });
+    // WAVE 2C — Bible idea 31: the shelf becomes a room. Built in the SCENE (not the
+    // spinning group) around the existing ring shelf, reusing the same photos, the same
+    // 6-face box build for the counter bunny, and the same name/price plaque sprite.
+    // New draw calls: floor 1 + walls 4 + shelf boards 1 (InstancedMesh) + wall minis 8
+    // + counter 1 + counter bunny 6 + counter plaque 1 + mirror frame 1 + mirror card 1 = 24.
+    var roomAniso=1; try{ roomAniso=Math.min(8,renderer.capabilities.getMaxAnisotropy()); }catch(e){}
+    var roomFloor=new T.Mesh(new T.PlaneGeometry(18,18), new T.MeshStandardMaterial({color:0x2a1218,roughness:0.9,metalness:0.05}));
+    roomFloor.rotation.x=-Math.PI/2; roomFloor.position.y=-1.12; roomFloor.receiveShadow=true; scene.add(roomFloor);
+    var roomWallMat=new T.MeshStandardMaterial({color:0x1c0f16,roughness:0.95,metalness:0});
+    function bettyRoomWall(w,h,x,y,z,ry){ var m=new T.Mesh(new T.PlaneGeometry(w,h),roomWallMat); m.position.set(x,y,z); m.rotation.y=ry; scene.add(m); return m; }
+    bettyRoomWall(18,6, 0,1.9,-9, 0);           // back wall — the mirror hangs here
+    bettyRoomWall(18,6, 0,1.9, 9, Math.PI);     // front wall — behind the visitor
+    bettyRoomWall(18,6, -9,1.9, 0, Math.PI/2);  // left wall
+    bettyRoomWall(18,6,  9,1.9, 0,-Math.PI/2);  // right wall
+    // Wall shelves on BOTH side walls: 2 boards per wall, 2 minis per board. Minis are
+    // single-material photo boxes (hero photo on every face, 1 draw call each) — the
+    // full 6-face build stays on the ring shelf; the minis reuse the same photos.
+    // Tapping a mini opens that soul's panel, same as tapping its ring piece.
+    var boardGeo=new T.BoxGeometry(0.35,0.12,4.4);
+    var boardMat=new T.MeshStandardMaterial({color:0x3a1526,roughness:0.6,metalness:0.1});
+    var boards=new T.InstancedMesh(boardGeo,boardMat,4);
+    var dummy2=new T.Object3D();
+    [[-8.6,0.3],[-8.6,1.7],[8.6,0.3],[8.6,1.7]].forEach(function(bp,bi){
+      dummy2.position.set(bp[0],bp[1],0); dummy2.rotation.set(0,0,0); dummy2.updateMatrix(); boards.setMatrixAt(bi,dummy2.matrix);
+    });
+    scene.add(boards);
+    items.forEach(function(item,idx){
+      var side=(idx<4)?-1:1;                    // first four souls left wall, rest right wall
+      var slot=idx%4, boardY=(slot<2)?0.3:1.7, zPos=(slot%2===0)?-1.3:1.3;
+      var miniMat=new T.MeshPhysicalMaterial({color:0xff2e88,roughness:0.85,sheen:0.6,sheenColor:new T.Color(0xff8fb8),sheenRoughness:0.6,envMapIntensity:0.35});
+      var mini=new T.Mesh(new T.BoxGeometry(0.8,0.9,0.45),miniMat);
+      mini.position.set(side*8.35,boardY+0.06+0.45,zPos); mini.rotation.y=side>0?-Math.PI/2:Math.PI/2;
+      mini.castShadow=true; mini.userData.setIndex=item.catalogIndex;
+      scene.add(mini); bettyStagePick.push(mini);
+      loader.load(item.heroSrc,function(tex){ if(T.SRGBColorSpace)tex.colorSpace=T.SRGBColorSpace; tex.anisotropy=roomAniso; miniMat.map=tex; miniMat.needsUpdate=true; },undefined,function(){ /* mini keeps its pink material */ });
+    });
+    // Counter, front and center, with Drippy the pink bunny on it — full 6-face photo
+    // box + name/price plaque, same build as the ring pieces. Not a stage holder, so
+    // the buy ritual still lifts the ring piece, never the counter bunny.
+    var counter=new T.Mesh(new T.BoxGeometry(3.2,1.0,1.4), new T.MeshStandardMaterial({color:0x3a1526,roughness:0.6,metalness:0.1}));
+    counter.position.set(0,-0.6,5.5); counter.castShadow=true; counter.receiveShadow=true; scene.add(counter);
+    var counterItem=null;
+    for(var ci=0;ci<items.length;ci++){ if(items[ci].soulName==='Drippy'){ counterItem=items[ci]; break; } }
+    if(!counterItem && items.length) counterItem=items[0];
+    if(counterItem){
+      var cFaceSrcs=bettyStageFaceSrcs(counterItem);
+      var cFaceMats=cFaceSrcs.map(function(){ return new T.MeshPhysicalMaterial({color:0xff2e88,roughness:0.85,sheen:0.6,sheenColor:new T.Color(0xff8fb8),sheenRoughness:0.6,envMapIntensity:0.35}); });
+      var cBox=new T.Mesh(new T.BoxGeometry(1.5,1.7,0.7),cFaceMats);
+      cBox.position.set(0,0.75,5.5); cBox.castShadow=true; cBox.userData.setIndex=counterItem.catalogIndex;
+      scene.add(cBox); bettyStagePick.push(cBox);
+      cFaceSrcs.forEach(function(src,fi){ loader.load(src,function(tex){ if(T.SRGBColorSpace)tex.colorSpace=T.SRGBColorSpace; tex.anisotropy=roomAniso; cFaceMats[fi].map=tex; cFaceMats[fi].needsUpdate=true; },undefined,function(){}); });
+      if(counterItem.labelName){
+        var cLabel=bettyStageLabelSprite(T,counterItem.labelName,counterItem.labelPrice);
+        cLabel.position.set(0,2.05,5.5); cLabel.userData.setIndex=counterItem.catalogIndex;
+        scene.add(cLabel); bettyStagePick.push(cLabel);
+      }
+    }
+    // Mirror on the back wall: shows the visitor's own soul card.
+    // RULE — first collected soul in bettyPlushCollectedV1 (Wave 2a key) that still
+    // exists in the catalog; otherwise the default card, Drippy the pink bunny
+    // (first new soul). Name + price come from the catalog only — never invented.
+    // Tapping the mirror opens that soul's panel. Refreshes whenever a panel visit
+    // lands (bettyCollectVisit calls bettyRoomMirrorRefresh).
+    var mirrorFrame=new T.Mesh(new T.BoxGeometry(2.6,3.4,0.15), new T.MeshStandardMaterial({color:0xC9A227,roughness:0.35,metalness:0.7}));
+    mirrorFrame.position.set(0,1.3,-8.85); scene.add(mirrorFrame);
+    var mirrorCanvas=document.createElement('canvas'); mirrorCanvas.width=512; mirrorCanvas.height=688;
+    var mirrorTex=new T.CanvasTexture(mirrorCanvas); if(T.SRGBColorSpace) mirrorTex.colorSpace=T.SRGBColorSpace;
+    var mirrorPlane=new T.Mesh(new T.PlaneGeometry(2.3,3.1), new T.MeshBasicMaterial({map:mirrorTex,toneMapped:false}));
+    mirrorPlane.position.set(0,1.3,-8.76); scene.add(mirrorPlane); bettyStagePick.push(mirrorPlane);
+    function bettyRoomMirrorPick(){
+      var collected=[]; try{ collected=JSON.parse(localStorage.getItem('bettyPlushCollectedV1')||'[]'); }catch(e){ collected=[]; }
+      if(Array.isArray(collected)){
+        for(var c=0;c<collected.length;c++){
+          for(var mi=0;mi<items.length;mi++){ if(items[mi].displayName===collected[c]) return {item:items[mi],via:'collected'}; }
+          if(bettySets){ for(var ck=0;ck<bettySets.length;ck++){ var cs=bettySets[ck]; if(cs.name===collected[c] && cs.pictures && cs.pictures.length) return {item:bettyStageMakeItem(ck,cs),via:'collected'}; } }
+        }
+      }
+      for(var di=0;di<items.length;di++){ if(items[di].soulName==='Drippy') return {item:items[di],via:'default'}; }
+      return {item:items[0],via:'default'};
+    }
+    function bettyRoomDrawMirror(){
+      var pick=bettyRoomMirrorPick(); if(!pick||!pick.item) return;
+      var it=pick.item, ctx=mirrorCanvas.getContext('2d');
+      mirrorPlane.userData.setIndex=it.catalogIndex;
+      ctx.fillStyle='#1a0f16'; ctx.fillRect(0,0,512,688);
+      ctx.strokeStyle='#FFD166'; ctx.lineWidth=10; ctx.strokeRect(14,14,484,660);
+      ctx.textAlign='center';
+      ctx.fillStyle='#FFD166'; ctx.font='bold 34px Arial, sans-serif'; ctx.fillText('YOUR SOUL CARD',256,66);
+      ctx.fillStyle='#FFB3CD'; ctx.font='28px Arial, sans-serif';
+      ctx.fillText(pick.via==='collected'?'First soul you collected':'Meet Drippy',256,106);
+      ctx.fillStyle='#ff2e88'; ctx.fillRect(56,130,400,360);
+      ctx.fillStyle='#ffffff'; ctx.font='bold 60px Arial, sans-serif'; ctx.fillText('\u2726',256,330);
+      var img=new Image();
+      img.onload=function(){
+        var iw=img.width, ih=img.height, tw=400, th=360, s=Math.max(tw/iw,th/ih);
+        var dw=iw*s, dh=ih*s;
+        ctx.save(); ctx.beginPath(); ctx.rect(56,130,400,360); ctx.clip();
+        ctx.drawImage(img,56+(tw-dw)/2,130+(th-dh)/2,dw,dh); ctx.restore();
+        mirrorTex.needsUpdate=true;
+      };
+      img.src=it.heroSrc;
+      var nm=it.labelName||it.displayName||'';
+      var nfs=42; ctx.font='bold '+nfs+'px Arial, sans-serif';
+      while(nfs>26 && ctx.measureText(nm).width>460){ nfs-=2; ctx.font='bold '+nfs+'px Arial, sans-serif'; }
+      ctx.fillStyle='#ffffff'; ctx.fillText(nm,256,552);
+      ctx.fillStyle='#FFB3CD'; ctx.font='bold 34px Arial, sans-serif';
+      ctx.fillText(it.labelPrice||'',256,604);
+      ctx.fillStyle='#bbb'; ctx.font='24px Arial, sans-serif';
+      ctx.fillText(pick.via==='collected'?'Collected in this browser':'Your first soul is waiting',256,650);
+      mirrorTex.needsUpdate=true;
+    }
+    bettyRoomDrawMirror();
+    bettyRoomMirrorRefresh=bettyRoomDrawMirror;
     bettyStageRaycaster=new T.Raycaster();
     function resize(){
       var w=canvas.clientWidth||900, h=canvas.clientHeight||420;
       renderer.setSize(w,h,false); if(composer) composer.setSize(w,h); camera.aspect=w/h; camera.updateProjectionMatrix();
     }
     resize(); window.addEventListener('resize',resize);
-    canvas.addEventListener('pointerdown',function(e){ bettyStageDragging=true; bettyStageVel=0; bettyStageLastX=e.clientX; bettyStageMoved=0; try{canvas.setPointerCapture(e.pointerId);}catch(err){} });
-    canvas.addEventListener('pointermove',function(e){ if(!bettyStageDragging) return; var dx=e.clientX-bettyStageLastX; bettyStageLastX=e.clientX; bettyStageMoved+=Math.abs(dx); bettyStageTarget+=dx*0.005; bettyStageVel=dx*0.005; });
+    canvas.addEventListener('pointerdown',function(e){ bettyStageDragging=true; bettyStageVel=0; bettyStageLastX=e.clientX; bettyStageLastY=e.clientY; bettyStageMoved=0; try{canvas.setPointerCapture(e.pointerId);}catch(err){} });
+    // WAVE 2C: drag looks around the room (yaw + pitch on the camera). The shelf keeps
+    // its slow auto-spin; dragging no longer spins the shelf. Tap detection still uses
+    // bettyStageMoved (<6px, either axis) and the raycast below is unchanged.
+    canvas.addEventListener('pointermove',function(e){ if(!bettyStageDragging) return; var dx=e.clientX-bettyStageLastX, dy=e.clientY-bettyStageLastY; bettyStageLastX=e.clientX; bettyStageLastY=e.clientY; bettyStageMoved+=Math.abs(dx)+Math.abs(dy); bettyRoomYaw-=dx*0.0045; bettyRoomPitch-=dy*0.003; if(bettyRoomPitch>0.5)bettyRoomPitch=0.5; if(bettyRoomPitch<-0.5)bettyRoomPitch=-0.5; camera.rotation.set(bettyRoomPitch,bettyRoomYaw,0); });
     function endDrag(e){
       if(!bettyStageDragging) return; bettyStageDragging=false;
       if(bettyStageMoved<6 && bettyStageRaycaster){
@@ -633,6 +771,12 @@ function bettyStageInit(){
           bettyStageTarget+=dt*0.12; // slow auto-spin
           bettyStageTarget+=bettyStageVel; bettyStageVel*=0.95; // damped spin: velocity lerps to zero, not a dead stop
         }
+        // WAVE 2C: walk in / step back along the camera's facing, clamped to the room.
+        if(bettyRoomMove!==0){
+          var fwdX=-Math.sin(bettyRoomYaw), fwdZ=-Math.cos(bettyRoomYaw);
+          camera.position.x=Math.max(-7.5,Math.min(7.5,camera.position.x+fwdX*bettyRoomMove*dt*3));
+          camera.position.z=Math.max(-7.5,Math.min(8.2,camera.position.z+fwdZ*bettyRoomMove*dt*3));
+        }
         bettyStageAngle+=(bettyStageTarget-bettyStageAngle)*Math.min(1,dt*6);
         group.rotation.y=bettyStageAngle;
         // Tap squish animation (350ms, transform only).
@@ -661,6 +805,33 @@ function bettyStageInit(){
     var obs=new IntersectionObserver(function(entries){ if(entries[0].isIntersecting){ obs.disconnect(); bettyStageInit(); } },{rootMargin:'200px'});
     obs.observe(box);
   } else { bettyStageInit(); }
+})();
+// WAVE 2C — room walk controls (DOM buttons + W/S + arrow keys on the canvas).
+// Hold a button (mouse or touch) to keep walking; release to stop. Reset restores the door view.
+(function(){
+  function hold(id,dir){
+    var b=document.getElementById(id); if(!b) return;
+    function on(e){ if(e)e.preventDefault(); bettyRoomMove=dir; }
+    function off(){ if(bettyRoomMove===dir) bettyRoomMove=0; }
+    b.addEventListener('pointerdown',on);
+    b.addEventListener('pointerup',off); b.addEventListener('pointerleave',off); b.addEventListener('pointercancel',off);
+  }
+  hold('bettyRoomIn',1); hold('bettyRoomOut',-1);
+  var reset=document.getElementById('bettyRoomReset');
+  if(reset) reset.addEventListener('click',function(){
+    bettyRoomYaw=0; bettyRoomPitch=0; bettyRoomMove=0;
+    if(bettyStageCamera){ bettyStageCamera.position.set(0,2.2,7.5); bettyStageCamera.rotation.set(0,0,0); }
+  });
+  var canvas=document.getElementById('bettyStage');
+  if(canvas){
+    canvas.addEventListener('keydown',function(e){
+      if(e.key==='w'||e.key==='W'||e.key==='ArrowUp'){ bettyRoomMove=1; e.preventDefault(); }
+      else if(e.key==='s'||e.key==='S'||e.key==='ArrowDown'){ bettyRoomMove=-1; e.preventDefault(); }
+    });
+    canvas.addEventListener('keyup',function(e){
+      if(e.key==='w'||e.key==='W'||e.key==='ArrowUp'||e.key==='s'||e.key==='S'||e.key==='ArrowDown'){ bettyRoomMove=0; }
+    });
+  }
 })();
 </script>
 
@@ -942,6 +1113,13 @@ function bettyPanelStageTry(idx){
 .betty-collection-shelf.betty-collected-full{animation:bettyGoldPulse 2.4s ease-in-out infinite}
 .betty-collection-note{color:#FFB3CD;font-size:0.9rem;margin-top:10px}
 </style>
+<style>
+/* WAVE 2C — Bible idea 31 (walk-through room): walk controls; canvas focus ring for the W/S keys. */
+#bettyStage:focus-visible{outline:3px solid #FFB3CD;outline-offset:2px}
+.betty-room-controls{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.betty-room-controls button{min-height:44px;padding:10px 16px;border-radius:999px;border:1px solid rgba(255,107,157,0.6);background:rgba(255,46,136,0.25);color:#fff;cursor:pointer;font-size:0.95rem}
+.betty-room-controls button:active{background:#ff2e88}
+</style>
 <script>
 // WAVE 2A — Bible idea 27 (buy flow as a ritual) + idea 33 (collection shelf).
 // Idea 27: tap Preorder (bettyPreorderBuy) or Add to cart (bettyCartAddByIndex) and the soul's
@@ -992,6 +1170,8 @@ function bettyCollectVisit(idx){
   var list=bettyCollectionLoad();
   if(list.indexOf(set.name)<0){list.push(set.name);bettyCollectionSave(list);}
   bettyCollectionRender();
+  // WAVE 2C: a new collected soul can change the mirror's card — refresh it if the room is running.
+  if(typeof bettyRoomMirrorRefresh==='function') bettyRoomMirrorRefresh();
 }
 function bettyCollectionRender(){
   var shelf=document.getElementById('bettyCollectionShelf'); if(!shelf)return;
