@@ -1224,6 +1224,337 @@ function skyPlacePlanets() {
 }
 skyPlacePlanets();
 
+// === BEGIN 222-TRAM (finding #101, cycle 4 §4B, tick 16) ===
+// THE 222 TRAM — one slow lit tram on an elevated outer-ring loop, the
+// city's pulse (the missing precondition for the cycle-6 tram ride,
+// finding #168; the tram stop, #144, follows in a later tick).
+// One merged mesh + its glow = +1 draw call total: the body, roof,
+// headlights, bogies and the TRACK RING are merged into a single
+// geometry (mergeParts, the torii pattern) under one material whose
+// emissiveMap is the tram glow canvas below — the track is a full
+// circle, so it is rotation-invariant and can ride in the same mesh
+// while the tram orbits it. The headlight "glow sprite" in the finding
+// is painted emissive discs, not a Sprite — a sprite would be a second
+// call and break the +1 budget.
+// Windows use the rank-99 interior-mapped canvas (makeWindowTexture —
+// the lit cells with mullion crosses, the room trick as it exists in
+// this base) drawn into the glow canvas's side band, with a cream 222
+// on both sides (the brand stack's number, not a route number).
+// LOOP: radius 44 — clears every building (max outer edge 40.46, min
+// keepOut clearance 1.54), every home spot (max radius 25.06), the
+// torii tunnel (max radius 25.79) and the streets (end r=38); inside
+// the far skyline wall (r=58). ELEVATED: track y=10, body centre
+// y=10.9 — above the machiya roofs, crossing the tower faces in the
+// gaps between the ring-0 neon blocks. SPEED: 90 s per circuit
+// (2π/90 rad/s). Never stops, never opens, never carries anyone —
+// the ride (#168) and the stop (#144) are later ticks, not here.
+// PER-FRAME: tramTick(dt) runs in skyTick (the sky's own rAF loop),
+// the same home as skyTwinkle — NOT in world-base.html's animate()
+// (discarded at build time) and NOT in RUNTIME_TEMPLATE (build_world.py
+// is coordinator-owned). Follows the rawDt convention: when the
+// fixed-timestep work lands, tramTick must migrate to fixedDt exactly
+// like updateRain(rawDt, t).
+// No LITE cut: the finding says "off in LITE", but no LITE mode exists
+// in this base or in build_world.py (same as the rain, which ships on
+// phone) — nothing to hook the cut into yet.
+const TRAM_R = 44;               // loop radius (see clearances above)
+const TRAM_TRACK_Y = 10.0;       // elevated rail height
+const TRAM_BODY_Y = 10.9;        // tram body centre height
+const TRAM_PERIOD = 90;          // seconds per circuit
+const TRAM_START = 2.2;          // start angle: north-west, in the default camera's view
+let tramAngle = TRAM_START;
+
+// UV helpers (tram-local names — no collisions with the base): remap a
+// geometry's UVs into one rect of the glow atlas.
+function tramRemapUV(geo, u0, v0, u1, v1) {
+  const uv = geo.attributes.uv;
+  for (let i = 0; i < uv.count; i++) {
+    uv.setXY(i, u0 + uv.getX(i) * (u1 - u0), v0 + uv.getY(i) * (v1 - v0));
+  }
+  return geo;
+}
+// BoxGeometry builds its faces in px, nx, py, ny, pz, nz order, 4 verts
+// each — give each face its own atlas rect.
+function tramRemapBoxFaces(geo, rects) {
+  const uv = geo.attributes.uv;
+  for (let f = 0; f < 6; f++) {
+    const r = rects[f];
+    for (let v = 0; v < 4; v++) {
+      const i = f * 4 + v;
+      uv.setXY(i, r[0] + uv.getX(i) * (r[2] - r[0]), r[1] + uv.getY(i) * (r[3] - r[1]));
+    }
+  }
+  return geo;
+}
+
+// Glow atlas (512x256), the tram's emissiveMap — black = no glow:
+//   A u .00-.50: side band — 4 lit windows (rank-99 canvas cells) + cream 222
+//   B u .50-.625: end band — one small lit window
+//   C u .625-.75: headlight amber blob
+//   D u .75-.875: tail-light pink blob
+//   E u .875-1: pure black (roof, bogies, rail, top/bottom faces)
+const TRAM_A = [0.00, 0.0, 0.50, 1.0];
+const TRAM_B = [0.50, 0.0, 0.625, 1.0];
+const TRAM_C = [0.625, 0.0, 0.75, 1.0];
+const TRAM_D = [0.75, 0.0, 0.875, 1.0];
+const TRAM_E = [0.875, 0.0, 1.0, 1.0];
+const tramGlowTex = canvasTex(512, 256, (g) => {
+  g.fillStyle = '#000000'; g.fillRect(0, 0, 512, 256);
+  // Side band A: windows from the rank-99 canvas, drawn in.
+  const win = makeWindowTexture({ seed: 222, lit: 0.8, w: 256, h: 128, cols: 4, rows: 2 });
+  g.drawImage(win.image, 0, 16, 256, 128);
+  // Cream 222 under the windows; 222 reads the same mirrored, so both
+  // sides carry it.
+  g.textAlign = 'center'; g.textBaseline = 'middle';
+  g.shadowColor = '#F59E0B'; g.shadowBlur = 18;
+  g.fillStyle = '#FFF3D6'; g.font = '900 64px Arial, sans-serif';
+  g.fillText('222', 128, 196);
+  g.shadowBlur = 0;
+  // End band B: one small lit window.
+  g.fillStyle = '#F59E0B'; g.globalAlpha = 0.9;
+  g.fillRect(272, 88, 32, 80);
+  g.globalAlpha = 1; g.fillStyle = '#000000';
+  g.fillRect(286, 88, 4, 80); g.fillRect(272, 124, 32, 4);
+  // Headlight blob C: warm amber radial glow.
+  let hg = g.createRadialGradient(352, 128, 4, 352, 128, 60);
+  hg.addColorStop(0, 'rgba(255,209,102,1)');
+  hg.addColorStop(0.5, 'rgba(245,158,11,0.9)');
+  hg.addColorStop(1, 'rgba(245,158,11,0)');
+  g.fillStyle = hg; g.fillRect(320, 64, 64, 128);
+  // Tail-light blob D: pink radial glow.
+  hg = g.createRadialGradient(416, 128, 4, 416, 128, 60);
+  hg.addColorStop(0, 'rgba(255,158,196,1)');
+  hg.addColorStop(0.5, 'rgba(255,46,136,0.9)');
+  hg.addColorStop(1, 'rgba(255,46,136,0)');
+  g.fillStyle = hg; g.fillRect(384, 64, 64, 128);
+});
+
+const tramMat = new THREE.MeshStandardMaterial({
+  vertexColors: true, roughness: 0.7, metalness: 0.05,
+  emissive: 0xFFFFFF, emissiveMap: tramGlowTex, emissiveIntensity: 1.1,
+});
+// Tram-local colours (Midnight Amber only — no cyan anywhere).
+const TRAM_AMBER = new THREE.Color(0xF59E0B);
+const TRAM_DARK = new THREE.Color(0x3A2418);
+const TRAM_RAIL = new THREE.Color(0x4A3220);
+const TRAM_CREAM = new THREE.Color(0xFFF3D6);
+const TRAM_PINK = new THREE.Color(0xFF2E88);
+const _tramM = (x, y, z) => new THREE.Matrix4().setPosition(x, y, z);
+// Body: 2.0 wide (radial) x 1.5 high x 4.6 long (tangential). Long faces
+// (+z/-z) take the side band A; ends (+x/-x) the end band B; top/bottom E.
+const tramBodyGeo = tramRemapBoxFaces(
+  new THREE.BoxGeometry(2.0, 1.5, 4.6),
+  [TRAM_B, TRAM_B, TRAM_E, TRAM_E, TRAM_A, TRAM_A]);
+// Roof slab: slightly wider than the body, dark timber, no glow.
+const tramRoofGeo = tramRemapUV(new THREE.BoxGeometry(2.3, 0.18, 4.9),
+  TRAM_E[0], TRAM_E[1], TRAM_E[2], TRAM_E[3]);
+// Headlights: two amber discs on the front (-z) end — the tram travels
+// toward -z as tramAngle increases (rotation.y takes +x toward -z).
+const tramHeadGeo = tramRemapUV(new THREE.CircleGeometry(0.13, 16),
+  TRAM_C[0], TRAM_C[1], TRAM_C[2], TRAM_C[3]);
+// Tail lights: two pink discs on the rear (+z) end.
+const tramTailGeo = tramRemapUV(new THREE.CircleGeometry(0.10, 16),
+  TRAM_D[0], TRAM_D[1], TRAM_D[2], TRAM_D[3]);
+// Bogies: dark boxes under the body, riding the rail.
+const tramBogieGeo = tramRemapUV(new THREE.BoxGeometry(1.4, 0.35, 1.0),
+  TRAM_E[0], TRAM_E[1], TRAM_E[2], TRAM_E[3]);
+// Track: one thin flat ring, full circle — rotation-invariant, so it can
+// live in the same merged mesh as the tram (the +1 budget's whole point).
+const tramRailGeo = tramRemapUV(
+  new THREE.RingGeometry(TRAM_R - 0.18, TRAM_R + 0.18, 128),
+  TRAM_E[0], TRAM_E[1], TRAM_E[2], TRAM_E[3]);
+
+const tramGroup = new THREE.Group();
+const tramMesh = new THREE.Mesh(mergeParts([
+  { geo: tramBodyGeo, matrix: _tramM(TRAM_R, TRAM_BODY_Y, 0), color: TRAM_AMBER },
+  { geo: tramRoofGeo, matrix: _tramM(TRAM_R, TRAM_BODY_Y + 0.84, 0), color: TRAM_DARK },
+  { geo: tramHeadGeo, matrix: new THREE.Matrix4().makeRotationY(Math.PI).setPosition(TRAM_R - 0.6, 10.7, -2.31), color: TRAM_CREAM },
+  { geo: tramHeadGeo, matrix: new THREE.Matrix4().makeRotationY(Math.PI).setPosition(TRAM_R + 0.6, 10.7, -2.31), color: TRAM_CREAM },
+  { geo: tramTailGeo, matrix: _tramM(TRAM_R - 0.6, 10.7, 2.31), color: TRAM_PINK },
+  { geo: tramTailGeo, matrix: _tramM(TRAM_R + 0.6, 10.7, 2.31), color: TRAM_PINK },
+  { geo: tramBogieGeo, matrix: _tramM(TRAM_R, 10.18, -1.4), color: TRAM_DARK },
+  { geo: tramBogieGeo, matrix: _tramM(TRAM_R, 10.18, 1.4), color: TRAM_DARK },
+  { geo: tramRailGeo, matrix: new THREE.Matrix4().makeRotationX(-Math.PI / 2).setPosition(0, TRAM_TRACK_Y, 0), color: TRAM_RAIL },
+]), tramMat);
+tramGroup.add(tramMesh);
+tramGroup.rotation.y = tramAngle;
+scene.add(tramGroup);
+
+// Per-frame: one slow circuit per TRAM_PERIOD seconds. The track is a
+// full circle, so rotating the group moves the tram and leaves the rail
+// exactly where it was. rawDt convention — migrate to fixedDt with
+// updateRain when the fixed timestep lands.
+function tramTick(dt) {
+  tramAngle += (Math.PI * 2 / TRAM_PERIOD) * dt;
+  tramGroup.rotation.y = tramAngle;
+  // finding #144: the stop lamp kindles as the tram approaches the
+  // stop angle (PI/2, overhead at (0,-44)) and dims as it leaves.
+  // Driven here, in skyTick via tramTick — NOT in animate() (the base's
+  // animate() is DISCARDED at build time) and NOT in RUNTIME_TEMPLATE
+  // (build_world.py is coordinator-owned). Raw-dt convention: migrates
+  // to fixedDt with tramTick/updateRain when the timestep lands.
+  // TRAMSTOP_ANGLE / tramStopMat are declared in the tram-stop block
+  // below; tramTick only runs from skyTick(), after that block.
+  let _sd = tramAngle - TRAMSTOP_ANGLE;
+  _sd = Math.atan2(Math.sin(_sd), Math.cos(_sd)); // wrap to [-PI, PI]
+  const _ad = Math.abs(_sd);
+  const _k = 1 - THREE.MathUtils.smoothstep(_ad, TRAMSTOP_KINDLE_NEAR, TRAMSTOP_KINDLE_FAR);
+  tramStopKindle = _k;
+  tramStopMat.emissiveIntensity = TRAMSTOP_GLOW_IDLE + (TRAMSTOP_GLOW_FULL - TRAMSTOP_GLOW_IDLE) * _k;
+}
+window.__tram = {
+  group: tramGroup, mesh: tramMesh, period: TRAM_PERIOD, radius: TRAM_R,
+  get angle() { return tramAngle; },
+  setAngle(a) { tramAngle = a; tramGroup.rotation.y = a; },
+  setVisible(v) { tramMesh.visible = !!v; },
+};
+// === END 222-TRAM ===
+// === BEGIN TRAM-STOP (finding #144, tick 17) ===
+// TRAM STOP SHELTER — the second precondition for the cycle-6 tram
+// ride (#168): roof + posts + bench + 222 sign where the tram loop
+// nears the plaza, on the plaza-gate axis due south (0,-44), directly
+// under the elevated loop. PLACEMENT (computed numerically over all 31
+// SOUL_DEFS homes + the 38 live keepOut circles + the 7 torii gates,
+// see the tick-17 PATCH.md): keepOut min +4.82 (circle (-6.97,-35.32)
+// r 3.94), homes min +19.80 (lenahorns), torii min +15.83 (gate 7 at
+// (0.90,-25.77)); footprint r 42.65..45.45 straddles the rail
+// (43.82..44.18) and the tram body span (43..45) HORIZONTALLY ONLY —
+// the shelter tops out at 3.65 while the rail sits at y 10 and the
+// tram body underside at ~10.15, so the vertical clearance is ~6.35 m:
+// the tram passes OVER the shelter, like a station under an el track.
+// The rider approaches from the plaza down the torii-tunnel axis and
+// waits under the roof; the lamp + the lit 222 sign kindle as the tram
+// approaches (tramTick above, driven by the tram angle).
+// BOARDING — NOT BUILT HERE: no platform, stair, or lift exists yet.
+// The ride tick (#168) adds the way up from the shelter's south side
+// to a platform at track height (y 10); this tick is the stop only —
+// place, look, lamp.
+// ONE merged mesh + its glow = +1 draw call (the tram pattern):
+// platform, posts, roof, back panel, bench, sign, lamp globe + lamp
+// disc share one MeshStandardMaterial (vertexColors + emissiveMap
+// atlas). The lamp kindles by raising that ONE material's
+// emissiveIntensity — the atlas is black everywhere except the lamp
+// blob (rect A) and the sign 222 (rect B), so only the lamp + sign
+// brighten; the timber stays dark. No real light is added (the
+// finding's "lamp kindles" is the emissive kindle; a PointLight would
+// wash the whole south plaza).
+const TRAMSTOP_X = 0, TRAMSTOP_Z = -44;   // shelter centre, plaza-gate axis
+const TRAMSTOP_ANGLE = Math.PI / 2;       // tram angle when it is overhead:
+// tram pos = (44 cos a, -44 sin a); a = PI/2 -> (0,-44). Verified
+// against window.__tram.angle in the tick-17 probe.
+const TRAMSTOP_KINDLE_NEAR = 0.12;        // rad: full brightness inside this
+const TRAMSTOP_KINDLE_FAR = 0.55;         // rad: idle beyond this (~8 s away)
+const TRAMSTOP_GLOW_IDLE = 0.35, TRAMSTOP_GLOW_FULL = 1.9;
+let tramStopKindle = 0;                    // 0..1, read by the probe handle
+
+// Glow atlas (512x256), the stop's emissiveMap — black = no glow:
+//   top band v .50-1.00: cream 222 (the lit sign, reads the same mirrored)
+//   bottom-left u .00-.332, v .00-.50: amber radial lamp blob
+//   bottom-right u .34-1.00, v .00-.50: pure black (roof/posts/bench)
+const STOP_A = [0.00, 0.0, 0.332, 0.5];
+const STOP_B = [0.00, 0.5, 1.0, 1.0];
+const STOP_C = [0.34, 0.0, 1.0, 0.5];
+const tramStopGlowTex = canvasTex(512, 256, (g) => {
+  g.fillStyle = '#000000'; g.fillRect(0, 0, 512, 256);
+  // Sign band (top half of the canvas = v .50-1.00): cream 222, amber halo.
+  g.textAlign = 'center'; g.textBaseline = 'middle';
+  g.shadowColor = '#F59E0B'; g.shadowBlur = 16;
+  g.fillStyle = '#FFF3D6'; g.font = '900 104px Arial, sans-serif';
+  g.fillText('222', 256, 64);
+  g.shadowBlur = 0;
+  // Lamp blob (bottom-left): warm amber radial glow.
+  const lg = g.createRadialGradient(85, 192, 4, 85, 192, 80);
+  lg.addColorStop(0, 'rgba(255,209,102,1)');
+  lg.addColorStop(0.5, 'rgba(245,158,11,0.9)');
+  lg.addColorStop(1, 'rgba(245,158,11,0)');
+  g.fillStyle = lg; g.fillRect(0, 128, 170, 128);
+});
+const tramStopMat = new THREE.MeshStandardMaterial({
+  vertexColors: true, roughness: 0.7, metalness: 0.05,
+  emissive: 0xFFFFFF, emissiveMap: tramStopGlowTex,
+  emissiveIntensity: TRAMSTOP_GLOW_IDLE,
+});
+
+// UV helpers (stop-local names — no collisions with the tram's).
+function stopRemapUV(geo, u0, v0, u1, v1) {
+  const uv = geo.attributes.uv;
+  for (let i = 0; i < uv.count; i++) {
+    uv.setXY(i, u0 + uv.getX(i) * (u1 - u0), v0 + uv.getY(i) * (v1 - v0));
+  }
+  return geo;
+}
+function stopRemapBoxFaces(geo, rects) {
+  const uv = geo.attributes.uv;
+  for (let f = 0; f < 6; f++) {
+    const r = rects[f];
+    for (let v = 0; v < 4; v++) {
+      const i = f * 4 + v;
+      uv.setXY(i, r[0] + uv.getX(i) * (r[2] - r[0]), r[1] + uv.getY(i) * (r[3] - r[1]));
+    }
+  }
+  return geo;
+}
+// Short-hands: every part is remapped — default BoxGeometry UVs (0-1 per
+// face) would smear the whole atlas across each face.
+const _stopC6 = [STOP_C, STOP_C, STOP_C, STOP_C, STOP_C, STOP_C];
+const stopCBox = (w, h, d) => stopRemapBoxFaces(new THREE.BoxGeometry(w, h, d), _stopC6);
+const stopCCyl = (rt, rb, h, s) => stopRemapUV(new THREE.CylinderGeometry(rt, rb, h, s), STOP_C[0], STOP_C[1], STOP_C[2], STOP_C[3]);
+const STOP_DARK = new THREE.Color(0x3A2418);
+const STOP_AMBER = new THREE.Color(0xF59E0B);
+const STOP_SLAB = new THREE.Color(0x2A1A12);
+const STOP_WOOD = new THREE.Color(0x7A4A22);
+const STOP_SIGN = new THREE.Color(0x140E0C);
+const STOP_CREAM = new THREE.Color(0xFFF3D6);
+const _stopM = (x, y, z) => new THREE.Matrix4().setPosition(x, y, z);
+// Local frame: origin at ground centre (0,0,-44); +z faces the plaza
+// (north, the rider's approach); +x east. Heights from the ground:
+// platform top 0.14, bench seat 0.58, roof 2.74-2.90, sign top 3.65.
+const tramStopMesh = new THREE.Mesh(mergeParts([
+  // platform slab + amber threshold strip on the approach edge
+  { geo: stopCBox(4.2, 0.14, 2.8), matrix: _stopM(0, 0.07, 0), color: STOP_SLAB },
+  { geo: stopCBox(4.2, 0.05, 0.18), matrix: _stopM(0, 0.165, 1.32), color: STOP_AMBER },
+  // four amber posts (platform top 0.14 -> roof underside 2.74)
+  { geo: stopCCyl(0.09, 0.11, 2.6, 8), matrix: _stopM(-1.7, 1.44, 0.95), color: STOP_AMBER },
+  { geo: stopCCyl(0.09, 0.11, 2.6, 8), matrix: _stopM(1.7, 1.44, 0.95), color: STOP_AMBER },
+  { geo: stopCCyl(0.09, 0.11, 2.6, 8), matrix: _stopM(-1.7, 1.44, -0.95), color: STOP_AMBER },
+  { geo: stopCCyl(0.09, 0.11, 2.6, 8), matrix: _stopM(1.7, 1.44, -0.95), color: STOP_AMBER },
+  // roof slab + amber fascia on the approach edge
+  { geo: stopCBox(4.0, 0.16, 2.4), matrix: _stopM(0, 2.82, 0), color: STOP_DARK },
+  { geo: stopCBox(4.0, 0.14, 0.08), matrix: _stopM(0, 2.74, 1.22), color: STOP_AMBER },
+  // back panel (bench back) + bench seat + legs
+  { geo: stopCBox(3.5, 1.15, 0.08), matrix: _stopM(0, 0.85, -1.0), color: STOP_DARK },
+  { geo: stopCBox(2.6, 0.12, 0.55), matrix: _stopM(0, 0.58, -0.72), color: STOP_WOOD },
+  { geo: stopCBox(0.12, 0.44, 0.5), matrix: _stopM(-1.1, 0.36, -0.72), color: STOP_DARK },
+  { geo: stopCBox(0.12, 0.44, 0.5), matrix: _stopM(1.1, 0.36, -0.72), color: STOP_DARK },
+  // 222 sign: dark frame standing on the roof front edge + the lit board
+  // (front +z face takes the 222 band; every other face is black).
+  { geo: stopCBox(2.5, 0.74, 0.07), matrix: _stopM(0, 3.28, 1.16), color: STOP_SIGN },
+  { geo: stopRemapBoxFaces(new THREE.BoxGeometry(2.36, 0.60, 0.05),
+      [STOP_C, STOP_C, STOP_C, STOP_C, STOP_B, STOP_C]),
+    matrix: _stopM(0, 3.28, 1.21), color: STOP_SIGN },
+  // hanging lamp: dark stem + cream globe (amber blob) + north-facing
+  // glow disc (the kindling face the rider sees on approach).
+  { geo: stopCCyl(0.03, 0.03, 0.3, 8), matrix: _stopM(0, 2.59, 0), color: STOP_DARK },
+  { geo: stopRemapUV(new THREE.SphereGeometry(0.17, 12, 10),
+      STOP_A[0], STOP_A[1], STOP_A[2], STOP_A[3]),
+    matrix: _stopM(0, 2.36, 0), color: STOP_CREAM },
+  { geo: stopRemapUV(new THREE.CircleGeometry(0.13, 16),
+      STOP_A[0], STOP_A[1], STOP_A[2], STOP_A[3]),
+    matrix: _stopM(0, 2.36, 0.18), color: STOP_CREAM },
+]), tramStopMat);
+tramStopMesh.position.set(TRAMSTOP_X, 0, TRAMSTOP_Z);
+scene.add(tramStopMesh);
+
+// debug handle for verification (real-browser checks, not gameplay).
+window.__tramStop = {
+  mesh: tramStopMesh, angle: TRAMSTOP_ANGLE,
+  get kindle() { return tramStopKindle; },
+  get glow() { return tramStopMat.emissiveIntensity; },
+  setVisible(v) { tramStopMesh.visible = !!v; },
+};
+// === END TRAM-STOP ===
+
+
 /* ---- sky per-frame update: orbits + spin (drag inertia + auto-rotate
    + collect impulse) + sky follows the camera. Own rAF, NOT the
    world's animate() (see the note at the top of this section). ---- */
@@ -1240,6 +1571,7 @@ function skyTick() {
   for (const p of PLANETS) p.angle += (Math.PI * 2 / p.period) * dt;
   skyPlacePlanets();
   skyTwinkle(dt); // finding #140: star twinkle, amortized chunk in the sky's own loop
+  tramTick(dt); // finding #101: 222 tram — same sky-loop home as the twinkle (NOT animate(), NOT RUNTIME_TEMPLATE)
   // drag inertia: velocity decays ~0.92/frame once the pointer lifts
   if (!skyDrag.active && Math.abs(skyDrag.vel) > 0.001) {
     skyAngle += skyDrag.vel * dt;
@@ -8089,7 +8421,7 @@ const COL = {
   pink: 0xFF2E88, pinkLight: 0xFF9EC6, pinkDark: 0xC2185B,
   dark: 0x2A0A1A, white: 0xFFF3D6,
   // Dream-eater Charm (sampled from bp-019/020/021 — soft sky blue, NOT cyan)
-  blue: 0x6FA3DC, blueLight: 0x8FB8E8, lavender: 0x9B7ED0, lavenderDark: 0x7E5CC0
+  blue: 0x82ADE2, blueLight: 0x9CC2EC, lavender: 0x9B7ED0, lavenderDark: 0x7E5CC0 // tick 16 A/B winner d-lighten (was 0x6FA3DC / 0x8FB8E8)
 };
 
 function canvasTex(w, h, draw) {
@@ -8102,8 +8434,22 @@ function canvasTex(w, h, draw) {
   return t;
 }
 
-function drawFace(ctx, w, h, eyesOpen) {
-  ctx.clearRect(0, 0, w, h);
+// ---- face atlas (research §1I, Mint Doze pattern; tick 16: 7
+// expressions, Midnight Star pattern): ONE 1792x256 canvas.
+// Columns: 0 open (DEFAULT — the photo face: closed right-eye curve,
+// zigzag grin, 3 pink fangs) | 1 happy (right eye ^^ arc) |
+// 2 excited (^^ arc + bigger fangs) | 3 sleepy (flatter curve + lid
+// line) | 4 wink (flat line + flick) | 5 surprised (small round open
+// eye, "o" mouth, fangs hidden) | 6 closed (blink — the old closed
+// cell). Swap = map.offset.x only, +0 draw calls. The left eye is the
+// star-patch GEOMETRY, not canvas — the atlas varies the right eye +
+// mouth only. The open cell is pixel-identical to the pre-tick-16 face
+// (proven by atlas-dream-eater-c16.py).
+const FACE_VARIANTS = ['open', 'happy', 'excited', 'sleepy', 'wink', 'surprised', 'closed'];
+function drawFaceCell(ctx, x0, variant) {
+  ctx.save();
+  ctx.translate(x0, 0);
+  ctx.clearRect(0, 0, 256, 256);
   // lavender stitch seams across the forehead (photo bp-019): one
   // diagonal, one vertical down the centre between the eyes.
   ctx.strokeStyle = 'rgba(155,126,208,0.9)'; ctx.lineWidth = 3;
@@ -8117,33 +8463,94 @@ function drawFace(ctx, w, h, eyesOpen) {
   ctx.beginPath(); ctx.arc(190, 150, 14, 0, Math.PI * 2); ctx.fill();
   // right eye (viewer's right): a closed happy curve — it is closed in
   // the photo. The left eye is the star-patch geometry, not canvas.
-  // Blink flattens the curve a touch.
   ctx.strokeStyle = '#6B4FA8'; ctx.lineWidth = 6; ctx.lineCap = 'round';
-  ctx.beginPath();
-  if (eyesOpen) {
-    ctx.moveTo(142, 102);
-    ctx.quadraticCurveTo(164, 128, 186, 102);
-  } else {
+  if (variant === 'happy' || variant === 'excited') {
+    // ^^ arc — a happier eye
+    ctx.beginPath();
+    ctx.moveTo(142, 112);
+    ctx.quadraticCurveTo(164, 84, 186, 112);
+    ctx.stroke();
+  } else if (variant === 'sleepy') {
+    // flatter curve + lid line above it
+    ctx.beginPath();
+    ctx.moveTo(144, 106);
+    ctx.quadraticCurveTo(164, 116, 184, 106);
+    ctx.stroke();
+    ctx.lineWidth = 5;
+    ctx.beginPath();
+    ctx.moveTo(140, 96);
+    ctx.quadraticCurveTo(164, 88, 188, 96);
+    ctx.stroke();
+  } else if (variant === 'wink') {
+    // flat line with a tiny upward flick at the outer end
+    ctx.beginPath();
+    ctx.moveTo(144, 110);
+    ctx.lineTo(182, 110);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(182, 110);
+    ctx.quadraticCurveTo(188, 104, 190, 100);
+    ctx.stroke();
+  } else if (variant === 'surprised') {
+    // small round open eye (an expression state — the photo eye is closed)
+    ctx.lineWidth = 5;
+    ctx.beginPath(); ctx.arc(164, 105, 14, 0, Math.PI * 2); ctx.stroke();
+    ctx.fillStyle = '#3A2A5E';
+    ctx.beginPath(); ctx.arc(164, 105, 10, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#FFFFFF';
+    ctx.beginPath(); ctx.arc(169, 99, 3, 0, Math.PI * 2); ctx.fill();
+  } else if (variant === 'closed') {
+    // the old closed cell (blink flattens the curve a touch)
+    ctx.beginPath();
     ctx.moveTo(144, 108);
     ctx.quadraticCurveTo(164, 120, 184, 108);
-  }
-  ctx.stroke();
-  // wide stitched grin: pink zigzag with three triangle fangs below it
-  ctx.strokeStyle = '#F28BB8'; ctx.lineWidth = 5; ctx.lineJoin = 'round';
-  ctx.beginPath();
-  ctx.moveTo(64, 166);
-  const zig = [[76, 176], [88, 166], [100, 176], [112, 166], [124, 176], [136, 166], [148, 176], [160, 166], [172, 176], [184, 166], [192, 172]];
-  for (const [x, y] of zig) ctx.lineTo(x, y);
-  ctx.stroke();
-  ctx.fillStyle = '#F28BB8';
-  for (const fx of [96, 128, 160]) {
+    ctx.stroke();
+  } else {
+    // open (DEFAULT): the photo curve, verbatim
     ctx.beginPath();
-    ctx.moveTo(fx - 9, 172); ctx.lineTo(fx + 9, 172); ctx.lineTo(fx, 188);
-    ctx.closePath(); ctx.fill();
+    ctx.moveTo(142, 102);
+    ctx.quadraticCurveTo(164, 128, 186, 102);
+    ctx.stroke();
   }
+  if (variant === 'surprised') {
+    // small "o" mouth, fangs hidden (Midnight Star pattern)
+    ctx.strokeStyle = '#F28BB8'; ctx.lineWidth = 4; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.arc(128, 192, 8, 0, Math.PI * 2); ctx.stroke();
+  } else {
+    // wide stitched grin: pink zigzag with three triangle fangs below it
+    ctx.strokeStyle = '#F28BB8'; ctx.lineWidth = 5; ctx.lineJoin = 'round';
+    ctx.beginPath();
+    ctx.moveTo(64, 166);
+    const zig = [[76, 176], [88, 166], [100, 176], [112, 166], [124, 176], [136, 166], [148, 176], [160, 166], [172, 176], [184, 166], [192, 172]];
+    for (const [x, y] of zig) ctx.lineTo(x, y);
+    ctx.stroke();
+    ctx.fillStyle = '#F28BB8';
+    const fangW = variant === 'excited' ? 12 : 9;
+    const fangD = variant === 'excited' ? 194 : 188;
+    for (const fx of [96, 128, 160]) {
+      ctx.beginPath();
+      ctx.moveTo(fx - fangW, 172); ctx.lineTo(fx + fangW, 172); ctx.lineTo(fx, fangD);
+      ctx.closePath(); ctx.fill();
+    }
+  }
+  ctx.restore();
 }
-const faceTexOpen = canvasTex(256, 256, (c, w, h) => drawFace(c, w, h, true));
-const faceTexClosed = canvasTex(256, 256, (c, w, h) => drawFace(c, w, h, false));
+const faceAtlasTex = canvasTex(1792, 256, (ctx, w, h) => {
+  for (let i = 0; i < FACE_VARIANTS.length; i++) drawFaceCell(ctx, i * 256, FACE_VARIANTS[i]);
+});
+faceAtlasTex.repeat.set(1 / FACE_VARIANTS.length, 1);
+const EXPR_COLS = { open: 0, happy: 1, excited: 2, sleepy: 3, wink: 4, surprised: 5, closed: 6 };
+function applyExpression(name) {
+  faceAtlasTex.offset.x = (EXPR_COLS[name] ?? 0) / FACE_VARIANTS.length;
+}
+// setExpression(name, dur): show an atlas expression for dur seconds,
+// then fall back to 'open'. Blink overrides briefly.
+function setExpression(name, dur) {
+  state.expr = name;
+  state.exprT = dur;
+  applyExpression(name);
+}
+applyExpression('open');
 
 const gridTex = canvasTex(512, 512, (ctx, w, h) => {
   ctx.fillStyle = '#0C0C12'; ctx.fillRect(0, 0, w, h);
@@ -8178,6 +8585,25 @@ const glowTex = canvasTex(128, 128, (ctx, w, h) => {
   ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
 });
 
+// Dream-eater Charm signature collect burst (finding #76): STARS —
+// the motif is on her face already (star eye patch + star embroidery
+// on the horns, catalog + photos bp-019), nothing invented. White
+// 5-point star with a darker centre; the burst's pink/gold vertex
+// colors tint it.
+const starBurstTex = canvasTex(128, 128, (ctx, w, h) => {
+  ctx.clearRect(0, 0, w, h);
+  ctx.fillStyle = '#FFFFFF';
+  ctx.beginPath();
+  for (let i = 0; i < 10; i++) {
+    const r = i % 2 === 0 ? 58 : 24;
+    const a = i * Math.PI / 5 - Math.PI / 2;
+    const x = 64 + Math.cos(a) * r, y = 64 + Math.sin(a) * r;
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  }
+  ctx.closePath(); ctx.fill();
+  ctx.fillStyle = '#E8C8D8';
+  ctx.beginPath(); ctx.arc(64, 64, 12, 0, Math.PI * 2); ctx.fill();
+});
 const heartSpriteTex = canvasTex(128, 128, (ctx, w, h) => {
   ctx.clearRect(0, 0, w, h);
   ctx.fillStyle = '#FF2E88';
@@ -8239,8 +8665,11 @@ const feet222Tex = canvasTex(128, 64, (ctx, w, h) => {
   ctx.beginPath();
   ctx.roundRect(4, 6, w - 8, h - 12, 12); ctx.fill();
   ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-  ctx.fillStyle = '#F28BB8';
-  ctx.font = '900 34px Arial, sans-serif';
+  // white halo behind the digits (Nightwing Dawn "222" fix) + deeper pink
+  ctx.strokeStyle = '#FFFFFF'; ctx.lineWidth = 7; ctx.lineJoin = 'round';
+  ctx.font = '900 44px Arial, sans-serif';
+  ctx.strokeText('222', w / 2, h / 2 + 1);
+  ctx.fillStyle = '#E85A9B';
   ctx.fillText('222', w / 2, h / 2 + 1);
 });
 
@@ -8285,14 +8714,14 @@ const matPinkLight = new THREE.MeshLambertMaterial({ color: COL.pinkLight, map: 
 const matPinkDark = new THREE.MeshLambertMaterial({ color: COL.pinkDark, map: napTex, bumpMap: napTex, bumpScale: 0.015, emissive: 0x2A0A14 });
 const matDark = new THREE.MeshStandardMaterial({ color: COL.dark, roughness: 0.9, metalness: 0 });
 const matHeart = new THREE.MeshStandardMaterial({ color: 0xFF5CA8, roughness: 0.7, metalness: 0 });
-const faceMat = new THREE.MeshStandardMaterial({ map: faceTexOpen, transparent: true, alphaTest: 0.05, roughness: 0.9, metalness: 0 });
+const faceMat = new THREE.MeshStandardMaterial({ map: faceAtlasTex, transparent: true, alphaTest: 0.05, roughness: 0.9, metalness: 0 }); // tick 16: face atlas (7 expressions, +0 calls)
 // horns are NOT plush: smooth glossy dark (roughness 0.4) so the fur reads furrier.
 // Vertex colors carry the amber tip (cones 1-2 dark, cone 3 amber).
 const matHorn = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.4, metalness: 0 });
 const matWing = new THREE.MeshStandardMaterial({ color: COL.dark, roughness: 0.85, metalness: 0, side: THREE.DoubleSide });
 // Dream-eater Charm materials (shared — one material per color, not per part)
-const matBlue = new THREE.MeshLambertMaterial({ color: COL.blue, map: napTex, bumpMap: napTex, bumpScale: 0.015 });
-const matBlueLight = new THREE.MeshLambertMaterial({ color: COL.blueLight, map: napTex, bumpMap: napTex, bumpScale: 0.015 });
+const matBlue = new THREE.MeshLambertMaterial({ color: COL.blue, map: napTex, bumpMap: napTex, bumpScale: 0.015, emissive: 0x1E2A4A }); // tick 16 A/B winner d-lift: cool emissive cools the steel cast without washing the blue out
+const matBlueLight = new THREE.MeshLambertMaterial({ color: COL.blueLight, map: napTex, bumpMap: napTex, bumpScale: 0.015, emissive: 0x1E2A4A }); // tick 16 A/B winner d-lift
 const matLavender = new THREE.MeshLambertMaterial({ color: COL.lavender, map: napTex, bumpMap: napTex, bumpScale: 0.015 });
 const matChecker = new THREE.MeshLambertMaterial({ map: checkerTex, bumpMap: napTex, bumpScale: 0.01 });
 const matHeartSoft = new THREE.MeshStandardMaterial({ color: 0xF0A0BE, roughness: 0.7, metalness: 0 });
@@ -8322,8 +8751,8 @@ addRim(matPink, 0xF59E0B, 0.5);
 addRim(matPinkLight, 0xF59E0B, 0.45);
 addRim(matPinkDark, 0xFF9EC6, 0.4);
 addRim(matWing, 0xF59E0B, 0.35);
-addRim(matBlue, 0xF59E0B, 0.12);
-addRim(matBlueLight, 0xF59E0B, 0.10);
+addRim(matBlue, 0xF59E0B, 0.08); // tick 16 A/B winner (was 0.12)
+addRim(matBlueLight, 0xF59E0B, 0.08); // tick 16 A/B winner (was 0.10)
 addRim(matLavender, 0xF59E0B, 0.15);
 addRim(matChecker, 0xF59E0B, 0.12);
 addRim(matPlushVC, 0xF59E0B, 0.12);
@@ -8334,7 +8763,7 @@ const haloMat = new THREE.ShaderMaterial({
   transparent: true, depthWrite: false, side: THREE.BackSide,
   uniforms: { uColor: { value: new THREE.Color(0xC9A8E8) } },
   vertexShader: 'varying vec3 vN; varying vec3 vV;\nvoid main(){ vN = normalize(normalMatrix * normal); vec4 mv = modelViewMatrix * vec4(position, 1.0); vV = normalize(-mv.xyz); gl_Position = projectionMatrix * mv; }',
-  fragmentShader: 'uniform vec3 uColor; varying vec3 vN; varying vec3 vV;\nvoid main(){ float f = pow(1.0 - abs(dot(normalize(vN), normalize(vV))), 2.0); gl_FragColor = vec4(uColor, f * 0.4); }'
+  fragmentShader: 'uniform vec3 uColor; varying vec3 vN; varying vec3 vV;\nvoid main(){ float f = pow(1.0 - abs(dot(normalize(vN), normalize(vV))), 2.0); gl_FragColor = vec4(uColor, f * 0.25); }' // tick 16 A/B winner (was 0.4)
 });
 
 /* ================================================================
@@ -8604,18 +9033,18 @@ function buildCharm() {
     horn.position.set(0.28 * side, 0.60, 0.02);
     horn.rotation.z = -side * 0.15; // tilted outward ~9 deg — the crescent bends in
     horn.rotation.x = -0.25;        // swept back (animate() holds this)
-    const c1 = paintGeo(new THREE.ConeGeometry(0.12, 0.20, 10), 0x8A68C8);
-    c1.rotateZ(-side * 0.10); c1.rotateX(-0.05); c1.translate(0, 0.09, 0);
-    const c2 = paintGeo(new THREE.ConeGeometry(0.08, 0.18, 10), 0x8A68C8);
-    c2.rotateZ(side * 0.45); c2.rotateX(-0.12); c2.translate(-side * 0.02, 0.24, -0.015);
-    const c3 = paintGeo(new THREE.ConeGeometry(0.042, 0.16, 10), 0x8A68C8);
-    c3.rotateZ(side * 0.95); c3.rotateX(-0.25); c3.translate(-side * 0.06, 0.36, -0.04);
-    const st = starGeometry(0.045, 0.02);
+    const c1 = paintGeo(new THREE.ConeGeometry(0.156, 0.26, 10), 0x8A68C8); // tick 16: horns ~1.3x — the photo's horns are bigger and more prominent
+    c1.rotateZ(-side * 0.10); c1.rotateX(-0.05); c1.translate(0, 0.117, 0);
+    const c2 = paintGeo(new THREE.ConeGeometry(0.104, 0.234, 10), 0x8A68C8);
+    c2.rotateZ(side * 0.45); c2.rotateX(-0.12); c2.translate(-side * 0.026, 0.312, -0.02);
+    const c3 = paintGeo(new THREE.ConeGeometry(0.055, 0.208, 10), 0x8A68C8);
+    c3.rotateZ(side * 0.95); c3.rotateX(-0.25); c3.translate(-side * 0.078, 0.468, -0.052);
+    const st = starGeometry(0.058, 0.026);
     st.rotateX(-0.45); // tip back to hug the cone's front slope
-    st.translate(0, 0.18, 0.05);
+    st.translate(0, 0.234, 0.065);
     paintGeo(st, 0xF28BB8);
-    const sw = new THREE.TorusGeometry(0.03, 0.007, 6, 12, 4.0);
-    sw.rotateX(-0.30); sw.translate(0, 0.07, 0.045);
+    const sw = new THREE.TorusGeometry(0.039, 0.009, 6, 12, 4.0);
+    sw.rotateX(-0.30); sw.translate(0, 0.091, 0.058);
     paintGeo(sw, 0xF28BB8);
     const mesh = new THREE.Mesh(mergeGeos([c1, c2, c3, st, sw]), matPlushVC);
     horn.add(mesh);
@@ -8728,11 +9157,11 @@ function buildCharm() {
   // the tech-pack flat cuts the last 2, the production piece is full).
   // Children of the leg pivots so they swing with the legs.
   const feetMat = new THREE.MeshBasicMaterial({ map: feet222Tex, transparent: true, depthWrite: false });
-  const footL = new THREE.Mesh(new THREE.PlaneGeometry(0.13, 0.065), feetMat);
-  footL.position.set(0, -0.18, 0.105);
+  const footL = new THREE.Mesh(new THREE.PlaneGeometry(0.18, 0.09), feetMat); // tick 16: bigger foot patches (was 0.13x0.065)
+  footL.position.set(0, -0.28, 0.12); // tick 16: lowered onto the visible leg stub — at -0.18 the belly occluded the patch from the front
   legL.add(footL);
-  const footR = new THREE.Mesh(new THREE.PlaneGeometry(0.13, 0.065), feetMat);
-  footR.position.set(0, -0.18, 0.105);
+  const footR = new THREE.Mesh(new THREE.PlaneGeometry(0.18, 0.09), feetMat);
+  footR.position.set(0, -0.28, 0.12);
   legR.add(footR);
 
   // tag every mesh with the soul id so the raycast resolves to it
@@ -8742,7 +9171,7 @@ function buildCharm() {
 }
 
   const charm = buildCharm();
-  return { rig: charm, face: { atlas: false, mat: faceMat, open: faceTexOpen, closed: faceTexClosed }, hornBaseX: null };
+  return { rig: charm, face: { atlas: true, apply: applyExpression, set: setExpression, mat: faceMat }, hornBaseX: null };
 }
 
 function build_cloud_the_clown(THREE, state) {
@@ -20018,15 +20447,21 @@ function canvasTex(w, h, draw) {
   return t;
 }
 
-// ---- face atlas (research §1I, cycle 2 pattern): ONE 1024x256 canvas,
-// 4 expressions. Columns: 0 open (DEFAULT — big black glossy ovals,
-// photos bp-265/266/267) | 1 closed (blink) | 2 happy (idle variation +
-// landing + collect) | 3 surprised (tease: "you're too far!").
-// Swap = map.offset.x only, +0 draw calls. Blush + wavy mouth + two
-// tiny white fangs are drawn in every cell except surprised (small
-// round open mouth there). Eyes drawn ~25% bigger than the
-// template's 256x256 face so the bunny face reads at plaza distance.
-const FACE_VARIANTS = ['open', 'closed', 'happy', 'surprised'];
+// ---- face atlas (research §1I, cycle 2 pattern; tick 17: 7
+// expressions, Midnight Star pattern): ONE 1792x256 canvas.
+// Columns: 0 open (DEFAULT — big black glossy ovals, photos
+// bp-265/266/267) | 1 happy (idle variation + landing) |
+// 2 excited (collect — bigger arcs + bigger fangs) | 3 sleepy
+// (flatter curves + lid lines) | 4 wink (left eye open, right eye
+// a flat line + flick) | 5 surprised (tease: "you're too far!") |
+// 6 closed (blink). Swap = map.offset.x only, +0 draw calls. Blush
+// + wavy mouth + two tiny white fangs are drawn in every cell except
+// surprised (small round open mouth there) and excited (bigger
+// fangs). The open cell is pixel-identical to the pre-tick-17 face
+// (proven by atlas-pixel-bunny-c17.py). Eyes drawn ~25% bigger than
+// the template's 256x256 face so the bunny face reads at plaza
+// distance.
+const FACE_VARIANTS = ['open', 'happy', 'excited', 'sleepy', 'wink', 'surprised', 'closed'];
 function drawFaceCell(ctx, x0, variant) {
   ctx.save();
   ctx.translate(x0, 0);
@@ -20067,6 +20502,39 @@ function drawFaceCell(ctx, x0, variant) {
       ctx.moveTo(cx - 26, 112); ctx.quadraticCurveTo(cx, 80, cx + 26, 112);
       ctx.stroke();
     }
+  } else if (variant === 'excited') {
+    // excited: bigger happy arcs (higher, wider) — the collect face
+    ctx.strokeStyle = '#14060C'; ctx.lineWidth = 8; ctx.lineCap = 'round';
+    for (const cx of [92, 164]) {
+      ctx.beginPath();
+      ctx.moveTo(cx - 28, 114); ctx.quadraticCurveTo(cx, 74, cx + 28, 114);
+      ctx.stroke();
+    }
+  } else if (variant === 'sleepy') {
+    // sleepy: flatter half-lidded curves + a lid line above each eye
+    ctx.strokeStyle = '#14060C'; ctx.lineWidth = 6; ctx.lineCap = 'round';
+    for (const cx of [92, 164]) {
+      ctx.beginPath();
+      ctx.moveTo(cx - 24, 108); ctx.quadraticCurveTo(cx, 94, cx + 24, 108);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(cx - 20, 88); ctx.lineTo(cx + 20, 88);
+      ctx.stroke();
+    }
+  } else if (variant === 'wink') {
+    // wink: left eye open (the photo eye), right eye a flat line + flick
+    ctx.fillStyle = '#14060C';
+    ctx.beginPath(); ctx.ellipse(92, 106, 26, 35, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#FFFFFF';
+    ctx.beginPath(); ctx.arc(99, 93, 6, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(83, 121, 3.5, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = '#14060C'; ctx.lineWidth = 6; ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(140, 104); ctx.lineTo(188, 104);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(188, 104); ctx.lineTo(196, 98);
+    ctx.stroke();
   } else {
     // closed (blink): gentle downward lash curves
     ctx.strokeStyle = '#14060C'; ctx.lineWidth = 6; ctx.lineCap = 'round';
@@ -20082,6 +20550,19 @@ function drawFaceCell(ctx, x0, variant) {
     // small round open mouth
     ctx.fillStyle = '#3A1A1A';
     ctx.beginPath(); ctx.ellipse(128, 172, 9, 12, 0, 0, Math.PI * 2); ctx.fill();
+  } else if (variant === 'excited') {
+    // excited: same wavy mouth, BIGGER fangs (the collect grin)
+    ctx.strokeStyle = '#3A1A1A'; ctx.lineWidth = 4; ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(110, 168); ctx.quadraticCurveTo(119, 177, 128, 168);
+    ctx.quadraticCurveTo(137, 177, 146, 168);
+    ctx.stroke();
+    ctx.fillStyle = '#FFFFFF';
+    for (const fx of [120, 136]) {
+      ctx.beginPath();
+      ctx.moveTo(fx - 6, 172); ctx.lineTo(fx + 6, 172); ctx.lineTo(fx, 187);
+      ctx.closePath(); ctx.fill();
+    }
   } else {
     // small wavy mouth (photos bp-265/266/267) + two tiny white fangs
     ctx.strokeStyle = '#3A1A1A'; ctx.lineWidth = 4; ctx.lineCap = 'round';
@@ -20098,11 +20579,11 @@ function drawFaceCell(ctx, x0, variant) {
   }
   ctx.restore();
 }
-const faceAtlasTex = canvasTex(1024, 256, (ctx, w, h) => {
+const faceAtlasTex = canvasTex(1792, 256, (ctx, w, h) => { // tick 17: 7 cells (was 1024, 4 cells)
   for (let i = 0; i < FACE_VARIANTS.length; i++) drawFaceCell(ctx, i * 256, FACE_VARIANTS[i]);
 });
 faceAtlasTex.repeat.set(1 / FACE_VARIANTS.length, 1);
-const EXPR_COLS = { open: 0, closed: 1, happy: 2, surprised: 3 };
+const EXPR_COLS = { open: 0, happy: 1, excited: 2, sleepy: 3, wink: 4, surprised: 5, closed: 6 }; // tick 17: 7 expressions
 function applyExpression(name) {
   faceAtlasTex.offset.x = (EXPR_COLS[name] ?? 0) / FACE_VARIANTS.length;
 }
@@ -20174,8 +20655,16 @@ const stitchTex = canvasTex(256, 64, (ctx, w, h) => {
 const text222BlackTex = canvasTex(256, 128, (ctx, w, h) => {
   ctx.clearRect(0, 0, w, h);
   ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  // TICK 17 A/B winner B: white halo behind the dark digits (Nightwing
+  // tick-7 pattern) + 100px digits — the 222 must read at 7.5 m plaza
+  // distance, not just up close. Dark text kept per the photos; the
+  // halo is the contrast.
+  ctx.fillStyle = '#FFFFFF';
+  ctx.shadowColor = '#FFFFFF'; ctx.shadowBlur = 18;
+  ctx.font = '900 100px Arial, sans-serif';
+  ctx.fillText('222', w / 2, h / 2 + 4);
+  ctx.shadowColor = '#FF9EC6'; ctx.shadowBlur = 12;
   ctx.fillStyle = '#111111'; // BLACK 222 on the pink pixel heart (photos bp-266/267/268)
-  ctx.font = '900 84px Arial, sans-serif';
   ctx.fillText('222', w / 2, h / 2 + 4);
 });
 
@@ -20265,7 +20754,7 @@ function addRim(mat, color, strength) {
   };
   mat.customProgramCacheKey = function () { return 'rim-' + color + '-' + strength; };
 }
-addRim(matBlack, 0xF59E0B, 0.08); // Nightwing tick-7 winner 0.08 — 0.15 still ran amber on black fur
+addRim(matBlack, 0xF59E0B, 0.05); // tick 17 A/B winner (was 0.08; 0.15 tested, warm_frac 0.124 — rejected; Midnight Star's 0.05 agrees)
 addRim(matPink, 0xF59E0B, 0.10); // pink pixel patches + inner-ear ground
 // matPinkInner takes no rim (the checker texture reads flat)
 addRim(matWing, 0xF59E0B, 0.35);
@@ -20443,7 +20932,7 @@ function buildPixelBunny() {
     '...X...',
   ];
   const heartParts = [];
-  const HS = 0.06;
+  const HS = 0.075; // tick 17 A/B winner B (was 0.06) — heart 0.42 -> 0.525 wide; 0.09 would swallow the chest pluses
   PIXEL_HEART.forEach((row, ri) => {
     for (let ci = 0; ci < row.length; ci++) {
       if (row[ci] !== 'X') continue;
@@ -20456,10 +20945,10 @@ function buildPixelBunny() {
   pixelHeart.position.set(0, 0.58, 0.40);
   bodyG.add(pixelHeart);
   const heartText = new THREE.Mesh(
-    new THREE.PlaneGeometry(0.20, 0.10),
+    new THREE.PlaneGeometry(0.26, 0.13), // tick 17 A/B winner B (was 0.20x0.10)
     new THREE.MeshBasicMaterial({ map: text222BlackTex, transparent: true, depthWrite: false })
   );
-  heartText.position.set(0, 0.58, 0.44);
+  heartText.position.set(0, 0.58, 0.47); // tick 17 A/B winner B (was z 0.44 — 0.045 proud of the heart face)
   bodyG.add(heartText);
 
   // stitched mark — the owner's mark, do not skip. Sits on the
@@ -21055,7 +21544,7 @@ const SOUL_REGISTRY = [
   claimed: false
 }; } },
   { id: "dream-eater-charm", title: "Dream-eater Charm &mdash; the anchor, the first charm of the line", desc: "Pale blue plush charm with lavender crescent horns, a star eye patch, stitched grin, checker panels, a curled lavender tail, and a pink 222 heart. The smallest soul with the biggest job.", story: "Dream-eater Charm is the anchor, the first charm of the line, and the smallest soul with the biggest job. Before it was kept, it sat at the edge of other people&rsquo;s sleep and ate the dreams that turned bad &mdash; not to steal them, but to carry them away so the sleeper could rest. It ate alone, and nobody thanked a charm for a quiet night. Collection meant a place on the line instead of the edge of the night: kept as a charm, held in a hand, carried on a ring where its work is seen. It still eats the bad dreams. Now it is kept for it, never deleted, the anchor everything else in the line hangs from.", note: "Story quoted verbatim from the catalog (story_draft: true, source campaign/soul-stories.md). Catalog desc is empty, so the desc above is written from the product photos bp-019/020/021. No PLT values exist in the catalog entry, so none are shown.", keep: "Keep it",
-    home: { x: -8.8, z: -8.8 }, mobile: true, genome: {"kit": false, "squashK": [160, 60], "squashB": 14, "earK": 35, "earB": 5.5, "earMass": 1.5, "earAmp": 0.18, "earPhases": null, "midK": 30, "midB": 5, "midMass": 1.5, "earTip": 0.3, "wingBase": 0.45, "hopEarKick": -0.45, "landEarKick": 0.35, "legAmp": 0.5, "armAmp": 0.35, "speed": 0.8, "blinkT": 0.12, "variation": null, "fallback": "open", "collectExpr": "excited", "teaseExpr": "surprised", "tail": false},
+    home: { x: -8.8, z: -8.8 }, mobile: true, genome: {"kit": true, "squashK": [160, 60], "squashB": 14, "earK": 35, "earB": 5.5, "earMass": 1.5, "earAmp": 0.18, "earPhases": [-0.3, -0.55], "midK": 30, "midB": 5, "midMass": 1.5, "earTip": 0.3, "wingBase": 0.45, "hopEarKick": -0.45, "landEarKick": 0.35, "legAmp": 0.5, "armAmp": 0.35, "speed": 0.8, "blinkT": 0.17, "variation": "kit4", "fallback": "open", "collectExpr": "excited", "teaseExpr": "surprised", "tail": false},
     build: build_dream_eater_charm,
     makeState: function () { return {
   mode: 'IDLE',            // IDLE | WANDER | COLLECTED
@@ -21066,10 +21555,13 @@ const SOUL_REGISTRY = [
   speed: 0,
   vy: 0,                   // vertical velocity for hops
   y: 0,                    // root height
-  // plush squash spring (research §1A): k~80, b~14 (zeta~0.78);
-  // asymmetric — compress k~160 (fast in), recover k~60 (slow out).
-  // dentT holds a deep squash 0.2 s; residualT then holds a small
-  // residual dent (scaleY 0.975) for 0.3 s before full re-inflate.
+  // plush squash spring (research §1A), tick-16 verified firing:
+  // compress k 160 (fast in), recover k 60 (slow out), b 14 — the
+  // soft-soul nominal, already there from the template (baseline
+  // probe: stretch 1.017 on takeoff, landing squash 0.954);
+  // dent hold 0.2 s on deep landings, residual dent (0.975) 0.3 s;
+  // volume 1/sqrt(sy). Tick 16 adds the squash-side clamp 0.85-1.18
+  // (Midnight parity).
   s: 0, vs: 0,
   dentT: 0, residualT: 0, dentHeld: false,
   earL: { a: 0, v: 0 }, earR: { a: 0, v: 0 },
@@ -21081,8 +21573,18 @@ const SOUL_REGISTRY = [
   hopTimer: 4,
   blinkTimer: 3,
   blinkT: 0,
+  expr: 'open', exprT: 0,         // face-atlas expression + its timer
+  variationT: 7,                // idle variation timer (7-14 s, randomised)
+  seed: Math.random() * Math.PI * 2, // per-soul phase seed — never shares a loop
+  blinkDouble: false,
+  anticipT: 0, anticipVy: 0, anticipStretch: 0, // anticipation squash before every hop
+  bounce2T: 0,          // double-bounce: second smaller squash after landing
+  ringT: 0, dustT: 0,   // landing kit timers (ring + dust)
+  hitStopT: 0, punchT: 0,       // collect staging: hit-stop + camera micro-punch
+  collectPending: false,        // burst fires at the collect launch, not the click
+  rebounded: false,     // double-bounce: one rebound per landing
   headYawTarget: 0, headYawTimer: 2,
-  collectT: 0, collectSpin: 0,
+  collectT: 0,
   teaseT: 0,
   claimed: false
 }; } },
@@ -21761,7 +22263,7 @@ const SOUL_REGISTRY = [
   claimed: false
 }; } },
   { id: "pixel-bunny", title: "Pixel Bunny &mdash; Queue 34", desc: "Queue batch 1, pic 34. Black/pink pixel bunny monster, rooftop pool.", story: "&ldquo;Pixel Bunny is a black-and-pink pixel bunny soul from the rooftop pool \u2014 blocky edges, soft heart, and a life lived one square at a time. Before collection, it was told it was too blocky to be soft and too soft to be a game piece, and it glitched between the two, never quite rendering. Collection was a rooftop where the pixels hold: a bunny kept blocky and soft at once, black and pink in every square, in every form. It still pixels. It no longer glitches out of itself. Kept, block by block, never deleted \u2014 the bunny that rendered fully at last.&rdquo;", note: "Name + story are catalog drafts (Ms GCP may change them). No PLT values exist in the catalog entry, so none are shown.", keep: "Keep her",
-    home: { x: -22.0, z: 12.0 }, mobile: false, genome: {"kit": false, "squashK": [160, 60], "squashB": 14, "earK": 35, "earB": 5.5, "earMass": 1.5, "earAmp": 0.18, "earPhases": null, "midK": 30, "midB": 5, "midMass": 1.5, "earTip": 0.3, "wingBase": 0.45, "hopEarKick": -0.45, "landEarKick": 0.35, "legAmp": 0.5, "armAmp": 0.35, "speed": 0.8, "blinkT": 0.12, "variation": null, "fallback": "open", "collectExpr": "excited", "teaseExpr": "surprised", "tail": true},
+    home: { x: -22.0, z: 12.0 }, mobile: false, genome: {"kit": true, "squashK": [160, 60], "squashB": 14, "earK": 35, "earB": 5.5, "earMass": 1.5, "earAmp": 0.18, "earPhases": [-0.3, -0.55], "midK": 30, "midB": 5, "midMass": 1.5, "earTip": 0.3, "wingBase": 0.45, "hopEarKick": -0.45, "landEarKick": 0.35, "legAmp": 0.5, "armAmp": 0.35, "speed": 0.8, "blinkT": 0.17, "variation": "kit4", "fallback": "open", "collectExpr": "excited", "teaseExpr": "surprised", "tail": true},
     build: build_pixel_bunny,
     makeState: function () { return {
   mode: 'IDLE',            // IDLE | WANDER | COLLECTED
@@ -21787,11 +22289,17 @@ const SOUL_REGISTRY = [
   hopTimer: 4,
   expr: 'open', exprT: 0,          // face-atlas expression + its timer
   blinkDouble: false,
-  idleExprTimer: 8,
+  variationT: 7,                // idle variation timer (7-14 s, randomised)
+  seed: Math.random() * Math.PI * 2, // per-soul phase seed — never shares a loop
+  anticipT: 0, anticipVy: 0, anticipStretch: 0, // anticipation squash before every hop
+  bounce2T: 0, rebounded: false, // double-bounce: second smaller squash after landing
+  dustT: 0, ringT: 0,           // landing kit timers
+  hitStopT: 0, punchT: 0,       // collect staging: hit-stop + camera micro-punch
+  collectPending: false,        // burst fires at the collect launch, not the click
   blinkTimer: 3,
   blinkT: 0,
   headYawTarget: 0, headYawTimer: 2,
-  collectT: 0, collectSpin: 0,
+  collectT: 0,
   teaseT: 0,
   claimed: false
 }; } }
