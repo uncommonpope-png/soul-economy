@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Betty Plush — The Portal</title>
+<!--
+  BETTY PLUSH PORTAL — LIVE on the site since 2026-11-09 (Pope's order: "uploaded to the page").
+  Ordered by Pope, live call 2026-11-08 ~10:19 CST.
+  Ride built 2026-11-09 on Pope's "build it" — route decided: LIVE 3D camera
+  path through the real world (betty-plush-portal-ride.html), not a pre-rendered video.
+  The world carries all 31 souls (tick 17: Charm upgrade, 222 tram, Pixel Bunny upgrade, tram stop);
+  the ride dwells on 13 of them (desktop) / 6 (phone) and flies past the rest. The landing links below
+  point at the live Betty Plush store.
+-->
+<style>
+  :root {
+    --bg:#0C0C12; --amber:#F59E0B; --pink:#FF4D8D; --purple:#A855F7;
+    --cream:#FFF7E8; --panel:#14141C;
+  }
+  * { box-sizing:border-box; }
+  html,body { margin:0; padding:0; height:100%; background:var(--bg); color:var(--cream);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; overflow:hidden; }
+
+  /* ---------- smoke / mist ---------- */
+  #smoke { position:fixed; inset:0; width:100%; height:100%; display:block; }
+  .mist { position:fixed; inset:-20%; pointer-events:none; opacity:.5;
+    background:
+      radial-gradient(ellipse 45% 32% at 22% 78%, rgba(168,85,247,.10), transparent 70%),
+      radial-gradient(ellipse 45% 32% at 80% 70%, rgba(255,77,141,.09), transparent 70%),
+      radial-gradient(ellipse 60% 40% at 50% 110%, rgba(245,158,11,.08), transparent 70%);
+    animation:mist-drift 26s ease-in-out infinite alternate; }
+  @keyframes mist-drift { from { transform:translateX(-2%) translateY(0); } to { transform:translateX(2%) translateY(-2%); } }
+  .vignette { position:fixed; inset:0; pointer-events:none;
+    background:radial-gradient(ellipse 70% 60% at 50% 50%, transparent 55%, rgba(0,0,0,.75) 100%); }
+
+  /* ---------- explore tab (real link to the live world) ---------- */
+  #explore-tab { position:fixed; top:12px; right:16px; z-index:55;
+    background:var(--panel); color:var(--amber); border:2px solid var(--amber); border-radius:999px;
+    padding:9px 16px; font-weight:800; font-size:13px; letter-spacing:.06em; cursor:pointer;
+    box-shadow:0 0 16px rgba(245,158,11,.35); text-decoration:none; display:inline-block; }
+  #explore-tab:hover { background:var(--amber); color:#0C0C12; }
+
+  /* ---------- generic stage ---------- */
+  .stage { position:fixed; inset:0; display:flex; flex-direction:column; align-items:center;
+    justify-content:center; z-index:10; padding:60px 16px 24px; text-align:center; }
+  .stage[hidden] { display:none; }
+
+  /* ---------- highway sign ---------- */
+  .sign { background:#0E1A12; border:3px solid var(--amber); border-radius:12px;
+    padding:10px 22px 12px; box-shadow:0 0 24px rgba(245,158,11,.35), inset 0 0 18px rgba(0,0,0,.6);
+    margin-bottom:26px; }
+  .sign .sign-title { font-size:clamp(20px,4vw,30px); font-weight:900; letter-spacing:.14em; color:#FFF7E8; }
+  .sign .sign-sub { display:flex; align-items:center; justify-content:center; gap:18px; margin-top:4px;
+    font-size:clamp(15px,3vw,20px); font-weight:800; color:var(--amber); letter-spacing:.1em; }
+  .sign .arrow { font-size:1.5em; line-height:1; }
+  .sign .arrow.left { color:var(--purple); text-shadow:0 0 12px var(--purple); }
+  .sign .arrow.right { color:var(--pink); text-shadow:0 0 12px var(--pink); }
+
+  /* ---------- the two hearts ---------- */
+  .hearts { display:flex; gap:clamp(28px,8vw,90px); align-items:center; justify-content:center; }
+  .heart-btn { background:none; border:0; padding:8px; cursor:pointer; position:relative;
+    transition:transform .2s ease; }
+  .heart-btn:hover, .heart-btn:focus-visible { transform:scale(1.08); outline:none; }
+  .heart-btn:focus-visible svg { filter:drop-shadow(0 0 22px #fff); }
+  .heart-btn svg { width:clamp(120px,26vw,210px); height:auto; display:block;
+    animation:throb 1.6s ease-in-out infinite; }
+  .heart-btn.purple svg { filter:drop-shadow(0 0 18px rgba(168,85,247,.9)) drop-shadow(0 0 46px rgba(168,85,247,.5)); }
+  .heart-btn.pink svg { filter:drop-shadow(0 0 18px rgba(255,77,141,.9)) drop-shadow(0 0 46px rgba(255,77,141,.5));
+    animation-delay:.35s; }
+  @keyframes throb {
+    0%,100% { transform:scale(1); }
+    12% { transform:scale(1.14); }
+    24% { transform:scale(1.02); }
+    36% { transform:scale(1.10); }
+    55% { transform:scale(1); }
+  }
+  .heart-btn .door-label { display:block; margin-top:10px; font-size:13px; font-weight:800;
+    letter-spacing:.22em; text-transform:uppercase; }
+  .heart-btn.purple .door-label { color:var(--purple); }
+  .heart-btn.pink .door-label { color:var(--pink); }
+  .heart-btn .door-arrow { display:block; font-size:26px; line-height:1; margin-top:2px; }
+  .heart-btn.purple .door-arrow { color:var(--purple); }
+  .heart-btn.pink .door-arrow { color:var(--pink); }
+  .caption { margin-top:26px; font-size:14px; opacity:.8; letter-spacing:.04em; line-height:1.6; }
+  .caption b { color:var(--amber); }
+
+  /* door-open transition */
+  .stage.door-opening .heart-btn { transition:transform .9s ease, opacity .9s ease; }
+  .stage.door-opening .heart-btn.purple { transform:translateX(-38vw) scale(2.4); opacity:0; }
+  .stage.door-opening .heart-btn.pink { transform:translateX(38vw) scale(2.4); opacity:0; }
+  .stage.door-opening .sign, .stage.door-opening .caption { opacity:0; transition:opacity .6s ease; }
+
+  @media (max-width:560px) {
+    .hearts { gap:18px; }
+    .heart-btn svg { width:128px; }
+    #explore-tab { top:32px; right:10px; padding:7px 12px; font-size:12px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .heart-btn svg, .mist { animation:none !important; }
+  }
+</style>
+</head>
+<body>
+<canvas id="smoke" aria-hidden="true"></canvas>
+<div class="mist" aria-hidden="true"></div>
+<div class="vignette" aria-hidden="true"></div>
+
+<a id="explore-tab" href="https://uncommonpope-png.github.io/soul-economy/betty-plush.html#bettyWorld">✦ EXPLORE THE WORLD</a>
+
+<!-- ============ THE DOOR ============ -->
+<main class="stage" id="door-stage">
+  <div class="sign" role="img" aria-label="Betty Plush highway sign: two arrows pointing in opposite directions">
+    <div class="sign-title">BETTY PLUSH</div>
+    <div class="sign-sub">
+      <span class="arrow left">⟵</span>
+      <span>222 · TWO DOORS · SAME WORLD</span>
+      <span class="arrow right">⟶</span>
+    </div>
+  </div>
+
+  <div class="hearts">
+    <button class="heart-btn purple" id="heart-purple" type="button" aria-label="Enter through the purple heart door">
+      <svg viewBox="0 0 100 92" aria-hidden="true">
+        <path d="M50 88 C20 64 4 46 4 28 C4 13 16 4 28 4 C38 4 46 10 50 18 C54 10 62 4 72 4 C84 4 96 13 96 28 C96 46 80 64 50 88 Z"
+              fill="#A855F7" stroke="#E9D5FF" stroke-width="2"/>
+        <path d="M50 78 C28 60 14 46 14 30 C14 19 22 12 30 12 C38 12 45 17 50 24 C55 17 62 12 70 12 C78 12 86 19 86 30 C86 46 72 60 50 78 Z"
+              fill="#C084FC" opacity=".85"/>
+      </svg>
+      <span class="door-label">Purple door</span>
+      <span class="door-arrow">⟵</span>
+    </button>
+
+    <button class="heart-btn pink" id="heart-pink" type="button" aria-label="Enter through the pink heart door">
+      <svg viewBox="0 0 100 92" aria-hidden="true">
+        <path d="M50 88 C20 64 4 46 4 28 C4 13 16 4 28 4 C38 4 46 10 50 18 C54 10 62 4 72 4 C84 4 96 13 96 28 C96 46 80 64 50 88 Z"
+              fill="#FF2E88" stroke="#FFD6E8" stroke-width="2"/>
+        <path d="M50 78 C28 60 14 46 14 30 C14 19 22 12 30 12 C38 12 45 17 50 24 C55 17 62 12 70 12 C78 12 86 19 86 30 C86 46 72 60 50 78 Z"
+              fill="#FF4D8D" opacity=".85"/>
+      </svg>
+      <span class="door-label">Pink door</span>
+      <span class="door-arrow">⟶</span>
+    </button>
+  </div>
+
+  <p class="caption">Two doors. <b>Same world.</b> Pick a heart — it opens, and the world scroll-zooms past you.<br>
+  You ride. You watch. You can&rsquo;t steer. <b id="door-soul-count">31 souls</b> live in there.</p>
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ================= smoke canvas (black smoke / mist, no assets) ================= */
+  var canvas = document.getElementById('smoke');
+  var ctx = canvas.getContext('2d');
+  var puffs = [];
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function sizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  function makePuffs() {
+    puffs = [];
+    var n = Math.max(24, Math.floor(window.innerWidth / 48));
+    for (var i = 0; i < n; i++) {
+      puffs.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: 60 + Math.random() * 190,
+        vx: (Math.random() - 0.5) * 0.22,
+        vy: -0.05 - Math.random() * 0.16,
+        a: 0.03 + Math.random() * 0.06,
+        hue: Math.random() < 0.18 ? '168,85,247' : (Math.random() < 0.3 ? '255,77,141' : '120,120,140')
+      });
+    }
+  }
+  function drawSmoke() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (var i = 0; i < puffs.length; i++) {
+      var p = puffs[i];
+      var g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r);
+      g.addColorStop(0, 'rgba(' + p.hue + ',' + p.a + ')');
+      g.addColorStop(1, 'rgba(' + p.hue + ',0)');
+      ctx.fillStyle = g;
+      ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill();
+      p.x += p.vx; p.y += p.vy;
+      if (p.y < -p.r) { p.y = canvas.height + p.r; p.x = Math.random() * canvas.width; }
+      if (p.x < -p.r) p.x = canvas.width + p.r;
+      if (p.x > canvas.width + p.r) p.x = -p.r;
+    }
+    if (!reduced) requestAnimationFrame(drawSmoke);
+  }
+  sizeCanvas(); makePuffs(); drawSmoke();
+  window.addEventListener('resize', function () { sizeCanvas(); makePuffs(); if (reduced) drawSmoke(); });
+
+  /* ================= the door opens -> the real ride =================
+     Both hearts open the SAME door: the live 3D flythrough in
+     betty-plush-portal-ride.html (the real world, 31 souls, camera path, chat
+     bubbles). ?ride=1 auto-starts the ride on arrival. */
+  var doorStage = document.getElementById('door-stage');
+  var going = false;
+  function enterPortal(whichHeart) {
+    if (going) return;
+    going = true;
+    doorStage.classList.add('door-opening');
+    setTimeout(function () {
+      window.location.href = './betty-plush-portal-ride.html?ride=1&heart=' + whichHeart;
+    }, reduced ? 60 : 950);
+  }
+  /* Phones get the reduced world (15 souls), computers the full 31 — say so. */
+  if (window.matchMedia('(pointer: coarse)').matches || window.innerWidth < 700) {
+    var dc = document.getElementById('door-soul-count');
+    if (dc) dc.textContent = '15 souls';
+  }
+  document.getElementById('heart-purple').addEventListener('click', function () { enterPortal('purple'); });
+  document.getElementById('heart-pink').addEventListener('click', function () { enterPortal('pink'); });
+})();
+</script>
+</body>
+</html>
