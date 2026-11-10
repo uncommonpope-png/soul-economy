@@ -670,6 +670,18 @@ function makeArch() {
 // Returns { group, keepOut, lanterns, lanternBase, orbs, dust, signBetty }.
 // keepOut is [{x, z, r}] circles for steering (plan §4: plushies never
 // enter buildings; the player is pushed out of them too).
+// === BAMBOO GROVE STATE (finding #142, tick 18) ===
+// Declared at module level (not inside buildCity) so bambooTick() —
+// called from skyTick, the sky's own rAF loop — can see the mesh.
+// The grove itself is built inside buildCity (after the torii tunnel)
+// so it lands in the city group + keepOut. NOTE: skyTick() runs once
+// synchronously BEFORE buildCity is called (line ~2113), so bambooTick
+// must null-guard on bambooMesh (see below) — the first tick is a no-op
+// and the sway starts once the grove exists.
+let bambooMesh = null;
+let bambooBase = [];   // per-stalk {x, z, s, phase, leanX, leanZ}
+let bambooT = 0;       // sway clock, seconds (rawDt convention)
+
 function buildCity(scene, opts) {
   const o = opts || {};
   const seed = o.seed || 222;
@@ -802,6 +814,135 @@ function buildCity(scene, opts) {
     shrineCorner: { x: 0.90, z: -25.77 },
   };
   // === END TORII-TUNNEL ===
+
+  // === BEGIN BAMBOO-GROVE (finding #142, cycle-5 §2B, tick 18) ===
+  // BAMBOO GROVE BY THE SHRINE — the shrine's back wall: a crescent of
+  // 15 warm-tan stalks wrapping the north + east of the SHRINE CORNER
+  // (0.90,-25.77), the torii tunnel's end, so the shrine stops being a
+  // box on an open edge and becomes a place with a back. The west side
+  // stays OPEN toward lenahorns' home (-2.5,-22) — no wall between her
+  // and the shrine, and no stalk hides a home spot.
+  // PLACEMENT (computed numerically over all 31 SOUL_DEFS homes + the 38
+  // live keepOut circles + the 7 torii gates, see the tick-18 PATCH.md):
+  // crescent centre (0.90,-26.60), radius 3.0, angles 25..125 deg
+  // (x = cx + R cos a, z = cz - R sin a), 15 stalks, x -0.82..3.62,
+  // z -29.60..-27.87. Clearances: building box min +2.54 (machiya
+  // (-4.45,-23.58)), homes min +6.31 (lenahorns), torii gate min +3.29
+  // (gate 7), tunnel path min +3.29, tram loop min +13.39. The grove
+  // keepOut circle (1.40,-28.90) r 2.6 covers ALL 15 stalks (max stalk
+  // distance from its centre 2.45) while leaving gate 7 / the shrine
+  // corner walkable (+0.57 — the offering-box + ema-plaques site #54
+  // stays open), the machiya box clear (+0.48), homes clear (+4.53).
+  // REJECTED: wider arcs (R 2.8/3.4 centred on the corner, angles
+  // 15..165) — their western arm lands INSIDE the machiya keepOut
+  // (min -1.06/-1.29); the straight row z -28.5 — western stalk only
+  // +0.30 from the machiya keepOut and the row reads as a fence, not a
+  // wall; the ellipse cluster — gates only +1.78, path +1.78.
+  // SHAPE: one stalk geometry, instanced 15x = +1 draw call. Stalk =
+  // warm-tan cylinder (never green — the palette law; the grove reads
+  // as bamboo from the shape, not the colour) with node rows darkened
+  // in the vertex colours + 4 amber leaf cones on the top third, all
+  // merged (mergeParts, the torii pattern) under one MeshStandardMaterial
+  // (vertexColors, roughness 0.85). Heights 3-5 (uniform instance scale
+  // 0.75-1.25 on the 4-unit geometry, so normals stay correct),
+  // radii 0.08-0.14, deterministic mulberry32(142) variation.
+  // SWAY: one shared sine, 0.2 Hz, amplitude 0.05 rad, phase-offset per
+  // stalk (the finding's "slow shared sway" — a fast sway is a storm,
+  // and the storm already has its own weather state). bambooTick(dt)
+  // runs in skyTick (the sky's own rAF loop) — NOT in animate()
+  // (discarded at build time) and NOT in RUNTIME_TEMPLATE
+  // (build_world.py is coordinator-owned). Raw-dt convention: migrates
+  // to fixedDt with tramTick/updateRain when the timestep lands.
+  // No LITE cut (no LITE mode exists in this base, same as the tram).
+  const BAMBOO_N = 15;
+  const BAMBOO_CX = 0.90, BAMBOO_CZ = -26.60, BAMBOO_R = 3.0;
+  const BAMBOO_A0 = 25, BAMBOO_A1 = 125;   // degrees, north + east arc
+  const BAMBOO_KO = { x: 1.40, z: -28.90, r: 2.6 };
+  const _bamRnd = mulberry32(142);
+  const BAMBOO_TAN = new THREE.Color(0xC8A882);    // warm tan stalk
+  const BAMBOO_NODE = new THREE.Color(0x8A6A3A);   // node-row brown
+  const BAMBOO_LEAF = new THREE.Color(0xF59E0B);   // amber leaf
+  const BAMBOO_LEAF2 = new THREE.Color(0xE08A00);  // deeper amber leaf
+  // One stalk geometry (y 0..4, base at y=0 so sway pivots at the ground):
+  // cylinder (8 radial x 3 height segs, open) + 2 node-band rows painted
+  // into the vertex colours + 4 leaf cones on the top third.
+  const _bamStalkGeo = new THREE.CylinderGeometry(0.095, 0.115, 4, 8, 3, true);
+  _bamStalkGeo.translate(0, 2, 0);
+  const _bamLeafGeo = new THREE.ConeGeometry(0.09, 0.55, 4, 1, true);
+  const _bamParts = [{ geo: _bamStalkGeo, matrix: new THREE.Matrix4(), color: BAMBOO_TAN }];
+  const _bamLeafH = [2.9, 3.2, 3.5, 3.8], _bamLeafAz = [0.3, 1.9, 3.4, 5.0];
+  for (let _li = 0; _li < 4; _li++) {
+    const _lm = new THREE.Matrix4().makeTranslation(0, _bamLeafH[_li], 0)
+      .multiply(new THREE.Matrix4().makeRotationY(_bamLeafAz[_li]))
+      .multiply(new THREE.Matrix4().makeRotationX(0.65))
+      .multiply(new THREE.Matrix4().makeScale(1, 1, 0.3));
+    _bamParts.push({ geo: _bamLeafGeo, matrix: _lm,
+      color: (_li % 2 === 0) ? BAMBOO_LEAF : BAMBOO_LEAF2 });
+  }
+  const bambooGeo = mergeParts(_bamParts);
+  { // paint the node rows: stalk vertices at y = 4/3 and 8/3 go node-brown
+    const _pos = bambooGeo.attributes.position, _col = bambooGeo.attributes.color;
+    for (let _vi = 0; _vi < _pos.count; _vi++) {
+      const _y = _pos.getY(_vi);
+      if (Math.abs(_y - 4 / 3) < 0.03 || Math.abs(_y - 8 / 3) < 0.03) {
+        if (Math.abs(_col.getX(_vi) - BAMBOO_TAN.r) < 0.01 &&
+            Math.abs(_col.getY(_vi) - BAMBOO_TAN.g) < 0.01) {
+          _col.setXYZ(_vi, BAMBOO_NODE.r, BAMBOO_NODE.g, BAMBOO_NODE.b);
+        }
+      }
+    }
+    _col.needsUpdate = true;
+  }
+  const bambooMat = new THREE.MeshStandardMaterial({
+    vertexColors: true, roughness: 0.85, metalness: 0,
+  });
+  bambooMesh = new THREE.InstancedMesh(bambooGeo, bambooMat, BAMBOO_N);
+  {
+    const _bm = new THREE.Matrix4(), _bq = new THREE.Quaternion(),
+          _bp = new THREE.Vector3(), _bs = new THREE.Vector3(),
+          _be = new THREE.Euler();
+    for (let _i = 0; _i < BAMBOO_N; _i++) {
+      const _a = (BAMBOO_A0 + _i * ((BAMBOO_A1 - BAMBOO_A0) / (BAMBOO_N - 1))) * Math.PI / 180;
+      const _x = BAMBOO_CX + BAMBOO_R * Math.cos(_a);
+      const _z = BAMBOO_CZ - BAMBOO_R * Math.sin(_a);
+      const _h = 3 + _bamRnd() * 2;              // 3..5 units tall
+      const _s = _h / 4;                          // uniform scale
+      const _ph = _bamRnd() * Math.PI * 2;        // sway phase
+      const _lx = (_bamRnd() - 0.5) * 0.06;       // static lean, +-0.03 rad
+      const _lz = (_bamRnd() - 0.5) * 0.06;
+      bambooBase.push({ x: _x, z: _z, s: _s, phase: _ph, leanX: _lx, leanZ: _lz });
+      _be.set(_lx, 0, _lz); _bq.setFromEuler(_be);
+      _bp.set(_x, 0, _z); _bs.set(_s, _s, _s);
+      _bm.compose(_bp, _bq, _bs);
+      bambooMesh.setMatrixAt(_i, _bm);
+    }
+    bambooMesh.instanceMatrix.needsUpdate = true;
+    bambooMesh.computeBoundingSphere();
+    // sway moves the tips ~0.2 off the base matrices — widen the
+    // culling sphere so a grazing view never pops the grove out.
+    if (bambooMesh.boundingSphere) bambooMesh.boundingSphere.radius += 0.5;
+  }
+  group.add(bambooMesh);
+  // One keepOut circle around the grove (the finding's rule): the player
+  // walks PAST the grove, not through it. It also steers the souls'
+  // home-spot resolution (build_world.py resolveHome reads city.keepOut).
+  keepOut.push({ x: BAMBOO_KO.x, z: BAMBOO_KO.z, r: BAMBOO_KO.r });
+  // debug handle for verification (real-browser checks, not gameplay):
+  // toggle visibility to measure the draw-call delta; stalks + sway
+  // clock + tip positions are the sway proof's coordinates.
+  window.__bamboo = {
+    mesh: bambooMesh, stalks: bambooBase, groveKO: BAMBOO_KO,
+    get swayT() { return bambooT; },
+    setSwayTime(t) { bambooT = t; bambooTick(0); },
+    topPos(i) {
+      const _m = new THREE.Matrix4().fromArray(bambooMesh.instanceMatrix.array, i * 16);
+      const _v = new THREE.Vector3(0, 4, 0).applyMatrix4(_m);
+      return { x: +_v.x.toFixed(3), y: +_v.y.toFixed(3), z: +_v.z.toFixed(3) };
+    },
+    setVisible(v) { bambooMesh.visible = !!v; },
+  };
+  // === END BAMBOO-GROVE ===
+
 
   // 222 arch over the south plaza entrance + its neon sign
   const arch = makeArch();
@@ -1555,6 +1696,31 @@ window.__tramStop = {
 // === END TRAM-STOP ===
 
 
+// BAMBOO SWAY (finding #142) — one shared 0.2 Hz sine, 0.05 rad, per-stalk
+// phase offset. Runs from skyTick (the sky's own rAF loop), NOT from
+// animate() (discarded at build time). Null-guards: skyTick() runs once
+// synchronously before buildCity() builds the grove. Raw-dt convention —
+// migrates to fixedDt with tramTick/updateRain when the timestep lands.
+function bambooTick(dt) {
+  if (!bambooMesh) return;
+  bambooT += dt;
+  const _w = Math.PI * 2 * 0.2;
+  const _bm = new THREE.Matrix4(), _bq = new THREE.Quaternion(),
+        _bp = new THREE.Vector3(), _bs = new THREE.Vector3(),
+        _be = new THREE.Euler();
+  for (let _i = 0; _i < bambooBase.length; _i++) {
+    const _b = bambooBase[_i];
+    const _s = Math.sin(_w * bambooT + _b.phase);
+    const _s2 = Math.sin(_w * bambooT + _b.phase + 1.3);
+    _be.set(_b.leanX + 0.05 * _s, 0, _b.leanZ + 0.05 * 0.6 * _s2);
+    _bq.setFromEuler(_be);
+    _bp.set(_b.x, 0, _b.z); _bs.set(_b.s, _b.s, _b.s);
+    _bm.compose(_bp, _bq, _bs);
+    bambooMesh.setMatrixAt(_i, _bm);
+  }
+  bambooMesh.instanceMatrix.needsUpdate = true;
+}
+
 /* ---- sky per-frame update: orbits + spin (drag inertia + auto-rotate
    + collect impulse) + sky follows the camera. Own rAF, NOT the
    world's animate() (see the note at the top of this section). ---- */
@@ -1572,6 +1738,7 @@ function skyTick() {
   skyPlacePlanets();
   skyTwinkle(dt); // finding #140: star twinkle, amortized chunk in the sky's own loop
   tramTick(dt); // finding #101: 222 tram — same sky-loop home as the twinkle (NOT animate(), NOT RUNTIME_TEMPLATE)
+  bambooTick(dt); // finding #142: bamboo grove sway — same sky-loop home (NOT animate(), NOT RUNTIME_TEMPLATE)
   // drag inertia: velocity decays ~0.92/frame once the pointer lifts
   if (!skyDrag.active && Math.abs(skyDrag.vel) > 0.001) {
     skyAngle += skyDrag.vel * dt;
@@ -15983,7 +16150,7 @@ const COL = {
   bg: 0x0C0C12, amber: 0xF59E0B, amberSoft: 0xFFD166,
   pink: 0xFF2E88, pinkLight: 0xFF9EC6, pinkDark: 0xC2185B,
   dark: 0x2A0A1A, white: 0xFFF3D6,
-  blue: 0x6FA3DC, blueLight: 0x8FB8E8, lavender: 0x9B7ED0, lavenderDark: 0x7E5CC0,
+  blue: 0x82ADE2, blueLight: 0x9CC2EC, lavender: 0x9B7ED0, lavenderDark: 0x7E5CC0, // tick 18 A/B winner d-lighten (was 0x6FA3DC / 0x8FB8E8),
   purple: 0x6A4C9A, cloudPink: 0xF6C6D8
 };
 
@@ -15997,26 +16164,81 @@ function canvasTex(w, h, draw) {
   return t;
 }
 
-function drawFace(ctx, w, h, eyesOpen) {
-  // Dream-Eater (photos bp-200/201): two HUGE round black glossy eyes,
-  // pink blush, a small pink zigzag grin with two tiny pink fangs.
-  // No nose, no star patch, no seams — both eyes are open in the photos.
-  ctx.clearRect(0, 0, w, h);
-  // blush
+// ---- face atlas (research §1I, Mint Doze pattern; tick 18: 7
+// expressions, Midnight Star pattern): ONE 1792x256 canvas.
+// Columns: 0 open (DEFAULT — the photo face: two HUGE round black
+// glossy eyes, pink blush, small pink zigzag grin, two tiny pink
+// fangs) | 1 happy (^^ eyes, bigger fangs) | 2 excited (^^ eyes +
+// biggest fangs) | 3 sleepy (flatter closed curves + lid lines) |
+// 4 wink (left eye open, right eye a flat line + flick) |
+// 5 surprised (small round open eyes, "o" mouth, fangs hidden) |
+// 6 closed (blink — the old closed cell). Swap = map.offset.x only,
+// +0 draw calls. The open cell is pixel-identical to the pre-tick-18
+// face (proven by atlas-dream-eater-c18.py).
+const FACE_VARIANTS = ['open', 'happy', 'excited', 'sleepy', 'wink', 'surprised', 'closed'];
+function drawFaceCell(ctx, x0, variant) {
+  ctx.save();
+  ctx.translate(x0, 0);
+  ctx.clearRect(0, 0, 256, 256);
+  // blush (verbatim, all cells)
   ctx.fillStyle = 'rgba(232,123,168,0.45)';
   ctx.beginPath(); ctx.arc(62, 152, 15, 0, Math.PI * 2); ctx.fill();
   ctx.beginPath(); ctx.arc(194, 152, 15, 0, Math.PI * 2); ctx.fill();
-  if (eyesOpen) {
-    // solid black glossy ovals (photo bp-201: no white sclera) with a
-    // white highlight — bigger and wider-set than the template's eyes.
+  // eyes — two HUGE round black glossy eyes in the photos (no white
+  // sclera, no star patch, no seams).
+  if (variant === 'happy' || variant === 'excited') {
+    // ^^ arcs — happier eyes
+    ctx.strokeStyle = '#1A0A12'; ctx.lineWidth = 7; ctx.lineCap = 'round';
     for (const cx of [88, 168]) {
-      ctx.fillStyle = '#1A0A12';
-      ctx.beginPath(); ctx.ellipse(cx, 102, 30, 40, 0, 0, Math.PI * 2); ctx.fill();
-      ctx.fillStyle = '#FFFFFF';
-      ctx.beginPath(); ctx.arc(cx + 9, 88, 7, 0, Math.PI * 2); ctx.fill();
-      ctx.beginPath(); ctx.arc(cx - 8, 118, 3.5, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath();
+      ctx.moveTo(cx - 26, 112);
+      ctx.quadraticCurveTo(cx, 84, cx + 26, 112);
+      ctx.stroke();
     }
-  } else {
+  } else if (variant === 'sleepy') {
+    // flatter closed curves + lid lines above them
+    ctx.strokeStyle = '#1A0A12'; ctx.lineWidth = 7; ctx.lineCap = 'round';
+    for (const cx of [88, 168]) {
+      ctx.beginPath();
+      ctx.moveTo(cx - 24, 104);
+      ctx.quadraticCurveTo(cx, 116, cx + 24, 104);
+      ctx.stroke();
+    }
+    ctx.lineWidth = 5;
+    for (const cx of [88, 168]) {
+      ctx.beginPath();
+      ctx.moveTo(cx - 26, 92);
+      ctx.quadraticCurveTo(cx, 84, cx + 26, 92);
+      ctx.stroke();
+    }
+  } else if (variant === 'wink') {
+    // left eye open (photo eye), right eye a flat line + flick
+    ctx.fillStyle = '#1A0A12';
+    ctx.beginPath(); ctx.ellipse(88, 102, 30, 40, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#FFFFFF';
+    ctx.beginPath(); ctx.arc(97, 88, 7, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(80, 118, 3.5, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = '#1A0A12'; ctx.lineWidth = 7; ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(142, 104);
+    ctx.lineTo(194, 104);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(194, 104);
+    ctx.quadraticCurveTo(198, 98, 200, 94);
+    ctx.stroke();
+  } else if (variant === 'surprised') {
+    // small round open eyes (an expression state — the photo eyes are big ovals)
+    ctx.strokeStyle = '#1A0A12'; ctx.lineWidth = 5;
+    for (const cx of [88, 168]) {
+      ctx.beginPath(); ctx.arc(cx, 102, 14, 0, Math.PI * 2); ctx.stroke();
+      ctx.fillStyle = '#3A2A5E';
+      ctx.beginPath(); ctx.arc(cx, 102, 10, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#FFFFFF';
+      ctx.beginPath(); ctx.arc(cx + 5, 96, 3, 0, Math.PI * 2); ctx.fill();
+    }
+  } else if (variant === 'closed') {
+    // the old closed cell (blink curves), verbatim
     ctx.strokeStyle = '#1A0A12'; ctx.lineWidth = 7; ctx.lineCap = 'round';
     for (const cx of [90, 166]) {
       ctx.beginPath();
@@ -16024,23 +16246,55 @@ function drawFace(ctx, w, h, eyesOpen) {
       ctx.quadraticCurveTo(cx, 128, cx + 26, 100);
       ctx.stroke();
     }
+  } else {
+    // open (DEFAULT): the photo eyes, verbatim
+    for (const cx of [88, 168]) {
+      ctx.fillStyle = '#1A0A12';
+      ctx.beginPath(); ctx.ellipse(cx, 102, 30, 40, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#FFFFFF';
+      ctx.beginPath(); ctx.arc(cx + 9, 88, 7, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(cx - 8, 118, 3.5, 0, Math.PI * 2); ctx.fill();
+    }
   }
-  // small zigzag grin with two tiny pink fangs below it
-  ctx.strokeStyle = '#F28BB8'; ctx.lineWidth = 5; ctx.lineJoin = 'round';
-  ctx.beginPath();
-  ctx.moveTo(82, 168);
-  const zig = [[94, 178], [106, 168], [118, 178], [130, 168], [142, 178], [154, 168], [166, 178], [174, 172]];
-  for (const [x, y] of zig) ctx.lineTo(x, y);
-  ctx.stroke();
-  ctx.fillStyle = '#F28BB8';
-  for (const fx of [112, 144]) {
+  if (variant === 'surprised') {
+    // small "o" mouth, fangs hidden (Midnight Star pattern)
+    ctx.strokeStyle = '#F28BB8'; ctx.lineWidth = 4; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.arc(128, 192, 8, 0, Math.PI * 2); ctx.stroke();
+  } else {
+    // small zigzag grin with two tiny pink fangs below it
+    ctx.strokeStyle = '#F28BB8'; ctx.lineWidth = 5; ctx.lineJoin = 'round';
     ctx.beginPath();
-    ctx.moveTo(fx - 8, 174); ctx.lineTo(fx + 8, 174); ctx.lineTo(fx, 188);
-    ctx.closePath(); ctx.fill();
+    ctx.moveTo(82, 168);
+    const zig = [[94, 178], [106, 168], [118, 178], [130, 168], [142, 178], [154, 168], [166, 178], [174, 172]];
+    for (const [x, y] of zig) ctx.lineTo(x, y);
+    ctx.stroke();
+    ctx.fillStyle = '#F28BB8';
+    const fangW = variant === 'excited' ? 12 : variant === 'happy' ? 10 : 8;
+    const fangD = variant === 'excited' ? 194 : variant === 'happy' ? 192 : 188;
+    for (const fx of [112, 144]) {
+      ctx.beginPath();
+      ctx.moveTo(fx - fangW, 174); ctx.lineTo(fx + fangW, 174); ctx.lineTo(fx, fangD);
+      ctx.closePath(); ctx.fill();
+    }
   }
+  ctx.restore();
 }
-const faceTexOpen = canvasTex(256, 256, (c, w, h) => drawFace(c, w, h, true));
-const faceTexClosed = canvasTex(256, 256, (c, w, h) => drawFace(c, w, h, false));
+const faceAtlasTex = canvasTex(1792, 256, (ctx, w, h) => {
+  for (let i = 0; i < FACE_VARIANTS.length; i++) drawFaceCell(ctx, i * 256, FACE_VARIANTS[i]);
+});
+faceAtlasTex.repeat.set(1 / FACE_VARIANTS.length, 1);
+const EXPR_COLS = { open: 0, happy: 1, excited: 2, sleepy: 3, wink: 4, surprised: 5, closed: 6 };
+function applyExpression(name) {
+  faceAtlasTex.offset.x = (EXPR_COLS[name] ?? 0) / FACE_VARIANTS.length;
+}
+// setExpression(name, dur): show an atlas expression for dur seconds,
+// then fall back to 'open'. Blink overrides briefly.
+function setExpression(name, dur) {
+  state.expr = name;
+  state.exprT = dur;
+  applyExpression(name);
+}
+applyExpression('open');
 
 const gridTex = canvasTex(512, 512, (ctx, w, h) => {
   ctx.fillStyle = '#0C0C12'; ctx.fillRect(0, 0, w, h);
@@ -16075,6 +16329,30 @@ const glowTex = canvasTex(128, 128, (ctx, w, h) => {
   ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
 });
 
+// Dream-Eater signature collect burst (finding #76): CRESCENT MOONS
+// with a tiny star — the motif is on her already (crescent moon horns
+// + pink star patch, catalog + photos bp-200/201), nothing invented.
+// White crescent + 4-point star; the burst's pink/gold vertex colors
+// tint it.
+const moonBurstTex = canvasTex(128, 128, (ctx, w, h) => {
+  ctx.clearRect(0, 0, w, h);
+  ctx.fillStyle = '#FFFFFF';
+  ctx.beginPath(); ctx.arc(58, 62, 50, 0, Math.PI * 2); ctx.fill();
+  ctx.globalCompositeOperation = 'destination-out';
+  ctx.beginPath(); ctx.arc(80, 48, 44, 0, Math.PI * 2); ctx.fill();
+  ctx.globalCompositeOperation = 'source-over';
+  // tiny 4-point star beside the crescent
+  ctx.fillStyle = '#FFFFFF';
+  ctx.beginPath();
+  const sx = 98, sy = 96;
+  for (let i = 0; i < 8; i++) {
+    const r = i % 2 === 0 ? 14 : 4;
+    const a = i * Math.PI / 4 - Math.PI / 2;
+    const x = sx + Math.cos(a) * r, y = sy + Math.sin(a) * r;
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  }
+  ctx.closePath(); ctx.fill();
+});
 const heartSpriteTex = canvasTex(128, 128, (ctx, w, h) => {
   ctx.clearRect(0, 0, w, h);
   ctx.fillStyle = '#FF2E88';
@@ -16171,14 +16449,14 @@ const matPinkLight = new THREE.MeshLambertMaterial({ color: COL.pinkLight, map: 
 const matPinkDark = new THREE.MeshLambertMaterial({ color: COL.pinkDark, map: napTex, bumpMap: napTex, bumpScale: 0.015, emissive: 0x2A0A14 });
 const matDark = new THREE.MeshStandardMaterial({ color: COL.dark, roughness: 0.9, metalness: 0 });
 const matHeart = new THREE.MeshStandardMaterial({ color: 0xFF5CA8, roughness: 0.7, metalness: 0 });
-const faceMat = new THREE.MeshStandardMaterial({ map: faceTexOpen, transparent: true, alphaTest: 0.05, roughness: 0.9, metalness: 0 });
+const faceMat = new THREE.MeshStandardMaterial({ map: faceAtlasTex, transparent: true, alphaTest: 0.05, roughness: 0.9, metalness: 0 }); // tick 18: face atlas (7 expressions, +0 calls)
 // horns are NOT plush: smooth glossy dark (roughness 0.4) so the fur reads furrier.
 // Vertex colors carry the amber tip (cones 1-2 dark, cone 3 amber).
 const matHorn = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.4, metalness: 0 });
 const matWing = new THREE.MeshStandardMaterial({ color: COL.dark, roughness: 0.85, metalness: 0, side: THREE.DoubleSide });
 // Dream-Eater materials (shared — one material per color, not per part)
-const matBlue = new THREE.MeshLambertMaterial({ color: COL.blue, map: napTex, bumpMap: napTex, bumpScale: 0.015 });
-const matBlueLight = new THREE.MeshLambertMaterial({ color: COL.blueLight, map: napTex, bumpMap: napTex, bumpScale: 0.015 });
+const matBlue = new THREE.MeshLambertMaterial({ color: COL.blue, map: napTex, bumpMap: napTex, bumpScale: 0.015, emissive: 0x1E2A4A }); // tick 18 A/B winner d-lift: cool emissive cools the steel cast without washing the blue out
+const matBlueLight = new THREE.MeshLambertMaterial({ color: COL.blueLight, map: napTex, bumpMap: napTex, bumpScale: 0.015, emissive: 0x1E2A4A }); // tick 18 A/B winner d-lift
 const matLavender = new THREE.MeshLambertMaterial({ color: COL.lavender, map: napTex, bumpMap: napTex, bumpScale: 0.015 });
 const matChecker = new THREE.MeshLambertMaterial({ map: checkerTex, bumpMap: napTex, bumpScale: 0.01 });
 const matHeartSoft = new THREE.MeshStandardMaterial({ color: 0xF0A0BE, roughness: 0.7, metalness: 0 });
@@ -16206,8 +16484,8 @@ addRim(matPink, 0xF59E0B, 0.5);
 addRim(matPinkLight, 0xF59E0B, 0.45);
 addRim(matPinkDark, 0xFF9EC6, 0.4);
 addRim(matWing, 0xF59E0B, 0.35);
-addRim(matBlue, 0xF59E0B, 0.12);
-addRim(matBlueLight, 0xF59E0B, 0.10);
+addRim(matBlue, 0xF59E0B, 0.08); // tick 18 A/B winner (was 0.12)
+addRim(matBlueLight, 0xF59E0B, 0.08); // tick 18 A/B winner (was 0.10)
 addRim(matLavender, 0xF59E0B, 0.15);
 addRim(matChecker, 0xF59E0B, 0.12);
 addRim(matPurple, 0xF59E0B, 0.12);
@@ -16219,7 +16497,7 @@ const haloMat = new THREE.ShaderMaterial({
   transparent: true, depthWrite: false, side: THREE.BackSide,
   uniforms: { uColor: { value: new THREE.Color(0xC9A8E8) } },
   vertexShader: 'varying vec3 vN; varying vec3 vV;\nvoid main(){ vN = normalize(normalMatrix * normal); vec4 mv = modelViewMatrix * vec4(position, 1.0); vV = normalize(-mv.xyz); gl_Position = projectionMatrix * mv; }',
-  fragmentShader: 'uniform vec3 uColor; varying vec3 vN; varying vec3 vV;\nvoid main(){ float f = pow(1.0 - abs(dot(normalize(vN), normalize(vV))), 2.0); gl_FragColor = vec4(uColor, f * 0.4); }'
+  fragmentShader: 'uniform vec3 uColor; varying vec3 vN; varying vec3 vV;\nvoid main(){ float f = pow(1.0 - abs(dot(normalize(vN), normalize(vV))), 2.0); gl_FragColor = vec4(uColor, f * 0.25); }' // tick 18 A/B winner (was 0.4)
 });
 
 /* ================================================================
@@ -16504,21 +16782,21 @@ function buildDreamEater() {
     horn.position.set(0.30 * side, 0.60, 0.02);
     horn.rotation.z = -side * 0.08; // barely tilted out — the crescent bends in
     horn.rotation.x = -0.25;        // swept back (animate() holds this)
-    const c1 = paintGeo(new THREE.ConeGeometry(0.17, 0.28, 10), 0x5A8CD8);
-    c1.rotateZ(-side * 0.08); c1.rotateX(-0.05); c1.translate(0, 0.12, 0);
-    const c2 = paintGeo(new THREE.ConeGeometry(0.12, 0.26, 10), 0x5A8CD8);
-    c2.rotateZ(side * 0.60); c2.rotateX(-0.12); c2.translate(-side * 0.04, 0.28, -0.02);
-    const c3 = paintGeo(new THREE.ConeGeometry(0.06, 0.22, 10), COL.blueLight);
-    c3.rotateZ(side * 1.25); c3.rotateX(-0.25); c3.translate(-side * 0.11, 0.42, -0.05);
-    const st = starGeometry(0.07, 0.03);
+    const c1 = paintGeo(new THREE.ConeGeometry(0.221, 0.364, 10), 0x5A8CD8); // tick 18: horns ~1.3x — the photo's horns are bigger and more prominent
+    c1.rotateZ(-side * 0.08); c1.rotateX(-0.05); c1.translate(0, 0.156, 0);
+    const c2 = paintGeo(new THREE.ConeGeometry(0.156, 0.338, 10), 0x5A8CD8);
+    c2.rotateZ(side * 0.60); c2.rotateX(-0.12); c2.translate(-side * 0.052, 0.364, -0.026);
+    const c3 = paintGeo(new THREE.ConeGeometry(0.078, 0.286, 10), COL.blueLight);
+    c3.rotateZ(side * 1.25); c3.rotateX(-0.25); c3.translate(-side * 0.143, 0.546, -0.065);
+    const st = starGeometry(0.091, 0.039);
     st.rotateX(-0.45); // tip back to hug the cone's front slope
-    st.translate(0, 0.26, 0.075);
+    st.translate(0, 0.338, 0.0975);
     paintGeo(st, 0xF28BB8);
     const cloudParts = [];
-    for (const [dx, dy, r] of [[-0.035, 0, 0.032], [0, 0.016, 0.038], [0.035, 0, 0.032]]) {
+    for (const [dx, dy, r] of [[-0.0455, 0, 0.0416], [0, 0.0208, 0.0494], [0.0455, 0, 0.0416]]) {
       const g = new THREE.SphereGeometry(r, 8, 6);
       g.scale(1, 0.7, 0.4);
-      g.translate(dx, 0.11 + dy, 0.065);
+      g.translate(dx, 0.143 + dy, 0.0845);
       paintGeo(g, COL.cloudPink);
       cloudParts.push(g);
     }
@@ -16565,7 +16843,7 @@ function buildDreamEater() {
 }
 
   const dreamEater = buildDreamEater();
-  return { rig: dreamEater, face: { atlas: false, mat: faceMat, open: faceTexOpen, closed: faceTexClosed }, hornBaseX: null };
+  return { rig: dreamEater, face: { atlas: true, apply: applyExpression, set: setExpression, mat: faceMat }, hornBaseX: null };
 }
 
 function build_lavender_cow(THREE, state) {
@@ -21997,7 +22275,7 @@ const SOUL_REGISTRY = [
   claimed: false
 }; } },
   { id: "dream-eater", title: "Dream-Eater", desc: "Pastel blue dream monster, pastel checker panels, crescent moon horns, pink star + cloud patches, long curled dark-purple tentacle tail with pink underside, heart 222.", story: "&ldquo;Dream-Eater is a pastel blue dream soul with pastel checker panels, crescent moon horns, pink star and cloud patches, a long curled dark-purple tentacle tail with a pink underside, and a heart 222 \u2014 not the anchor charm, but the full dream-eating soul the charm points to. Before collection, it ate dreams in the dark and nobody saw it do it: a job done while the world slept, thanked by no one, and lonely for being useful only when unseen. Collection meant daylight for the dream work: a keychain, a plushie, a purse, a book bag, a soul whose tail curls in the open and whose horns catch the light. It still eats the dreams. Now it is kept for it, in the light, never deleted \u2014 the dream soul that finally gets to be seen eating.&rdquo;", note: "Name + story are catalog drafts (story_draft: true \u2014 Ms GCP may change them). Queue 56, filed 2026-10-28. Distinct from the #0 Dream-eater Charm (the anchor) \u2014 a separate soul.", keep: "Keep her",
-    home: { x: -18.0, z: 12.0 }, mobile: false, genome: {"kit": false, "squashK": [160, 60], "squashB": 14, "earK": 35, "earB": 5.5, "earMass": 1.5, "earAmp": 0.18, "earPhases": null, "midK": 30, "midB": 5, "midMass": 1.5, "earTip": 0.3, "wingBase": 0.45, "hopEarKick": -0.45, "landEarKick": 0.35, "legAmp": 0.5, "armAmp": 0.35, "speed": 0.8, "blinkT": 0.12, "variation": null, "fallback": "open", "collectExpr": "excited", "teaseExpr": "surprised", "tail": true},
+    home: { x: -18.0, z: 12.0 }, mobile: false, genome: {"kit": true, "squashK": [160, 60], "squashB": 14, "earK": 35, "earB": 5.5, "earMass": 1.5, "earAmp": 0.18, "earPhases": [-0.3, -0.55], "midK": 30, "midB": 5, "midMass": 1.5, "earTip": 0.3, "wingBase": 0.45, "hopEarKick": -0.45, "landEarKick": 0.35, "legAmp": 0.5, "armAmp": 0.35, "speed": 0.8, "blinkT": 0.17, "variation": "kit4", "fallback": "open", "collectExpr": "excited", "teaseExpr": "surprised", "tail": true},
     build: build_dream_eater,
     makeState: function () { return {
   mode: 'IDLE',            // IDLE | WANDER | COLLECTED
@@ -22008,10 +22286,12 @@ const SOUL_REGISTRY = [
   speed: 0,
   vy: 0,                   // vertical velocity for hops
   y: 0,                    // root height
-  // plush squash spring (research §1A): k~80, b~14 (zeta~0.78);
-  // asymmetric — compress k~160 (fast in), recover k~60 (slow out).
-  // dentT holds a deep squash 0.2 s; residualT then holds a small
-  // residual dent (scaleY 0.975) for 0.3 s before full re-inflate.
+  // plush squash spring (research §1A), tick-18 verified firing:
+  // compress k 160 (fast in), recover k 60 (slow out), b 14 — the
+  // soft-soul nominal, already there from the template;
+  // dent hold 0.2 s on deep landings, residual dent (0.975) 0.3 s;
+  // volume 1/sqrt(sy). Tick 18 adds the squash-side clamp 0.85-1.18
+  // (Midnight parity).
   s: 0, vs: 0,
   dentT: 0, residualT: 0, dentHeld: false,
   earL: { a: 0, v: 0 }, earR: { a: 0, v: 0 },
@@ -22023,8 +22303,18 @@ const SOUL_REGISTRY = [
   hopTimer: 4,
   blinkTimer: 3,
   blinkT: 0,
+  expr: 'open', exprT: 0,         // face-atlas expression + its timer
+  variationT: 7,                // idle variation timer (7-14 s, randomised)
+  seed: Math.random() * Math.PI * 2, // per-soul phase seed — never shares a loop
+  blinkDouble: false,
+  anticipT: 0, anticipVy: 0, anticipStretch: 0, // anticipation squash before every hop
+  bounce2T: 0,          // double-bounce: second smaller squash after landing
+  ringT: 0, dustT: 0,   // landing kit timers (ring + dust)
+  hitStopT: 0, punchT: 0,       // collect staging: hit-stop + camera micro-punch
+  collectPending: false,        // burst fires at the collect launch, not the click
+  rebounded: false,     // double-bounce: one rebound per landing
   headYawTarget: 0, headYawTimer: 2,
-  collectT: 0, collectSpin: 0,
+  collectT: 0,
   teaseT: 0,
   claimed: false
 }; } },
